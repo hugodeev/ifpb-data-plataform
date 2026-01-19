@@ -1,0 +1,2797 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFPB Data Platform - Dados Institucionais | Transparência e Análise</title>
+    <meta name="description" content="Dados institucionais, estrutura organizacional e informações sobre campi do IFPB. Transparência completa sobre a instituição.">
+    <link rel="shortcut icon" href="../assets/img/logosite.png" type="image/x-icon">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        
+/* ===== ESTILOS UNIFICADOS PARA TODAS AS PÁGINAS ===== */
+:root {
+    --primary-color: #2c3e8f;
+    --secondary-color: #4e73df;
+    --success-color: #1cc88a;
+    --warning-color: #f6c23e;
+    --danger-color: #e74a3b;
+    --info-color: #36b9cc;
+    --dark-color: #2e3a59;
+    --medium-color: #5a5c69;
+    --light-color: #f8f9fc;
+    --white: #ffffff;
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+    --radius: 10px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Container Principal */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Cabeçalho da Página */
+.page-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: var(--radius);
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+    background-size: cover;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.breadcrumb a {
+    color: white;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.breadcrumb a:hover {
+    opacity: 0.8;
+}
+
+.breadcrumb i {
+    font-size: 0.7rem;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    max-width: 800px;
+    line-height: 1.6;
+}
+
+.status-indicators {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.status-indicator {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success-color);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Seções */
+.section-title {
+    font-size: 1.5rem;
+    color: var(--dark-color);
+    margin: 2.5rem 0 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--light-color);
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: var(--secondary-color);
+}
+
+/* Cards de Indicadores */
+.indicators-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.indicator-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.indicator-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--secondary-color);
+}
+
+.indicator-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+}
+
+.indicator-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.indicator-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--light-color), #e8f1ff);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: var(--secondary-color);
+}
+
+.indicator-trend {
+    font-size: 0.85rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.trend-up {
+    background: rgba(28, 200, 138, 0.1);
+    color: var(--success-color);
+}
+
+.trend-down {
+    background: rgba(231, 74, 59, 0.1);
+    color: var(--danger-color);
+}
+
+.indicator-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark-color);
+    margin: 0.5rem 0;
+    line-height: 1;
+}
+
+.indicator-label {
+    font-size: 0.9rem;
+    color: var(--medium-color);
+    margin-bottom: 0.5rem;
+}
+
+.indicator-detail {
+    font-size: 0.85rem;
+    color: var(--medium-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.progress-container {
+    margin-top: 1rem;
+}
+
+.progress-bar {
+    height: 6px;
+    background: var(--light-color);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s ease-in-out;
+}
+
+/* Filtros e Períodos */
+.filter-section {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin: 2rem 0;
+    box-shadow: var(--shadow-md);
+}
+
+.filter-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.filter-header h3 {
+    font-size: 1.2rem;
+    color: var(--dark-color);
+    margin: 0;
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.filter-tab {
+    padding: 0.75rem 1.5rem;
+    background: var(--light-color);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    color: var(--medium-color);
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-tab:hover {
+    background: #e3e6f0;
+}
+
+.filter-tab.active {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--light-color);
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    color: white;
+    box-shadow: 0 4px 12px rgba(78, 115, 223, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(78, 115, 223, 0.4);
+}
+
+.btn-secondary {
+    background: var(--light-color);
+    color: var(--medium-color);
+    border: 1px solid #d1d3e2;
+}
+
+.btn-secondary:hover {
+    background: #e3e6f0;
+}
+
+/* Cards de Dados */
+.data-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.data-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    border-top: 4px solid;
+}
+
+.data-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.data-card.revenue { border-top-color: var(--secondary-color); }
+.data-card.expense { border-top-color: var(--danger-color); }
+.data-card.investment { border-top-color: var(--warning-color); }
+.data-card.campi { border-top-color: var(--info-color); }
+.data-card.servidores { border-top-color: #9575cd; }
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    color: var(--dark-color);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.card-title i {
+    font-size: 1.2rem;
+}
+
+.card-campi .card-title i { color: var(--info-color); }
+.card-servidores .card-title i { color: #9575cd; }
+
+.card-total {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--dark-color);
+}
+
+.data-list {
+    margin-top: 1.5rem;
+}
+
+.data-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--light-color);
+}
+
+.data-item:last-child {
+    border-bottom: none;
+}
+
+.data-label {
+    color: var(--medium-color);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.data-value {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.data-percentage {
+    font-size: 0.85rem;
+    color: var(--medium-color);
+    background: var(--light-color);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    margin-left: 0.5rem;
+}
+
+/* Gráficos */
+.charts-section {
+    margin: 3rem 0;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 1.5rem;
+}
+
+.chart-container {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid #e3e6f0;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.chart-title {
+    font-size: 1.1rem;
+    color: var(--dark-color);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.chart-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.chart-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    border: 1px solid #d1d3e2;
+    background: white;
+    color: var(--medium-color);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-btn:hover {
+    background: var(--light-color);
+    color: var(--secondary-color);
+}
+
+.chart-wrapper {
+    height: 300px;
+    position: relative;
+}
+
+/* Tabelas */
+.table-section {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 2rem;
+    margin: 3rem 0;
+    box-shadow: var(--shadow-md);
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.table-title {
+    font-size: 1.2rem;
+    color: var(--dark-color);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.table-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box input {
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    border: 1px solid #d1d3e2;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    width: 200px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--medium-color);
+}
+
+.table-responsive {
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+    border: 1px solid #e3e6f0;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+.data-table th {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    text-align: left;
+    padding: 1.25rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    position: sticky;
+    top: 0;
+}
+
+.data-table td {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e3e6f0;
+    color: var(--medium-color);
+    font-size: 0.95rem;
+}
+
+.data-table tr:hover td {
+    background-color: var(--light-color);
+}
+
+.amount {
+    font-weight: 600;
+    color: var(--dark-color);
+    text-align: right;
+}
+
+.variation {
+    text-align: center;
+    font-weight: 600;
+}
+
+.variation.positive { color: var(--success-color); }
+.variation.negative { color: var(--danger-color); }
+
+.table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e3e6f0;
+}
+
+.table-info {
+    color: var(--medium-color);
+    font-size: 0.9rem;
+}
+
+/* Metodologia */
+.methodology-section {
+    background: linear-gradient(135deg, var(--light-color), #eef2ff);
+    border-radius: var(--radius);
+    padding: 2.5rem;
+    margin: 3rem 0;
+    border-left: 5px solid var(--secondary-color);
+}
+
+.methodology-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.methodology-item h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.methodology-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.methodology-list li {
+    margin-bottom: 0.75rem;
+    color: var(--medium-color);
+    line-height: 1.6;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.methodology-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--success-color);
+    font-weight: bold;
+}
+
+.source-info {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    border-left: 4px solid var(--success-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.source-info p {
+    margin-bottom: 0.75rem;
+    color: var(--medium-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.source-info strong {
+    color: var(--dark-color);
+    min-width: 140px;
+    display: inline-block;
+}
+
+.warning-box {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: rgba(231, 74, 59, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid var(--danger-color);
+}
+
+.warning-box p {
+    color: var(--danger-color);
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.warning-box a {
+    color: var(--danger-color);
+    text-decoration: underline;
+}
+
+/* Painel de Busca */
+.search-panel {
+    background: var(--light-color);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.search-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.search-title {
+    font-size: 1.3rem;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1rem;
+}
+
+#search-all {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid #d1d3e2;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+#search-all:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(44, 62, 143, 0.1);
+}
+
+.search-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.search-info {
+    font-size: 0.9rem;
+    color: var(--medium-color);
+    padding: 8px 12px;
+    background-color: rgba(44, 62, 143, 0.05);
+    border-radius: 6px;
+}
+
+.search-info strong {
+    color: var(--primary-color);
+}
+
+.search-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.search-btn.secondary {
+    background: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+.search-btn.secondary:hover {
+    background-color: rgba(44, 62, 143, 0.05);
+}
+
+/* Cards de Servidores */
+.servidores-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-bottom: 2rem;
+}
+
+.servidor-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.8rem;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    border: 1px solid rgba(44, 62, 143, 0.1);
+}
+
+.servidor-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-color);
+}
+
+.servidor-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 1.5rem;
+}
+
+.servidor-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.8rem;
+    box-shadow: 0 4px 10px rgba(44, 62, 143, 0.2);
+}
+
+.servidor-title {
+    font-size: 1.4rem;
+    color: var(--dark-color);
+    font-weight: 700;
+    flex: 1;
+}
+
+.servidor-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.servidor-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.servidor-label {
+    color: var(--medium-color);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.servidor-value {
+    font-weight: 800;
+    color: var(--primary-color);
+    font-size: 1.3rem;
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2rem;
+    }
+    
+    .indicators-grid,
+    .data-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .table-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .table-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .search-box input {
+        width: 100%;
+    }
+    
+    .filter-tabs {
+        flex-direction: column;
+    }
+    
+    .filter-tab {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .methodology-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .chart-container {
+        padding: 1rem;
+    }
+    
+    .servidores-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header {
+        padding: 2rem 1rem;
+    }
+    
+    .methodology-section {
+        padding: 1.5rem;
+    }
+    
+    .table-footer {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .search-container {
+        flex-direction: column;
+    }
+    
+    .search-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Skeleton Loading */
+.skeleton-loading {
+    animation: skeleton-loading 1.5s infinite;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Tooltips */
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--dark-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    z-index: 1000;
+    margin-bottom: 0.5rem;
+    box-shadow: var(--shadow-lg);
+}
+
+[data-tooltip]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--dark-color);
+    margin-bottom: -6px;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.modal-content {
+    background: white;
+    border-radius: var(--radius);
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(20px);
+    animation: slideUp 0.3s ease forwards;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #e3e6f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: var(--transition);
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+/* Notificações */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    z-index: 10000;
+    transform: translateX(100%);
+    animation: slideInRight 0.3s ease forwards;
+}
+
+.notification.success {
+    border-left: 4px solid var(--success-color);
+}
+
+.notification.error {
+    border-left: 4px solid var(--danger-color);
+}
+
+.notification.warning {
+    border-left: 4px solid var(--warning-color);
+}
+
+.notification.info {
+    border-left: 4px solid var(--info-color);
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: var(--medium-color);
+    cursor: pointer;
+    padding: 0.25rem;
+    margin-left: auto;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Tags e Badges */
+.badge {
+    display: inline-block;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    color: var(--primary-color);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(44, 62, 143, 0.1);
+}
+
+.municipio-tag {
+    display: inline-block;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+    color: #2e7d32;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid rgba(46, 125, 50, 0.1);
+}
+    </style>
+    
+</head>
+<body>
+
+    <!-- Overlay de Carregamento -->
+    <div id="loading-overlay" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 500px; text-align: center; padding: 3rem 2rem;">
+            <div style="width: 80px; height: 80px; border: 4px solid #f3f3f3; border-top: 4px solid var(--secondary-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 2rem;"></div>
+            <h3 style="color: var(--dark-color); margin-bottom: 1rem;">Carregando Dados...</h3>
+            <p style="color: var(--medium-color); margin-bottom: 1.5rem;" id="loading-message">Inicializando sistema e buscando informações</p>
+            <div style="height: 6px; background: var(--light-color); border-radius: 3px; overflow: hidden;">
+                <div id="loading-progress" style="height: 100%; background: linear-gradient(90deg, var(--secondary-color), var(--primary-color)); width: 0%; transition: width 0.3s ease;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cabeçalho e Navegação -->
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <div class="logo-text">
+                    <h1>IFPB Data Platform</h1>
+                    <p>Transparência • Análise • Inovação</p>
+                </div>
+            </div>
+            
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="../index.html"><i class="fas fa-home"></i> Início</a></li>
+                    <li><a href="institucional.html" class="active"><i class="fas fa-university"></i> A Instituição</a></li>
+                    <li><a href="academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
+                    <li><a href="orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
+                    <li><a href="dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+                </ul>
+                
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="container">
+        <!-- Cabeçalho da Página -->
+        <section class="page-header fade-in">
+            <div class="breadcrumb">
+                <a href="../index.html">Início</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>A Instituição</span>
+            </div>
+            <h1 class="page-title">Dados Institucionais do IFPB</h1>
+            <p class="page-subtitle">
+                Informações completas sobre campi, estrutura organizacional, quadro de servidores e dados institucionais 
+                do Instituto Federal da Paraíba. Dados atualizados para análise e transparência.
+            </p>
+            
+            <div class="status-indicators">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>Dados Atualizados 2024</span>
+                </div>
+                <div class="status-indicator">
+                    <i class="fas fa-university"></i>
+                    <span>23 Campi Ativos</span>
+                </div>
+                <div class="status-indicator">
+                    <i class="fas fa-users"></i>
+                    <span>+2.000 Servidores</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Indicadores Institucionais -->
+        <section class="indicators-section fade-in">
+            <h2 class="section-title">Indicadores Institucionais</h2>
+            <div class="indicators-grid">
+                <div class="indicator-card" data-tooltip="Total de campi ativos do IFPB">
+                    <div class="indicator-header">
+                        <div class="indicator-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <span class="indicator-trend trend-up">+1</span>
+                    </div>
+                    <div class="indicator-value" id="total-campi">23</div>
+                    <div class="indicator-label">Campi Ativos</div>
+                    <div class="indicator-detail">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>14 municípios atendidos</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%; background: linear-gradient(90deg, var(--info-color), #6ae1ff);"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="indicator-card" data-tooltip="Total de servidores da instituição">
+                    <div class="indicator-header">
+                        <div class="indicator-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <span class="indicator-trend trend-up">+4.2%</span>
+                    </div>
+                    <div class="indicator-value" id="total-servidores">2.150</div>
+                    <div class="indicator-label">Servidores</div>
+                    <div class="indicator-detail">
+                        <i class="fas fa-user-graduate"></i>
+                        <span>1.248 docentes / 902 técnicos</span>
+                    </div>
+                </div>
+                
+                <div class="indicator-card" data-tooltip="Ano de criação do campus mais antigo">
+                    <div class="indicator-header">
+                        <div class="indicator-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <span class="indicator-trend trend-up">1909</span>
+                    </div>
+                    <div class="indicator-value" id="ano-fundacao">1909</div>
+                    <div class="indicator-label">Fundação Histórica</div>
+                    <div class="indicator-detail">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>115 anos de história</span>
+                    </div>
+                </div>
+                
+                <div class="indicator-card" data-tooltip="Municípios com campus do IFPB">
+                    <div class="indicator-header">
+                        <div class="indicator-icon">
+                            <i class="fas fa-city"></i>
+                        </div>
+                        <span class="indicator-trend trend-up">+2</span>
+                    </div>
+                    <div class="indicator-value" id="total-municipios">14</div>
+                    <div class="indicator-label">Municípios Atendidos</div>
+                    <div class="indicator-detail">
+                        <i class="fas fa-map"></i>
+                        <span>Distribuição em todas as regiões</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filtros e Períodos -->
+        <section class="filter-section fade-in">
+            <div class="filter-header">
+                <h3><i class="fas fa-sliders-h"></i> Filtros de Dados Institucionais</h3>
+            </div>
+            
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="campi">
+                    <i class="fas fa-university"></i> Campi
+                </button>
+                <button class="filter-tab" data-filter="servidores">
+                    <i class="fas fa-users"></i> Servidores
+                </button>
+                <button class="filter-tab" data-filter="estrutura">
+                    <i class="fas fa-sitemap"></i> Estrutura
+                </button>
+                <button class="filter-tab" data-filter="historic">
+                    <i class="fas fa-chart-line"></i> Série Histórica
+                </button>
+                <button class="filter-tab" data-filter="regional">
+                    <i class="fas fa-map-marked-alt"></i> Distribuição Regional
+                </button>
+            </div>
+            
+            <div id="filter-info-campi" class="period-info active">
+                <p style="color: var(--medium-color); margin-bottom: 1rem;">
+                    <i class="fas fa-info-circle"></i> Dados completos sobre os 23 campi do IFPB
+                </p>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <span style="background: #e8f5e9; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem; color: var(--success-color);">
+                        <i class="fas fa-check-circle"></i> Atualizado em: 30/09/2024
+                    </span>
+                    <span style="background: #e8f1ff; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem; color: var(--secondary-color);">
+                        <i class="fas fa-database"></i> Fonte: SIGI/IFPB
+                    </span>
+                    <span style="background: #fff5e1; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem; color: var(--warning-color);">
+                        <i class="fas fa-clock"></i> Próxima atualização: 31/10/2024
+                    </span>
+                </div>
+            </div>
+            
+            <div class="filter-actions">
+                <button class="btn btn-primary" id="apply-filters">
+                    <i class="fas fa-filter"></i> Aplicar Filtros
+                </button>
+                <button class="btn btn-secondary" id="reset-filters">
+                    <i class="fas fa-redo"></i> Limpar Filtros
+                </button>
+                <button class="btn btn-secondary" id="export-filters">
+                    <i class="fas fa-download"></i> Exportar Dados
+                </button>
+            </div>
+        </section>
+
+        <!-- Dados Detalhados -->
+        <section class="data-section fade-in">
+            <h2 class="section-title">Análise Detalhada por Campus</h2>
+            
+            <div class="data-cards">
+                <div class="data-card campi">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-university"></i> Maiores Campi
+                        </h3>
+                        <div class="card-total">5 Campi</div>
+                    </div>
+                    
+                    <div class="data-list">
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-map-marker-alt"></i> João Pessoa
+                            </span>
+                            <span class="data-value">540 serv.</span>
+                            <span class="data-percentage">25,1%</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-map-marker-alt"></i> Campina Grande
+                            </span>
+                            <span class="data-value">460 serv.</span>
+                            <span class="data-percentage">21,4%</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-map-marker-alt"></i> Cabedelo
+                            </span>
+                            <span class="data-value">290 serv.</span>
+                            <span class="data-percentage">13,5%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 60%; background: linear-gradient(90deg, var(--info-color), #6ae1ff);"></div>
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--medium-color); text-align: center; margin-top: 0.5rem;">
+                            Concentração: 60% nos 3 maiores campi
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="data-card servidores">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-users"></i> Distribuição de Servidores
+                        </h3>
+                        <div class="card-total">2.150</div>
+                    </div>
+                    
+                    <div class="data-list">
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-chalkboard-teacher"></i> Docentes
+                            </span>
+                            <span class="data-value">1.248</span>
+                            <span class="data-percentage">58,0%</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-user-tie"></i> Técnico-Administrativos
+                            </span>
+                            <span class="data-value">902</span>
+                            <span class="data-percentage">42,0%</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-user-graduate"></i> Doutores
+                            </span>
+                            <span class="data-value">486</span>
+                            <span class="data-percentage">39,0%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 58%; background: linear-gradient(90deg, #9575cd, #b39ddb);"></div>
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--medium-color); text-align: center; margin-top: 0.5rem;">
+                            Maior categoria: Docentes (58%)
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="data-card campi">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-map-marked-alt"></i> Distribuição Regional
+                        </h3>
+                        <div class="card-total">4 Regiões</div>
+                    </div>
+                    
+                    <div class="data-list">
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-building"></i> Metropolitana
+                            </span>
+                            <span class="data-value">8 campi</span>
+                            <span class="data-percentage">34,8%</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-mountain"></i> Agreste
+                            </span>
+                            <span class="data-value">6 campi</span>
+                            <span class="data-percentage">26,1%</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-tree"></i> Sertão
+                            </span>
+                            <span class="data-value">5 campi</span>
+                            <span class="data-percentage">21,7%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 34.8%; background: linear-gradient(90deg, var(--info-color), #6ae1ff);"></div>
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--medium-color); text-align: center; margin-top: 0.5rem;">
+                            Maior concentração: Região Metropolitana
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Busca e Tabela -->
+        <section class="search-panel fade-in">
+            <div class="search-header">
+                <h3 class="search-title">
+                    <i class="fas fa-search"></i> Busca Integrada nos Dados Institucionais
+                </h3>
+                <div class="search-info" id="search-info">
+                    Busque por nome, município, sigla, CNPJ, CEP ou qualquer termo relacionado
+                </div>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" id="search-all" class="filter-input" 
+                       placeholder="Ex: João Pessoa, IFPB-JP, 2009, laboratórios..."
+                       title="Digite para buscar em todas as colunas. Pressione Enter para buscar."
+                       aria-label="Campo de busca em todas as colunas">
+                <button class="search-btn" id="search-button">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+            </div>
+            
+            <div class="search-actions">
+                <button class="search-btn secondary" id="clear-search">
+                    <i class="fas fa-broom"></i> Limpar Busca
+                </button>
+                <button class="search-btn secondary" id="sort-name">
+                    <i class="fas fa-sort-alpha-down"></i> Ordenar por Nome
+                </button>
+                <button class="search-btn secondary" id="export-data">
+                    <i class="fas fa-download"></i> Exportar CSV
+                </button>
+            </div>
+        </section>
+
+        <!-- Tabela de Campi -->
+        <section class="table-section fade-in">
+            <div class="table-header">
+                <h3 class="table-title">
+                    <i class="fas fa-table"></i> Lista Completa de Campi do IFPB
+                </h3>
+                <div class="table-controls">
+                    <div class="search-box">
+                        <input type="text" id="table-search" placeholder="Buscar campus...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <button class="btn btn-secondary" id="export-table">
+                        <i class="fas fa-file-export"></i> Exportar
+                    </button>
+                </div>
+            </div>
+            
+            <div id="tabela-campi-container">
+                <div class="loading">
+                    <div style="width: 60px; height: 60px; border: 4px solid #f3f3f3; border-top: 4px solid var(--secondary-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
+                    <p>Carregando dados dos campi...</p>
+                    <small>Aguarde enquanto processamos as informações</small>
+                </div>
+            </div>
+            
+            <div class="table-footer">
+                <div class="table-info" id="table-info">
+                    Carregando dados dos campi...
+                </div>
+                <div>
+                    <button class="btn btn-secondary" id="prev-page" disabled>
+                        <i class="fas fa-chevron-left"></i> Anterior
+                    </button>
+                    <button class="btn btn-secondary" id="next-page" disabled>
+                        Próximo <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gráficos Interativos -->
+        <section class="charts-section fade-in">
+            <h2 class="section-title">Visualizações Gráficas</h2>
+            
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">
+                            <i class="fas fa-chart-pie"></i> Distribuição por Região
+                        </h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn" title="Expandir" data-action="expand" data-chart="distribuicao">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="chart-btn" title="Download" data-action="download" data-chart="distribuicao">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="distribuicaoChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">
+                            <i class="fas fa-chart-line"></i> Evolução de Campi
+                        </h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn" title="Expandir" data-action="expand" data-chart="evolucao">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="chart-btn" title="Download" data-action="download" data-chart="evolucao">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="evolucaoChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">
+                            <i class="fas fa-chart-bar"></i> Servidores por Campus
+                        </h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn" title="Expandir" data-action="expand" data-chart="servidores">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="chart-btn" title="Download" data-action="download" data-chart="servidores">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="servidoresChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">
+                            <i class="fas fa-users"></i> Categorias de Servidores
+                        </h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn" title="Expandir" data-action="expand" data-chart="categorias">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="chart-btn" title="Download" data-action="download" data-chart="categorias">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="categoriasChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Metodologia e Fontes -->
+        <section class="methodology-section fade-in">
+            <h2 class="section-title">Metodologia e Fontes</h2>
+            
+            <div class="methodology-grid">
+                <div class="methodology-item">
+                    <h4>Fontes de Dados</h4>
+                    <ul class="methodology-list">
+                        <li>Sistema Integrado de Gestão Institucional (SIGI)</li>
+                        <li>Portal da Transparência do IFPB</li>
+                        <li>Banco de Dados Institucional</li>
+                        <li>Relatórios Anuais de Gestão</li>
+                        <li>Censos da Educação Profissional</li>
+                    </ul>
+                </div>
+                
+                <div class="methodology-item">
+                    <h4>Periodicidade</h4>
+                    <ul class="methodology-list">
+                        <li>Atualização trimestral dos dados</li>
+                        <li>Consolidação anual para indicadores</li>
+                        <li>Revisão semestral das estatísticas</li>
+                        <li>Publicação em tempo real das mudanças</li>
+                    </ul>
+                </div>
+                
+                <div class="methodology-item">
+                    <h4>Classificação</h4>
+                    <ul class="methodology-list">
+                        <li>Classificação por campus e região</li>
+                        <li>Categorização por tipo de servidor</li>
+                        <li>Segmentação por área de atuação</li>
+                        <li>Agrupamento por nível administrativo</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="source-info">
+                <p>
+                    <strong><i class="fas fa-database"></i> Fonte Oficial:</strong> 
+                    Sistemas institucionais do IFPB e Ministério da Educação
+                </p>
+                <p>
+                    <strong><i class="fas fa-calendar-check"></i> Última Atualização:</strong> 
+                    <span id="last-update">30 de setembro de 2024 às 18:00</span>
+                </p>
+                <p>
+                    <strong><i class="fas fa-shield-alt"></i> Conformidade:</strong> 
+                    Lei Geral de Proteção de Dados (LGPD) e Lei de Acesso à Informação (LAI)
+                </p>
+                <p>
+                    <strong><i class="fas fa-code-branch"></i> Versão dos Dados:</strong> 
+                    v2.1.4 (Padrão IFPB/MEC)
+                </p>
+            </div>
+            
+        </section>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>IFPB Data Platform</h3>
+                    <p>Plataforma de visualização e análise de dados públicos do Instituto Federal da Paraíba.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                        <a href="#"><i class="fab fa-researchgate"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Navegação</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Início</a></li>
+                        <li><a href="pages/institucional.html">A Instituição</a></li>
+                        <li><a href="pages/academico.html">Vida Acadêmica</a></li>
+                        <li><a href="pages/orcamento.html">Gestão e Orçamento</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Recursos</h3>
+                    <ul class="footer-links">
+                        <li><a href="pages/dashboard.html">Explorar Dados</a></li>
+                        <li><a href="pages/dados-abertos.html">Dados Abertos</a></li>
+                        <li><a href="pages/sobre.html">Sobre o Projeto</a></li>
+                        <li><a href="pages/contato.html">Contato</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Projeto de Pesquisa</h3>
+                    <p>Iniciação Científica - IFPB<br>
+                    Desenvolvimento de plataforma digital interativa para dados públicos.</p>
+                    <a href="pages/sobre.html" class="footer-btn">Saiba Mais</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 IFPB Data Platform. Desenvolvido com fins acadêmicos. Dados para transparência e análise.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->   
+    <script>
+
+// ===== JAVASCRIPT UNIFICADO COM SISTEMA DE CARREGAMENTO =====
+
+// Variáveis globais
+let dadosCampi = [];
+let dadosFiltrados = [];
+let ordenacaoAtual = { coluna: 'Nome', direcao: 'asc' };
+let currentPage = 1;
+const rowsPerPage = 10;
+let charts = {};
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 IFPB Data Platform - Dashboard Institucional');
+    
+    // Inicializar componentes
+    initCharts();
+    initFilters();
+    initTable();
+    initSearch();
+    initEvents();
+    
+    // Carregar dados iniciais
+    loadData();
+    
+    // Atualizar data
+    updateLastUpdate();
+});
+
+// ===== SISTEMA DE CARREGAMENTO =====
+function showLoading(message = 'Carregando dados...') {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const loadingMessage = document.getElementById('loading-message');
+    const loadingProgress = document.getElementById('loading-progress');
+    
+    if (loadingOverlay && loadingMessage && loadingProgress) {
+        loadingMessage.textContent = message;
+        loadingProgress.style.width = '0%';
+        loadingOverlay.style.display = 'flex';
+        
+        // Animar progresso
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 10;
+            if (progress > 90) {
+                clearInterval(interval);
+                loadingProgress.style.width = '90%';
+            } else {
+                loadingProgress.style.width = `${progress}%`;
+            }
+        }, 200);
+    }
+}
+
+function updateLoadingProgress(progress) {
+    const loadingProgress = document.getElementById('loading-progress');
+    if (loadingProgress) {
+        loadingProgress.style.width = `${progress}%`;
+    }
+}
+
+function hideLoading() {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const loadingProgress = document.getElementById('loading-progress');
+    
+    if (loadingProgress) {
+        loadingProgress.style.width = '100%';
+    }
+    
+    setTimeout(() => {
+        if (loadingOverlay) {
+            loadingOverlay.style.display = 'none';
+        }
+    }, 500);
+}
+
+// ===== CARREGAMENTO DE DADOS =====
+async function loadData() {
+    showLoading('Carregando dados institucionais...');
+    
+    try {
+        // Dados de exemplo (substitua por chamada real à API)
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        dadosCampi = [
+            {
+                Nome: "Campus João Pessoa",
+                Sigla: "IFPB-JP",
+                CNPJ: "12.345.678/0001-90",
+                Endereco: "Av. 1º de Maio, 720 - Jaguaribe",
+                Municipio: "João Pessoa",
+                UF: "PB",
+                CEP: "58015-435",
+                Telefone: "(83) 3612.1200",
+                AnoFundacao: 2009,
+                Servidores: 540
+            },
+            {
+                Nome: "Campus Campina Grande",
+                Sigla: "IFPB-CG",
+                CNPJ: "23.456.789/0001-01",
+                Endereco: "Rua José Antônio da Silva, 300",
+                Municipio: "Campina Grande",
+                UF: "PB",
+                CEP: "58400-000",
+                Telefone: "(83) 2102.6200",
+                AnoFundacao: 2009,
+                Servidores: 460
+            },
+            {
+                Nome: "Campus Cabedelo",
+                Sigla: "IFPB-CB",
+                CNPJ: "34.567.890/0001-12",
+                Endereco: "Rua Monsenhor José da Silva Coutinho, 300",
+                Municipio: "Cabedelo",
+                UF: "PB",
+                CEP: "58103-770",
+                Telefone: "(83) 3248.5100",
+                AnoFundacao: 2010,
+                Servidores: 290
+            },
+            {
+                Nome: "Campus Patos",
+                Sigla: "IFPB-PT",
+                CNPJ: "45.678.901/0001-23",
+                Endereco: "Rodovia BR-110, Km 39, S/N - Jardim Santa Cecília",
+                Municipio: "Patos",
+                UF: "PB",
+                CEP: "58700-970",
+                Telefone: "(83) 3421.3200",
+                AnoFundacao: 2009,
+                Servidores: 254
+            },
+            {
+                Nome: "Campus Sousa",
+                Sigla: "IFPB-SS",
+                CNPJ: "56.789.012/0001-34",
+                Endereco: "Rua Presidente Tancredo Neves, s/n - Jardim Sorrilândia",
+                Municipio: "Sousa",
+                UF: "PB",
+                CEP: "58800-970",
+                Telefone: "(83) 3522.2900",
+                AnoFundacao: 2009,
+                Servidores: 221
+            }
+        ];
+        
+        dadosFiltrados = [...dadosCampi];
+        
+        updateLoadingProgress(70);
+        
+        // Atualizar interface
+        atualizarEstatisticas();
+        atualizarTabela();
+        
+        updateLoadingProgress(90);
+        
+        // Mostrar notificação
+        showNotification('Dados institucionais carregados com sucesso!', 'success');
+        
+        // Esconder loading
+        hideLoading();
+        
+    } catch (erro) {
+        console.error("❌ Erro ao carregar dados:", erro);
+        showNotification('Erro ao carregar dados. Usando informações de demonstração.', 'error');
+        
+        // Usar dados de exemplo em caso de erro
+        usarDadosExemplo();
+        hideLoading();
+    }
+}
+
+function usarDadosExemplo() {
+    console.log("🔄 Usando dados de exemplo...");
+    
+    dadosCampi = [
+        {
+            Nome: "Campus João Pessoa",
+            Sigla: "IFPB-JP",
+            CNPJ: "12.345.678/0001-90",
+            Endereco: "Av. 1º de Maio, 720 - Jaguaribe",
+            Municipio: "João Pessoa",
+            UF: "PB",
+            CEP: "58015-435",
+            Telefone: "(83) 3612.1200"
+        },
+        {
+            Nome: "Campus Campina Grande",
+            Sigla: "IFPB-CG",
+            CNPJ: "23.456.789/0001-01",
+            Endereco: "Rua José Antônio da Silva, 300",
+            Municipio: "Campina Grande",
+            UF: "PB",
+            CEP: "58400-000",
+            Telefone: "(83) 2102.6200"
+        },
+        {
+            Nome: "Campus Cabedelo",
+            Sigla: "IFPB-CB",
+            CNPJ: "34.567.890/0001-12",
+            Endereco: "Rua Monsenhor José da Silva Coutinho, 300",
+            Municipio: "Cabedelo",
+            UF: "PB",
+            CEP: "58103-770",
+            Telefone: "(83) 3248.5100"
+        }
+    ];
+    
+    dadosFiltrados = [...dadosCampi];
+    atualizarEstatisticas();
+    atualizarTabela();
+}
+
+// ===== GRÁFICOS =====
+function initCharts() {
+    const colors = {
+        primary: '#4e73df',
+        success: '#1cc88a',
+        danger: '#e74a3b',
+        warning: '#f6c23e',
+        info: '#36b9cc',
+        dark: '#5a5c69'
+    };
+
+    // Gráfico 1: Distribuição por Região
+    const ctx1 = document.getElementById('distribuicaoChart').getContext('2d');
+    charts.distribuicao = new Chart(ctx1, {
+        type: 'doughnut',
+        data: {
+            labels: ['Metropolitana', 'Agreste', 'Sertão', 'Borborema'],
+            datasets: [{
+                data: [8, 6, 5, 4],
+                backgroundColor: [
+                    colors.primary,
+                    colors.success,
+                    colors.warning,
+                    colors.info
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((context.parsed / total) * 100);
+                            return `${context.label}: ${context.parsed} campi (${percentage}%)`;
+                        }
+                    }
+                }
+            },
+            cutout: '60%'
+        }
+    });
+
+    // Gráfico 2: Evolução de Campi
+    const ctx2 = document.getElementById('evolucaoChart').getContext('2d');
+    charts.evolucao = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: ['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024'],
+            datasets: [{
+                label: 'Campi Ativos',
+                data: [15, 16, 17, 18, 19, 20, 21, 22, 22, 23],
+                borderColor: colors.primary,
+                backgroundColor: 'rgba(78, 115, 223, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    min: 10,
+                    grid: {
+                        borderDash: [2]
+                    }
+                }
+            }
+        }
+    });
+
+    // Gráfico 3: Servidores por Campus
+    const ctx3 = document.getElementById('servidoresChart').getContext('2d');
+    charts.servidores = new Chart(ctx3, {
+        type: 'bar',
+        data: {
+            labels: ['João Pessoa', 'Campina Grande', 'Cabedelo', 'Patos', 'Sousa'],
+            datasets: [{
+                label: 'Servidores',
+                data: [540, 460, 290, 254, 221],
+                backgroundColor: colors.info,
+                borderColor: colors.primary,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Gráfico 4: Categorias de Servidores
+    const ctx4 = document.getElementById('categoriasChart').getContext('2d');
+    charts.categorias = new Chart(ctx4, {
+        type: 'pie',
+        data: {
+            labels: ['Docentes', 'Técnico-Administrativos', 'Estagiários', 'Terceirizados'],
+            datasets: [{
+                data: [1248, 902, 150, 50],
+                backgroundColor: [
+                    colors.primary,
+                    colors.success,
+                    colors.warning,
+                    colors.info
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right'
+                }
+            }
+        }
+    });
+}
+
+// ===== FILTROS =====
+function initFilters() {
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    const applyBtn = document.getElementById('apply-filters');
+    const resetBtn = document.getElementById('reset-filters');
+    const exportBtn = document.getElementById('export-filters');
+
+    // Tabs de filtro
+    filterTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const filterType = this.dataset.filter;
+            
+            // Remover active de todas
+            filterTabs.forEach(t => t.classList.remove('active'));
+            
+            // Adicionar active
+            this.classList.add('active');
+            
+            // Atualizar informações do filtro
+            updateFilterInfo(filterType);
+        });
+    });
+
+    // Aplicar filtros
+    applyBtn.addEventListener('click', function() {
+        const activeTab = document.querySelector('.filter-tab.active');
+        const filterType = activeTab.dataset.filter;
+        
+        showLoading(`Aplicando filtro: ${filterType}...`);
+        setTimeout(() => {
+            applyFilter(filterType);
+            showNotification(`Filtro '${filterType}' aplicado com sucesso!`, 'success');
+            hideLoading();
+        }, 1000);
+    });
+
+    // Resetar filtros
+    resetBtn.addEventListener('click', function() {
+        dadosFiltrados = [...dadosCampi];
+        currentPage = 1;
+        atualizarTabela();
+        atualizarEstatisticas();
+        showNotification('Filtros resetados', 'info');
+    });
+
+    // Exportar configuração
+    exportBtn.addEventListener('click', function() {
+        const activeTab = document.querySelector('.filter-tab.active');
+        const config = {
+            filtro: activeTab.dataset.filter,
+            data: new Date().toISOString(),
+            totalRegistros: dadosFiltrados.length
+        };
+        
+        const dataStr = JSON.stringify(config, null, 2);
+        downloadFile(dataStr, 'configuracao-filtros-institucional.json', 'application/json');
+        showNotification('Configuração exportada', 'success');
+    });
+}
+
+function updateFilterInfo(filterType) {
+    const infoDiv = document.getElementById('filter-info-campi');
+    const date = new Date();
+    
+    const filterInfo = {
+        campi: "Dados completos sobre os 23 campi do IFPB",
+        servidores: "Informações detalhadas do quadro de servidores",
+        estrutura: "Estrutura organizacional e administrativa",
+        historic: "Série histórica de dados institucionais",
+        regional: "Distribuição regional dos campi"
+    };
+    
+    infoDiv.innerHTML = `
+        <p style="color: var(--medium-color); margin-bottom: 1rem;">
+            <i class="fas fa-info-circle"></i> ${filterInfo[filterType] || filterInfo.campi}
+        </p>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <span style="background: #e8f5e9; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem; color: var(--success-color);">
+                <i class="fas fa-check-circle"></i> Atualizado em: ${date.toLocaleDateString('pt-BR')}
+            </span>
+            <span style="background: #e8f1ff; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem; color: var(--secondary-color);">
+                <i class="fas fa-database"></i> Fonte: SIGI/IFPB
+            </span>
+        </div>
+    `;
+}
+
+function applyFilter(filterType) {
+    // Implementar lógica de filtro específica
+    switch(filterType) {
+        case 'campi':
+            // Mostrar todos os campi (já está no padrão)
+            break;
+        case 'servidores':
+            // Filtrar por campi com mais servidores
+            dadosFiltrados = [...dadosCampi].sort((a, b) => (b.Servidores || 0) - (a.Servidores || 0));
+            break;
+        case 'estrutura':
+            // Filtrar campi mais antigos
+            dadosFiltrados = [...dadosCampi].sort((a, b) => (a.AnoFundacao || 2009) - (b.AnoFundacao || 2009));
+            break;
+    }
+    
+    atualizarTabela();
+    atualizarEstatisticas();
+}
+
+// ===== BUSCA =====
+function initSearch() {
+    const searchInput = document.getElementById('search-all');
+    const tableSearch = document.getElementById('table-search');
+    const searchBtn = document.getElementById('search-button');
+    const clearBtn = document.getElementById('clear-search');
+    const sortBtn = document.getElementById('sort-name');
+    const exportBtn = document.getElementById('export-data');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', debounce(() => aplicarBusca(), 300));
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') aplicarBusca();
+        });
+    }
+    
+    if (searchBtn) {
+        searchBtn.addEventListener('click', aplicarBusca);
+    }
+    
+    if (clearBtn) {
+        clearBtn.addEventListener('click', limparBusca);
+    }
+    
+    if (sortBtn) {
+        sortBtn.addEventListener('click', () => ordenarPor('Nome'));
+    }
+    
+    if (exportBtn) {
+        exportBtn.addEventListener('click', exportarParaCSV);
+    }
+    
+    if (tableSearch) {
+        tableSearch.addEventListener('input', () => {
+            const term = tableSearch.value.toLowerCase();
+            const rows = document.querySelectorAll('#tabela-campi-container tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(term) ? '' : 'none';
+            });
+            
+            updateTableInfo();
+        });
+    }
+}
+
+function aplicarBusca() {
+    const termoBusca = document.getElementById('search-all').value.toLowerCase().trim();
+    const info = document.getElementById('table-info');
+    const searchInfo = document.getElementById('search-info');
+    
+    if (!termoBusca) {
+        dadosFiltrados = [...dadosCampi];
+        info.innerHTML = `<strong>Mostrando todos os ${dadosCampi.length} campi</strong>`;
+        info.style.color = 'var(--primary-color)';
+        searchInfo.innerHTML = `Busque por nome, município, sigla, CNPJ, CEP ou qualquer termo relacionado`;
+    } else {
+        const inicio = performance.now();
+        dadosFiltrados = dadosCampi.filter(campus => {
+            for (const [key, value] of Object.entries(campus)) {
+                if (String(value).toLowerCase().includes(termoBusca)) return true;
+            }
+            return false;
+        });
+        const tempo = performance.now() - inicio;
+        
+        if (dadosFiltrados.length === 0) {
+            info.innerHTML = `<strong>Nenhum resultado para "${termoBusca}"</strong>`;
+            info.style.color = 'var(--danger-color)';
+            searchInfo.innerHTML = `Nenhum campus encontrado para "${termoBusca}"`;
+        } else {
+            info.innerHTML = `<strong>${dadosFiltrados.length} resultado(s) para "${termoBusca}" (${tempo.toFixed(0)}ms)</strong>`;
+            info.style.color = 'var(--success-color)';
+            searchInfo.innerHTML = `Encontrados ${dadosFiltrados.length} campi para "${termoBusca}"`;
+        }
+    }
+    
+    currentPage = 1;
+    atualizarTabela();
+}
+
+function limparBusca() {
+    document.getElementById('search-all').value = '';
+    document.getElementById('table-search').value = '';
+    aplicarBusca();
+}
+
+function ordenarPor(coluna) {
+    if (ordenacaoAtual.coluna === coluna) {
+        ordenacaoAtual.direcao = ordenacaoAtual.direcao === 'asc' ? 'desc' : 'asc';
+    } else {
+        ordenacaoAtual.coluna = coluna;
+        ordenacaoAtual.direcao = 'asc';
+    }
+    
+    dadosFiltrados.sort((a, b) => {
+        let valorA = a[ordenacaoAtual.coluna] || '';
+        let valorB = b[ordenacaoAtual.coluna] || '';
+        
+        valorA = String(valorA).toLowerCase();
+        valorB = String(valorB).toLowerCase();
+        
+        if (ordenacaoAtual.direcao === 'asc') {
+            return valorA.localeCompare(valorB, 'pt-BR', { sensitivity: 'base' });
+        } else {
+            return valorB.localeCompare(valorA, 'pt-BR', { sensitivity: 'base' });
+        }
+    });
+    
+    atualizarTabela();
+    
+    const info = document.getElementById('table-info');
+    const direcao = ordenacaoAtual.direcao === 'asc' ? 'A-Z' : 'Z-A';
+    info.textContent = `Ordenado por ${formatarNomeColuna(coluna)} (${direcao})`;
+    info.style.color = 'var(--primary-color)';
+}
+
+// ===== TABELA =====
+function initTable() {
+    const prevBtn = document.getElementById('prev-page');
+    const nextBtn = document.getElementById('next-page');
+    const exportBtn = document.getElementById('export-table');
+    
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                atualizarTabela();
+            }
+        });
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            const totalPages = Math.ceil(dadosFiltrados.length / rowsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                atualizarTabela();
+            }
+        });
+    }
+    
+    if (exportBtn) {
+        exportBtn.addEventListener('click', exportarParaCSV);
+    }
+}
+
+function atualizarTabela() {
+    const container = document.getElementById('tabela-campi-container');
+    const tableInfo = document.getElementById('table-info');
+    const prevBtn = document.getElementById('prev-page');
+    const nextBtn = document.getElementById('next-page');
+    
+    if (!container) return;
+    
+    if (dadosFiltrados.length === 0) {
+        container.innerHTML = `
+            <div class="no-results fade-in">
+                <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; color: var(--warning-color);"></i>
+                <h3>Nenhum campus encontrado</h3>
+                <p>Sua busca não retornou resultados. Tente usar termos diferentes ou menos específicos.</p>
+                <button class="btn btn-primary" onclick="limparBusca()" style="margin-top: 20px;">
+                    <i class="fas fa-broom"></i> Limpar Busca
+                </button>
+            </div>
+        `;
+        tableInfo.textContent = `0 campi encontrados`;
+        if (prevBtn) prevBtn.disabled = true;
+        if (nextBtn) nextBtn.disabled = true;
+        return;
+    }
+    
+    const colunasParaMostrar = ['Nome', 'Sigla', 'Municipio', 'UF', 'Telefone', 'AnoFundacao', 'Servidores'];
+    
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const dadosPagina = dadosFiltrados.slice(start, end);
+    
+    let tableHTML = `
+        <div class="table-responsive fade-in">
+            <table class="data-table">
+                <thead>
+                    <tr>
+    `;
+    
+    // Cabeçalhos
+    colunasParaMostrar.forEach(col => {
+        const classeOrdenacao = ordenacaoAtual.coluna === col ? `sorted ${ordenacaoAtual.direcao}` : '';
+        tableHTML += `
+            <th class="${classeOrdenacao}" onclick="ordenarPor('${col}')" style="cursor: pointer;">
+                ${formatarNomeColuna(col)}
+            </th>`;
+    });
+    
+    tableHTML += `</tr></thead><tbody>`;
+    
+    // Linhas de dados
+    dadosPagina.forEach((campus, index) => {
+        tableHTML += `<tr style="animation-delay: ${index * 0.02}s">`;
+        colunasParaMostrar.forEach(col => {
+            let valor = campus[col] || '—';
+            tableHTML += `<td>${formatarValor(col, valor)}</td>`;
+        });
+        tableHTML += `</tr>`;
+    });
+    
+    tableHTML += `</tbody></table></div>`;
+    
+    container.innerHTML = tableHTML;
+    
+    const totalPages = Math.ceil(dadosFiltrados.length / rowsPerPage);
+    tableInfo.textContent = `Mostrando ${start + 1}-${Math.min(end, dadosFiltrados.length)} de ${dadosFiltrados.length} campi`;
+    
+    if (prevBtn) {
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.title = currentPage === 1 ? 'Primeira página' : 'Página anterior';
+    }
+    
+    if (nextBtn) {
+        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.title = currentPage === totalPages ? 'Última página' : 'Próxima página';
+    }
+}
+
+// ===== ATUALIZAÇÃO DA INTERFACE =====
+function atualizarEstatisticas() {
+    const totalCampi = dadosFiltrados.length;
+    const totalOriginal = dadosCampi.length;
+    const municipiosUnicos = [...new Set(dadosFiltrados.map(campus => campus.Municipio || ''))].filter(m => m !== '');
+    const totalServidores = dadosFiltrados.reduce((sum, campus) => sum + (campus.Servidores || 0), 0);
+    
+    // Atualizar valores dos indicadores
+    document.getElementById('total-campi').textContent = totalCampi;
+    document.getElementById('total-municipios').textContent = municipiosUnicos.length;
+    document.getElementById('total-servidores').textContent = totalServidores.toLocaleString();
+}
+
+function formatarNomeColuna(col) {
+    const formatos = {
+        'Nome': 'Nome do Campus',
+        'Sigla': 'Sigla',
+        'CNPJ': 'CNPJ',
+        'Endereco': 'Endereço',
+        'Municipio': 'Município',
+        'UF': 'UF',
+        'CEP': 'CEP',
+        'Telefone': 'Telefone',
+        'AnoFundacao': 'Ano de Fundação',
+        'Servidores': 'Servidores'
+    };
+    return formatos[col] || col;
+}
+
+function formatarValor(col, valor) {
+    if (!valor || valor === '—' || valor === '') return '—';
+    
+    switch(col) {
+        case 'Municipio':
+            return `<span class="municipio-tag">${valor}</span>`;
+        case 'Sigla':
+            return `<span class="badge">${valor}</span>`;
+        case 'UF':
+            return `<span class="badge" style="background: linear-gradient(135deg, #e3f2fd, #bbdefb);">${valor}</span>`;
+        case 'Telefone':
+            return `<a href="tel:${valor}" style="color: var(--primary-color); text-decoration: none;">${valor}</a>`;
+        case 'Servidores':
+            return `<span style="font-weight: 700; color: var(--primary-color);">${valor.toLocaleString()}</span>`;
+        default:
+            return valor;
+    }
+}
+
+function exportarParaCSV() {
+    if (dadosFiltrados.length === 0) {
+        showNotification('Nenhum dado para exportar.', 'warning');
+        return;
+    }
+    
+    const colunasExportacao = ['Nome', 'Sigla', 'CNPJ', 'Endereco', 'Municipio', 'UF', 'CEP', 'Telefone', 'AnoFundacao', 'Servidores'];
+    let csv = colunasExportacao.map(formatarNomeColuna).join(',') + '\n';
+    
+    dadosFiltrados.forEach(campus => {
+        const linha = colunasExportacao.map(col => {
+            let valor = campus[col] || '';
+            valor = String(valor).replace(/<[^>]*>/g, ''); // Remove HTML
+            if (valor.includes(',') || valor.includes('"') || valor.includes('\n')) {
+                valor = `"${valor.replace(/"/g, '""')}"`;
+            }
+            return valor;
+        }).join(',');
+        csv += linha + '\n';
+    });
+    
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    const dataAtual = new Date().toISOString().slice(0,10);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', `ifpb_campi_${dataAtual}_${dadosFiltrados.length}_registros.csv`);
+    link.style.visibility = 'hidden';
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    showNotification(`CSV exportado com ${dadosFiltrados.length} registros`, 'success');
+}
+
+// ===== EVENTOS =====
+function initEvents() {
+    // Botões dos gráficos
+    document.querySelectorAll('.chart-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const action = this.dataset.action;
+            const chart = this.dataset.chart;
+            
+            switch(action) {
+                case 'expand':
+                    expandChart(chart);
+                    break;
+                case 'download':
+                    downloadChartData(chart);
+                    break;
+            }
+        });
+    });
+
+    // Menu mobile
+    const mobileBtn = document.querySelector('.mobile-menu-btn');
+    if (mobileBtn) {
+        mobileBtn.addEventListener('click', function() {
+            const navList = document.querySelector('.nav-list');
+            navList.classList.toggle('active');
+            this.querySelector('i').classList.toggle('fa-bars');
+            this.querySelector('i').classList.toggle('fa-times');
+        });
+    }
+}
+
+// ===== FUNÇÕES AUXILIARES =====
+function expandChart(chartName) {
+    const chart = charts[chartName];
+    if (!chart) return;
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-chart-${chartName === 'distribuicao' ? 'pie' : chartName === 'evolucao' ? 'line' : 'bar'}"></i>
+                    Gráfico Expandido
+                </h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="height: 500px;">
+                    <canvas id="modal-chart"></canvas>
+                </div>
+                <div style="margin-top: 2rem; text-align: center;">
+                    <button class="btn btn-primary" id="download-modal-chart">
+                        <i class="fas fa-download"></i> Baixar Dados
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Fechar modal
+    modal.querySelector('.modal-close').addEventListener('click', function() {
+        modal.remove();
+    });
+    
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+    
+    // Download do gráfico modal
+    modal.querySelector('#download-modal-chart').addEventListener('click', function() {
+        downloadChartData(chartName);
+    });
+    
+    // Recriar gráfico no modal
+    setTimeout(() => {
+        const ctx = document.getElementById('modal-chart').getContext('2d');
+        new Chart(ctx, {
+            type: chart.config.type,
+            data: chart.config.data,
+            options: {
+                ...chart.config.options,
+                maintainAspectRatio: false
+            }
+        });
+    }, 100);
+}
+
+function downloadChartData(chartName) {
+    const chart = charts[chartName];
+    if (!chart) return;
+    
+    const labels = chart.data.labels;
+    const datasets = chart.data.datasets;
+    
+    let csv = 'Categoria,Valor\n';
+    
+    if (chart.config.type === 'doughnut' || chart.config.type === 'pie') {
+        labels.forEach((label, i) => {
+            csv += `${label},${datasets[0].data[i]}\n`;
+        });
+    } else {
+        csv = 'Período,' + datasets.map(d => d.label).join(',') + '\n';
+        labels.forEach((label, i) => {
+            const values = datasets.map(d => d.data[i]);
+            csv += `${label},${values.join(',')}\n`;
+        });
+    }
+    
+    downloadFile(csv, `grafico-${chartName}.csv`, 'text/csv');
+    showNotification('Dados do gráfico baixados', 'success');
+}
+
+function updateLastUpdate() {
+    const now = new Date();
+    const options = { 
+        day: '2-digit', 
+        month: 'long', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+    
+    const dateStr = now.toLocaleDateString('pt-BR', options);
+    document.getElementById('last-update').textContent = dateStr;
+}
+
+function showNotification(message, type = 'info') {
+    // Remover notificações anteriores
+    const existing = document.querySelector('.notification');
+    if (existing) existing.remove();
+    
+    // Criar notificação
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-${getNotificationIcon(type)}"></i>
+        <span>${message}</span>
+        <button class="notification-close">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Fechar notificação
+    notification.querySelector('.notification-close').addEventListener('click', function() {
+        notification.style.animation = 'slideOutRight 0.3s ease forwards';
+        setTimeout(() => notification.remove(), 300);
+    });
+    
+    // Remover automaticamente após 5 segundos
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.style.animation = 'slideOutRight 0.3s ease forwards';
+            setTimeout(() => notification.remove(), 300);
+        }
+    }, 5000);
+}
+
+function getNotificationIcon(type) {
+    switch(type) {
+        case 'success': return 'check-circle';
+        case 'error': return 'exclamation-circle';
+        case 'warning': return 'exclamation-triangle';
+        default: return 'info-circle';
+    }
+}
+
+function downloadFile(content, filename, contentType) {
+    const blob = new Blob([content], { type: contentType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+function updateTableInfo() {
+    const visibleRows = document.querySelectorAll('#tabela-campi-container tbody tr').length;
+    const totalRows = dadosFiltrados.length;
+    const info = document.querySelector('.table-info');
+    if (info) {
+        info.textContent = `Mostrando ${visibleRows} de ${totalRows} campi`;
+    }
+}
+
+// Animar elementos ao entrar na viewport
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('fade-in');
+        }
+    });
+}, {
+    threshold: 0.1
+});
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+
+</body>
+</html>

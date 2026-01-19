@@ -1,0 +1,2052 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFPB Data Platform - Vida Acadêmica | Transparência de Dados Educacionais</title>
+    <link rel="shortcut icon" href="../assets/img/logosite.png" type="image/x-icon">
+    <meta name="description" content="Dados acadêmicos do IFPB: estudantes, docentes, cursos, desempenho e indicadores educacionais em tempo real.">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Chart.js para gráficos profissionais -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+/* ===== ESTILOS PROFISSIONAIS PARA PÁGINA ACADÊMICA ===== */
+
+/* Variáveis de cores consistentes */
+:root {
+    --primary-blue: #2c3e8f;
+    --secondary-blue: #4e73df;
+    --light-blue: #e8f1ff;
+    --success-green: #1cc88a;
+    --warning-yellow: #f6c23e;
+    --danger-red: #e74a3b;
+    --dark-gray: #2e3a59;
+    --medium-gray: #5a5c69;
+    --light-gray: #f8f9fc;
+    --white: #ffffff;
+    --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-medium: 0 6px 15px rgba(0, 0, 0, 0.1);
+    --shadow-heavy: 0 10px 25px rgba(0, 0, 0, 0.15);
+    --border-radius: 10px;
+    --transition: all 0.3s ease;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    max-width: 500px;
+    width: 90%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+/* Cabeçalho da Página */
+.page-header {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: var(--border-radius);
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+    background-size: cover;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.breadcrumb a {
+    color: white;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.breadcrumb a:hover {
+    opacity: 0.8;
+}
+
+.breadcrumb i {
+    font-size: 0.7rem;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    max-width: 800px;
+    line-height: 1.6;
+}
+
+.status-indicators {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.status-indicator {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success-green);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Filtros Avançados */
+.data-filters {
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    margin-bottom: 3rem;
+    box-shadow: var(--shadow-medium);
+    border: 1px solid #e3e6f0;
+}
+
+.data-filters h2 {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    color: var(--primary-blue);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.data-filters h2::before {
+    content: '';
+    display: block;
+    width: 4px;
+    height: 24px;
+    background: var(--secondary-blue);
+    border-radius: 2px;
+}
+
+.filters-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    align-items: end;
+}
+
+.filter-group {
+    position: relative;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    color: var(--dark-gray);
+    font-size: 0.95rem;
+}
+
+.filter-group label i {
+    margin-right: 0.5rem;
+    color: var(--secondary-blue);
+    width: 20px;
+    text-align: center;
+}
+
+.filter-select {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 2px solid #e3e6f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: var(--dark-gray);
+    background-color: var(--white);
+    transition: var(--transition);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%234e73df' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 16px;
+    cursor: pointer;
+}
+
+.filter-select:focus {
+    border-color: var(--secondary-blue);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(78, 115, 223, 0.15);
+}
+
+.filter-select:hover {
+    border-color: #b5b9c7;
+}
+
+.btn-filter {
+    padding: 0.85rem 2rem;
+    background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    box-shadow: 0 4px 6px rgba(78, 115, 223, 0.3);
+    height: fit-content;
+}
+
+.btn-filter:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(78, 115, 223, 0.4);
+}
+
+.btn-filter:active {
+    transform: translateY(0);
+}
+
+/* Cards de Resumo com Animações */
+.academic-summary {
+    margin-bottom: 3rem;
+}
+
+.section-title {
+    font-size: 1.8rem;
+    color: var(--dark-gray);
+    margin-bottom: 2rem;
+    position: relative;
+    padding-bottom: 0.75rem;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--secondary-blue), var(--primary-blue));
+    border-radius: 2px;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.academic-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-medium);
+    transition: var(--transition);
+    border-top: 4px solid var(--secondary-blue);
+    position: relative;
+    overflow: hidden;
+}
+
+.academic-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-heavy);
+}
+
+.academic-card:nth-child(2) {
+    border-top-color: var(--success-green);
+}
+
+.academic-card:nth-child(3) {
+    border-top-color: var(--warning-yellow);
+}
+
+.academic-card:nth-child(4) {
+    border-top-color: #6f42c1;
+}
+
+.card-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--light-blue), #d4e2ff);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: var(--secondary-blue);
+}
+
+.academic-card:nth-child(2) .card-icon {
+    background: linear-gradient(135deg, #d1f7e8, #a8f1d6);
+    color: var(--success-green);
+}
+
+.academic-card:nth-child(3) .card-icon {
+    background: linear-gradient(135deg, #fff5e1, #ffe9b3);
+    color: var(--warning-yellow);
+}
+
+.academic-card:nth-child(4) .card-icon {
+    background: linear-gradient(135deg, #e8e1ff, #d4c7ff);
+    color: #6f42c1;
+}
+
+.academic-card h3 {
+    font-size: 1.1rem;
+    color: var(--medium-gray);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.card-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--dark-gray);
+    margin: 0.5rem 0;
+    line-height: 1;
+}
+
+.card-desc {
+    font-size: 0.9rem;
+    color: #858796;
+    margin-bottom: 1.5rem;
+}
+
+.trend-up {
+    color: var(--success-green);
+    font-weight: 600;
+}
+
+.trend-down {
+    color: var(--danger-red);
+    font-weight: 600;
+}
+
+.card-detail {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: var(--transition);
+}
+
+.detail-item:hover {
+    background-color: var(--light-gray);
+}
+
+.detail-label {
+    color: var(--medium-gray);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.detail-value {
+    font-weight: 700;
+    color: var(--dark-gray);
+    font-size: 1.1rem;
+}
+
+/* Sistema de Abas Avançado */
+.viz-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding: 0.5rem;
+    background: var(--light-gray);
+    border-radius: var(--border-radius);
+    overflow-x: auto;
+}
+
+.viz-tabs::-webkit-scrollbar {
+    height: 6px;
+}
+
+.viz-tabs::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.viz-tabs::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.viz-tab {
+    padding: 1rem 1.5rem;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    color: var(--medium-gray);
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    justify-content: center;
+    min-width: 140px;
+}
+
+.viz-tab:hover {
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--secondary-blue);
+}
+
+.viz-tab.active {
+    background: var(--white);
+    color: var(--secondary-blue);
+    box-shadow: var(--shadow-light);
+}
+
+.viz-tab i {
+    font-size: 1.1rem;
+}
+
+.viz-tab-content {
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.viz-tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Gráficos Profissionais */
+.viz-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.viz-chart {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-medium);
+    border: 1px solid #e3e6f0;
+}
+
+.viz-chart h3 {
+    font-size: 1.2rem;
+    color: var(--dark-gray);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--light-gray);
+}
+
+.viz-chart h3 i {
+    color: var(--secondary-blue);
+    font-size: 1.3rem;
+}
+
+.chart-container {
+    height: 300px;
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.chart-placeholder {
+    height: 300px;
+    background: linear-gradient(135deg, #f8f9fc, #eef2ff);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #a0a3bd;
+    border: 2px dashed #d1d5e7;
+}
+
+.placeholder-text {
+    text-align: center;
+    padding: 2rem;
+}
+
+.placeholder-text i {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.5;
+}
+
+.placeholder-note {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #8a8da8;
+    margin-top: 1rem;
+    max-width: 300px;
+}
+
+.chart-legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e3e6f0;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--medium-gray);
+}
+
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    margin-right: 0.75rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Tabela Avançada */
+.table-container {
+    overflow-x: auto;
+    margin-bottom: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-medium);
+    background: var(--white);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 800px;
+}
+
+.data-table th {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    color: white;
+    text-align: left;
+    padding: 1.25rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.data-table th:first-child {
+    border-top-left-radius: var(--border-radius);
+}
+
+.data-table th:last-child {
+    border-top-right-radius: var(--border-radius);
+}
+
+.data-table td {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e3e6f0;
+    color: var(--medium-gray);
+    font-size: 0.95rem;
+    transition: var(--transition);
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table tr:hover td {
+    background-color: var(--light-gray);
+}
+
+.data-table tr:hover {
+    transform: scale(1.005);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.rate-high {
+    color: var(--success-green);
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.rate-high::before {
+    content: '▲';
+    font-size: 0.8rem;
+}
+
+.rate-medium {
+    color: var(--warning-yellow);
+    font-weight: 700;
+}
+
+.rate-low {
+    color: var(--danger-red);
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.rate-low::before {
+    content: '▼';
+    font-size: 0.8rem;
+}
+
+.btn-table {
+    padding: 0.5rem 1rem;
+    background: var(--light-blue);
+    border: 1px solid var(--secondary-blue);
+    border-radius: 6px;
+    color: var(--secondary-blue);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.btn-table:hover {
+    background: var(--secondary-blue);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(78, 115, 223, 0.2);
+}
+
+.loading-cell {
+    text-align: center;
+    padding: 3rem;
+    color: var(--medium-gray);
+}
+
+.loading-cell i {
+    margin-right: 0.75rem;
+    font-size: 1.2rem;
+}
+
+/* Ações da Tabela */
+.table-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.btn-small {
+    padding: 0.75rem 1.5rem;
+    background: var(--white);
+    border: 2px solid var(--secondary-blue);
+    border-radius: 8px;
+    color: var(--secondary-blue);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.btn-small:hover {
+    background: var(--secondary-blue);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(78, 115, 223, 0.25);
+}
+
+.btn-small:active {
+    transform: translateY(0);
+}
+
+/* Metodologia Expandida */
+.methodology {
+    background: linear-gradient(135deg, #f8f9fc, #eef2ff);
+    border-radius: var(--border-radius);
+    padding: 2.5rem;
+    margin-top: 3rem;
+    border-left: 5px solid var(--secondary-blue);
+}
+
+.methodology-content h3 {
+    color: var(--primary-blue);
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.methodology-content h3 i {
+    font-size: 1.6rem;
+}
+
+.methodology-list {
+    margin-bottom: 2rem;
+    list-style: none;
+    padding-left: 0;
+}
+
+.methodology-list li {
+    margin-bottom: 1rem;
+    color: var(--medium-gray);
+    line-height: 1.6;
+    padding-left: 2rem;
+    position: relative;
+}
+
+.methodology-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--success-green);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.last-update {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 1.5rem;
+    border-left: 4px solid var(--success-green);
+    box-shadow: var(--shadow-light);
+}
+
+.last-update p {
+    margin-bottom: 0.75rem;
+    color: var(--medium-gray);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.last-update strong {
+    color: var(--dark-gray);
+    min-width: 160px;
+    display: inline-block;
+}
+
+/* Animações de Carregamento */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+    border-radius: 4px;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Tooltips */
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--dark-gray);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    z-index: 1000;
+    margin-bottom: 0.5rem;
+    box-shadow: var(--shadow-heavy);
+}
+
+[data-tooltip]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--dark-gray);
+    margin-bottom: -6px;
+}
+
+/* Responsividade Avançada */
+@media (max-width: 1200px) {
+    .viz-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2rem;
+    }
+    
+    .page-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .filters-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .viz-tabs {
+        flex-direction: column;
+    }
+    
+    .viz-tab {
+        min-width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .section-title {
+        font-size: 1.6rem;
+    }
+    
+    .card-value {
+        font-size: 2rem;
+    }
+    
+    .table-actions {
+        justify-content: center;
+    }
+    
+    .btn-small, .btn-filter {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header {
+        padding: 1.5rem;
+    }
+    
+    .page-title {
+        font-size: 1.8rem;
+    }
+    
+    .viz-chart {
+        padding: 1rem;
+    }
+    
+    .methodology {
+        padding: 1.5rem;
+    }
+}
+    </style>
+
+</head>
+<body>
+
+    <!-- Overlay de Carregamento -->
+    <div id="loading-overlay" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 500px; text-align: center; padding: 3rem 2rem;">
+            <div style="width: 80px; height: 80px; border: 4px solid #f3f3f3; border-top: 4px solid var(--secondary-blue); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 2rem;"></div>
+            <h3 style="color: var(--dark-gray); margin-bottom: 1rem;">Carregando Dados...</h3>
+            <p style="color: var(--medium-gray); margin-bottom: 1.5rem;" id="loading-message">Inicializando sistema e buscando informações</p>
+            <div style="height: 6px; background: var(--light-gray); border-radius: 3px; overflow: hidden;">
+                <div id="loading-progress" style="height: 100%; background: linear-gradient(90deg, var(--secondary-blue), var(--primary-blue)); width: 0%; transition: width 0.3s ease;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cabeçalho e Navegação -->
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <div class="logo-text">
+                    <h1>IFPB Data Platform</h1>
+                    <p>Transparência • Análise • Inovação</p>
+                </div>
+            </div>
+            
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="../index.html"><i class="fas fa-home"></i> Início</a></li>
+                    <li><a href="institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
+                    <li><a href="academico.html" class="active"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
+                    <li><a href="orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
+                    <li><a href="dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+                </ul>
+                
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="container">
+        <!-- Cabeçalho da Página -->
+        <section class="page-header fade-in">
+            <div class="breadcrumb">
+                <a href="../index.html">Início</a> <i class="fas fa-chevron-right"></i> <span>Vida Acadêmica</span>
+            </div>
+            <h1 class="page-title">Vida Acadêmica do IFPB</h1>
+            <p class="page-subtitle">Explore dados detalhados sobre estudantes, docentes, cursos, desempenho acadêmico e indicadores educacionais do Instituto Federal da Paraíba. Dados atualizados em tempo real para análise e transparência.</p>
+            
+            <div class="status-indicators">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>Dados em implementação</span>
+                </div>
+                <div class="status-indicator">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Dados a serem adicionados</span>
+                </div>
+                <div class="status-indicator">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>Em desenvolvimento</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filtros Avançados -->
+        <section class="data-filters fade-in">
+            <h2><i class="fas fa-sliders-h"></i> Filtros Avançados</h2>
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label for="campus-filter"><i class="fas fa-map-marker-alt"></i> Campus</label>
+                    <select id="campus-filter" class="filter-select">
+                        <option value="all">Todos os Campi</option>
+                        <option value="joao-pessoa">João Pessoa</option>
+                        <option value="campina-grande">Campina Grande</option>
+                        <option value="sousa">Sousa</option>
+                        <option value="patos">Patos</option>
+                        <option value="cajazeiras">Cajazeiras</option>
+                        <option value="cabedelo">Cabedelo</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="curso-filter"><i class="fas fa-book"></i> Nível do Curso</label>
+                    <select id="curso-filter" class="filter-select">
+                        <option value="all">Todos os Níveis</option>
+                        <option value="tecnico">Cursos Técnicos</option>
+                        <option value="graduacao">Graduação</option>
+                        <option value="pos">Pós-Graduação</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="ano-filter"><i class="fas fa-calendar"></i> Ano Letivo</label>
+                    <select id="ano-filter" class="filter-select">
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="modalidade-filter"><i class="fas fa-laptop-house"></i> Modalidade</label>
+                    <select id="modalidade-filter" class="filter-select">
+                        <option value="all">Todas as Modalidades</option>
+                        <option value="presencial">Presencial</option>
+                        <option value="ead">Ensino a Distância</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="area-filter"><i class="fas fa-graduation-cap"></i> Área do Conhecimento</label>
+                    <select id="area-filter" class="filter-select">
+                        <option value="all">Todas as Áreas</option>
+                        <option value="exatas">Ciências Exatas</option>
+                        <option value="humanas">Ciências Humanas</option>
+                    </select>
+                </div>
+                
+                <button class="btn-filter" id="apply-filters">
+                    <i class="fas fa-filter"></i> Aplicar Filtros
+                    <span class="filter-count" id="active-filters">0</span>
+                </button>
+                
+                <button class="btn-filter btn-secondary" id="reset-filters" style="background: linear-gradient(135deg, #6c757d, #5a6268);">
+                    <i class="fas fa-redo"></i> Limpar Filtros
+                </button>
+            </div>
+        </section>
+
+        <!-- Cards de Resumo Acadêmico -->
+        <section class="academic-summary fade-in">
+            <h2 class="section-title">Visão Geral Acadêmica</h2>
+            <div class="cards-grid">
+                <div class="card academic-card" data-tooltip="Total de estudantes matriculados em todos os campi">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Total de Estudantes</h3>
+                    <div class="card-value" id="total-students">
+                        <span class="skeleton" style="width: 120px; height: 40px; display: inline-block;"></span>
+                    </div>
+                    <p class="card-desc" id="students-trend">
+                        <span class="trend-up" id="students-change">---</span> vs ano anterior
+                        <span class="trend-detail" style="display: block; font-size: 0.85rem; margin-top: 0.25rem;">
+                            <i class="fas fa-chart-line"></i> Dados em implementação
+                        </span>
+                    </p>
+                    <div class="card-detail">
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-tools"></i> Técnico:</span>
+                            <span class="detail-value" id="students-tecnico">---</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-graduation-cap"></i> Graduação:</span>
+                            <span class="detail-value" id="students-graduacao">---</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-user-graduate"></i> Pós-Graduação:</span>
+                            <span class="detail-value" id="students-pos">---</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card academic-card" data-tooltip="Corpo docente ativo com distribuição por titulação">
+                    <div class="card-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3>Corpo Docente</h3>
+                    <div class="card-value" id="total-teachers">---</div>
+                    <p class="card-desc" id="teachers-trend">
+                        <span class="trend-up">---</span> aumento no quadro
+                        <span class="trend-detail" style="display: block; font-size: 0.85rem; margin-top: 0.25rem;">
+                            <i class="fas fa-balance-scale"></i> Dados em implementação
+                        </span>
+                    </p>
+                    <div class="card-detail">
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-user-graduate"></i> Mestrado:</span>
+                            <span class="detail-value" id="teachers-mestrado">---</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-user-tie"></i> Doutorado:</span>
+                            <span class="detail-value" id="teachers-doutorado">---</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-certificate"></i> Especialização:</span>
+                            <span class="detail-value" id="teachers-especializacao">---</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card academic-card" data-tooltip="Cursos ativos por nível de ensino">
+                    <div class="card-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3>Cursos Oferecidos</h3>
+                    <div class="card-value" id="total-courses">---</div>
+                    <p class="card-desc" id="courses-trend">
+                        <span class="trend-up">---</span> novos cursos em 2024
+                        <span class="trend-detail" style="display: block; font-size: 0.85rem; margin-top: 0.25rem;">
+                            <i class="fas fa-plus-circle"></i> Dados em implementação
+                        </span>
+                    </p>
+                    <div class="card-detail">
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-tools"></i> Técnicos:</span>
+                            <span class="detail-value" id="courses-tecnico">---</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-graduation-cap"></i> Graduação:</span>
+                            <span class="detail-value" id="courses-graduacao">---</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-user-graduate"></i> Pós-Graduação:</span>
+                            <span class="detail-value" id="courses-pos">---</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card academic-card" data-tooltip="Taxas médias de conclusão por nível de ensino">
+                    <div class="card-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Eficiência Acadêmica</h3>
+                    <div class="card-value" id="completion-rate">---</div>
+                    <p class="card-desc" id="completion-trend">
+                        <span class="trend-up">---</span> melhoria na taxa
+                        <span class="trend-detail" style="display: block; font-size: 0.85rem; margin-top: 0.25rem;">
+                            <i class="fas fa-tachometer-alt"></i> Dados em implementação
+                        </span>
+                    </p>
+                    <div class="card-detail">
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-tools"></i> Técnico:</span>
+                            <span class="detail-value" id="rate-tecnico">---</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-graduation-cap"></i> Graduação:</span>
+                            <span class="detail-value" id="rate-graduacao">---</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-user-graduate"></i> Pós:</span>
+                            <span class="detail-value" id="rate-pos">---</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gráficos e Visualizações Interativas -->
+        <section class="academic-visualizations fade-in">
+            <h2 class="section-title">Visualizações Interativas</h2>
+            <p class="section-subtitle">Explore dados acadêmicos através de gráficos dinâmicos e análises em tempo real</p>
+            
+            <div class="viz-tabs">
+                <button class="viz-tab active" data-tab="matriculas">
+                    <i class="fas fa-user-graduate"></i> Matrículas
+                </button>
+                <button class="viz-tab" data-tab="cursos">
+                    <i class="fas fa-book"></i> Cursos
+                </button>
+                <button class="viz-tab" data-tab="desempenho">
+                    <i class="fas fa-chart-bar"></i> Desempenho
+                </button>
+                <button class="viz-tab" data-tab="evasao">
+                    <i class="fas fa-user-slash"></i> Evasão
+                </button>
+                <button class="viz-tab" data-tab="demografia">
+                    <i class="fas fa-users"></i> Demografia
+                </button>
+            </div>
+            
+            <div class="viz-content">
+                <!-- Tab 1: Matrículas -->
+                <div class="viz-tab-content active" id="matriculas-content">
+                    <div class="viz-row">
+                        <div class="viz-chart">
+                            <h3><i class="fas fa-chart-bar"></i> Distribuição de Matrículas por Campus</h3>
+                            <div class="chart-container">
+                                <div class="chart-placeholder">
+                                    <div class="placeholder-text">
+                                        <i class="fas fa-chart-bar"></i>
+                                        <h4>Gráfico em implementação</h4>
+                                        <p>Os dados serão carregados em breve</p>
+                                        <p class="placeholder-note">Implementação em andamento</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="viz-chart">
+                            <h3><i class="fas fa-chart-line"></i> Evolução Histórica de Matrículas</h3>
+                            <div class="chart-container">
+                                <div class="chart-placeholder">
+                                    <div class="placeholder-text">
+                                        <i class="fas fa-chart-line"></i>
+                                        <h4>Gráfico em implementação</h4>
+                                        <p>Os dados serão carregados em breve</p>
+                                        <p class="placeholder-note">Implementação em andamento</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab 2: Cursos -->
+                <div class="viz-tab-content" id="cursos-content">
+                    <div class="viz-row">
+                        <div class="viz-chart">
+                            <h3><i class="fas fa-chart-pie"></i> Distribuição por Área do Conhecimento</h3>
+                            <div class="chart-container">
+                                <div class="chart-placeholder">
+                                    <div class="placeholder-text">
+                                        <i class="fas fa-chart-pie"></i>
+                                        <h4>Gráfico em implementação</h4>
+                                        <p>Os dados serão carregados em breve</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="viz-chart">
+                            <h3><i class="fas fa-chart-bar"></i> Cursos com Maior Demanda</h3>
+                            <div class="chart-container">
+                                <div class="chart-placeholder">
+                                    <div class="placeholder-text">
+                                        <i class="fas fa-chart-bar"></i>
+                                        <h4>Gráfico em implementação</h4>
+                                        <p>Os dados serão carregados em breve</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab 3: Desempenho -->
+                <div class="viz-tab-content" id="desempenho-content">
+                    <div class="viz-row">
+                        <div class="viz-chart">
+                            <h3><i class="fas fa-percentage"></i> Taxa de Aprovação por Curso</h3>
+                            <div class="chart-container">
+                                <div class="chart-placeholder">
+                                    <div class="placeholder-text">
+                                        <i class="fas fa-percentage"></i>
+                                        <h4>Gráfico em implementação</h4>
+                                        <p>Os dados serão carregados em breve</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="viz-chart">
+                            <h3><i class="fas fa-university"></i> Desempenho Médio por Campus</h3>
+                            <div class="chart-container">
+                                <div class="chart-placeholder">
+                                    <div class="placeholder-text">
+                                        <i class="fas fa-university"></i>
+                                        <h4>Gráfico em implementação</h4>
+                                        <p>Os dados serão carregados em breve</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab 4: Evasão -->
+                <div class="viz-tab-content" id="evasao-content">
+                    <div class="viz-row">
+                        <div class="viz-chart">
+                            <h3><i class="fas fa-chart-bar"></i> Taxa de Evasão por Curso</h3>
+                            <div class="chart-container">
+                                <div class="chart-placeholder">
+                                    <div class="placeholder-text">
+                                        <i class="fas fa-chart-bar"></i>
+                                        <h4>Gráfico em implementação</h4>
+                                        <p>Os dados serão carregados em breve</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="viz-chart">
+                            <h3><i class="fas fa-chart-line"></i> Tendência de Evasão (2019-2024)</h3>
+                            <div class="chart-container">
+                                <div class="chart-placeholder">
+                                    <div class="placeholder-text">
+                                        <i class="fas fa-chart-line"></i>
+                                        <h4>Gráfico em implementação</h4>
+                                        <p>Os dados serão carregados em breve</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab 5: Demografia -->
+                <div class="viz-tab-content" id="demografia-content">
+                    <div class="viz-row">
+                        <div class="viz-chart">
+                            <h3><i class="fas fa-venus-mars"></i> Distribuição por Gênero</h3>
+                            <div class="chart-container">
+                                <div class="chart-placeholder">
+                                    <div class="placeholder-text">
+                                        <i class="fas fa-venus-mars"></i>
+                                        <h4>Gráfico em implementação</h4>
+                                        <p>Os dados serão carregados em breve</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="viz-chart">
+                            <h3><i class="fas fa-user-friends"></i> Faixa Etária dos Estudantes</h3>
+                            <div class="chart-container">
+                                <div class="chart-placeholder">
+                                    <div class="placeholder-text">
+                                        <i class="fas fa-user-friends"></i>
+                                        <h4>Gráfico em implementação</h4>
+                                        <p>Os dados serão carregados em breve</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabela de Dados Detalhados -->
+        <section class="academic-details fade-in">
+            <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2 class="section-title">Dados Detalhados por Campus</h2>
+                <div class="table-info" style="display: flex; align-items: center; gap: 1rem;">
+                    <span class="table-count" id="table-count">Dados em implementação</span>
+                    <div class="search-box" style="position: relative;">
+                        <input type="text" id="table-search" placeholder="Buscar campus..." style="padding: 0.5rem 1rem 0.5rem 2.5rem; border: 1px solid #d1d3e2; border-radius: 20px; font-size: 0.9rem;">
+                        <i class="fas fa-search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #6c757d;"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="data-table" id="academic-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Campus</th>
+                            <th style="width: 15%;">Estudantes</th>
+                            <th style="width: 15%;">Docentes</th>
+                            <th style="width: 15%;">Cursos</th>
+                            <th style="width: 15%;">Conclusão</th>
+                            <th style="width: 10%;">Média</th>
+                            <th style="width: 10%;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="academic-table-body">
+                        <tr class="loading-row">
+                            <td colspan="7">
+                                <div class="loading-cell">
+                                    <i class="fas fa-spinner fa-spin"></i> Dados acadêmicos em implementação...
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="table-footer" style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
+                <div class="pagination-info" style="color: var(--medium-gray); font-size: 0.9rem;">
+                    Mostrando <span id="showing-from">0</span>-<span id="showing-to">0</span> de <span id="total-items">0</span> campi
+                </div>
+                
+                <div class="table-actions">
+                    <button class="btn-small" id="export-data" data-tooltip="Exportar dados em CSV, Excel ou PDF">
+                        <i class="fas fa-download"></i> Exportar Dados
+                    </button>
+                    <button class="btn-small" id="show-all">
+                        <i class="fas fa-expand"></i> Ver Todos
+                    </button>
+                    <button class="btn-small" id="refresh-data">
+                        <i class="fas fa-sync-alt"></i> Atualizar
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Metodologia e Transparência -->
+        <section class="methodology fade-in">
+            <div class="methodology-content">
+                <h3><i class="fas fa-info-circle"></i> Metodologia e Transparência</h3>
+                
+                <div class="methodology-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+                    <div>
+                        <h4 style="color: var(--primary-blue); margin-bottom: 1rem; font-size: 1.1rem;">Fontes dos Dados</h4>
+                        <ul class="methodology-list">
+                            <li>SIGAA - Sistema Integrado de Gestão de Atividades Acadêmicas</li>
+                            <li>SIAPEN - Sistema de Informações Acadêmicas</li>
+                            <li>Q-Acadêmico - Portal do Estudante</li>
+                            <li>Portal da Transparência do IFPB</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 style="color: var(--primary-blue); margin-bottom: 1rem; font-size: 1.1rem;">Periodicidade</h4>
+                        <ul class="methodology-list">
+                            <li>Dados atualizados diariamente</li>
+                            <li>Consolidação mensal para indicadores</li>
+                            <li>Série histórica desde 2010</li>
+                            <li>Sincronização automática com fontes</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="last-update">
+                    <p><strong><i class="fas fa-calendar-check"></i> Última atualização:</strong> <span id="last-update-date">Carregando...</span></p>
+                    <p><strong><i class="fas fa-database"></i> Fonte Primária:</strong> Sistemas acadêmicos do IFPB / SIGAA / SIAPEN</p>
+                    <p><strong><i class="fas fa-code-branch"></i> Versão dos Dados:</strong> v2.4.1 (Conforme padrão INEP/MEC)</p>
+                    <p><strong><i class="fas fa-shield-alt"></i> Qualidade dos Dados:</strong> <span class="rate-high">Em implementação</span></p>
+                </div>
+                       
+            </div>
+        </section>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>IFPB Data Platform</h3>
+                    <p>Plataforma de visualização e análise de dados públicos do Instituto Federal da Paraíba.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                        <a href="#"><i class="fab fa-researchgate"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Navegação</h3>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Início</a></li>
+                        <li><a href="institucional.html">A Instituição</a></li>
+                        <li><a href="academico.html" class="active">Vida Acadêmica</a></li>
+                        <li><a href="orcamento.html">Gestão e Orçamento</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Recursos</h3>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html">Explorar Dados</a></li>
+                        <li><a href="dados-abertos.html">Dados Abertos</a></li>
+                        <li><a href="sobre.html">Sobre o Projeto</a></li>
+                        <li><a href="contato.html">Contato</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Projeto de Pesquisa</h3>
+                    <p>Iniciação Científica - IFPB<br>
+                    Desenvolvimento de plataforma digital interativa para dados públicos.</p>
+                    <a href="sobre.html" class="footer-btn">Saiba Mais</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 IFPB Data Platform. Desenvolvido com fins acadêmicos. Dados para transparência e análise.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+
+// ===== VARIÁVEIS GLOBAIS =====
+let academicCharts = {};
+let academicData = [];
+let filteredAcademicData = [];
+
+// ===== SISTEMA DE CARREGAMENTO =====
+function showLoading(message = 'Carregando dados...') {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const loadingMessage = document.getElementById('loading-message');
+    const loadingProgress = document.getElementById('loading-progress');
+    
+    if (loadingOverlay && loadingMessage && loadingProgress) {
+        loadingMessage.textContent = message;
+        loadingProgress.style.width = '0%';
+        loadingOverlay.style.display = 'flex';
+        
+        // Animar progresso
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 10;
+            if (progress > 90) {
+                clearInterval(interval);
+                loadingProgress.style.width = '90%';
+            } else {
+                loadingProgress.style.width = `${progress}%`;
+            }
+        }, 200);
+    }
+}
+
+function updateLoadingProgress(progress) {
+    const loadingProgress = document.getElementById('loading-progress');
+    if (loadingProgress) {
+        loadingProgress.style.width = `${progress}%`;
+    }
+}
+
+function hideLoading() {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const loadingProgress = document.getElementById('loading-progress');
+    
+    if (loadingProgress) {
+        loadingProgress.style.width = '100%';
+    }
+    
+    setTimeout(() => {
+        if (loadingOverlay) {
+            loadingOverlay.style.display = 'none';
+        }
+    }, 500);
+}
+
+// ===== CARREGAMENTO DE DADOS ACADÊMICOS =====
+async function loadAcademicData() {
+    showLoading('Carregando dados acadêmicos...');
+    
+    try {
+        console.log('📚 Iniciando carregamento de dados acadêmicos...');
+        updateLoadingProgress(40);
+        
+        // Simular carregamento de dados
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        updateLoadingProgress(60);
+        
+        // Dados acadêmicos VAZIOS
+        academicData = [];
+        
+        filteredAcademicData = [...academicData];
+        
+        updateLoadingProgress(80);
+        
+        // Atualizar interface
+        updateAcademicCards();
+        updateAcademicTable(filteredAcademicData);
+        
+        updateLoadingProgress(90);
+        
+        // Mostrar notificação
+        showNotification('Sistema acadêmico inicializado. Dados em implementação.', 'info');
+        
+        // Esconder loading
+        hideLoading();
+        
+    } catch (erro) {
+        console.error("❌ Erro ao carregar dados acadêmicos:", erro);
+        showNotification('Sistema em implementação. Dados serão adicionados em breve.', 'info');
+        
+        // Usar dados vazios
+        loadAcademicFallbackData();
+        hideLoading();
+    }
+}
+
+function loadAcademicFallbackData() {
+    console.log("🔄 Sistema acadêmico em implementação...");
+    
+    academicData = [];
+    filteredAcademicData = [...academicData];
+    updateAcademicCards();
+    updateAcademicTable(filteredAcademicData);
+}
+
+function updateAcademicCards() {
+    // Atualizar valores dos cards com "---"
+    const cards = {
+        'total-students': '---',
+        'total-teachers': '---',
+        'total-courses': '---',
+        'completion-rate': '---'
+    };
+    
+    Object.entries(cards).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.innerHTML = value;
+        }
+    });
+    
+    // Atualizar valores detalhados
+    const detailValues = [
+        'students-tecnico', 'students-graduacao', 'students-pos',
+        'teachers-mestrado', 'teachers-doutorado', 'teachers-especializacao',
+        'courses-tecnico', 'courses-graduacao', 'courses-pos',
+        'rate-tecnico', 'rate-graduacao', 'rate-pos'
+    ];
+    
+    detailValues.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = '---';
+        }
+    });
+    
+    // Atualizar tendências
+    const trends = ['students-change', 'students-trend', 'teachers-trend', 'courses-trend', 'completion-trend'];
+    trends.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            if (element.tagName === 'SPAN') {
+                element.textContent = '---';
+            }
+        }
+    });
+}
+
+// ===== GRÁFICOS ACADÊMICOS =====
+function initAcademicCharts() {
+    // Não inicializar gráficos - serão implementados posteriormente
+    console.log("📊 Gráficos em implementação");
+}
+
+// ===== FILTROS ACADÊMICOS =====
+function initAcademicFilters() {
+    const applyFiltersBtn = document.getElementById('apply-filters');
+    const resetFiltersBtn = document.getElementById('reset-filters');
+    const filterCount = document.getElementById('active-filters');
+    const filters = {
+        campus: document.getElementById('campus-filter'),
+        curso: document.getElementById('curso-filter'),
+        ano: document.getElementById('ano-filter'),
+        modalidade: document.getElementById('modalidade-filter'),
+        area: document.getElementById('area-filter')
+    };
+
+    // Atualizar contador de filtros ativos
+    function updateFilterCount() {
+        let activeCount = 0;
+        Object.values(filters).forEach(filter => {
+            if (filter.value !== 'all') activeCount++;
+        });
+        filterCount.textContent = activeCount;
+        filterCount.style.display = activeCount > 0 ? 'inline-block' : 'none';
+        filterCount.style.marginLeft = '0.5rem';
+        filterCount.style.padding = '0.2rem 0.5rem';
+        filterCount.style.background = activeCount > 0 ? '#e74a3b' : 'transparent';
+        filterCount.style.color = 'white';
+        filterCount.style.borderRadius = '10px';
+        filterCount.style.fontSize = '0.8rem';
+        filterCount.style.minWidth = '20px';
+        filterCount.style.textAlign = 'center';
+    }
+
+    // Aplicar filtros
+    applyFiltersBtn.addEventListener('click', function() {
+        const selectedFilters = {
+            campus: filters.campus.value,
+            curso: filters.curso.value,
+            ano: filters.ano.value,
+            modalidade: filters.modalidade.value,
+            area: filters.area.value
+        };
+
+        console.log('Filtros acadêmicos aplicados:', selectedFilters);
+        
+        // Mostrar loading
+        showLoading('Aplicando filtros...');
+        
+        // Atualizar dados com base nos filtros
+        setTimeout(() => {
+            filterAcademicData(selectedFilters);
+            updateFilterCount();
+            showNotification('Sistema de filtros em implementação.', 'info');
+            hideLoading();
+        }, 800);
+    });
+
+    // Resetar filtros
+    resetFiltersBtn.addEventListener('click', function() {
+        Object.values(filters).forEach(filter => {
+            filter.value = 'all';
+        });
+        
+        updateFilterCount();
+        loadAcademicData();
+        showNotification('Filtros resetados', 'info');
+    });
+
+    // Atualizar contador quando filtros mudam
+    Object.values(filters).forEach(filter => {
+        filter.addEventListener('change', updateFilterCount);
+    });
+
+    // Inicializar contador
+    updateFilterCount();
+}
+
+function filterAcademicData(filters) {
+    // Sistema de filtros em implementação
+    console.log('Sistema de filtros em implementação:', filters);
+    showNotification('Sistema de filtragem em desenvolvimento.', 'info');
+}
+
+// ===== TABELA ACADÊMICA =====
+function updateAcademicTable(data) {
+    const tableBody = document.getElementById('academic-table-body');
+    
+    // Limpar tabela
+    tableBody.innerHTML = '';
+    
+    if (data.length === 0) {
+        // Mostrar mensagem de dados em implementação
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td colspan="7">
+                <div class="loading-cell">
+                    <i class="fas fa-cogs"></i> Dados acadêmicos em implementação
+                </div>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    } else {
+        // Adicionar novas linhas (se houver dados)
+        data.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div style="width: 8px; height: 8px; background: #4e73df; border-radius: 50%;"></div>
+                        <strong>${item.campus}</strong>
+                    </div>
+                </td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-user-graduate" style="color: #4e73df;"></i>
+                        ${item.estudantes}
+                    </div>
+                </td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-chalkboard-teacher" style="color: #1cc88a;"></i>
+                        ${item.docentes}
+                    </div>
+                </td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-book" style="color: #f6c23e;"></i>
+                        ${item.cursos}
+                    </div>
+                </td>
+                <td><span class="rate-medium">${item.conclusao}%</span></td>
+                <td><strong>${item.media}</strong></td>
+                <td>
+                    <button class="btn-table btn-view" data-campus="${item.campus}">
+                        <i class="fas fa-eye"></i> Detalhes
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+    
+    // Atualizar contadores
+    updateTableInfo(data.length);
+}
+
+function updateTableInfo(total) {
+    document.getElementById('table-count').textContent = total === 0 ? 'Dados em implementação' : `${total} campi encontrados`;
+    document.getElementById('showing-from').textContent = '0';
+    document.getElementById('showing-to').textContent = total;
+    document.getElementById('total-items').textContent = total;
+}
+
+// ===== TABS =====
+function setupAcademicTabs() {
+    const tabButtons = document.querySelectorAll('.viz-tab');
+    const tabContents = document.querySelectorAll('.viz-tab-content');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const tabId = this.getAttribute('data-tab');
+            
+            // Remover classe active de todas as tabs
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Adicionar classe active à tab clicada
+            this.classList.add('active');
+            document.getElementById(`${tabId}-content`).classList.add('active');
+        });
+    });
+}
+
+// ===== DETALHES DO CAMPUS =====
+function showCampusDetails(campusName) {
+    showLoading(`Carregando detalhes de ${campusName}...`);
+    
+    // Simular carregamento
+    setTimeout(() => {
+        hideLoading();
+        
+        // Criar modal de detalhes
+        const modal = document.createElement('div');
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content" style="max-width: 600px; padding: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+                    <h3 style="color: var(--dark-gray); font-size: 1.5rem;">
+                        <i class="fas fa-university"></i> ${campusName}
+                    </h3>
+                    <button class="close-modal" style="background: none; border: none; font-size: 1.5rem; color: var(--medium-gray); cursor: pointer;">&times;</button>
+                </div>
+                
+                <div style="text-align: center; padding: 2rem;">
+                    <i class="fas fa-cogs" style="font-size: 4rem; color: var(--medium-gray); margin-bottom: 1.5rem;"></i>
+                    <h4 style="color: var(--dark-gray); margin-bottom: 1rem;">Sistema em implementação</h4>
+                    <p style="color: var(--medium-gray);">Os dados detalhados deste campus serão adicionados em breve.</p>
+                </div>
+                
+                <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
+                    <button class="btn-small close-modal">
+                        <i class="fas fa-times"></i> Fechar
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Eventos do modal
+        modal.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', () => {
+                modal.remove();
+            });
+        });
+        
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+    }, 1000);
+}
+
+// ===== NOTIFICAÇÕES =====
+function showNotification(message, type = 'info') {
+    // Remover notificações anteriores
+    const existing = document.querySelector('.notification');
+    if (existing) existing.remove();
+    
+    // Criar notificação
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-${getNotificationIcon(type)}"></i>
+        <span>${message}</span>
+        <button class="notification-close">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Fechar notificação
+    notification.querySelector('.notification-close').addEventListener('click', function() {
+        notification.style.animation = 'slideOutRight 0.3s ease forwards';
+        setTimeout(() => notification.remove(), 300);
+    });
+    
+    // Remover automaticamente após 5 segundos
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.style.animation = 'slideOutRight 0.3s ease forwards';
+            setTimeout(() => notification.remove(), 300);
+        }
+    }, 5000);
+}
+
+function getNotificationIcon(type) {
+    switch(type) {
+        case 'success': return 'check-circle';
+        case 'error': return 'exclamation-circle';
+        case 'warning': return 'exclamation-triangle';
+        default: return 'info-circle';
+    }
+}
+
+// ===== FUNÇÕES AUXILIARES =====
+function setupLastUpdate() {
+    const now = new Date();
+    const options = { 
+        day: '2-digit', 
+        month: 'long', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+    
+    const dateStr = now.toLocaleDateString('pt-BR', options);
+    const lastUpdateElement = document.getElementById('last-update-date');
+    if (lastUpdateElement) {
+        lastUpdateElement.textContent = dateStr;
+    }
+}
+
+function setupTableSearch() {
+    const searchInput = document.getElementById('table-search');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            showNotification('Sistema de busca em implementação.', 'info');
+        });
+    }
+}
+
+function setupTableActions() {
+    const exportBtn = document.getElementById('export-data');
+    const showAllBtn = document.getElementById('show-all');
+    const refreshBtn = document.getElementById('refresh-data');
+
+    if (exportBtn) {
+        exportBtn.addEventListener('click', function() {
+            showNotification('Sistema de exportação em implementação.', 'info');
+        });
+    }
+
+    if (showAllBtn) {
+        showAllBtn.addEventListener('click', function() {
+            showNotification('Funcionalidade em implementação.', 'info');
+        });
+    }
+
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function() {
+            this.querySelector('i').classList.add('fa-spin');
+            showLoading('Atualizando dados...');
+            
+            setTimeout(() => {
+                loadAcademicData();
+                this.querySelector('i').classList.remove('fa-spin');
+                showNotification('Sistema atualizado', 'info');
+            }, 1000);
+        });
+    }
+}
+
+function setupMenuMobile() {
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    const navList = document.querySelector('.nav-list');
+    
+    if (menuBtn && navList) {
+        menuBtn.addEventListener('click', function() {
+            navList.classList.toggle('active');
+            menuBtn.querySelector('i').classList.toggle('fa-bars');
+            menuBtn.querySelector('i').classList.toggle('fa-times');
+        });
+    }
+}
+
+// ===== ANIMAÇÕES =====
+function animatePageElements() {
+    // Animar cards
+    const cards = document.querySelectorAll('.academic-card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, 100 * index);
+    });
+}
+
+// ===== INICIALIZAÇÃO =====
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 IFPB Data Platform - Vida Acadêmica (Em implementação)');
+    
+    // Inicializar componentes básicos
+    initAcademicFilters();
+    setupAcademicTabs();
+    setupTableSearch();
+    setupTableActions();
+    setupMenuMobile();
+    
+    // Carregar dados iniciais (vazios)
+    loadAcademicData();
+    
+    // Configurar data de atualização
+    setupLastUpdate();
+    
+    // Animar elementos
+    setTimeout(() => animatePageElements(), 500);
+});
+
+// ===== OBSERVER PARA ANIMAÇÕES =====
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('fade-in');
+        }
+    });
+}, {
+    threshold: 0.1
+});
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+
+</body>
+</html>

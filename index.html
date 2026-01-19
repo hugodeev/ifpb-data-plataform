@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFPB Data Platform - Transparência e Análise de Dados</title>
+    <link rel="shortcut icon" href="assets/img/logosite.png " type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    
+    <!-- Cabeçalho e Navegação -->
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <div class="logo-text">
+                    <h1>IFPB Data Platform</h1>
+                    <p>Transparência • Análise • Inovação</p>
+                </div>
+            </div>
+            
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="index.html" class="active"><i class="fas fa-home"></i> Início</a></li>
+                    <li><a href="pages/institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
+                    <li><a href="pages/academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
+                    <li><a href="pages/orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
+                    <li><a href="pages/dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+                </ul>
+                
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Plataforma de Dados do Instituto Federal da Paraíba</h2>
+                <p>Visualização interativa de dados institucionais, acadêmicos e orçamentários para transparência e análise estratégica.</p>
+                <div class="hero-buttons">
+                    <a href="pages/dashboard.html" class="btn-primary">
+                        <i class="fas fa-chart-line"></i> Acessar Dashboard
+                    </a>
+                    <a href="pages/sobre.html" class="btn-secondary">
+                        <i class="fas fa-info-circle"></i> Sobre o Projeto
+                    </a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="chart-placeholder">
+                    <div class="chart-animation">
+                        <div class="bar" style="height: 70%; animation-delay: 0.1s;"></div>
+                        <div class="bar" style="height: 90%; animation-delay: 0.2s;"></div>
+                        <div class="bar" style="height: 60%; animation-delay: 0.3s;"></div>
+                        <div class="bar" style="height: 80%; animation-delay: 0.4s;"></div>
+                        <div class="bar" style="height: 75%; animation-delay: 0.5s;"></div>
+                    </div>
+                    <p class="chart-label">Distribuição de Estudantes por Campus</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cards de Destaque -->
+        <section class="highlights">
+            <h2 class="section-title">Dados em Destaque</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Campi</h3>
+                    <div class="card-value" id="campi-count">23</div>
+                    <p class="card-desc">Unidades em todo o estado da Paraíba</p>
+                    <a href="pages/institucional.html" class="card-link">Ver detalhes <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Estudantes</h3>
+                    <div class="card-value" id="students-count">28.000</div>
+                    <p class="card-desc">Matriculados em 2024</p>
+                    <a href="pages/academico.html" class="card-link">Ver detalhes <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3>Docentes</h3>
+                    <div class="card-value" id="teachers-count">1.452</div>
+                    <p class="card-desc">Professores ativos</p>
+                    <a href="pages/academico.html" class="card-link">Ver detalhes <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h3>Orçamento 2024</h3>
+                    <div class="card-value">R$ <span id="budget-value">382.7</span> mi</div>
+                    <p class="card-desc">Recursos investidos na educação</p>
+                    <a href="pages/orcamento.html" class="card-link">Ver detalhes <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Visualizações -->
+        <section class="visualizations">
+            <h2 class="section-title">Visualizações Interativas</h2>
+            <p class="section-subtitle">Explore dados através de gráficos e painéis interativos</p>
+            
+            <div class="viz-container">
+                <div class="viz-preview">
+                    <div class="viz-placeholder" id="map-preview">
+                        <i class="fas fa-map"></i>
+                        <h4>Mapa dos Campi</h4>
+                    </div>
+                    <p>Localização geográfica de todas as unidades do IFPB</p>
+                    <a href="pages/dashboard.html?view=map" class="btn-small">Explorar Mapa</a>
+                </div>
+                
+                <div class="viz-preview">
+                    <div class="viz-placeholder" id="timeline-preview">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>Evolução Temporal</h4>
+                    </div>
+                    <p>Análise histórica de matrículas, orçamento e investimentos</p>
+                    <a href="pages/dashboard.html?view=timeline" class="btn-small">Ver Gráficos</a>
+                </div>
+                
+                <div class="viz-preview">
+                    <div class="viz-placeholder" id="comparison-preview">
+                        <i class="fas fa-balance-scale"></i>
+                        <h4>Comparativos</h4>
+                    </div>
+                    <p>Compare indicadores entre campi, cursos e períodos</p>
+                    <a href="pages/dashboard.html?view=comparison" class="btn-small">Comparar Dados</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chamada para Ação -->
+        <section class="cta">
+            <div class="cta-content">
+                <h2>Dados Abertos para Todos</h2>
+                <p>Esta plataforma é um projeto de iniciação científica que promove transparência e acesso à informação pública.</p>
+                <div class="cta-buttons">
+                    <a href="pages/dados-abertos.html" class="btn-primary">
+                        <i class="fas fa-download"></i> Baixar Dados
+                    </a>
+                    <a href="pages/sobre.html" class="btn-secondary">
+                        <i class="fas fa-code"></i> Ver Código-Fonte
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>IFPB Data Platform</h3>
+                    <p>Plataforma de visualização e análise de dados públicos do Instituto Federal da Paraíba.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                        <a href="#"><i class="fab fa-researchgate"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Navegação</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Início</a></li>
+                        <li><a href="pages/institucional.html">A Instituição</a></li>
+                        <li><a href="pages/academico.html">Vida Acadêmica</a></li>
+                        <li><a href="pages/orcamento.html">Gestão e Orçamento</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Recursos</h3>
+                    <ul class="footer-links">
+                        <li><a href="pages/dashboard.html">Explorar Dados</a></li>
+                        <li><a href="pages/dados-abertos.html">Dados Abertos</a></li>
+                        <li><a href="pages/sobre.html">Sobre o Projeto</a></li>
+                        <li><a href="pages/contato.html">Contato</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Projeto de Pesquisa</h3>
+                    <p>Iniciação Científica - IFPB<br>
+                    Desenvolvimento de plataforma digital interativa para dados públicos.</p>
+                    <a href="pages/sobre.html" class="footer-btn">Saiba Mais</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 IFPB Data Platform. Desenvolvido com fins acadêmicos. Dados para transparência e análise.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+    <script src="assets/js/charts.js"></script>
+</body>
+</html>

@@ -1,0 +1,2639 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFPB Data Platform - Gestão e Orçamento | Transparência Financeira</title>
+    <meta name="description" content="Dados orçamentários, financeiros e de investimentos do IFPB. Transparência completa sobre receitas, despesas e gestão de recursos públicos.">
+    <link rel="shortcut icon" href="../assets/img/logosite.png" type="image/x-icon">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+/* ===== ESTILOS PROFISSIONAIS PARA ORÇAMENTO ===== */
+:root {
+    --primary-color: #2c3e8f;
+    --secondary-color: #4e73df;
+    --success-color: #1cc88a;
+    --warning-color: #f6c23e;
+    --danger-color: #e74a3b;
+    --info-color: #36b9cc;
+    --dark-color: #2e3a59;
+    --medium-color: #5a5c69;
+    --light-color: #f8f9fc;
+    --white: #ffffff;
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+    --radius: 10px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Container Principal */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Cabeçalho da Página */
+.page-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: var(--radius);
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+    background-size: cover;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.breadcrumb a {
+    color: white;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.breadcrumb a:hover {
+    opacity: 0.8;
+}
+
+.breadcrumb i {
+    font-size: 0.7rem;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    max-width: 800px;
+    line-height: 1.6;
+}
+
+.status-indicators {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.status-indicator {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success-color);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Seções */
+.section-title {
+    font-size: 1.5rem;
+    color: var(--dark-color);
+    margin: 2.5rem 0 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--light-color);
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: var(--secondary-color);
+}
+
+/* Cards de Indicadores */
+.indicators-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.indicator-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.indicator-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--secondary-color);
+}
+
+.indicator-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+}
+
+.indicator-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.indicator-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--light-color), #e8f1ff);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: var(--secondary-color);
+}
+
+.indicator-trend {
+    font-size: 0.85rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.trend-up {
+    background: rgba(28, 200, 138, 0.1);
+    color: var(--success-color);
+}
+
+.trend-down {
+    background: rgba(231, 74, 59, 0.1);
+    color: var(--danger-color);
+}
+
+.indicator-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark-color);
+    margin: 0.5rem 0;
+    line-height: 1;
+}
+
+.indicator-label {
+    font-size: 0.9rem;
+    color: var(--medium-color);
+    margin-bottom: 0.5rem;
+}
+
+.indicator-detail {
+    font-size: 0.85rem;
+    color: var(--medium-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.progress-container {
+    margin-top: 1rem;
+}
+
+.progress-bar {
+    height: 6px;
+    background: var(--light-color);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s ease-in-out;
+}
+
+.progress-revenue { background: linear-gradient(90deg, var(--secondary-color), #6a8cff); }
+.progress-expense { background: linear-gradient(90deg, var(--danger-color), #ff7b7b); }
+.progress-investment { background: linear-gradient(90deg, var(--warning-color), #ffd966); }
+
+/* Filtros e Períodos */
+.filter-section {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin: 2rem 0;
+    box-shadow: var(--shadow-md);
+}
+
+.filter-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.filter-header h3 {
+    font-size: 1.2rem;
+    color: var(--dark-color);
+    margin: 0;
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.filter-tab {
+    padding: 0.75rem 1.5rem;
+    background: var(--light-color);
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    color: var(--medium-color);
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-tab:hover {
+    background: #e3e6f0;
+}
+
+.filter-tab.active {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--light-color);
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    color: white;
+    box-shadow: 0 4px 12px rgba(78, 115, 223, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(78, 115, 223, 0.4);
+}
+
+.btn-secondary {
+    background: var(--light-color);
+    color: var(--medium-color);
+    border: 1px solid #d1d3e2;
+}
+
+.btn-secondary:hover {
+    background: #e3e6f0;
+}
+
+/* Cards de Dados */
+.data-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.data-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+    border-top: 4px solid;
+}
+
+.data-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.data-card.revenue { border-top-color: var(--secondary-color); }
+.data-card.expense { border-top-color: var(--danger-color); }
+.data-card.investment { border-top-color: var(--warning-color); }
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    color: var(--dark-color);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.card-title i {
+    font-size: 1.2rem;
+}
+
+.card-revenue .card-title i { color: var(--secondary-color); }
+.card-expense .card-title i { color: var(--danger-color); }
+.card-investment .card-title i { color: var(--warning-color); }
+
+.card-total {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--dark-color);
+}
+
+.data-list {
+    margin-top: 1.5rem;
+}
+
+.data-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--light-color);
+}
+
+.data-item:last-child {
+    border-bottom: none;
+}
+
+.data-label {
+    color: var(--medium-color);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.data-value {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.data-percentage {
+    font-size: 0.85rem;
+    color: var(--medium-color);
+    background: var(--light-color);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    margin-left: 0.5rem;
+}
+
+/* Gráficos */
+.charts-section {
+    margin: 3rem 0;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 1.5rem;
+}
+
+.chart-container {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid #e3e6f0;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.chart-title {
+    font-size: 1.1rem;
+    color: var(--dark-color);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.chart-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.chart-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    border: 1px solid #d1d3e2;
+    background: white;
+    color: var(--medium-color);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-btn:hover {
+    background: var(--light-color);
+    color: var(--secondary-color);
+}
+
+.chart-wrapper {
+    height: 300px;
+    position: relative;
+}
+
+/* Tabelas */
+.table-section {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 2rem;
+    margin: 3rem 0;
+    box-shadow: var(--shadow-md);
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.table-title {
+    font-size: 1.2rem;
+    color: var(--dark-color);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.table-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box input {
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    border: 1px solid #d1d3e2;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    width: 200px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--medium-color);
+}
+
+.table-responsive {
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    border-radius: 8px;
+    border: 1px solid #e3e6f0;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+.data-table th {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    text-align: left;
+    padding: 1.25rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    position: sticky;
+    top: 0;
+}
+
+.data-table td {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e3e6f0;
+    color: var(--medium-color);
+    font-size: 0.95rem;
+}
+
+.data-table tr:hover td {
+    background-color: var(--light-color);
+}
+
+.amount {
+    font-weight: 600;
+    color: var(--dark-color);
+    text-align: right;
+}
+
+.variation {
+    text-align: center;
+    font-weight: 600;
+}
+
+.variation.positive { color: var(--success-color); }
+.variation.negative { color: var(--danger-color); }
+
+.table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e3e6f0;
+}
+
+.table-info {
+    color: var(--medium-color);
+    font-size: 0.9rem;
+}
+
+/* Loading na tabela */
+.loading-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.loading-indicator i {
+    font-size: 2rem;
+    color: var(--secondary-color);
+}
+
+/* Metodologia */
+.methodology-section {
+    background: linear-gradient(135deg, var(--light-color), #eef2ff);
+    border-radius: var(--radius);
+    padding: 2.5rem;
+    margin: 3rem 0;
+    border-left: 5px solid var(--secondary-color);
+}
+
+.methodology-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.methodology-item h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.methodology-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.methodology-list li {
+    margin-bottom: 0.75rem;
+    color: var(--medium-color);
+    line-height: 1.6;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.methodology-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--success-color);
+    font-weight: bold;
+}
+
+.source-info {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    border-left: 4px solid var(--success-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.source-info p {
+    margin-bottom: 0.75rem;
+    color: var(--medium-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.source-info strong {
+    color: var(--dark-color);
+    min-width: 140px;
+    display: inline-block;
+}
+
+.warning-box {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: rgba(231, 74, 59, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid var(--danger-color);
+}
+
+.warning-box p {
+    color: var(--danger-color);
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.warning-box a {
+    color: var(--danger-color);
+    text-decoration: underline;
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2rem;
+    }
+    
+    .indicators-grid,
+    .data-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .table-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .table-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .search-box input {
+        width: 100%;
+    }
+    
+    .filter-tabs {
+        flex-direction: column;
+    }
+    
+    .filter-tab {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .methodology-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header {
+        padding: 2rem 1rem;
+    }
+    
+    .chart-container {
+        padding: 1rem;
+    }
+    
+    .methodology-section {
+        padding: 1.5rem;
+    }
+    
+    .table-footer {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Tooltips */
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--dark-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    z-index: 1000;
+    margin-bottom: 0.5rem;
+    box-shadow: var(--shadow-lg);
+}
+
+[data-tooltip]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--dark-color);
+    margin-bottom: -6px;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 0;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.modal-content {
+    background: white;
+    border-radius: var(--radius);
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(20px);
+    animation: slideUp 0.3s ease forwards;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #e3e6f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 6px;
+    transition: var(--transition);
+}
+
+.modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+/* Notificações */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    z-index: 10000;
+    transform: translateX(100%);
+    animation: slideInRight 0.3s ease forwards;
+}
+
+.notification.success {
+    border-left: 4px solid var(--success-color);
+}
+
+.notification.error {
+    border-left: 4px solid var(--danger-color);
+}
+
+.notification.warning {
+    border-left: 4px solid var(--warning-color);
+}
+
+.notification.info {
+    border-left: 4px solid var(--info-color);
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: var(--medium-color);
+    cursor: pointer;
+    padding: 0.25rem;
+    margin-left: auto;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.loading-content {
+    text-align: center;
+    max-width: 500px;
+    padding: 3rem 2rem;
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+}
+
+.loading-spinner {
+    width: 80px;
+    height: 80px;
+    border: 6px solid rgba(44, 62, 143, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    border-right-color: var(--secondary-color);
+    border-bottom-color: var(--warning-color);
+    animation: spin 1.2s ease-in-out infinite;
+    margin: 0 auto 2rem;
+    position: relative;
+}
+
+.loading-spinner::after {
+    content: 'IFPB';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    letter-spacing: 1.5px;
+}
+
+.loading-content h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.loading-content p {
+    color: var(--medium-color);
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.loading-progress {
+    height: 6px;
+    background: var(--light-color);
+    border-radius: 3px;
+    margin: 2rem auto 0;
+    overflow: hidden;
+    max-width: 300px;
+}
+
+.loading-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 3px;
+}
+    </style>
+    
+</head>
+<body>
+    <!-- Overlay de Carregamento -->
+    <div id="loading-overlay" class="modal-overlay" style="display: none;">
+        <div class="modal-content" style="max-width: 500px; text-align: center; padding: 3rem 2rem;">
+            <div style="width: 80px; height: 80px; border: 4px solid #f3f3f3; border-top: 4px solid var(--secondary-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 2rem;"></div>
+            <h3 style="color: var(--dark-color); margin-bottom: 1rem;">Carregando Dados...</h3>
+            <p style="color: var(--medium-color); margin-bottom: 1.5rem;" id="loading-message">Inicializando sistema e buscando informações</p>
+            <div style="height: 6px; background: var(--light-color); border-radius: 3px; overflow: hidden;">
+                <div id="loading-progress" style="height: 100%; background: linear-gradient(90deg, var(--secondary-color), var(--primary-color)); width: 0%; transition: width 0.3s ease;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cabeçalho e Navegação -->
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <div class="logo-text">
+                    <h1>IFPB Data Platform</h1>
+                    <p>Transparência • Análise • Inovação</p>
+                </div>
+            </div>
+            
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="../index.html"><i class="fas fa-home"></i> Início</a></li>
+                    <li><a href="institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
+                    <li><a href="academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
+                    <li><a href="orcamento.html" class="active"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
+                    <li><a href="dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+                </ul>
+                
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="container">
+        <!-- Cabeçalho da Página -->
+        <section class="page-header fade-in">
+            <div class="breadcrumb">
+                <a href="../index.html">Início</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>Gestão e Orçamento</span>
+            </div>
+            <h1 class="page-title">Gestão e Orçamento do IFPB</h1>
+            <p class="page-subtitle">
+                Transparência completa sobre receitas, despesas, investimentos e gestão financeira do Instituto Federal da Paraíba. 
+                Dados atualizados em tempo real para análise e controle social.
+            </p>
+            
+            <div class="status-indicators">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>Dados Atualizados 2026</span>
+                </div>
+                <div class="status-indicator">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Fonte: Portal da Transparência</span>
+                </div>
+                <div class="status-indicator">
+                    <i class="fas fa-calendar-check"></i>
+                    <span>Período: Janeiro-Setembro 2026</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Indicadores Financeiros -->
+        <section class="indicators-section">
+            <h2 class="section-title">Indicadores Financeiros em Destaque</h2>
+            <div class="indicators-grid">
+                <div class="indicator-card" data-tooltip="Orçamento total autorizado para 2024">
+                    <div class="indicator-header">
+                        <div class="indicator-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <span class="indicator-trend trend-up">+--%</span>
+                    </div>
+                    <div class="indicator-value" id="total-budget">R$ ---</div>
+                    <div class="indicator-label">Orçamento Total 2024</div>
+                    <div class="indicator-detail">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Executado: R$ 287,0 mi (75%)</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill progress-revenue" style="width: 75%"></div>
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--medium-color); display: flex; justify-content: space-between;">
+                            <span>Previsto</span>
+                            <span>75% Executado</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="indicator-card" data-tooltip="Receitas arrecadadas até setembro/2024">
+                    <div class="indicator-header">
+                        <div class="indicator-icon">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <span class="indicator-trend trend-up">+--%</span>
+                    </div>
+                    <div class="indicator-value" id="total-revenue">R$ R$ ---</div>
+                    <div class="indicator-label">Receitas Arrecadadas</div>
+                    <div class="indicator-detail">
+                        <i class="fas fa-bullseye"></i>
+                        <span>Meta: R$ 340,0 mi (92% atingida)</span>
+                    </div>
+                </div>
+                
+                <div class="indicator-card" data-tooltip="Despesas empenhadas até setembro/2024">
+                    <div class="indicator-header">
+                        <div class="indicator-icon">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                        <span class="indicator-trend trend-down">+--%</span>
+                    </div>
+                    <div class="indicator-value" id="total-expenses">R$ R$ ---</div>
+                    <div class="indicator-label">Despesas Empenhadas</div>
+                    <div class="indicator-detail">
+                        <i class="fas fa-balance-scale"></i>
+                        <span>Superávit: R$ 25,4 mi</span>
+                    </div>
+                </div>
+                
+                <div class="indicator-card" data-tooltip="Investimentos em infraestrutura e equipamentos">
+                    <div class="indicator-header">
+                        <div class="indicator-icon">
+                            <i class="fas fa-hard-hat"></i>
+                        </div>
+                        <span class="indicator-trend trend-up">+--%</span>
+                    </div>
+                    <div class="indicator-value" id="total-investments">R$ R$ ---</div>
+                    <div class="indicator-label">Investimentos em Infraestrutura</div>
+                    <div class="indicator-detail">
+                        <i class="fas fa-tools"></i>
+                        <span>15 obras em andamento</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filtros e Períodos -->
+        <section class="filter-section fade-in">
+            <div class="filter-header">
+                <h3><i class="fas fa-sliders-h"></i> Filtros e Períodos</h3>
+            </div>
+            
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-period="2024">
+                    <i class="fas fa-calendar-star"></i> 2024
+                </button>
+                <button class="filter-tab" data-period="2023">
+                    <i class="fas fa-calendar"></i> 2023
+                </button>
+                <button class="filter-tab" data-period="2022">
+                    <i class="fas fa-calendar"></i> 2022
+                </button>
+                <button class="filter-tab" data-period="2021">
+                    <i class="fas fa-calendar"></i> 2021
+                </button>
+                <button class="filter-tab" data-period="historic">
+                    <i class="fas fa-chart-line"></i> Série Histórica
+                </button>
+                <button class="filter-tab" data-period="quarterly">
+                    <i class="fas fa-chart-bar"></i> Visão Trimestral
+                </button>
+            </div>
+            
+            <div id="period-info-2024" class="period-info active">
+                <p style="color: var(--medium-color); margin-bottom: 1rem;">
+                    <i class="fas fa-info-circle"></i> Dados referentes ao exercício financeiro de 2024
+                </p>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <span style="background: #e8f5e9; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem; color: var(--success-color);">
+                        <i class="fas fa-check-circle"></i> Atualizado em: 30/09/2024
+                    </span>
+                    <span style="background: #e8f1ff; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem; color: var(--secondary-color);">
+                        <i class="fas fa-database"></i> Fonte: SIAFI/SIGEF
+                    </span>
+                    <span style="background: #fff5e1; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem; color: var(--warning-color);">
+                        <i class="fas fa-clock"></i> Próxima atualização: 31/10/2024
+                    </span>
+                </div>
+            </div>
+            
+            <div class="filter-actions">
+                <button class="btn btn-primary" id="apply-filters">
+                    <i class="fas fa-filter"></i> Aplicar Filtros
+                </button>
+                <button class="btn btn-secondary" id="reset-filters">
+                    <i class="fas fa-redo"></i> Limpar Filtros
+                </button>
+                <button class="btn btn-secondary" id="export-filters">
+                    <i class="fas fa-download"></i> Exportar Configuração
+                </button>
+            </div>
+        </section>
+
+        <!-- Dados Detalhados -->
+        <section class="data-section fade-in">
+            <h2 class="section-title">Análise Detalhada do Orçamento</h2>
+            
+            <div class="data-cards">
+                <div class="data-card revenue">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-money-check-alt"></i> Receitas
+                        </h3>
+                        <div class="card-total">R$ ---</div>
+                    </div>
+                    
+                    <div class="data-list">
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-landmark"></i> Recursos Federais
+                            </span>
+                            <span class="data-value">R$ ---</span>
+                            <span class="data-percentage">--%</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-university"></i> Recursos Próprios
+                            </span>
+                            <span class="data-value">R$ ---</span>
+                            <span class="data-percentage">--%</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-handshake"></i> Convênios e Parcerias
+                            </span>
+                            <span class="data-value">R$ ---</span>
+                            <span class="data-percentage">--%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill progress-revenue" style="width: 91.3%"></div>
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--medium-color); text-align: center; margin-top: 0.5rem;">
+                            Maior fonte: Recursos Federais
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="data-card expense">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-file-invoice-dollar"></i> Despesas
+                        </h3>
+                        <div class="card-total">R$ ---</div>
+                    </div>
+                    
+                    <div class="data-list">
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-users"></i> Pessoal e Encargos
+                            </span>
+                            <span class="data-value">R$ ---</span>
+                            <span class="data-percentage">--%</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-cogs"></i> Custeio e Manutenção
+                            </span>
+                            <span class="data-value">R$ ---</span>
+                            <span class="data-percentage">--%</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-hard-hat"></i> Investimentos
+                            </span>
+                            <span class="data-value">R$ ---</span>
+                            <span class="data-percentage">--%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill progress-expense" style="width: 69.1%"></div>
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--medium-color); text-align: center; margin-top: 0.5rem;">
+                            Maior despesa: Pessoal e Encargos
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="data-card investment">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-hard-hat"></i> Investimentos
+                        </h3>
+                        <div class="card-total">R$ ---</div>
+                    </div>
+                    
+                    <div class="data-list">
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-university"></i> Infraestrutura
+                            </span>
+                            <span class="data-value">R$ ---</span>
+                            <span class="data-percentage">--%</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-laptop"></i> Tecnologia
+                            </span>
+                            <span class="data-value">R$ ---</span>
+                            <span class="data-percentage">--%</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">
+                                <i class="fas fa-book"></i> Equipamentos Acadêmicos
+                            </span>
+                            <span class="data-value">R$ ---</span>
+                            <span class="data-percentage">--%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill progress-investment" style="width: 58.3%"></div>
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--medium-color); text-align: center; margin-top: 0.5rem;">
+                            Principal investimento: Infraestrutura
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gráficos Interativos -->
+        <section class="charts-section fade-in">
+            <h2 class="section-title">Visualizações Gráficas</h2>
+            
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">
+                            <i class="fas fa-chart-pie"></i> Composição Orçamentária
+                        </h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn" title="Expandir" data-action="expand" data-chart="composition">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="chart-btn" title="Download" data-action="download" data-chart="composition">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="compositionChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">
+                            <i class="fas fa-chart-line"></i> Evolução Receitas vs Despesas
+                        </h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn" title="Expandir" data-action="expand" data-chart="evolution">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="chart-btn" title="Download" data-action="download" data-chart="evolution">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="evolutionChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">
+                            <i class="fas fa-chart-bar"></i> Despesas por Categoria
+                        </h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn" title="Expandir" data-action="expand" data-chart="expenses">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="chart-btn" title="Download" data-action="download" data-chart="expenses">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="expensesChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3 class="chart-title">
+                            <i class="fas fa-map-marked-alt"></i> Distribuição por Campus
+                        </h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn" title="Expandir" data-action="expand" data-chart="distribution">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="chart-btn" title="Download" data-action="download" data-chart="distribution">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="distributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabela de Despesas Detalhadas (AGORA DINÂMICA) -->
+        <section class="table-section fade-in">
+            <div class="table-header">
+                <h3 class="table-title">
+                    <i class="fas fa-table"></i> Despesas Detalhadas por Função
+                </h3>
+                <div class="table-controls">
+                    <div class="search-box">
+                        <input type="text" id="table-search" placeholder="Buscar função...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <button class="btn btn-secondary" id="export-table">
+                        <i class="fas fa-file-export"></i> Exportar
+                    </button>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="data-table" id="expensesTable">
+                    <thead>
+                        <tr>
+                            <th>Função</th>
+                            <th>Dot. Inicial</th>
+                            <th>Dot. Atual</th>
+                            <th>Empenhado</th>
+                            <th>Liquidado</th>
+                            <th>% Exec.</th>
+                            <th>Variação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expensesTableBody">
+                        <!-- Dados serão carregados dinamicamente pelo JavaScript -->
+                        <tr class="loading-row">
+                            <td colspan="7">
+                                <div class="loading-indicator">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    <span>Carregando dados das despesas...</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="table-footer">
+                <div class="table-info" id="tableInfo">
+                    Aguardando carregamento...
+                </div>
+                <div>
+                    <button class="btn btn-secondary" id="prev-page" disabled>
+                        <i class="fas fa-chevron-left"></i> Anterior
+                    </button>
+                    <button class="btn btn-secondary" id="next-page" disabled>
+                        Próximo <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparativo Anual -->
+        <section class="comparison-section fade-in">
+            <h2 class="section-title">Comparativo Anual</h2>
+            
+            <div style="background: var(--white); border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow-md);">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.9rem; color: var(--medium-color); margin-bottom: 0.5rem;">Orçamento Total</div>
+                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--dark-color);">R$ 382,7 mi</div>
+                        <div style="font-size: 0.85rem; color: var(--success-color); margin-top: 0.25rem;">
+                            <i class="fas fa-arrow-up"></i> +8.5% vs 2023
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.9rem; color: var(--medium-color); margin-bottom: 0.5rem;">Receitas</div>
+                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--dark-color);">R$ 312,4 mi</div>
+                        <div style="font-size: 0.85rem; color: var(--success-color); margin-top: 0.25rem;">
+                            <i class="fas fa-arrow-up"></i> +12.3% vs 2023
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.9rem; color: var(--medium-color); margin-bottom: 0.5rem;">Despesas</div>
+                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--dark-color);">R$ 287,0 mi</div>
+                        <div style="font-size: 0.85rem; color: var(--danger-color); margin-top: 0.25rem;">
+                            <i class="fas fa-arrow-up"></i> +5.2% vs 2023
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.9rem; color: var(--medium-color); margin-bottom: 0.5rem;">Superávit</div>
+                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--dark-color);">R$ 25,4 mi</div>
+                        <div style="font-size: 0.85rem; color: var(--success-color); margin-top: 0.25rem;">
+                            <i class="fas fa-arrow-up"></i> +175% vs 2023
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <button class="btn btn-primary" id="compare-years">
+                        <i class="fas fa-balance-scale"></i> Comparar Anos
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Metodologia e Fontes -->
+        <section class="methodology-section fade-in">
+            <h2 class="section-title">Metodologia e Fontes</h2>
+            
+            <div class="methodology-grid">
+                <div class="methodology-item">
+                    <h4>Fontes Primárias</h4>
+                    <ul class="methodology-list">
+                        <li>Portal da Transparência do IFPB</li>
+                        <li>Sistema Integrado de Administração Financeira (SIAFI)</li>
+                        <li>Sistema de Gestão de Contratos (SICON)</li>
+                        <li>Relatórios de Gestão Anual</li>
+                        <li>Leis Orçamentárias Anuais (LOA)</li>
+                    </ul>
+                </div>
+                
+                <div class="methodology-item">
+                    <h4>Periodicidade</h4>
+                    <ul class="methodology-list">
+                        <li>Atualização diária dos dados financeiros</li>
+                        <li>Consolidação mensal para indicadores</li>
+                        <li>Relatórios trimestrais de execução</li>
+                        <li>Balancete anual consolidado</li>
+                    </ul>
+                </div>
+                
+                <div class="methodology-item">
+                    <h4>Classificação</h4>
+                    <ul class="methodology-list">
+                        <li>Classificação por função e subfunção</li>
+                        <li>Classificação econômica da despesa</li>
+                        <li>Classificação por programa e ação</li>
+                        <li>Classificação por fonte de recursos</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="source-info">
+                <p>
+                    <strong><i class="fas fa-database"></i> Fonte Oficial:</strong> 
+                    Portal da Transparência do Governo Federal e IFPB
+                </p>
+                <p>
+                    <strong><i class="fas fa-calendar-check"></i> Última Atualização:</strong> 
+                    <span id="last-update">30 de setembro de 2024 às 18:00</span>
+                </p>
+                <p>
+                    <strong><i class="fas fa-shield-alt"></i> Conformidade:</strong> 
+                    Lei de Responsabilidade Fiscal (LRF) e Lei de Acesso à Informação (LAI)
+                </p>
+                <p>
+                    <strong><i class="fas fa-code-branch"></i> Versão dos Dados:</strong> 
+                    v3.1.2 (Padrão SIAFI/STN)
+                </p>
+            </div>
+            
+        </section>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>IFPB Data Platform</h3>
+                    <p>Plataforma de visualização e análise de dados públicos do Instituto Federal da Paraíba.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                        <a href="#"><i class="fab fa-researchgate"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Navegação</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Início</a></li>
+                        <li><a href="pages/institucional.html">A Instituição</a></li>
+                        <li><a href="pages/academico.html">Vida Acadêmica</a></li>
+                        <li><a href="pages/orcamento.html">Gestão e Orçamento</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Recursos</h3>
+                    <ul class="footer-links">
+                        <li><a href="pages/dashboard.html">Explorar Dados</a></li>
+                        <li><a href="pages/dados-abertos.html">Dados Abertos</a></li>
+                        <li><a href="pages/sobre.html">Sobre o Projeto</a></li>
+                        <li><a href="pages/contato.html">Contato</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Projeto de Pesquisa</h3>
+                    <p>Iniciação Científica - IFPB<br>
+                    Desenvolvimento de plataforma digital interativa para dados públicos.</p>
+                    <a href="pages/sobre.html" class="footer-btn">Saiba Mais</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 IFPB Data Platform. Desenvolvido com fins acadêmicos. Dados para transparência e análise.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+// ===== JAVASCRIPT PROFISSIONAL - SEM DUPLICAÇÃO DE DADOS =====
+
+// Variáveis globais
+let charts = {};
+let dadosOrcamentarios = [];
+let dadosFiltrados = [];
+let periodoAtual = '2024';
+let currentPage = 1;
+const rowsPerPage = 5;
+
+// ===== SISTEMA DE CARREGAMENTO =====
+function showLoading(message = 'Carregando dados...') {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const loadingMessage = document.getElementById('loading-message');
+    const loadingProgress = document.getElementById('loading-progress');
+    
+    if (loadingOverlay && loadingMessage && loadingProgress) {
+        loadingMessage.textContent = message;
+        loadingProgress.style.width = '0%';
+        loadingOverlay.style.display = 'flex';
+        
+        // Animar progresso
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 10;
+            if (progress > 90) {
+                clearInterval(interval);
+                loadingProgress.style.width = '90%';
+            } else {
+                loadingProgress.style.width = `${progress}%`;
+            }
+        }, 200);
+    }
+}
+
+function updateLoadingProgress(progress) {
+    const loadingProgress = document.getElementById('loading-progress');
+    if (loadingProgress) {
+        loadingProgress.style.width = `${progress}%`;
+    }
+}
+
+function hideLoading() {
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const loadingProgress = document.getElementById('loading-progress');
+    
+    if (loadingProgress) {
+        loadingProgress.style.width = '100%';
+    }
+    
+    setTimeout(() => {
+        if (loadingOverlay) {
+            loadingOverlay.style.display = 'none';
+        }
+    }, 500);
+}
+
+// ===== FUNÇÃO PARA BUSCAR DADOS =====
+async function fetchOrcamentoData() {
+    // Em produção, isso viria de uma API real:
+    // return fetch('https://api.ifpb.edu.br/orcamento/2024').then(r => r.json());
+    
+  // Dados mock para demonstração
+return [
+    {
+        Funcao: "Educação Básica",
+        DotInicial: "R$ ---",
+        DotAtual: "R$ ---",
+        Empenhado: "R$ ---",
+        Liquidado: "R$ ---",
+        Execucao: "--%",
+        Variacao: "+---%",
+        Icon: "fa-graduation-cap",
+        Tipo: "educacao"
+    },
+    {
+        Funcao: "Educação Superior",
+        DotInicial: "R$ ---",
+        DotAtual: "R$ ---",
+        Empenhado: "R$ ---",
+        Liquidado: "R$ ---",
+        Execucao: "--%",
+        Variacao: "+---%",
+        Icon: "fa-user-graduate",
+        Tipo: "educacao"
+    },
+    {
+        Funcao: "Pessoal e Encargos",
+        DotInicial: "R$ ---",
+        DotAtual: "R$ ---",
+        Empenhado: "R$ ---",
+        Liquidado: "R$ ---",
+        Execucao: "--%",
+        Variacao: "+---%",
+        Icon: "fa-users",
+        Tipo: "pessoal"
+    },
+    {
+        Funcao: "Manutenção",
+        DotInicial: "R$ ---",
+        DotAtual: "R$ ---",
+        Empenhado: "R$ ---",
+        Liquidado: "R$ ---",
+        Execucao: "--%",
+        Variacao: "+---%",
+        Icon: "fa-cogs",
+        Tipo: "manutencao"
+    },
+    {
+        Funcao: "Investimentos",
+        DotInicial: "R$ ---",
+        DotAtual: "R$ ---",
+        Empenhado: "R$ ---",
+        Liquidado: "R$ ---",
+        Execucao: "--%",
+        Variacao: "+---%",
+        Icon: "fa-hard-hat",
+        Tipo: "investimento"
+    },
+    {
+        Funcao: "Pesquisa e Inovação",
+        DotInicial: "R$ ---",
+        DotAtual: "R$ ---",
+        Empenhado: "R$ ---",
+        Liquidado: "R$ ---",
+        Execucao: "--%",
+        Variacao: "+---%",
+        Icon: "fa-flask",
+        Tipo: "pesquisa"
+    },
+    {
+        Funcao: "Assistência Estudantil",
+        DotInicial: "R$ ---",
+        DotAtual: "R$ ---",
+        Empenhado: "R$ ---",
+        Liquidado: "R$ ---",
+        Execucao: "--%",
+        Variacao: "+---%",
+        Icon: "fa-hand-holding-heart",
+        Tipo: "assistencia"
+    },
+    {
+        Funcao: "Tecnologia da Informação",
+        DotInicial: "R$ ---",
+        DotAtual: "R$ ---",
+        Empenhado: "R$ ---",
+        Liquidado: "R$ ---",
+        Execucao: "--%",
+        Variacao: "+---%",
+        Icon: "fa-laptop-code",
+        Tipo: "tecnologia"
+    },
+    {
+        Funcao: "Infraestrutura Física",
+        DotInicial: "R$ ---",
+        DotAtual: "R$ ---",
+        Empenhado: "R$ ---",
+        Liquidado: "R$ ---",
+        Execucao: "--%",
+        Variacao: "+---%",
+        Icon: "fa-building",
+        Tipo: "infraestrutura"
+    },
+    {
+        Funcao: "Gestão Administrativa",
+        DotInicial: "R$ ---",
+        DotAtual: "R$ ---",
+        Empenhado: "R$ ---",
+        Liquidado: "R$ ---",
+        Execucao: "--%",
+        Variacao: "+---%",
+        Icon: "fa-clipboard-list",
+        Tipo: "gestao"
+    }
+  ];
+}
+
+// ===== CARREGAMENTO DE DADOS =====
+async function loadData() {
+    showLoading('Carregando dados orçamentários...');
+    
+    try {
+        console.log('📊 Iniciando carregamento de dados orçamentários...');
+        updateLoadingProgress(40);
+        
+        // Buscar dados da função única
+        dadosOrcamentarios = await fetchOrcamentoData();
+        dadosFiltrados = [...dadosOrcamentarios];
+        
+        updateLoadingProgress(60);
+        
+        // Popular tabela dinamicamente
+        populateExpensesTable();
+        
+        updateLoadingProgress(80);
+        
+        // Inicializar gráficos
+        initCharts();
+        
+        updateLoadingProgress(90);
+        
+        // Mostrar notificação
+        showNotification('Dados orçamentários carregados com sucesso!', 'success');
+        
+        // Esconder loading
+        hideLoading();
+        
+    } catch (erro) {
+        console.error("❌ Erro ao carregar dados:", erro);
+        showNotification('Erro ao carregar dados. Verifique sua conexão.', 'error');
+        hideLoading();
+    }
+}
+
+// ===== POPULAR TABELA DINAMICAMENTE =====
+function populateExpensesTable() {
+    const tbody = document.getElementById('expensesTableBody');
+    
+    if (!tbody) return;
+    
+    // Calcular índices de paginação
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const dadosPagina = dadosFiltrados.slice(start, end);
+    
+    // Limpar tabela
+    tbody.innerHTML = '';
+    
+    if (dadosFiltrados.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 2rem;">
+                    <i class="fas fa-search" style="font-size: 2rem; color: var(--medium-color); margin-bottom: 1rem; display: block;"></i>
+                    <h4 style="color: var(--dark-color); margin-bottom: 0.5rem;">Nenhum dado encontrado</h4>
+                    <p style="color: var(--medium-color);">Tente ajustar seus filtros de busca.</p>
+                </td>
+            </tr>
+        `;
+    } else {
+        // Popular com dados da página atual
+        dadosPagina.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><i class="fas ${item.Icon}"></i> ${item.Funcao}</td>
+                <td class="amount">${item.DotInicial}</td>
+                <td class="amount">${item.DotAtual}</td>
+                <td class="amount">${item.Empenhado}</td>
+                <td class="amount">${item.Liquidado}</td>
+                <td style="text-align: center; font-weight: 600;">${item.Execucao}</td>
+                <td class="variation ${item.Variacao.includes('+') ? 'positive' : 'negative'}">${item.Variacao}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+    
+    // Atualizar informações da tabela
+    updateTableInfo();
+}
+
+function updateTableInfo() {
+    const total = dadosFiltrados.length;
+    const start = Math.min((currentPage - 1) * rowsPerPage + 1, total);
+    const end = Math.min(currentPage * rowsPerPage, total);
+    
+    const infoElement = document.getElementById('tableInfo');
+    if (infoElement) {
+        infoElement.textContent = total > 0 
+            ? `Mostrando ${start}-${end} de ${total} funções orçamentárias`
+            : 'Nenhum dado encontrado';
+    }
+    
+    // Atualizar botões de paginação
+    const prevBtn = document.getElementById('prev-page');
+    const nextBtn = document.getElementById('next-page');
+    const totalPages = Math.ceil(total / rowsPerPage);
+    
+    if (prevBtn) prevBtn.disabled = currentPage === 1;
+    if (nextBtn) nextBtn.disabled = currentPage === totalPages || total === 0;
+}
+
+// ===== GRÁFICOS =====
+function initCharts() {
+    const colors = {
+        primary: '#4e73df',
+        success: '#1cc88a',
+        danger: '#e74a3b',
+        warning: '#f6c23e',
+        info: '#36b9cc',
+        dark: '#5a5c69'
+    };
+
+    // Gráfico 1: Composição
+    const ctx1 = document.getElementById('compositionChart').getContext('2d');
+    charts.composition = new Chart(ctx1, {
+        type: 'doughnut',
+        data: {
+            labels: ['Pessoal', 'Custeio', 'Investimentos', 'Outras'],
+            datasets: [{
+                data: [100, 100, 100, 0],
+                backgroundColor: [
+                    colors.danger,
+                    colors.warning,
+                    colors.info,
+                    colors.dark
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((context.parsed / total) * 100);
+                            return `${context.label}: R$ ${context.parsed} mi (${percentage}%)`;
+                        }
+                    }
+                }
+            },
+            cutout: '60%'
+        }
+    });
+
+    // Gráfico 2: Evolução
+    const ctx2 = document.getElementById('evolutionChart').getContext('2d');
+    charts.evolution = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: ['2020', '2021', '2022', '2023', '2024'],
+            datasets: [
+                {
+                    label: 'Receitas',
+                    data: [400, 400, 400, 400, 400],
+                    borderColor: colors.primary,
+                    backgroundColor: 'rgba(78, 115, 223, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                },
+                {
+                    label: 'Despesas',
+                    data: [200, 200, 200, 200, 200],
+                    borderColor: colors.danger,
+                    backgroundColor: 'rgba(231, 74, 59, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    min: 200,
+                    grid: {
+                        borderDash: [2]
+                    }
+                }
+            }
+        }
+    });
+
+    // Gráfico 3: Despesas
+    const ctx3 = document.getElementById('expensesChart').getContext('2d');
+    charts.expenses = new Chart(ctx3, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set'],
+            datasets: [
+                {
+                    label: 'Pessoal',
+                    data: [16.2, 16.8, 17.5, 18.2, 19.0, 19.8, 20.5, 21.2, 21.8],
+                    backgroundColor: colors.danger
+                },
+                {
+                    label: 'Custeio',
+                    data: [4.2, 4.5, 4.8, 5.2, 5.5, 5.8, 6.2, 6.5, 6.8],
+                    backgroundColor: colors.warning
+                },
+                {
+                    label: 'Investimentos',
+                    data: [2.8, 3.2, 3.5, 3.8, 4.2, 4.5, 4.8, 5.2, 5.5],
+                    backgroundColor: colors.info
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Gráfico 4: Distribuição
+    const ctx4 = document.getElementById('distributionChart').getContext('2d');
+    charts.distribution = new Chart(ctx4, {
+        type: 'bar',
+        data: {
+            labels: ['João Pessoa', 'Campina Grande', 'Sousa', 'Patos', 'Cajazeiras', 'Cabedelo'],
+            datasets: [{
+                label: 'Orçamento (R$ milhões)',
+                data: [58.2, 42.5, 28.7, 24.3, 19.8, 16.5],
+                backgroundColor: [
+                    colors.primary,
+                    colors.success,
+                    colors.info,
+                    colors.warning,
+                    colors.danger,
+                    colors.dark
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+// ===== FILTROS =====
+function initFilters() {
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    const applyBtn = document.getElementById('apply-filters');
+    const resetBtn = document.getElementById('reset-filters');
+    const exportBtn = document.getElementById('export-filters');
+
+    // Tabs de período
+    filterTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const period = this.dataset.period;
+            
+            // Remover active de todas
+            filterTabs.forEach(t => t.classList.remove('active'));
+            
+            // Adicionar active
+            this.classList.add('active');
+            
+            // Atualizar período atual
+            periodoAtual = period;
+            
+            // Atualizar informações do período
+            updatePeriodInfo(period);
+        });
+    });
+
+    // Aplicar filtros
+    applyBtn.addEventListener('click', function() {
+        const activeTab = document.querySelector('.filter-tab.active');
+        const period = activeTab.dataset.period;
+        
+        showLoading(`Aplicando filtros do período ${period}...`);
+        setTimeout(() => {
+            applyFilter(period);
+            showNotification(`Filtros do período ${period} aplicados com sucesso!`, 'success');
+            hideLoading();
+        }, 1000);
+    });
+
+    // Resetar filtros
+    resetBtn.addEventListener('click', function() {
+        filterTabs.forEach(tab => {
+            if (tab.dataset.period === '2024') {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+        
+        periodoAtual = '2024';
+        currentPage = 1;
+        dadosFiltrados = [...dadosOrcamentarios];
+        
+        updatePeriodInfo('2024');
+        populateExpensesTable();
+        showNotification('Filtros resetados', 'info');
+    });
+
+    // Exportar configuração
+    exportBtn.addEventListener('click', function() {
+        const activeTab = document.querySelector('.filter-tab.active');
+        const config = {
+            periodo: activeTab.dataset.period,
+            data: new Date().toISOString(),
+            totalRegistros: dadosFiltrados.length
+        };
+        
+        const dataStr = JSON.stringify(config, null, 2);
+        downloadFile(dataStr, 'configuracao-filtros-orcamento.json', 'application/json');
+        showNotification('Configuração exportada', 'success');
+    });
+}
+
+function updatePeriodInfo(period) {
+    const infoDiv = document.getElementById('period-info-2024');
+    const date = new Date();
+    
+    infoDiv.innerHTML = `
+        <p style="color: var(--medium-color); margin-bottom: 1rem;">
+            <i class="fas fa-info-circle"></i> Dados referentes ao exercício financeiro de ${period}
+        </p>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <span style="background: #e8f5e9; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem; color: var(--success-color);">
+                <i class="fas fa-check-circle"></i> Atualizado em: ${date.toLocaleDateString('pt-BR')}
+            </span>
+            <span style="background: #e8f1ff; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem; color: var(--secondary-color);">
+                <i class="fas fa-database"></i> Fonte: SIAFI/SIGEF
+            </span>
+        </div>
+    `;
+}
+
+function applyFilter(period) {
+    // Aqui você implementaria a lógica de filtro real
+    // Por enquanto, apenas simulamos
+    console.log(`Aplicando filtro: ${period}`);
+    
+    // Resetar para dados completos
+    dadosFiltrados = [...dadosOrcamentarios];
+    currentPage = 1;
+    
+    // Se quiser filtrar por período específico:
+    // dadosFiltrados = dadosOrcamentarios.filter(item => item.Periodo === period);
+    
+    populateExpensesTable();
+}
+
+// ===== FUNÇÕES DA TABELA =====
+function initTableFunctions() {
+    const searchInput = document.getElementById('table-search');
+    const exportBtn = document.getElementById('export-table');
+    const prevBtn = document.getElementById('prev-page');
+    const nextBtn = document.getElementById('next-page');
+
+    // Busca
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const term = this.value.toLowerCase().trim();
+            
+            if (term === '') {
+                dadosFiltrados = [...dadosOrcamentarios];
+            } else {
+                dadosFiltrados = dadosOrcamentarios.filter(item =>
+                    item.Funcao.toLowerCase().includes(term) ||
+                    item.Tipo.toLowerCase().includes(term)
+                );
+            }
+            
+            currentPage = 1;
+            populateExpensesTable();
+        });
+    }
+
+    // Exportar tabela
+    if (exportBtn) {
+        exportBtn.addEventListener('click', function() {
+            exportTableToCSV();
+        });
+    }
+
+    // Paginação
+    if (prevBtn) {
+        prevBtn.addEventListener('click', function() {
+            if (currentPage > 1) {
+                currentPage--;
+                populateExpensesTable();
+            }
+        });
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', function() {
+            const totalPages = Math.ceil(dadosFiltrados.length / rowsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                populateExpensesTable();
+            }
+        });
+    }
+}
+
+function exportTableToCSV() {
+    if (dadosFiltrados.length === 0) {
+        showNotification('Nenhum dado para exportar.', 'warning');
+        return;
+    }
+    
+    const headers = ['Função', 'Dotação Inicial', 'Dotação Atual', 'Empenhado', 'Liquidado', '% Execução', 'Variação'];
+    const rows = dadosFiltrados.map(item => [
+        item.Funcao,
+        item.DotInicial.replace('R$ ', '').replace(' mi', ''),
+        item.DotAtual.replace('R$ ', '').replace(' mi', ''),
+        item.Empenhado.replace('R$ ', '').replace(' mi', ''),
+        item.Liquidado.replace('R$ ', '').replace(' mi', ''),
+        item.Execucao.replace('%', ''),
+        item.Variacao.replace('%', '')
+    ]);
+    
+    let csv = headers.join(',') + '\n';
+    rows.forEach(row => {
+        csv += row.join(',') + '\n';
+    });
+    
+    downloadFile(csv, `despesas-ifpb-${periodoAtual}.csv`, 'text/csv');
+    showNotification(`CSV exportado com ${dadosFiltrados.length} registros`, 'success');
+}
+
+// ===== EVENTOS =====
+function initEvents() {
+    // Botões dos gráficos
+    document.querySelectorAll('.chart-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const action = this.dataset.action;
+            const chart = this.dataset.chart;
+            
+            switch(action) {
+                case 'expand':
+                    expandChart(chart);
+                    break;
+                case 'download':
+                    downloadChartData(chart);
+                    break;
+            }
+        });
+    });
+
+    // Comparar anos
+    const compareBtn = document.getElementById('compare-years');
+    if (compareBtn) {
+        compareBtn.addEventListener('click', function() {
+            showComparisonModal();
+        });
+    }
+
+    // Menu mobile
+    const mobileBtn = document.querySelector('.mobile-menu-btn');
+    if (mobileBtn) {
+        mobileBtn.addEventListener('click', function() {
+            const navList = document.querySelector('.nav-list');
+            navList.classList.toggle('active');
+            this.querySelector('i').classList.toggle('fa-bars');
+            this.querySelector('i').classList.toggle('fa-times');
+        });
+    }
+}
+
+// ===== FUNÇÕES AUXILIARES =====
+function updateLastUpdate() {
+    const now = new Date();
+    const options = { 
+        day: '2-digit', 
+        month: 'long', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+    
+    const dateStr = now.toLocaleDateString('pt-BR', options);
+    const lastUpdateElement = document.getElementById('last-update');
+    if (lastUpdateElement) {
+        lastUpdateElement.textContent = dateStr;
+    }
+}
+
+function showNotification(message, type = 'info') {
+    // Remover notificações anteriores
+    const existing = document.querySelector('.notification');
+    if (existing) existing.remove();
+    
+    // Criar notificação
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-${getNotificationIcon(type)}"></i>
+        <span>${message}</span>
+        <button class="notification-close">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Fechar notificação
+    notification.querySelector('.notification-close').addEventListener('click', function() {
+        notification.style.animation = 'slideOutRight 0.3s ease forwards';
+        setTimeout(() => notification.remove(), 300);
+    });
+    
+    // Remover automaticamente após 5 segundos
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.style.animation = 'slideOutRight 0.3s ease forwards';
+            setTimeout(() => notification.remove(), 300);
+        }
+    }, 5000);
+}
+
+function getNotificationIcon(type) {
+    switch(type) {
+        case 'success': return 'check-circle';
+        case 'error': return 'exclamation-circle';
+        case 'warning': return 'exclamation-triangle';
+        default: return 'info-circle';
+    }
+}
+
+function expandChart(chartName) {
+    const chart = charts[chartName];
+    if (!chart) return;
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-chart-${chartName === 'composition' ? 'pie' : chartName === 'evolution' ? 'line' : 'bar'}"></i>
+                    Gráfico Expandido
+                </h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="height: 500px;">
+                    <canvas id="modal-chart"></canvas>
+                </div>
+                <div style="margin-top: 2rem; text-align: center;">
+                    <button class="btn btn-primary" id="download-modal-chart">
+                        <i class="fas fa-download"></i> Baixar Dados
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Fechar modal
+    modal.querySelector('.modal-close').addEventListener('click', function() {
+        modal.remove();
+    });
+    
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+    
+    // Download do gráfico modal
+    modal.querySelector('#download-modal-chart').addEventListener('click', function() {
+        downloadChartData(chartName);
+    });
+    
+    // Recriar gráfico no modal
+    setTimeout(() => {
+        const ctx = document.getElementById('modal-chart').getContext('2d');
+        new Chart(ctx, {
+            type: chart.config.type,
+            data: chart.config.data,
+            options: {
+                ...chart.config.options,
+                maintainAspectRatio: false
+            }
+        });
+    }, 100);
+}
+
+function downloadChartData(chartName) {
+    const chart = charts[chartName];
+    if (!chart) return;
+    
+    const labels = chart.data.labels;
+    const datasets = chart.data.datasets;
+    
+    let csv = 'Categoria,Valor\n';
+    
+    if (chart.config.type === 'doughnut') {
+        labels.forEach((label, i) => {
+            csv += `${label},${datasets[0].data[i]}\n`;
+        });
+    } else {
+        csv = 'Período,' + datasets.map(d => d.label).join(',') + '\n';
+        labels.forEach((label, i) => {
+            const values = datasets.map(d => d.data[i]);
+            csv += `${label},${values.join(',')}\n`;
+        });
+    }
+    
+    downloadFile(csv, `grafico-${chartName}.csv`, 'text/csv');
+    showNotification('Dados do gráfico baixados', 'success');
+}
+
+function showComparisonModal() {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-balance-scale"></i> Comparativo Anual Detalhado
+                </h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.9rem; color: var(--medium-color);">2024</div>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--dark-color);">R$ 382,7 mi</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.9rem; color: var(--medium-color);">2023</div>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--dark-color);">R$ 352,8 mi</div>
+                    </div>
+                </div>
+                
+                <div style="background: var(--light-color); padding: 1.5rem; border-radius: 8px;">
+                    <h4 style="color: var(--dark-color); margin-bottom: 1rem;">Principais Variações</h4>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 6px;">
+                            <span style="color: var(--medium-color);">Receitas Federais:</span>
+                            <span style="float: right; color: var(--success-color); font-weight: 600;">+12.3%</span>
+                        </li>
+                        <li style="margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 6px;">
+                            <span style="color: var(--medium-color);">Investimentos:</span>
+                            <span style="float: right; color: var(--success-color); font-weight: 600;">+18.7%</span>
+                        </li>
+                        <li style="margin-bottom: 0.5rem; padding: 0.5rem; background: white; border-radius: 6px;">
+                            <span style="color: var(--medium-color);">Despesas com Pessoal:</span>
+                            <span style="float: right; color: var(--danger-color); font-weight: 600;">+5.2%</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div style="margin-top: 2rem; text-align: center;">
+                    <button class="btn btn-primary" id="close-comparison">
+                        <i class="fas fa-check"></i> Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Fechar modal
+    const closeBtn = modal.querySelector('.modal-close');
+    const closeComparisonBtn = modal.querySelector('#close-comparison');
+    
+    closeBtn.addEventListener('click', () => modal.remove());
+    closeComparisonBtn.addEventListener('click', () => modal.remove());
+    
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+}
+
+function downloadFile(content, filename, contentType) {
+    const blob = new Blob([content], { type: contentType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// ===== INICIALIZAÇÃO =====
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 IFPB Data Platform - Gestão e Orçamento');
+    
+    // Inicializar componentes
+    initFilters();
+    initTableFunctions();
+    initEvents();
+    
+    // Carregar dados
+    loadData();
+    
+    // Atualizar data
+    updateLastUpdate();
+});
+
+// Animar elementos ao entrar na viewport
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('fade-in');
+        }
+    });
+}, {
+    threshold: 0.1
+});
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+
+</body>
+</html>

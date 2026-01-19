@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre o Projeto - IFPB Data Platform</title>
+    <link rel="shortcut icon" href="assets/img/logosite.png " type="image/x-icon">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+
+        
+        /* Estilos específicos para a página Sobre */
+        .project-hero {
+            background: linear-gradient(135deg, var(--ifpb-green), var(--ifpb-dark-green));
+            color: rgba(0, 0, 0, 0.808);
+            padding: 4rem 0;
+            margin-bottom: 3rem;
+            border-radius: 0 0 15px 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none" opacity="0.1"><path d="M0,0 L100,0 L100,100 Z" fill="white"/></svg>');
+            background-size: cover;
+        }
+        
+        .project-hero .container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .project-hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .project-hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            opacity: 0.9;
+        }
+        
+        .project-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid #eaeaea;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .section-card h2 {
+            color: var(--ifpb-dark-green);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .section-card h2 i {
+            color: var(--ifpb-green);
+            background: rgba(0, 107, 62, 0.1);
+            padding: 12px;
+            border-radius: 10px;
+        }
+        
+        .section-card p, .section-card ul {
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1.2rem;
+            font-size: 1.05rem;
+        }
+        
+        .section-card ul {
+            padding-left: 1.5rem;
+        }
+        
+        .section-card li {
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 10px;
+        }
+        
+        .section-card li:before {
+            content: "▸";
+            color: var(--ifpb-green);
+            font-weight: bold;
+            position: absolute;
+            left: -1.5rem;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #f8fff9, #f0f9ff);
+            border-left: 4px solid var(--ifpb-green);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+        
+        .highlight-box h4 {
+            color: var(--ifpb-dark-green);
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+        }
+        
+        .project-timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+        
+        .project-timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--ifpb-green), var(--ifpb-dark-green));
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            width: 45%;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            margin-left: 55%;
+        }
+        
+        .timeline-item:nth-child(even) {
+            margin-right: 55%;
+        }
+        
+        .timeline-content {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid #eaeaea;
+        }
+        
+        .timeline-content h4 {
+            color: var(--ifpb-dark-green);
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .timeline-content h4 i {
+            color: var(--ifpb-green);
+        }
+        
+        .timeline-content p {
+            font-size: 0.95rem;
+            color: #666;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--ifpb-green);
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px var(--ifpb-green);
+            top: 20px;
+        }
+        
+        .timeline-item:nth-child(odd)::before {
+            left: -43px;
+        }
+        
+        .timeline-item:nth-child(even)::before {
+            right: -43px;
+        }
+        
+        .team-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2.5rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .team-member {
+            text-align: center;
+            max-width: 200px;
+            transition: transform 0.3s ease;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-8px);
+        }
+        
+        .member-avatar {
+            width: 140px;
+            height: 140px;
+            background: linear-gradient(135deg, var(--ifpb-green), var(--ifpb-dark-green));
+            border-radius: 50%;
+            margin: 0 auto 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.8rem;
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 107, 62, 0.2);
+        }
+        
+        .member-name {
+            font-weight: 600;
+            color: var(--ifpb-dark-green);
+            margin-bottom: 0.3rem;
+            font-size: 1.1rem;
+        }
+        
+        .member-role {
+            color: #666;
+            font-size: 0.95rem;
+            background: #f8f9fa;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            display: inline-block;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+        
+        .tech-item {
+            background: linear-gradient(135deg, #f1f8ff, #e8f4ff);
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            color: var(--ifpb-dark-green);
+            border: 1px solid #d1e3ff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .tech-item:hover {
+            background: linear-gradient(135deg, #e8f4ff, #d1e3ff);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 107, 62, 0.1);
+        }
+        
+        .tech-item i {
+            color: var(--ifpb-green);
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--ifpb-green);
+            text-decoration: none;
+            font-weight: 500;
+            margin: 3rem auto 2rem;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid var(--ifpb-green);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .back-link:hover {
+            background: var(--ifpb-green);
+            color: white;
+            transform: translateX(-5px);
+        }
+        
+        .data-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f8fff9, #f0f9ff);
+            border-radius: 15px;
+            border: 1px solid #e0f0e5;
+        }
+        
+        .flow-step {
+            text-align: center;
+            max-width: 180px;
+        }
+        
+        .flow-icon {
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--ifpb-green);
+            border: 2px solid var(--ifpb-green);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .flow-arrow {
+            color: var(--ifpb-green);
+            font-size: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .project-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .section-card {
+                padding: 1.8rem;
+            }
+            
+            .project-timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+                margin-right: 0 !important;
+            }
+            
+            .timeline-item::before {
+                left: -40px !important;
+                right: auto !important;
+            }
+            
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+            
+            .data-flow {
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cabeçalho e Navegação -->
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                
+                <div class="logo-text">
+                    <h1>IFPB Data Platform</h1>
+                    <p>Transparência • Análise • Inovação</p>
+                </div>
+            </div>
+            
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="../index.html"><i class="fas fa-home"></i> Início</a></li>
+                    <li><a href="institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
+                    <li><a href="academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
+                    <li><a href="orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
+                    <li><a href="dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+                </ul>
+                
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="project-hero">
+            <div class="container">
+                <h1>Transformando Dados em Conhecimento</h1>
+                <p>Uma plataforma inovadora para democratizar o acesso às informações do IFPB através de visualização interativa e análise inteligente</p>
+            </div>
+        </section>
+
+        <!-- Visão Geral -->
+        <section class="project-content">
+            <div class="section-card">
+                <h2><i class="fas fa-lightbulb"></i> A Visão do Projeto</h2>
+                <p>O IFPB Data Platform nasceu da necessidade de transformar dados institucionais em ferramentas de transformação. Em um mundo cada vez mais orientado por informações, reconhecemos que os dados gerados diariamente pelo IFPB representam um patrimônio valioso, mas subutilizado.</p>
+                
+                <div class="highlight-box">
+                    <h4>Nossa Missão 🎯</h4>
+                    <p>Criar uma ponte entre dados técnicos complexos e decisões estratégicas, tornando a informação acessível, compreensível e útil para toda a comunidade acadêmica e sociedade em geral.</p>
+                </div>
+                
+                <p>Imagine poder explorar visualmente a evolução do número de matrículas, acompanhar a distribuição orçamentária em tempo real, ou entender as tendências acadêmicas através de gráficos interativos. Esta é a revolução que buscamos trazer para o IFPB.</p>
+            </div>
+
+            <!-- O Desafio -->
+            <div class="section-card">
+                <h2><i class="fas fa-exclamation-triangle"></i> O Desafio que Enfrentamos</h2>
+                <p>Atualmente, os dados do IFPB estão dispersos em diversos sistemas, planilhas e relatórios. Esta fragmentação cria barreiras:</p>
+                
+                <ul>
+                    <li><strong>Inacessibilidade:</strong> Informações críticas estão em formatos não amigáveis</li>
+                    <li><strong>Desconexão:</strong> Dados não conversam entre si, perdendo-se insights valiosos</li>
+                    <li><strong>Complexidade:</strong> Análises exigem conhecimento técnico especializado</li>
+                    <li><strong>Atualização lenta:</strong> Informações não refletem a realidade em tempo hábil</li>
+                </ul>
+                
+                <p>Este cenário limita o potencial dos dados como ferramenta de gestão, planejamento e transparência. A Lei de Acesso à Informação garante o direito aos dados, mas não garante sua compreensão ou utilidade prática.</p>
+            </div>
+
+            <!-- Nossa Solução -->
+            <div class="section-card">
+                <h2><i class="fas fa-rocket"></i> Nossa Solução Inovadora</h2>
+                <p>Criamos uma plataforma que transforma dados brutos em narrativas visuais poderosas. Mais do que um sistema de relatórios, desenvolvemos um ambiente interativo onde cada usuário pode:</p>
+                
+                <div class="data-flow">
+                    <div class="flow-step">
+                        <div class="flow-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h4>Coletar</h4>
+                        <p>Dados estruturados de múltiplas fontes</p>
+                    </div>
+                    
+                    <div class="flow-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-icon">
+                            <i class="fas fa-filter"></i>
+                        </div>
+                        <h4>Processar</h4>
+                        <p>Limpeza e organização inteligente</p>
+                    </div>
+                    
+                    <div class="flow-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>Visualizar</h4>
+                        <p>Gráficos interativos e dinâmicos</p>
+                    </div>
+                    
+                    <div class="flow-arrow">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    
+                    <div class="flow-step">
+                        <div class="flow-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h4>Compreender</h4>
+                        <p>Insights para decisões informadas</p>
+                    </div>
+                </div>
+                
+                <p>A plataforma foi projetada para ser intuitiva, permitindo que desde estudantes até gestores possam explorar dados sem necessidade de conhecimentos técnicos em análise de dados.</p>
+            </div>
+
+            <!-- Linha do Tempo do Projeto -->
+            <div class="section-card">
+                <h2><i class="fas fa-road"></i> Jornada de Desenvolvimento</h2>
+                <p>O projeto segue uma metodologia ágil e iterativa, com foco na entrega contínua de valor:</p>
+                
+                <div class="project-timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4><i class="fas fa-search"></i> Fase 1: Descoberta</h4>
+                            <p>Mapeamento completo das fontes de dados do IFPB, identificação de necessidades dos usuários e definição dos casos de uso prioritários.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4><i class="fas fa-paint-brush"></i> Fase 2: Design</h4>
+                            <p>Criação da arquitetura da informação, prototipagem de interfaces e definição das visualizações mais adequadas para cada tipo de dado.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4><i class="fas fa-code"></i> Fase 3: Desenvolvimento</h4>
+                            <p>Implementação do backend robusto e frontend responsivo, integração com APIs e desenvolvimento dos dashboards interativos.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4><i class="fas fa-vial"></i> Fase 4: Testes</h4>
+                            <p>Validação com usuários reais, otimização de performance e ajustes baseados no feedback da comunidade acadêmica.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <h4><i class="fas fa-rocket"></i> Fase 5: Lançamento</h4>
+                            <p>Implantação em produção, treinamento de usuários e estabelecimento de processos de manutenção e evolução contínua.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tecnologias -->
+            <div class="section-card">
+                <h2><i class="fas fa-cogs"></i> Tecnologia de Ponta</h2>
+                <p>Utilizamos uma stack tecnológica moderna e robusta para garantir performance, escalabilidade e experiência do usuário excepcional:</p>
+                
+                <div class="tech-stack">
+                    <span class="tech-item"><i class="fab fa-python"></i> Python</span>
+                    <span class="tech-item"><i class="fab fa-js"></i> JavaScript ES6+</span>
+                    <span class="tech-item"><i class="fas fa-chart-bar"></i> D3.js</span>
+                    <span class="tech-item"><i class="fas fa-database"></i> PostgreSQL</span>
+                    <span class="tech-item"><i class="fas fa-server"></i> Flask API</span>
+                    <span class="tech-item"><i class="fas fa-chart-line"></i> Chart.js</span>
+                    <span class="tech-item"><i class="fab fa-git-alt"></i> Git Flow</span>
+                    <span class="tech-item"><i class="fas fa-cloud"></i> Docker</span>
+                    <span class="tech-item"><i class="fas fa-mobile-alt"></i> Design Responsivo</span>
+                    <span class="tech-item"><i class="fas fa-bolt"></i> Performance</span>
+                </div>
+                
+                <div class="highlight-box">
+                    <h4>🔒 Segurança e Privacidade</h4>
+                    <p>Todos os dados são tratados com conformidade à LGPD e às melhores práticas de segurança da informação. Implementamos criptografia, controle de acesso e anonimização de dados sensíveis.</p>
+                </div>
+            </div>
+
+            <!-- Impacto Esperado -->
+            <div class="section-card">
+                <h2><i class="fas fa-bullseye"></i> Impacto e Benefícios</h2>
+                <p>Esta plataforma representa mais do que uma ferramenta técnica - é um catalisador para mudanças positivas:</p>
+                
+                <ul>
+                    <li><strong>Para Gestores:</strong> Decisões baseadas em dados reais e atualizados</li>
+                    <li><strong>Para Professores:</strong> Insights sobre evasão e desempenho estudantil</li>
+                    <li><strong>Para Estudantes:</strong> Transparência sobre recursos e oportunidades</li>
+                    <li><strong>Para Pesquisadores:</strong> Base rica para estudos e publicações</li>
+                    <li><strong>Para a Sociedade:</strong> Prestação de contas clara e acessível</li>
+                </ul>
+                
+                <p>Estimamos que a plataforma possa influenciar positivamente a alocação de recursos, reduzir taxas de evasão e fortalecer a cultura de dados na instituição.</p>
+            </div>
+
+            <!-- Equipe -->
+            <div class="section-card">
+                <h2><i class="fas fa-users"></i> A Equipe por Trás da Inovação</h2>
+                <p>Este projeto é desenvolvido por uma equipe multidisciplinar apaixonada por dados e educação:</p>
+                
+                <div class="team-section">
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="member-name">Pesquisadores</div>
+                        <div class="member-role">Iniciação Científica</div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <div class="member-name">Orientadores</div>
+                        <div class="member-role">Professores Especialistas</div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <i class="fas fa-laptop-code"></i>
+                        </div>
+                        <div class="member-name">Desenvolvedores</div>
+                        <div class="member-role">Full Stack</div>
+                    </div>
+                    
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="member-name">Analistas</div>
+                        <div class="member-role">Ciência de Dados</div>
+                    </div>
+                </div>
+                
+                <p>Trabalhamos em colaboração com diversos setores do IFPB para garantir que a plataforma atenda às reais necessidades da comunidade acadêmica.</p>
+            </div>
+
+            <!-- Chamada para Ação -->
+            <div class="section-card" style="text-align: center; background: linear-gradient(135deg, #f8fff9, #e8f4ff); border: 2px dashed var(--ifpb-green);">
+                <h2 style="border: none;"><i class="fas fa-hands-helping"></i> Participe Desta Transformação</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 2rem;">Esta plataforma é viva e evolui com o uso. Sua participação é fundamental!</p>
+                
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="dashboard.html" class="btn-primary" style="display: inline-flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-chart-line"></i> Explorar Dados
+                    </a>
+                    <a href="contato.html" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-comment"></i> Dar Feedback
+                    </a>
+                    <a href="dados-abertos.html" class="btn-primary" style="display: inline-flex; align-items: center; gap: 10px; background: var(--ifpb-dark-green);">
+                        <i class="fas fa-download"></i> Baixar Dados
+                    </a>
+                </div>
+                
+                <p style="margin-top: 2rem; color: #666; font-size: 0.95rem;">
+                    <i class="fas fa-info-circle"></i> Esta é uma versão em desenvolvimento ativo. Novos recursos são adicionados regularmente.
+                </p>
+            </div>
+
+            <!-- Link de Voltar -->
+            <div style="text-align: center;">
+                <a href="../index.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Voltar para a página inicial
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>IFPB Data Platform</h3>
+                    <p>Plataforma de visualização e análise de dados públicos do Instituto Federal da Paraíba.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                        <a href="#"><i class="fab fa-researchgate"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Navegação</h3>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Início</a></li>
+                        <li><a href="institucional.html">A Instituição</a></li>
+                        <li><a href="academico.html">Vida Acadêmica</a></li>
+                        <li><a href="orcamento.html">Gestão e Orçamento</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Recursos</h3>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html">Explorar Dados</a></li>
+                        <li><a href="dados-abertos.html">Dados Abertos</a></li>
+                        <li><a href="sobre.html" class="active">Sobre o Projeto</a></li>
+                        <li><a href="contato.html">Contato</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Projeto de Pesquisa</h3>
+                    <p>Iniciação Científica - IFPB<br>
+                    Desenvolvimento de plataforma digital interativa para dados públicos.</p>
+                    <a href="sobre.html" class="footer-btn">Saiba Mais</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 IFPB Data Platform. Desenvolvido com fins acadêmicos. Dados para transparência e análise.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="../script.js"></script>
+    <script>
+        // Animação suave para os cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.section-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
