@@ -1,272 +1,689 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IFPB Data Platform - Transparência e Análise de Dados</title>
-    <link rel="shortcut icon" href="assets/img/logosite.png " type="image/x-icon">
-    <link rel="stylesheet" href="style.css">
+    <title>IFPB Data Platform - Dashboard Interativo | Explorar Dados</title>
+    <meta name="description" content="Dashboard interativo para análise e visualização de dados do IFPB. Gráficos, filtros avançados e exportação de dados.">
+    <link rel="shortcut icon" href="../assets/img/logosite.png" type="image/x-icon">
+    <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* ESTILOS UNIFICADOS - IGUAL À PÁGINA INSTITUCIONAL */
+        :root {
+            --primary-color: #2c3e8f;
+            --secondary-color: #4e73df;
+            --success-color: #1cc88a;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --info-color: #36b9cc;
+            --dark-color: #2e3a59;
+            --medium-color: #5a5c69;
+            --light-color: #f8f9fc;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --radius: 10px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-/* Reset e Estilos Base */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-:root {
-    /* Cores do Tema */
-    --primary-color: #1a5f7a;
-    --primary-dark: #0e4a63;
-    --primary-light: #2a7a9a;
-    --secondary-color: #57cc99;
-    --accent-color: #ff9a3c;
-    --text-color: #333;
-    --text-light: #666;
-    --bg-light: #f8f9fa;
-    --bg-white: #ffffff;
-    --border-color: #e0e0e0;
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.12);
-    
-    /* Tipografia */
-    --font-heading: 'Poppins', sans-serif;
-    --font-body: 'Roboto', sans-serif;
-}
+        /* Cabeçalho da Página */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: var(--radius);
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
 
-body {
-    font-family: var(--font-body);
-    color: var(--text-color);
-    line-height: 1.6;
-    background-color: var(--bg-light);
-}
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+        }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
 
-/* Cabeçalho */
-.main-header {
-    background-color: var(--bg-white);
-    box-shadow: var(--shadow);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    padding: 15px 0;
-}
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
 
-.main-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+        .breadcrumb a:hover {
+            opacity: 0.8;
+        }
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+        .breadcrumb i {
+            font-size: 0.7rem;
+        }
 
-.logo-img {
-    height: 50px;
-    width: auto;
-}
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
 
-.logo-text h1 {
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    margin-bottom: 2px;
-}
+        .page-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            line-height: 1.6;
+        }
 
-.logo-text p {
-    font-size: 0.85rem;
-    color: var(--text-light);
-}
+        .status-indicators {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
 
-/* Navegação */
-.main-nav ul {
-    display: flex;
-    list-style: none;
-    gap: 25px;
-}
+        .status-indicator {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
 
-.nav-list a {
-    text-decoration: none;
-    color: var(--text-color);
-    font-weight: 500;
-    padding: 8px 12px;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-color);
+            animation: pulse 2s infinite;
+        }
 
-.nav-list a:hover {
-    color: var(--primary-color);
-    background-color: rgba(26, 95, 122, 0.05);
-}
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
 
-.nav-list a.active {
-    color: var(--primary-color);
-    background-color: rgba(26, 95, 122, 0.1);
-}
+        /* Seções */
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            margin: 2.5rem 0 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--light-color);
+            position: relative;
+        }
 
-.dashboard-btn {
-    background-color: var(--accent-color);
-    color: white !important;
-    padding: 10px 20px !important;
-}
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--secondary-color);
+        }
 
-.dashboard-btn:hover {
-    background-color: #e68a2e !important;
-}
+        /* Cards de Indicadores */
+        .indicators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
 
-.mobile-menu-btn {
-    display: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--primary-color);
-}
+        .indicator-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
 
-/* Rodapé */
-.main-footer {
-    background-color: var(--primary-dark);
-    color: white;
-    padding: 50px 0 20px;
-    margin-top: 60px;
-}
+        .indicator-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--secondary-color);
+        }
 
-.footer-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 40px;
-    margin-bottom: 40px;
-}
+        .indicator-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+        }
 
-.footer-col h3 {
-    font-family: var(--font-heading);
-    font-size: 1.3rem;
-    margin-bottom: 20px;
-    color: white;
-}
+        .indicator-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
 
-.footer-col p {
-    opacity: 0.8;
-    margin-bottom: 20px;
-    line-height: 1.6;
-}
+        .indicator-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--light-color), #e8f1ff);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: var(--secondary-color);
+        }
 
-.footer-links {
-    list-style: none;
-}
+        .indicator-trend {
+            font-size: 0.85rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
 
-.footer-links li {
-    margin-bottom: 12px;
-}
+        .trend-up {
+            background: rgba(28, 200, 138, 0.1);
+            color: var(--success-color);
+        }
 
-.footer-links a {
-    color: rgba(255, 255, 255, 0.8);
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
+        .trend-down {
+            background: rgba(231, 74, 59, 0.1);
+            color: var(--danger-color);
+        }
 
-.footer-links a:hover {
-    color: white;
-    padding-left: 5px;
-}
+        .indicator-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin: 0.5rem 0;
+            line-height: 1;
+        }
 
-.social-links {
-    display: flex;
-    gap: 15px;
-    margin-top: 20px;
-}
+        .indicator-label {
+            font-size: 0.9rem;
+            color: var(--medium-color);
+            margin-bottom: 0.5rem;
+        }
 
-.social-links a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    color: white;
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
-}
+        .indicator-detail {
+            font-size: 0.85rem;
+            color: var(--medium-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-.social-links a:hover {
-    background-color: var(--accent-color);
-    transform: translateY(-3px);
-}
+        /* Filtros Avançados */
+        .filter-section {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-md);
+        }
 
-.footer-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: var(--accent-color);
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: 500;
-    margin-top: 10px;
-    transition: all 0.3s ease;
-}
+        .filter-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
 
-.footer-btn:hover {
-    background-color: #e68a2e;
-    transform: translateY(-2px);
-}
+        .filter-header h3 {
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            margin: 0;
+        }
 
-.footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 20px;
-    text-align: center;
-    font-size: 0.9rem;
-    opacity: 0.7;
-}
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
 
-.footer-note {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: rgba(255, 154, 60, 0.1);
-    border-radius: 4px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
+        .filter-tab {
+            padding: 0.75rem 1.5rem;
+            background: var(--light-color);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            color: var(--medium-color);
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-/* Responsividade */
+        .filter-tab:hover {
+            background: #e3e6f0;
+        }
 
+        .filter-tab.active {
+            background: var(--secondary-color);
+            color: white;
+        }
 
-@media (max-width: 576px) {
-    .cards-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .hero-content h2 {
-        font-size: 2rem;
-    }
-    
-    .section-title {
-        font-size: 1.7rem;
-    }
-    
-    .footer-grid {
-        grid-template-columns: 1fr;
-    }
-}
+        .filter-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
 
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(78, 115, 223, 0.1);
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--light-color);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            box-shadow: 0 4px 12px rgba(78, 115, 223, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(78, 115, 223, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--light-color);
+            color: var(--medium-color);
+            border: 1px solid #d1d3e2;
+        }
+
+        .btn-secondary:hover {
+            background: #e3e6f0;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .dashboard-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid #e3e6f0;
+            transition: var(--transition);
+        }
+
+        .dashboard-card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .dashboard-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            color: var(--dark-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .card-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            border: 1px solid #d1d3e2;
+            background: white;
+            color: var(--medium-color);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-btn:hover {
+            background: var(--light-color);
+            color: var(--secondary-color);
+        }
+
+        .chart-wrapper {
+            height: 300px;
+            position: relative;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        .data-table th {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: left;
+            padding: 1rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            position: sticky;
+            top: 0;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e3e6f0;
+            color: var(--medium-color);
+            font-size: 0.95rem;
+        }
+
+        .data-table tr:hover td {
+            background-color: var(--light-color);
+        }
+
+        /* Exportação de Dados */
+        .export-section {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin: 3rem 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        .export-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .export-title {
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .export-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .export-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem;
+            background: var(--light-color);
+            border-radius: var(--radius);
+            transition: var(--transition);
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .export-option:hover {
+            background: #e3e6f0;
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .export-option i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+
+        .export-option h4 {
+            margin: 0 0 0.5rem 0;
+            color: var(--dark-color);
+        }
+
+        .export-option p {
+            margin: 0;
+            color: var(--medium-color);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* Metodologia */
+        .methodology-section {
+            background: linear-gradient(135deg, var(--light-color), #eef2ff);
+            border-radius: var(--radius);
+            padding: 2.5rem;
+            margin: 3rem 0;
+            border-left: 5px solid var(--secondary-color);
+        }
+
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .methodology-item h4 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .methodology-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .methodology-list li {
+            margin-bottom: 0.75rem;
+            color: var(--medium-color);
+            line-height: 1.6;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .methodology-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        .source-info {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border-left: 4px solid var(--success-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .source-info p {
+            margin-bottom: 0.75rem;
+            color: var(--medium-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .source-info strong {
+            color: var(--dark-color);
+            min-width: 140px;
+            display: inline-block;
+        }
+
+        /* Animações */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .indicators-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-tabs {
+                flex-direction: column;
+            }
+            
+            .filter-tab {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .filter-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .methodology-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                padding: 2rem 1rem;
+            }
+            
+            .methodology-section {
+                padding: 1.5rem;
+            }
+            
+            .export-options {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
+
     <!-- Cabeçalho e Navegação -->
     <header class="main-header">
         <div class="container">
@@ -279,11 +696,11 @@ body {
             
             <nav class="main-nav">
                 <ul class="nav-list">
-                    <li><a href="index.html" class="active"><i class="fas fa-home"></i> Início</a></li>
-                    <li><a href="pages/institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
-                    <li><a href="pages/academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
-                    <li><a href="pages/orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
-                    <li><a href="pages/dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+                    <li><a href="../index.html"><i class="fas fa-home"></i> Início</a></li>
+                    <li><a href="institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
+                    <li><a href="academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
+                    <li><a href="orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
+                    <li><a href="dashboard.html" class="dashboard-btn active"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
                 </ul>
                 
                 <div class="mobile-menu-btn">
@@ -295,7 +712,452 @@ body {
 
     <!-- Conteúdo Principal -->
     <main class="container">
-   
+        <!-- Cabeçalho da Página -->
+        <section class="page-header fade-in">
+            <div class="breadcrumb">
+                <a href="../index.html">Início</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>Explorar Dados</span>
+            </div>
+            <h1 class="page-title">Dashboard Interativo IFPB</h1>
+            <p class="page-subtitle">
+                Explore, analise e visualize dados institucionais do IFPB através de gráficos interativos, filtros avançados 
+                e painéis personalizados. Transforme dados em insights acionáveis.
+            </p>
+            
+            <div class="status-indicators">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>Dados em Tempo Real</span>
+                </div>
+                <div class="status-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span>6 Visualizações Interativas</span>
+                </div>
+                <div class="status-indicator">
+                    <i class="fas fa-download"></i>
+                    <span>Exportação Completa</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Indicadores Principais -->
+        <section class="indicators-section fade-in">
+            <h2 class="section-title">Indicadores em Tempo Real</h2>
+            <div class="indicators-grid">
+                <div class="indicator-card" data-tooltip="Total de estudantes matriculados no IFPB">
+                    <div class="indicator-header">
+                        <div class="indicator-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <span class="indicator-trend trend-up">+5.2%</span>
+                    </div>
+                    <div class="indicator-value" id="total-estudantes">28.456</div>
+                    <div class="indicator-label">Estudantes Matriculados</div>
+                    <div class="indicator-detail">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>2023-2024</span>
+                    </div>
+                </div>
+                
+                <div class="indicator-card" data-tooltip="Total de servidores da instituição">
+                    <div class="indicator-header">
+                        <div class="indicator-icon">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <span class="indicator-trend trend-up">+3.1%</span>
+                    </div>
+                    <div class="indicator-value" id="total-servidores">1.847</div>
+                    <div class="indicator-label">Servidores</div>
+                    <div class="indicator-detail">
+                        <i class="fas fa-user-graduate"></i>
+                        <span>Docentes e Técnicos</span>
+                    </div>
+                </div>
+                
+                <div class="indicator-card" data-tooltip="Cursos oferecidos pelo IFPB">
+                    <div class="indicator-header">
+                        <div class="indicator-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <span class="indicator-trend trend-up">+8</span>
+                    </div>
+                    <div class="indicator-value" id="total-cursos">127</div>
+                    <div class="indicator-label">Cursos Ofertados</div>
+                    <div class="indicator-detail">
+                        <i class="fas fa-university"></i>
+                        <span>Em 18 campi</span>
+                    </div>
+                </div>
+                
+                <div class="indicator-card" data-tooltip="Orçamento anual do IFPB">
+                    <div class="indicator-header">
+                        <div class="indicator-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <span class="indicator-trend trend-up">+8.7%</span>
+                    </div>
+                    <div class="indicator-value">R$ 428M</div>
+                    <div class="indicator-label">Orçamento 2023</div>
+                    <div class="indicator-detail">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Receitas vs Despesas</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filtros Avançados -->
+        <section class="filter-section fade-in">
+            <div class="filter-header">
+                <h3><i class="fas fa-sliders-h"></i> Filtros Avançados do Dashboard</h3>
+                <span class="indicator-trend trend-up" style="margin-left: auto;">Filtros Ativos</span>
+            </div>
+            
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="geral">
+                    <i class="fas fa-globe"></i> Visão Geral
+                </button>
+                <button class="filter-tab" data-filter="academico">
+                    <i class="fas fa-graduation-cap"></i> Acadêmico
+                </button>
+                <button class="filter-tab" data-filter="financeiro">
+                    <i class="fas fa-chart-pie"></i> Financeiro
+                </button>
+                <button class="filter-tab" data-filter="temporal">
+                    <i class="fas fa-calendar-alt"></i> Temporal
+                </button>
+                <button class="filter-tab" data-filter="comparativo">
+                    <i class="fas fa-balance-scale"></i> Comparativo
+                </button>
+            </div>
+            
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label for="campusSelect"><i class="fas fa-map-marker-alt"></i> Campus</label>
+                    <select id="campusSelect">
+                        <option value="all">Todos os Campi</option>
+                        <option value="joao-pessoa">João Pessoa</option>
+                        <option value="campina-grande">Campina Grande</option>
+                        <option value="guarabira">Guarabira</option>
+                        <option value="sousa">Sousa</option>
+                        <option value="cajazeiras">Cajazeiras</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="periodSelect"><i class="fas fa-calendar"></i> Período</label>
+                    <select id="periodSelect">
+                        <option value="2024">2024</option>
+                        <option value="2023" selected>2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="all">Todo o período</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="categorySelect"><i class="fas fa-filter"></i> Categoria</label>
+                    <select id="categorySelect">
+                        <option value="all">Todas as Categorias</option>
+                        <option value="academico">Acadêmico</option>
+                        <option value="financeiro">Financeiro</option>
+                        <option value="estrutura">Estrutura</option>
+                        <option value="pessoal">Pessoal</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="metricSelect"><i class="fas fa-chart-bar"></i> Métrica</label>
+                    <select id="metricSelect">
+                        <option value="matriculas">Matrículas</option>
+                        <option value="concluintes">Concluintes</option>
+                        <option value="investimento">Investimento</option>
+                        <option value="docentes">Docentes</option>
+                        <option value="cursos">Cursos</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="filter-actions">
+                <button class="btn btn-primary" id="apply-filters">
+                    <i class="fas fa-filter"></i> Aplicar Filtros
+                </button>
+                <button class="btn btn-secondary" id="reset-filters">
+                    <i class="fas fa-redo"></i> Limpar Filtros
+                </button>
+                <button class="btn btn-secondary" id="save-filters">
+                    <i class="fas fa-save"></i> Salvar Configuração
+                </button>
+            </div>
+        </section>
+
+        <!-- Dashboard Grid -->
+        <section class="dashboard-section fade-in">
+            <h2 class="section-title">Visualizações Interativas</h2>
+            
+            <div class="dashboard-grid">
+                <!-- Gráfico 1: Distribuição de Estudantes -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-bar"></i> Distribuição de Estudantes por Campus
+                        </h3>
+                        <div class="card-actions">
+                            <button class="card-btn" title="Expandir" data-action="expand" data-chart="distribuicao">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="card-btn" title="Download" data-action="download" data-chart="distribuicao">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="distribuicaoChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Gráfico 2: Evolução Temporal -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-line"></i> Evolução de Matrículas
+                        </h3>
+                        <div class="card-actions">
+                            <button class="card-btn" title="Expandir" data-action="expand" data-chart="evolucao">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="card-btn" title="Download" data-action="download" data-chart="evolucao">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="evolucaoChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Gráfico 3: Tipos de Cursos -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-pie"></i> Tipos de Cursos
+                        </h3>
+                        <div class="card-actions">
+                            <button class="card-btn" title="Informações" data-action="info" data-chart="tipos">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="tiposChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Gráfico 4: Investimentos -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-money-bill-wave"></i> Investimento por Área
+                        </h3>
+                        <div class="card-actions">
+                            <button class="card-btn" title="Expandir" data-action="expand" data-chart="investimentos">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="card-btn" title="Download" data-action="download" data-chart="investimentos">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="investimentosChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Tabela: Top Campi -->
+                <div class="dashboard-card full-width">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-table"></i> Top 10 Campi por Estudantes
+                        </h3>
+                        <div class="card-actions">
+                            <button class="card-btn" title="Exportar" data-action="export" data-table="top-campi">
+                                <i class="fas fa-file-export"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Posição</th>
+                                    <th>Campus</th>
+                                    <th>Estudantes</th>
+                                    <th>% Total</th>
+                                    <th>Variação</th>
+                                </tr>
+                            </thead>
+                            <tbody id="topCampiTable">
+                                <!-- Dados serão preenchidos via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Gráfico 5: Comparativo Regional -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-balance-scale"></i> Comparativo Regional
+                        </h3>
+                        <div class="card-actions">
+                            <button class="card-btn" title="Informações" data-action="info" data-chart="comparativo">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="comparativoChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Gráfico 6: Taxa de Conclusão -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-graduation-cap"></i> Taxa de Conclusão
+                        </h3>
+                        <div class="card-actions">
+                            <button class="card-btn" title="Expandir" data-action="expand" data-chart="conclusao">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="card-btn" title="Download" data-action="download" data-chart="conclusao">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="conclusaoChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exportação de Dados -->
+        <section class="export-section fade-in">
+            <div class="export-header">
+                <h3 class="export-title">
+                    <i class="fas fa-download"></i> Exportar Dados e Relatórios
+                </h3>
+                <span class="indicator-trend trend-up">Formatos Disponíveis</span>
+            </div>
+            
+            <p style="color: var(--medium-color); margin-bottom: 2rem; line-height: 1.6;">
+                Exporte os dados filtrados e visualizações para análise externa. Formatos compatíveis com Excel, Power BI, R, Python e outras ferramentas de análise.
+            </p>
+            
+            <div class="export-options">
+                <div class="export-option" data-format="csv">
+                    <i class="fas fa-file-csv"></i>
+                    <h4>CSV</h4>
+                    <p>Dados estruturados para Excel e análise básica</p>
+                </div>
+                
+                <div class="export-option" data-format="json">
+                    <i class="fas fa-file-code"></i>
+                    <h4>JSON</h4>
+                    <p>Formato estruturado para aplicações web e APIs</p>
+                </div>
+                
+                <div class="export-option" data-format="excel">
+                    <i class="fas fa-file-excel"></i>
+                    <h4>Excel</h4>
+                    <p>Planilha completa com formatação e gráficos</p>
+                </div>
+                
+                <div class="export-option" data-format="pdf">
+                    <i class="fas fa-file-pdf"></i>
+                    <h4>PDF</h4>
+                    <p>Relatório completo com gráficos e análises</p>
+                </div>
+            </div>
+            
+            <div class="filter-actions" style="margin-top: 2rem;">
+                <button class="btn btn-primary" id="export-all">
+                    <i class="fas fa-download"></i> Exportar Todos os Dados
+                </button>
+                <button class="btn btn-secondary" id="export-custom">
+                    <i class="fas fa-cogs"></i> Exportação Personalizada
+                </button>
+                <button class="btn btn-secondary" id="schedule-export">
+                    <i class="fas fa-clock"></i> Agendar Exportação
+                </button>
+            </div>
+        </section>
+
+        <!-- Metodologia e Fontes -->
+        <section class="methodology-section fade-in">
+            <h2 class="section-title">Metodologia e Fontes</h2>
+            
+            <div class="methodology-grid">
+                <div class="methodology-item">
+                    <h4>Fontes de Dados</h4>
+                    <ul class="methodology-list">
+                        <li>Sistema Acadêmico do IFPB (Q-Acadêmico)</li>
+                        <li>Portal da Transparência</li>
+                        <li>Relatórios Anuais de Gestão</li>
+                        <li>Instituto Nacional de Estudos e Pesquisas (INEP)</li>
+                        <li>APIs Institucionais</li>
+                    </ul>
+                </div>
+                
+                <div class="methodology-item">
+                    <h4>Processamento</h4>
+                    <ul class="methodology-list">
+                        <li>Limpeza e padronização de dados</li>
+                        <li>Anonimização conforme LGPD</li>
+                        <li>Consolidação de múltiplas fontes</li>
+                        <li>Validação cruzada de informações</li>
+                    </ul>
+                </div>
+                
+                <div class="methodology-item">
+                    <h4>Atualização</h4>
+                    <ul class="methodology-list">
+                        <li>Dados acadêmicos: Trimestral</li>
+                        <li>Dados financeiros: Mensal</li>
+                        <li>Indicadores: Semestral</li>
+                        <li>Cache: Atualizado a cada acesso</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="source-info">
+                <p>
+                    <strong><i class="fas fa-database"></i> Base de Dados:</strong> 
+                    Plataforma integrada com atualização automática
+                </p>
+                <p>
+                    <strong><i class="fas fa-calendar-check"></i> Última Atualização:</strong> 
+                    <span id="last-update">15 de janeiro de 2024 às 14:30</span>
+                </p>
+                <p>
+                    <strong><i class="fas fa-shield-alt"></i> Conformidade:</strong> 
+                    LGPD - Lei Geral de Proteção de Dados
+                </p>
+                <p>
+                    <strong><i class="fas fa-code-branch"></i> Versão da API:</strong> 
+                    v3.2.1 (RESTful)
+                </p>
+            </div>
+            
+            <div class="warning-box" style="margin-top: 1.5rem;">
+                <p>
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Nota:</strong> Dados para fins de análise e transparência. Para dados oficiais, consulte os portais institucionais do IFPB. Alguns dados podem estar sujeitos a atrasos na consolidação.
+                </p>
+            </div>
+        </section>
     </main>
 
     <!-- Rodapé -->
@@ -315,20 +1177,20 @@ body {
                 <div class="footer-col">
                     <h3>Navegação</h3>
                     <ul class="footer-links">
-                        <li><a href="index.html">Início</a></li>
-                        <li><a href="pages/institucional.html">A Instituição</a></li>
-                        <li><a href="pages/academico.html">Vida Acadêmica</a></li>
-                        <li><a href="pages/orcamento.html">Gestão e Orçamento</a></li>
+                        <li><a href="../index.html">Início</a></li>
+                        <li><a href="institucional.html">A Instituição</a></li>
+                        <li><a href="academico.html">Vida Acadêmica</a></li>
+                        <li><a href="orcamento.html">Gestão e Orçamento</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-col">
                     <h3>Recursos</h3>
                     <ul class="footer-links">
-                        <li><a href="pages/dashboard.html">Explorar Dados</a></li>
-                        <li><a href="pages/dados-abertos.html">Dados Abertos</a></li>
-                        <li><a href="pages/sobre.html">Sobre o Projeto</a></li>
-                        <li><a href="pages/contato.html">Contato</a></li>
+                        <li><a href="dashboard.html" class="active">Explorar Dados</a></li>
+                        <li><a href="dados-abertos.html">Dados Abertos</a></li>
+                        <li><a href="sobre.html">Sobre o Projeto</a></li>
+                        <li><a href="contato.html">Contato</a></li>
                     </ul>
                 </div>
                 
@@ -336,22 +1198,834 @@ body {
                     <h3>Projeto de Pesquisa</h3>
                     <p>Iniciação Científica - IFPB<br>
                     Desenvolvimento de plataforma digital interativa para dados públicos.</p>
-                    <a href="pages/sobre.html" class="footer-btn">Saiba Mais</a>
+                    <a href="sobre.html" class="footer-btn">Saiba Mais</a>
                 </div>
             </div>
             
             <div class="footer-bottom">
                 <p>&copy; 2026 IFPB Data Platform. Desenvolvido com fins acadêmicos. Dados para transparência e análise.</p>
-                <p class="footer-note">
-                    <i class="fas fa-exclamation-circle"></i>
-                    Esta é uma versão de demonstração. Alguns dados são ilustrativos.
-                </p>
             </div>
         </div>
     </footer>
 
-    <!-- JavaScript -->
-    <script src="script.js"></script>
-    <script src="assets/js/charts.js"></script>
+    <!-- Scripts -->
+    <script>
+        // ===== DASHBOARD INTERATIVO - JAVASCRIPT =====
+
+        // Variáveis globais
+        let charts = {};
+        let filters = {
+            campus: 'all',
+            period: '2023',
+            category: 'all',
+            metric: 'matriculas'
+        };
+        
+        // Dados de exemplo para o dashboard
+        const dashboardData = {
+            campuses: ['João Pessoa', 'Campina Grande', 'Guarabira', 'Sousa', 'Cajazeiras', 
+                      'Patos', 'Monteiro', 'Princesa Isabel', 'Picuí', 'Santa Rita'],
+            studentsByCampus: [8500, 6200, 3200, 2800, 2500, 1800, 1200, 950, 800, 750],
+            enrollmentYears: ['2018', '2019', '2020', '2021', '2022', '2023'],
+            enrollmentData: [22000, 23500, 24500, 25800, 27200, 28456],
+            courseTypes: ['Técnico', 'Graduação', 'Pós-Graduação'],
+            courseDistribution: [35, 55, 10],
+            investmentAreas: ['Infraestrutura', 'Pesquisa', 'Extensão', 'Capacitação', 'Bolsa'],
+            investmentData: [45, 25, 15, 10, 5],
+            regions: ['Metropolitana', 'Agreste', 'Sertão', 'Borborema'],
+            regionStudents: [15000, 8500, 3500, 1456],
+            topCampi: [
+                { name: 'João Pessoa', students: 8500, percentage: 29.9, variation: '+5.2%' },
+                { name: 'Campina Grande', students: 6200, percentage: 21.8, variation: '+3.1%' },
+                { name: 'Guarabira', students: 3200, percentage: 11.2, variation: '+7.8%' },
+                { name: 'Sousa', students: 2800, percentage: 9.8, variation: '+2.5%' },
+                { name: 'Cajazeiras', students: 2500, percentage: 8.8, variation: '+1.9%' },
+                { name: 'Patos', students: 1800, percentage: 6.3, variation: '+4.2%' },
+                { name: 'Monteiro', students: 1200, percentage: 4.2, variation: '+6.1%' },
+                { name: 'Princesa Isabel', students: 950, percentage: 3.3, variation: '+3.7%' },
+                { name: 'Picuí', students: 800, percentage: 2.8, variation: '+5.5%' },
+                { name: 'Santa Rita', students: 750, percentage: 2.6, variation: '+2.3%' }
+            ],
+            completionRates: [92, 88, 85, 82, 80, 78, 76, 74, 72, 70],
+            completionCourses: ['Informática', 'Administração', 'Edificações', 'Enfermagem', 'Agricultura', 
+                               'Química', 'Eletrotécnica', 'Mecânica', 'Turismo', 'Design']
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📊 IFPB Dashboard Interativo - Inicializando...');
+            
+            // Inicializar componentes
+            initCharts();
+            initFilters();
+            initTable();
+            initExport();
+            initEvents();
+            
+            // Atualizar data
+            updateLastUpdate();
+            
+            // Mostrar notificação inicial
+            setTimeout(() => {
+                showNotification('Dashboard interativo carregado com sucesso!', 'success');
+            }, 1000);
+        });
+
+        // ===== INICIALIZAR GRÁFICOS =====
+        function initCharts() {
+            const colors = {
+                primary: '#4e73df',
+                success: '#1cc88a',
+                danger: '#e74a3b',
+                warning: '#f6c23e',
+                info: '#36b9cc',
+                dark: '#5a5c69'
+            };
+
+            // Gráfico 1: Distribuição de Estudantes por Campus
+            const ctx1 = document.getElementById('distribuicaoChart').getContext('2d');
+            charts.distribuicao = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: dashboardData.campuses,
+                    datasets: [{
+                        label: 'Estudantes',
+                        data: dashboardData.studentsByCampus,
+                        backgroundColor: [
+                            colors.primary,
+                            colors.success,
+                            colors.warning,
+                            colors.info,
+                            '#9575cd',
+                            '#ff7043',
+                            '#26a69a',
+                            '#ffca28',
+                            '#78909c',
+                            '#8d6e63'
+                        ],
+                        borderColor: colors.primary,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.parsed.y.toLocaleString()} estudantes`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico 2: Evolução de Matrículas
+            const ctx2 = document.getElementById('evolucaoChart').getContext('2d');
+            charts.evolucao = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: dashboardData.enrollmentYears,
+                    datasets: [{
+                        label: 'Matrículas',
+                        data: dashboardData.enrollmentData,
+                        borderColor: colors.primary,
+                        backgroundColor: 'rgba(78, 115, 223, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.parsed.y.toLocaleString()} matrículas`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            },
+                            grid: {
+                                borderDash: [2]
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico 3: Tipos de Cursos
+            const ctx3 = document.getElementById('tiposChart').getContext('2d');
+            charts.tipos = new Chart(ctx3, {
+                type: 'doughnut',
+                data: {
+                    labels: dashboardData.courseTypes,
+                    datasets: [{
+                        data: dashboardData.courseDistribution,
+                        backgroundColor: [colors.primary, colors.success, colors.warning],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((context.parsed / total) * 100);
+                                    return `${context.label}: ${percentage}%`;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '60%'
+                }
+            });
+
+            // Gráfico 4: Investimento por Área
+            const ctx4 = document.getElementById('investimentosChart').getContext('2d');
+            charts.investimentos = new Chart(ctx4, {
+                type: 'pie',
+                data: {
+                    labels: dashboardData.investmentAreas,
+                    datasets: [{
+                        data: dashboardData.investmentData,
+                        backgroundColor: [
+                            colors.primary,
+                            colors.success,
+                            colors.warning,
+                            colors.info,
+                            '#9575cd'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.parsed}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico 5: Comparativo Regional
+            const ctx5 = document.getElementById('comparativoChart').getContext('2d');
+            charts.comparativo = new Chart(ctx5, {
+                type: 'polarArea',
+                data: {
+                    labels: dashboardData.regions,
+                    datasets: [{
+                        data: dashboardData.regionStudents,
+                        backgroundColor: [
+                            'rgba(78, 115, 223, 0.7)',
+                            'rgba(28, 200, 138, 0.7)',
+                            'rgba(246, 194, 62, 0.7)',
+                            'rgba(54, 185, 204, 0.7)'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.parsed.toLocaleString()} estudantes`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfico 6: Taxa de Conclusão
+            const ctx6 = document.getElementById('conclusaoChart').getContext('2d');
+            charts.conclusao = new Chart(ctx6, {
+                type: 'bar',
+                data: {
+                    labels: dashboardData.completionCourses,
+                    datasets: [{
+                        label: 'Taxa de Conclusão (%)',
+                        data: dashboardData.completionRates,
+                        backgroundColor: colors.success,
+                        borderColor: colors.primary,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.parsed.x}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // ===== INICIALIZAR FILTROS =====
+        function initFilters() {
+            // Tabs de filtro
+            const filterTabs = document.querySelectorAll('.filter-tab');
+            filterTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remover active de todas
+                    filterTabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Adicionar active
+                    this.classList.add('active');
+                    
+                    // Atualizar interface
+                    updateFilterInterface(this.dataset.filter);
+                });
+            });
+            
+            // Elementos de filtro
+            document.getElementById('campusSelect').addEventListener('change', function() {
+                filters.campus = this.value;
+                updateDashboard();
+            });
+            
+            document.getElementById('periodSelect').addEventListener('change', function() {
+                filters.period = this.value;
+                updateDashboard();
+            });
+            
+            document.getElementById('categorySelect').addEventListener('change', function() {
+                filters.category = this.value;
+                updateDashboard();
+            });
+            
+            document.getElementById('metricSelect').addEventListener('change', function() {
+                filters.metric = this.value;
+                updateDashboard();
+            });
+            
+            // Botões de ação
+            document.getElementById('apply-filters').addEventListener('click', function() {
+                applyFilters();
+            });
+            
+            document.getElementById('reset-filters').addEventListener('click', function() {
+                resetFilters();
+            });
+            
+            document.getElementById('save-filters').addEventListener('click', function() {
+                saveFilterConfiguration();
+            });
+        }
+        
+        function updateFilterInterface(filterType) {
+            console.log(`Atualizando interface para filtro: ${filterType}`);
+            
+            // Atualizar indicadores visuais
+            const filterInfo = document.querySelector('.filter-header .indicator-trend');
+            if (filterInfo) {
+                filterInfo.textContent = `Filtro: ${filterType.toUpperCase()}`;
+            }
+        }
+        
+        function applyFilters() {
+            console.log('Aplicando filtros:', filters);
+            
+            // Simular processamento
+            showNotification('Aplicando filtros e atualizando visualizações...', 'info');
+            
+            setTimeout(() => {
+                // Aqui você faria a atualização real dos dados
+                updateChartsWithFilters();
+                updateTable();
+                showNotification('Filtros aplicados com sucesso!', 'success');
+            }, 500);
+        }
+        
+        function resetFilters() {
+            // Resetar valores
+            document.getElementById('campusSelect').value = 'all';
+            document.getElementById('periodSelect').value = '2023';
+            document.getElementById('categorySelect').value = 'all';
+            document.getElementById('metricSelect').value = 'matriculas';
+            
+            // Resetar objeto de filtros
+            filters = {
+                campus: 'all',
+                period: '2023',
+                category: 'all',
+                metric: 'matriculas'
+            };
+            
+            // Resetar tabs
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector('[data-filter="geral"]').classList.add('active');
+            
+            // Atualizar dashboard
+            updateDashboard();
+            showNotification('Filtros resetados para configuração padrão', 'info');
+        }
+        
+        function saveFilterConfiguration() {
+            const config = {
+                ...filters,
+                timestamp: new Date().toISOString(),
+                version: '1.0'
+            };
+            
+            const dataStr = JSON.stringify(config, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            
+            a.href = url;
+            a.download = `dashboard-config-${new Date().toISOString().slice(0,10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('Configuração de filtros salva com sucesso!', 'success');
+        }
+
+        // ===== ATUALIZAR GRÁFICOS COM FILTROS =====
+        function updateChartsWithFilters() {
+            // Esta função seria implementada com dados reais da API
+            console.log('Atualizando gráficos com filtros:', filters);
+            
+            // Simular alteração nos dados baseado nos filtros
+            if (filters.campus !== 'all') {
+                // Filtrar dados para campus específico
+                const campusIndex = Math.min(Math.floor(Math.random() * dashboardData.campuses.length), 9);
+                const filteredData = [dashboardData.studentsByCampus[campusIndex]];
+                
+                charts.distribuicao.data.datasets[0].data = filteredData;
+                charts.distribuicao.data.labels = [dashboardData.campuses[campusIndex]];
+                charts.distribuicao.update();
+            }
+            
+            // Outras atualizações baseadas nos filtros...
+        }
+
+        // ===== INICIALIZAR TABELA =====
+        function initTable() {
+            updateTable();
+            
+            // Botão de exportação da tabela
+            const exportBtn = document.querySelector('[data-action="export"]');
+            if (exportBtn) {
+                exportBtn.addEventListener('click', function() {
+                    exportTableData();
+                });
+            }
+        }
+        
+        function updateTable() {
+            const tableBody = document.getElementById('topCampiTable');
+            if (!tableBody) return;
+            
+            let html = '';
+            dashboardData.topCampi.forEach((campus, index) => {
+                const variationClass = campus.variation.includes('+') ? 'positive' : 'negative';
+                
+                html += `
+                    <tr>
+                        <td style="font-weight: 700; color: var(--primary-color);">${index + 1}º</td>
+                        <td style="font-weight: 600;">${campus.name}</td>
+                        <td style="font-weight: 700; color: var(--dark-color);">${campus.students.toLocaleString()}</td>
+                        <td>${campus.percentage}%</td>
+                        <td class="${variationClass}" style="font-weight: 600;">${campus.variation}</td>
+                    </tr>
+                `;
+            });
+            
+            tableBody.innerHTML = html;
+        }
+        
+        function exportTableData() {
+            let csv = 'Posição,Campus,Estudantes,Porcentagem,Variação\n';
+            
+            dashboardData.topCampi.forEach((campus, index) => {
+                csv += `${index + 1}º,${campus.name},${campus.students},${campus.percentage}%,${campus.variation}\n`;
+            });
+            
+            downloadFile(csv, 'top-campi-ifpb.csv', 'text/csv');
+            showNotification('Tabela exportada para CSV', 'success');
+        }
+
+        // ===== INICIALIZAR EXPORTAÇÃO =====
+        function initExport() {
+            // Opções de exportação
+            document.querySelectorAll('.export-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const format = this.dataset.format;
+                    exportData(format);
+                });
+            });
+            
+            // Botões de ação
+            document.getElementById('export-all').addEventListener('click', function() {
+                exportAllData();
+            });
+            
+            document.getElementById('export-custom').addEventListener('click', function() {
+                showCustomExportModal();
+            });
+            
+            document.getElementById('schedule-export').addEventListener('click', function() {
+                showScheduleExportModal();
+            });
+            
+            // Botões de download dos gráficos
+            document.querySelectorAll('[data-action="download"]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const chart = this.dataset.chart;
+                    downloadChartData(chart);
+                });
+            });
+        }
+        
+        function exportData(format) {
+            let data, filename, contentType;
+            
+            switch(format) {
+                case 'csv':
+                    data = generateCSVData();
+                    filename = `ifpb-dashboard-${new Date().toISOString().slice(0,10)}.csv`;
+                    contentType = 'text/csv';
+                    break;
+                    
+                case 'json':
+                    data = JSON.stringify(dashboardData, null, 2);
+                    filename = `ifpb-dashboard-${new Date().toISOString().slice(0,10)}.json`;
+                    contentType = 'application/json';
+                    break;
+                    
+                case 'excel':
+                    // Para Excel, usaremos CSV (simulação)
+                    data = generateCSVData();
+                    filename = `ifpb-dashboard-${new Date().toISOString().slice(0,10)}.xlsx`;
+                    contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+                    break;
+                    
+                case 'pdf':
+                    // Simulação de PDF
+                    data = 'PDF content would be generated here';
+                    filename = `ifpb-dashboard-${new Date().toISOString().slice(0,10)}.pdf`;
+                    contentType = 'application/pdf';
+                    break;
+            }
+            
+            downloadFile(data, filename, contentType);
+            showNotification(`Dados exportados em formato ${format.toUpperCase()}`, 'success');
+        }
+        
+        function generateCSVData() {
+            let csv = 'Categoria,Valor\n';
+            
+            // Dados dos campi
+            dashboardData.campuses.forEach((campus, index) => {
+                csv += `${campus},${dashboardData.studentsByCampus[index]}\n`;
+            });
+            
+            csv += '\nPeríodo,Matrículas\n';
+            
+            // Dados temporais
+            dashboardData.enrollmentYears.forEach((year, index) => {
+                csv += `${year},${dashboardData.enrollmentData[index]}\n`;
+            });
+            
+            return csv;
+        }
+        
+        function exportAllData() {
+            const allData = {
+                metadata: {
+                    exportDate: new Date().toISOString(),
+                    filters: filters,
+                    version: '1.0'
+                },
+                data: dashboardData
+            };
+            
+            const dataStr = JSON.stringify(allData, null, 2);
+            downloadFile(dataStr, `ifpb-complete-data-${new Date().toISOString().slice(0,10)}.json`, 'application/json');
+            showNotification('Todos os dados exportados com sucesso!', 'success');
+        }
+        
+        function downloadChartData(chartName) {
+            const chart = charts[chartName];
+            if (!chart) return;
+            
+            let csv = '';
+            
+            if (chart.config.type === 'line' || chart.config.type === 'bar') {
+                csv = 'Categoria,Valor\n';
+                chart.data.labels.forEach((label, index) => {
+                    const value = chart.data.datasets[0].data[index];
+                    csv += `${label},${value}\n`;
+                });
+            } else if (chart.config.type === 'pie' || chart.config.type === 'doughnut') {
+                csv = 'Categoria,Valor\n';
+                chart.data.labels.forEach((label, index) => {
+                    const value = chart.data.datasets[0].data[index];
+                    csv += `${label},${value}\n`;
+                });
+            }
+            
+            downloadFile(csv, `grafico-${chartName}.csv`, 'text/csv');
+            showNotification(`Dados do gráfico ${chartName} exportados`, 'success');
+        }
+
+        // ===== INICIALIZAR EVENTOS =====
+        function initEvents() {
+            // Botões dos cards
+            document.querySelectorAll('.card-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const action = this.dataset.action;
+                    const target = this.dataset.chart || this.dataset.table;
+                    
+                    switch(action) {
+                        case 'expand':
+                            expandChart(target);
+                            break;
+                        case 'info':
+                            showChartInfo(target);
+                            break;
+                    }
+                });
+            });
+            
+            // Menu mobile
+            const mobileBtn = document.querySelector('.mobile-menu-btn');
+            if (mobileBtn) {
+                mobileBtn.addEventListener('click', function() {
+                    const navList = document.querySelector('.nav-list');
+                    navList.classList.toggle('active');
+                    this.querySelector('i').classList.toggle('fa-bars');
+                    this.querySelector('i').classList.toggle('fa-times');
+                });
+            }
+        }
+
+        // ===== FUNÇÕES AUXILIARES =====
+        function expandChart(chartName) {
+            const chart = charts[chartName];
+            if (!chart) return;
+            
+            // Criar modal
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">
+                            <i class="fas fa-expand"></i> Gráfico Expandido
+                        </h3>
+                        <button class="modal-close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div style="height: 500px;">
+                            <canvas id="modal-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Fechar modal
+            modal.querySelector('.modal-close').addEventListener('click', function() {
+                modal.remove();
+            });
+            
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+            
+            // Recriar gráfico no modal
+            setTimeout(() => {
+                const ctx = document.getElementById('modal-chart').getContext('2d');
+                new Chart(ctx, {
+                    type: chart.config.type,
+                    data: chart.config.data,
+                    options: {
+                        ...chart.config.options,
+                        maintainAspectRatio: false
+                    }
+                });
+            }, 100);
+        }
+        
+        function showChartInfo(chartName) {
+            const info = {
+                distribuicao: 'Distribuição de estudantes por campus do IFPB',
+                evolucao: 'Evolução histórica das matrículas na instituição',
+                tipos: 'Proporção de cursos por nível de ensino',
+                investimentos: 'Distribuição dos investimentos por área',
+                comparativo: 'Comparativo de estudantes por região',
+                conclusao: 'Taxa de conclusão dos principais cursos'
+            };
+            
+            alert(info[chartName] || 'Informações não disponíveis.');
+        }
+        
+        function showCustomExportModal() {
+            alert('Esta funcionalidade permitiria configurar uma exportação personalizada com colunas e formatos específicos.');
+        }
+        
+        function showScheduleExportModal() {
+            alert('Esta funcionalidade permitiria agendar exportações automáticas periódicas.');
+        }
+        
+        function updateDashboard() {
+            console.log('Atualizando dashboard com filtros:', filters);
+            // Na implementação real, aqui você faria requisições à API
+        }
+        
+        function updateLastUpdate() {
+            const now = new Date();
+            const options = { 
+                day: '2-digit', 
+                month: 'long', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            
+            const dateStr = now.toLocaleDateString('pt-BR', options);
+            document.getElementById('last-update').textContent = dateStr;
+        }
+        
+        function showNotification(message, type = 'info') {
+            // Remover notificações anteriores
+            const existing = document.querySelector('.notification');
+            if (existing) existing.remove();
+            
+            // Criar notificação
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${getNotificationIcon(type)}"></i>
+                <span>${message}</span>
+                <button class="notification-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Fechar notificação
+            notification.querySelector('.notification-close').addEventListener('click', function() {
+                notification.style.animation = 'slideOutRight 0.3s ease forwards';
+                setTimeout(() => notification.remove(), 300);
+            });
+            
+            // Remover automaticamente
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.style.animation = 'slideOutRight 0.3s ease forwards';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, 5000);
+        }
+        
+        function getNotificationIcon(type) {
+            switch(type) {
+                case 'success': return 'check-circle';
+                case 'error': return 'exclamation-circle';
+                case 'warning': return 'exclamation-triangle';
+                default: return 'info-circle';
+            }
+        }
+        
+        function downloadFile(content, filename, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Animar elementos ao entrar na viewport
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+
 </body>
 </html>
