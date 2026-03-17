@@ -131,7 +131,7 @@ function setCurrentYear() {
 
 // Simulação de carregamento de dados (para demonstração)
 function loadSampleData() {
-    // Esta função seria substituída por uma chamada real à API
+    // Esta função seria substituída por uma chamada real à API JP, CG, PT, Cajazeiras e Sousa
     console.log('Carregando dados do IFPB...');
     
     // Dados de exemplo
@@ -144,10 +144,10 @@ function loadSampleData() {
             { name: 'Sousa', students: 1600, courses: 18 }
         ],
         budget: {
-            2021: 320.5,
+            2010: 320.5,
             2022: 345.2,
             2023: 368.9,
-            2024: 382.7
+            2026: 382.7
         }
     };
     
