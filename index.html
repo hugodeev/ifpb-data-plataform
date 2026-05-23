@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFPB Data Platform - Transparência e Análise de Dados</title>
+    <link rel="shortcut icon" href="assets/img/logosite.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- cabeçalho e navegação -->
+    <header class="main-header" id="main-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon-wrap">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>IFPB Data Platform</h1>
+                    <p>Transparência • Análise • Inovação</p>
+                </div>
+            </a>
+
+            <nav class="main-nav" role="navigation">
+                <ul class="nav-list">
+                    <li><a href="index.html" class="active"><i class="fas fa-home"></i> Início</a></li>
+                    <li><a href="pages/pages dados abertos/Dadosabertosifpb.html"><i class="fas fa-university"></i> Dados Abertos IFPB</a></li>
+                    <li><a href="pages/Pages Enade/DadosENADE.html"><i class="fas fa-graduation-cap"></i> Dados ENADE</a></li>
+                    <li><a href="pages/Pages dados formularios/Dadosforms.html"><i class="fas fa-chart-pie"></i> Dados de Pesquisa</a></li>
+                    <li><a href="pages/dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+                </ul>
+
+                <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menu" aria-expanded="false">
+                    <span></span><span></span><span></span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- mobiile dropdown -->
+        <div class="mobile-nav" id="mobile-nav">
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> Início</a></li>
+                <li><a href="pages/pages dados abertos/Dadosabertosifpb.html"><i class="fas fa-university"></i> Dados Abertos IFPB</a></li>
+                <li><a href="pages/Pages Enade/DadosENADE.html"><i class="fas fa-graduation-cap"></i> Dados ENADE</a></li>
+                <li><a href="pages/Pages dados formularios/Dadosforms.html"><i class="fas fa-chart-pie"></i> Dados de Pesquisa</a></li>
+                <li><a href="pages/dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- conteúdo do main -->
+    <main class="container">
+
+        <!-- hero section -->
+        <section class="hero">
+            <div class="hero-content reveal-up" style="--delay: 0s">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    Projeto de Iniciação Científica — IFPB 2026
+                </div>
+                <h2>Plataforma de Dados do<br><span class="hero-title-highlight">Instituto Federal da Paraíba</span></h2>
+                <p>Visualização interativa de dados institucionais, acadêmicos e orçamentários para transparência e análise estratégica.</p>
+                <div class="hero-buttons">
+                    <a href="pages/dashboard.html" class="btn-primary">
+                        <i class="fas fa-chart-line"></i> Acessar Dashboard
+                    </a>
+                    <a href="pages/sobre.html" class="btn-secondary">
+                        <i class="fas fa-info-circle"></i> Sobre o Projeto
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-visual reveal-right" style="--delay: 0.15s">
+                <div class="hero-card">
+                    <div class="hero-card-header">
+                        <span class="hero-card-title"><i class="fas fa-chart-bar"></i> Estudantes por Campus</span>
+                        <span class="hero-card-year">2024</span>
+                    </div>
+                    <div class="chart-animation-wrap">
+                        <div class="chart-animation">
+                            <div class="bar-group">
+                                <div class="bar" style="--h: 87%; --delay: 0.3s;">
+                                    <span class="bar-value">5.2k</span>
+                                </div>
+                                <span class="bar-label">JP</span>
+                            </div>
+                            <div class="bar-group">
+                                <div class="bar" style="--h: 100%; --delay: 0.4s;">
+                                    <span class="bar-value">4.8k</span>
+                                </div>
+                                <span class="bar-label">CG</span>
+                            </div>
+                            <div class="bar-group">
+                                <div class="bar" style="--h: 55%; --delay: 0.5s;">
+                                    <span class="bar-value">2.1k</span>
+                                </div>
+                                <span class="bar-label">PT</span>
+                            </div>
+                            <div class="bar-group">
+                                <div class="bar" style="--h: 47%; --delay: 0.6s;">
+                                    <span class="bar-value">1.8k</span>
+                                </div>
+                                <span class="bar-label">CJ</span>
+                            </div>
+                            <div class="bar-group">
+                                <div class="bar" style="--h: 42%; --delay: 0.7s;">
+                                    <span class="bar-value">1.6k</span>
+                                </div>
+                                <span class="bar-label">SZ</span>
+                            </div>
+                        </div>
+                        <div class="chart-baseline"></div>
+                    </div>
+                    <div class="hero-card-footer">
+                        <span class="trend-badge trend-up"><i class="fas fa-arrow-up"></i> +12.4% vs 2023</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- seção de cards das páginas -->
+        <section class="data-cards-section">
+            <div class="section-header reveal-up" style="--delay: 0s">
+                <span class="section-tag">Bases de Dados</span>
+                <h2 class="section-title">Explore Nossas Bases de Dados</h2>
+                <p class="section-subtitle">Três fontes de dados completas para análise e transparência</p>
+            </div>
+
+            <div class="data-cards-grid">
+                <!-- card dados abertos IFPB -->
+                <div class="data-card reveal-up" data-type="ifpb" style="--delay: 0.05s">
+                    <div class="data-card-header">
+                        <div class="data-card-icon-wrap">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h3>Dados Abertos IFPB</h3>
+                        <p>Informações oficiais da instituição</p>
+                    </div>
+                    <div class="data-card-body">
+                        <div class="data-stat">
+                            <span class="data-stat-label"><i class="fas fa-map-marker-alt"></i> Campi</span>
+                            <span class="data-stat-value">23 unidades</span>
+                        </div>
+                        <div class="data-stat">
+                            <span class="data-stat-label"><i class="fas fa-users"></i> Estudantes</span>
+                            <span class="data-stat-value">28.456</span>
+                        </div>
+                        <div class="data-stat">
+                            <span class="data-stat-label"><i class="fas fa-chalkboard-teacher"></i> Docentes</span>
+                            <span class="data-stat-value">1.847</span>
+                        </div>
+                        <div class="data-stat">
+                            <span class="data-stat-label"><i class="fas fa-money-bill-wave"></i> Orçamento</span>
+                            <span class="data-stat-value">R$ 428M</span>
+                        </div>
+                    </div>
+                    <div class="data-card-footer">
+                        <a href="pages/pages dados abertos/Dadosabertosifpb.html" class="data-card-btn">
+                            Acessar Dados Abertos <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- card ENADE -->
+                <div class="data-card reveal-up" data-type="enade" style="--delay: 0.15s">
+                    <div class="data-card-header">
+                        <div class="data-card-icon-wrap">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>Dados ENADE</h3>
+                        <p>Desempenho dos cursos de graduação</p>
+                    </div>
+                    <div class="data-card-body">
+                        <div class="data-stat">
+                            <span class="data-stat-label"><i class="fas fa-calendar"></i> Último ciclo</span>
+                            <span class="data-stat-value">2023</span>
+                        </div>
+                        <div class="data-stat">
+                            <span class="data-stat-label"><i class="fas fa-graduation-cap"></i> Cursos avaliados</span>
+                            <span class="data-stat-value">23</span>
+                        </div>
+                        <div class="data-stat">
+                            <span class="data-stat-label"><i class="fas fa-chart-line"></i> Nota média</span>
+                            <span class="data-stat-value">62.5</span>
+                        </div>
+                        <div class="data-stat">
+                            <span class="data-stat-label"><i class="fas fa-trophy"></i> Conceito máximo</span>
+                            <span class="data-stat-value">5 cursos</span>
+                        </div>
+                    </div>
+                    <div class="data-card-footer">
+                        <a href="pages/Pages Enade/DadosENADE.html" class="data-card-btn">
+                            Acessar Dados ENADE <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- card dados de Pesquisa -->
+                <div class="data-card reveal-up" data-type="pesquisa" style="--delay: 0.25s">
+                    <div class="data-card-header">
+                        <div class="data-card-icon-wrap">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <h3>Dados de Pesquisa</h3>
+                        <p>Questionários com alunos e professores</p>
+                    </div>
+                    <div class="data-card-body">
+                        <div class="data-stat">
+                            <span class="data-stat-label"><i class="fas fa-user-graduate"></i> Alunos respondentes</span>
+                            <span class="data-stat-value">1.247</span>
+                        </div>
+                        <div class="data-stat">
+                            <span class="data-stat-label"><i class="fas fa-chalkboard-teacher"></i> Professores</span>
+                            <span class="data-stat-value">342</span>
+                        </div>
+                        <div class="data-stat">
+                            <span class="data-stat-label"><i class="fas fa-smile"></i> Satisfação geral</span>
+                            <span class="data-stat-value">4.2 / 5</span>
+                        </div>
+                        <div class="data-stat">
+                            <span class="data-stat-label"><i class="fas fa-calendar-alt"></i> Coleta</span>
+                            <span class="data-stat-value">Março/2026</span>
+                        </div>
+                    </div>
+                    <div class="data-card-footer">
+                        <a href="pages/Pages dados formularios/Dadosforms.html" class="data-card-btn">
+                            Acessar Dados de Pesquisa <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- cards de destaque -->
+        <section class="highlights">
+            <div class="section-header reveal-up" style="--delay: 0s">
+                <span class="section-tag">Indicadores</span>
+                <h2 class="section-title">Dados em Destaque</h2>
+            </div>
+
+            <div class="cards-grid">
+                <div class="card reveal-up" style="--delay: 0.05s">
+                    <div class="card-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Campi</h3>
+                    <div class="card-value" id="campi-count">23</div>
+                    <p class="card-desc">Unidades em todo o estado da Paraíba</p>
+                    <a href="pages/institucional.html" class="card-link">Ver detalhes <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="card reveal-up" style="--delay: 0.1s">
+                    <div class="card-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Estudantes</h3>
+                    <div class="card-value" id="students-count">28.000</div>
+                    <p class="card-desc">Matriculados em 2023</p>
+                    <a href="pages/academico.html" class="card-link">Ver detalhes <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="card reveal-up" style="--delay: 0.15s">
+                    <div class="card-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3>Docentes</h3>
+                    <div class="card-value" id="teachers-count">1.452</div>
+                    <p class="card-desc">Professores ativos</p>
+                    <a href="pages/academico.html" class="card-link">Ver detalhes <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="card reveal-up" style="--delay: 0.2s">
+                    <div class="card-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h3>Orçamento 2022</h3>
+                    <div class="card-value">R$ <span id="budget-value">382.7</span> mi</div>
+                    <p class="card-desc">Recursos investidos na educação</p>
+                    <a href="pages/orcamento.html" class="card-link">Ver detalhes <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- visualizações -->
+        <section class="visualizations">
+            <div class="section-header reveal-up" style="--delay: 0s">
+                <span class="section-tag">Dashboard</span>
+                <h2 class="section-title">Visualizações Interativas</h2>
+                <p class="section-subtitle">Explore dados através de gráficos e painéis interativos</p>
+            </div>
+
+            <div class="viz-container">
+                <a href="pages/dashboard.html?view=map" class="viz-preview reveal-up" style="--delay: 0.05s">
+                    <div class="viz-placeholder" id="map-preview">
+                        <i class="fas fa-map"></i>
+                        <h4>Mapa dos Campi</h4>
+                    </div>
+                    <p>Localização geográfica de todas as unidades do IFPB</p>
+                    <span class="btn-small">Explorar Mapa <i class="fas fa-arrow-right"></i></span>
+                </a>
+
+                <a href="pages/dashboard.html?view=timeline" class="viz-preview reveal-up" style="--delay: 0.1s">
+                    <div class="viz-placeholder" id="timeline-preview">
+                        <i class="fas fa-chart-line"></i>
+                        <h4>Evolução Temporal</h4>
+                    </div>
+                    <p>Análise histórica de matrículas, orçamento e investimentos</p>
+                    <span class="btn-small">Ver Gráficos <i class="fas fa-arrow-right"></i></span>
+                </a>
+
+                <a href="pages/dashboard.html?view=comparison" class="viz-preview reveal-up" style="--delay: 0.15s">
+                    <div class="viz-placeholder" id="comparison-preview">
+                        <i class="fas fa-balance-scale"></i>
+                        <h4>Comparativos</h4>
+                    </div>
+                    <p>Compare indicadores entre campi, cursos e períodos</p>
+                    <span class="btn-small">Comparar Dados <i class="fas fa-arrow-right"></i></span>
+                </a>
+            </div>
+        </section>
+
+        <!-- CTA dados abertos para todos-->
+        <section class="cta reveal-up" style="--delay: 0s">
+            <div class="cta-content">
+                <div class="cta-icon-wrap" aria-hidden="true">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h2>Dados Abertos para Todos</h2>
+                <p>Esta plataforma é um projeto de iniciação científica que promove transparência e acesso à informação pública.</p>
+                <div class="cta-buttons">
+                    <a href="pages/dados-abertos.html" class="btn-primary">
+                        <i class="fas fa-download"></i> Baixar Dados
+                    </a>
+                    <a href="pages/sobre.html" class="btn-secondary">
+                        <i class="fas fa-code"></i> Ver Código-Fonte
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- rodapé final da pages -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">
+                        <div class="footer-logo-icon" aria-hidden="true">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3>IFPB Data Platform</h3>
+                    </div>
+                    <p>Plataforma de visualização e análise de dados públicos do Instituto Federal da Paraíba.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" aria-label="E-mail"><i class="fas fa-envelope"></i></a>
+                        <a href="#" aria-label="ResearchGate"><i class="fab fa-researchgate"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Navegação</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Início</a></li>
+                        <li><a href="pages/institucional.html"><i class="fas fa-chevron-right"></i> A Instituição</a></li>
+                        <li><a href="pages/academico.html"><i class="fas fa-chevron-right"></i> Vida Acadêmica</a></li>
+                        <li><a href="pages/orcamento.html"><i class="fas fa-chevron-right"></i> Gestão e Orçamento</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Recursos</h3>
+                    <ul class="footer-links">
+                        <li><a href="pages/dashboard.html"><i class="fas fa-chevron-right"></i> Explorar Dados</a></li>
+                        <li><a href="pages/dados-abertos.html"><i class="fas fa-chevron-right"></i> Dados Abertos</a></li>
+                        <li><a href="pages/sobre.html"><i class="fas fa-chevron-right"></i> Sobre o Projeto</a></li>
+                        <li><a href="pages/contato.html"><i class="fas fa-chevron-right"></i> Contato</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Projeto de Pesquisa</h3>
+                    <p>Iniciação Científica — IFPB<br>
+                    Desenvolvimento de plataforma digital interativa para dados públicos.</p>
+                    <a href="pages/sobre.html" class="footer-btn">Saiba Mais <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 IFPB Data Platform. Desenvolvido com fins acadêmicos.</p>
+                <p>Dados para transparência e análise.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
