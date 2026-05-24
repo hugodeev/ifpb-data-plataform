@@ -6,7 +6,7 @@
     <title>IFPB Data Platform - Dashboard de Gestão | Monitoramento em Tempo Real</title>
     <meta name="description" content="Dashboard de monitoramento institucional do IFPB. Visualize indicadores de desempenho, métricas operacionais e KPIs em tempo real.">
     <link rel="shortcut icon" href="../assets/img/logosite.png" type="image/x-icon">
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -873,23 +873,39 @@
                     <li><a href="../dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
                 </ul>
 
-                <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menu" aria-expanded="false">
-                    <span></span><span></span><span></span>
+                <button class="hamburger" id="hamburger" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </button>
-            </nav>
         </div>
 
-        <!-- mobiile dropdown -->
-        <div class="mobile-nav" id="mobile-nav">
-            <ul>
-                <li><a href="index.html"><i class="fas fa-home"></i> Início</a></li>
-                <li><a href="pages/pages dados abertos/Dadosabertosifpb.html"><i class="fas fa-university"></i> Dados Abertos IFPB</a></li>
-                <li><a href="pages/Pages Enade/DadosENADE.html"><i class="fas fa-graduation-cap"></i> Dados ENADE</a></li>
-                <li><a href="pages/Pages dados formularios/Dadosforms.html"><i class="fas fa-chart-pie"></i> Dados de Pesquisa</a></li>
-                <li><a href="pages/dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
-            </ul>
-        </div>
     </header>
+
+        <div class="menu-overlay" id="menuOverlay"></div>
+
+            <!-- Menu Mobile (lateral deslizante) -->
+        <nav class="nav-menu-mobile" id="navMenuMobile">
+            <div class="menu-header">
+                <div class="menu-logo">
+                    <i class="fas fa-chart-bar"></i>
+                    <div class="menu-logo-text">
+                        <span class="menu-logo-main">IFPB Data Platform</span>
+                        <span class="menu-logo-sub">Dados Abertos</span>
+                    </div>
+                </div>
+                <button class="menu-close-btn" id="menuCloseBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <ul>
+                <li><a href="../index.html"><i class="fas fa-home"></i> Início</a></li>
+                <li><a href="../pages/pages dados abertos/Dadosabertosifpb.html"><i class="fas fa-university"></i> Dados Abertos IFPB</a></li>
+                <li><a href="../pages/Pages Enade/DadosENADE.html"><i class="fas fa-graduation-cap"></i> Dados ENADE</a></li>
+                <li><a href="../pages/Pages dados formularios/Dadosforms.html"><i class="fas fa-chart-pie"></i> Dados de Pesquisa</a></li>
+                <li><a href="../pages/dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+            </ul>
+        </nav>
 
     <!-- tela de carregamento que some quando tudo estiver pronto -->
     <div id="loading-overlay" class="modal-overlay" style="display: none;">
@@ -2062,6 +2078,64 @@
         
         // inicia o efeito quando a página carregar
         window.addEventListener('load', typeWriterEffect);
+
+        // Elementos
+        const hamburger = document.getElementById('hamburger');
+        const navMenuMobile = document.getElementById('navMenuMobile');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const menuCloseBtn = document.getElementById('menuCloseBtn');
+
+        function closeMenu() {
+            hamburger?.classList.remove('active');
+            navMenuMobile?.classList.remove('active');
+            menuOverlay?.classList.remove('active');
+            document.body.classList.remove('menu-open');
+        }
+
+        function openMenu() {
+            hamburger?.classList.add('active');
+            navMenuMobile?.classList.add('active');
+            menuOverlay?.classList.add('active');
+            document.body.classList.add('menu-open');
+        }
+
+        function toggleMenu() {
+            if (navMenuMobile?.classList.contains('active')) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
+        }
+
+        if (hamburger) hamburger.addEventListener('click', toggleMenu);
+        if (menuCloseBtn) menuCloseBtn.addEventListener('click', closeMenu);
+        if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
+
+        // Fecha o menu ao redimensionar para desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 900 && navMenuMobile?.classList.contains('active')) {
+                closeMenu();
+            }
+        });
+
+        // Fecha o menu ao clicar em qualquer link interno
+        document.querySelectorAll('.nav-menu-mobile a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    closeMenu();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        setTimeout(() => {
+                            window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+                        }, 150);
+                    }
+                } else {
+                    closeMenu(); // para links normais, apenas fecha o menu
+                }
+            });
+        });
     </script>
 
 </body>
