@@ -52,6 +52,38 @@ body {
 a { text-decoration: none; color: inherit; }
 img { display: block; max-width: 100%; }
 
+/* modal overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+}
+
 /* ===== CONTAINER ===== */
 .container {
     max-width: 1200px;
@@ -219,7 +251,7 @@ body.menu-open {
 
 @media (max-width: 900px) {
     .nav-list {
-        display: none;  /* esconde menu desktop */
+        display: none; 
     }
     .hamburger {
         display: flex;
@@ -340,8 +372,6 @@ body.menu-open {
         display: none !important;
     }
 }
-
-
 
 /* ===== FOOTER ===== */
 .main-footer {
