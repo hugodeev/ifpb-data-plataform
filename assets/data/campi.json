@@ -1,0 +1,212 @@
+[
+  {
+    "Nome": "REITORIA",
+    "Sigla": "REITORIA",
+    "CNPJ": "10.783.898/0001-75",
+    "Endereco": "Av. João da Mata, 256 - Jaguaribe",
+    "Municipio": "JOÃO PESSOA",
+    "UF": "PB",
+    "CEP": "58015-020",
+    "Telefone": "(83) 3612.9701"
+  },
+  {
+    "Nome": "CAMPUS JOÃO PESSOA",
+    "Sigla": "CAMPUS-JP",
+    "CNPJ": "10.783.898/0002-56",
+    "Endereco": "Av. Primeiro de Maio, 720 - Jaguaribe",
+    "Municipio": "JOÃO PESSOA",
+    "UF": "PB",
+    "CEP": "58015-435",
+    "Telefone": "(83) 3612.1200"
+  },
+  {
+    "Nome": "CAMPUS CAMPINA GRANDE",
+    "Sigla": "CAMPUS-CG",
+    "CNPJ": "10.783.898/0003-37",
+    "Endereco": "R. Tranqüilino Coelho Lemos, 671 - Dinamérica",
+    "Municipio": "CAMPINA GRANDE",
+    "UF": "PB",
+    "CEP": "58432-300",
+    "Telefone": "(83) 2102.6200"
+  },
+  {
+    "Nome": "CAMPUS SOUSA",
+    "Sigla": "CAMPUS-SS",
+    "CNPJ": "10.783.898/0004-18",
+    "Endereco": "Av. Pres. Tancredo Neves, s/n - Jardim Sorrilandia",
+    "Municipio": "SOUSA",
+    "UF": "PB",
+    "CEP": "58800-970",
+    "Telefone": "(83) 3522.2727"
+  },
+  {
+    "Nome": "CAMPUS CAJAZEIRAS",
+    "Sigla": "CAMPUS-CZ",
+    "CNPJ": "10.783.898/0005-07",
+    "Endereco": "Rua José Antônio da Silva, 300 - Bairro Jardim Oásis",
+    "Municipio": "CAJAZEIRAS",
+    "UF": "PB",
+    "CEP": "58.900-000",
+    "Telefone": "(83) 3532-4100"
+  },
+  {
+    "Nome": "CAMPUS PATOS",
+    "Sigla": "CAMPUS-PT",
+    "CNPJ": "10.783.898/0006-80",
+    "Endereco": "BR 110, s/n, Alto da Tubiba",
+    "Municipio": "PATOS",
+    "UF": "PB",
+    "CEP": "58700-000",
+    "Telefone": "(83) 3423-9676"
+  },
+  {
+    "Nome": "CAMPUS PRINCESA ISABEL",
+    "Sigla": "CAMPUS-PI",
+    "CNPJ": "10.783.898/0007-60",
+    "Endereco": "BR 426, S/N, Zona Rural / Sítio Barro Vermelho",
+    "Municipio": "PRINCESA ISABEL",
+    "UF": "PB",
+    "CEP": "58755-000",
+    "Telefone": "(83) 3065.4901"
+  },
+  {
+    "Nome": "CAMPUS MONTEIRO",
+    "Sigla": "CAMPUS-MT",
+    "CNPJ": "10.783.898/0008-41",
+    "Endereco": "PB-264, S/N - Serrote",
+    "Municipio": "MONTEIRO",
+    "UF": "PB",
+    "CEP": "58500-000",
+    "Telefone": "(83) 3351-3700"
+  },
+  {
+    "Nome": "CAMPUS PICUÍ",
+    "Sigla": "CAMPUS-PC",
+    "CNPJ": "10.783.898/0009-22",
+    "Endereco": "PB 151, S/N, Cenecista",
+    "Municipio": "PICUÍ",
+    "UF": "PB",
+    "CEP": "58187-000",
+    "Telefone": "(83) 3371.2555"
+  },
+  {
+    "Nome": "CAMPUS CABEDELO",
+    "Sigla": "CAMPUS-CB",
+    "CNPJ": "10.783.898/0010-66",
+    "Endereco": "Rua Santa Rita de Cássia, 1900 - Jardim Camboinha",
+    "Municipio": "CABEDELO",
+    "UF": "PB",
+    "CEP": "58103-772",
+    "Telefone": "(83) 3248.5400"
+  },
+  {
+    "Nome": "CAMPUS GUARABIRA",
+    "Sigla": "CAMPUS-GB",
+    "CNPJ": "10.783.898/0011-47",
+    "Endereco": "Rua Prof. Carlos Leonardo Arcoverde, S/N, Km 02, PB-057",
+    "Municipio": "GUARABIRA",
+    "UF": "PB",
+    "CEP": "58200-000",
+    "Telefone": "(83) 98195-6465"
+  },
+  {
+    "Nome": "CAMPUS SANTA RITA",
+    "Sigla": "CAMPUS-SR",
+    "CNPJ": " 10.783.898/0016-50",
+    "Endereco": "BR230, km 42, S/N, Bairro Popular",
+    "Municipio": "SANTA RITA",
+    "UF": "PB",
+    "CEP": "58.301-645",
+    "Telefone": "(83) 99115-7975"
+  },
+  {
+    "Nome": "CAMPUS ESPERANÇA",
+    "Sigla": "CAMPUS-ES",
+    "CNPJ": "10.783.898/0013-09",
+    "Endereco": "PB 121",
+    "Municipio": "ESPERANÇA",
+    "UF": "PB",
+    "CEP": "58135-000",
+    "Telefone": "(83) 99126-5817"
+  },
+  {
+    "Nome": "CAMPUS ITABAIANA",
+    "Sigla": "CAMPUS-IB",
+    "CNPJ": "10.783.898/0014-90",
+    "Endereco": "Rodovia PB 054, Km 17, Alto Alegre",
+    "Municipio": "ITABAIANA",
+    "UF": "PB",
+    "CEP": "58360-000",
+    "Telefone": "(83) 99116.6632"
+  },
+  {
+    "Nome": "CAMPUS CATOLÉ DO ROCHA",
+    "Sigla": "CAMPUS-CR",
+    "CNPJ": "10.783.898/0015-70",
+    "Endereco": "Rua Cícero Pereira de Lima, 227 - João Pereira de Lima",
+    "Municipio": "CATOLÉ DO ROCHA",
+    "UF": "PB",
+    "CEP": "58884-000",
+    "Telefone": "(83) 99126 1908"
+  },
+  {
+    "Nome": "CAMPUS ITAPORANGA",
+    "Sigla": "CAMPUS-IP",
+    "CNPJ": "10.783.898/0016-51",
+    "Endereco": "BR 361 - Km 116",
+    "Municipio": "ITAPORANGA",
+    "UF": "PB",
+    "CEP": "58780-000",
+    "Telefone": "(83) 99970-2923"
+  },
+  {
+    "Nome": "CAMPUS SANTA LUZIA",
+    "Sigla": "CAMPUS-SL",
+    "CNPJ": "10.783.898/0017-32",
+    "Endereco": "Avenida Professora Dorinha Eugênia, Cidade Universitária, S/N",
+    "Municipio": "SANTA LUZIA",
+    "UF": "PB",
+    "CEP": "58.600-000",
+    "Telefone": "(83)99862.1074"
+  },
+  {
+    "Nome": "CAMPUS PEDRAS DE FOGO",
+    "Sigla": "CAMPUS-PF",
+    "CNPJ": "10.783.898/0018-13",
+    "Endereco": "Rua Monsenhor José da Silva Coutinho, S/N – Centro",
+    "Municipio": "PEDRAS DE FOGO",
+    "UF": "PB",
+    "CEP": "58328-000",
+    "Telefone": "(83) 00000-0000"
+  },
+  {
+    "Nome": "CAMPUS SOLEDADE",
+    "Sigla": "CAMPUS-SD",
+    "CNPJ": "10.783.898/0019-02",
+    "Endereco": "Rodovia PB 411, Km 03, Sítio Farias",
+    "Municipio": "SOLEDADE",
+    "UF": "PB",
+    "CEP": "58155-000",
+    "Telefone": "(83) 98770-8750"
+  },
+  {
+    "Nome": "CAMPUS AREIA",
+    "Sigla": "CAMPUS-AR",
+    "CNPJ": "10.783.898/0001-75",
+    "Endereco": "Rua Prefeito Pedro Cunha Lima S/N. Bairro: Jussara",
+    "Municipio": "AREIA",
+    "UF": "PB",
+    "CEP": "58.397-000",
+    "Telefone": "(83) 9806-0351"
+  },
+  {
+    "Nome": "CAMPUS MANGABEIRA",
+    "Sigla": "CAMPUS-MG",
+    "CNPJ": "10.783.898/0001-75",
+    "Endereco": "Rua Gutemberg Morais Paiva nº 245, Bancários, João Pessoa",
+    "Municipio": "MANGABEIRA",
+    "UF": "PB",
+    "CEP": "58051-025",
+    "Telefone": "(83) 99119-7136"
+  }
+]
