@@ -2,270 +2,462 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>IFPB Data Platform - Transparência e Análise de Dados</title>
     <link rel="shortcut icon" href="assets/img/logosite.png " type="image/x-icon">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
 
-/* reset básico e estilos gerais – pra garantir consistência */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-:root {
-    /* paleta de cores do tema (escolhi essas porque combinam com a identidade do IFPB) */
-    --primary-color: #1a5f7a;
-    --primary-dark: #0e4a63;
-    --primary-light: #2a7a9a;
-    --secondary-color: #57cc99;
-    --accent-color: #ff9a3c;
-    --text-color: #333;
-    --text-light: #666;
-    --bg-light: #f8f9fa;
-    --bg-white: #ffffff;
-    --border-color: #e0e0e0;
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.12);
-    
-    /* fontes – uma pra títulos, outra pro corpo do texto */
-    --font-heading: 'Poppins', sans-serif;
-    --font-body: 'Roboto', sans-serif;
-}
+        :root {
+            --primary-color: #1a5f7a;
+            --primary-dark: #0e4a63;
+            --primary-light: #2a7a9a;
+            --secondary-color: #57cc99;
+            --accent-color: #ff9a3c;
+            --text-color: #333;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --border-color: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.12);
+            --font-heading: 'Poppins', sans-serif;
+            --font-body: 'Roboto', sans-serif;
+            --header-height: 72px;
+        }
 
-body {
-    font-family: var(--font-body);
-    color: var(--text-color);
-    line-height: 1.6;
-    background-color: var(--bg-light);
-}
+        body {
+            font-family: var(--font-body);
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: var(--bg-light);
+        }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 clamp(1rem, 4vw, 2rem);
+            width: 100%;
+        }
 
-/* estilo do cabeçalho fixo */
-.main-header {
-    background-color: var(--bg-white);
-    box-shadow: var(--shadow);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    padding: 15px 0;
-}
+        .main-header {
+            background-color: var(--bg-white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+        }
 
-.main-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+        .main-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+        /* Logo com texto responsivo */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+        }
 
-.logo-img {
-    height: 50px;
-    width: auto;
-}
+        .logo-img {
+            height: 50px;
+            width: auto;
+        }
 
-.logo-text h1 {
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    margin-bottom: 2px;
-}
+        .logo-text h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.2rem, 5vw, 1.5rem);
+            color: var(--primary-color);
+            margin-bottom: 2px;
+            line-height: 1.2;
+        }
 
-.logo-text p {
-    font-size: 0.85rem;
-    color: var(--text-light);
-}
+        .logo-text p {
+            font-size: clamp(0.7rem, 3vw, 0.85rem);
+            color: var(--text-light);
+        }
 
-/* barra de navegação principal */
-.main-nav ul {
-    display: flex;
-    list-style: none;
-    gap: 25px;
-}
+        .main-nav {
+            display: flex;
+            align-items: center;
+        }
+        .nav-list {
+            display: flex;
+            list-style: none;
+            gap: 2px;
+            align-items: center;
+        }
 
-.nav-list a {
-    text-decoration: none;
-    color: var(--text-color);
-    font-weight: 500;
-    padding: 8px 12px;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+        .nav-list a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: clamp(0.85rem, 3vw, 0.95rem);
+        }
 
-.nav-list a:hover {
-    color: var(--primary-color);
-    background-color: rgba(26, 95, 122, 0.05);
-}
+        .nav-list a:hover {
+            color: var(--primary-color);
+            background-color: rgba(26, 95, 122, 0.05);
+        }
 
-.nav-list a.active {
-    color: var(--primary-color);
-    background-color: rgba(26, 95, 122, 0.1);
-}
+        .nav-list a.active {
+            color: var(--primary-color);
+            background-color: rgba(26, 95, 122, 0.1);
+        }
 
-/* botão de dashboard com destaque laranja */
-.dashboard-btn {
-    background-color: var(--accent-color);
-    color: white !important;
-    padding: 10px 20px !important;
-}
+        /* Botão do Dashboard  */
+        .dashboard-btn {
+            background-color: var(--accent-color);
+            color: white !important;
+            padding: 10px 20px !important;
+            border-radius: 8px;
+        }
 
-.dashboard-btn:hover {
-    background-color: #e68a2e !important;
-}
+        .dashboard-btn:hover {
+            background-color: #e68a2e !important;
+        }
 
-.mobile-menu-btn {
-    display: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--primary-color);
-}
+        /* menu hamburguer */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 1002;
+            position: relative;
+        }
+        .hamburger span {
+            width: 26px;
+            height: 2px;
+            background: var(--text-color);
+            transition: all 0.3s ease;
+            border-radius: 100px;
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
 
-/* rodapé – informações e links úteis */
-.main-footer {
-    background-color: var(--primary-dark);
-    color: white;
-    padding: 50px 0 20px;
-    margin-top: 60px;
-}
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
 
-.footer-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 40px;
-    margin-bottom: 40px;
-}
+        body.menu-open {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+        }
 
-.footer-col h3 {
-    font-family: var(--font-heading);
-    font-size: 1.3rem;
-    margin-bottom: 20px;
-    color: white;
-}
+        .nav-menu-mobile {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 280px;
+            height: 100dvh;
+            background: linear-gradient(135deg, #ffffff, #ffffff);
+            padding: 50px 24px 20px;
+            transition: left 0.3s ease;
+            z-index: 1001;
+            overflow-y: auto;
+            box-shadow: 5px 0 30px rgba(0,0,0,0.3);
+            display: block !important;
+        }
+        .nav-menu-mobile.active {
+            left: 0;
+        }
+        .nav-menu-mobile ul {
+            list-style: none;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            display: flex;
+            margin-top: 35px;
+        }
+        .nav-menu-mobile li {
+            width: 100%;
+        }
+        .nav-menu-mobile a {
+            color: rgb(29, 28, 28);
+            font-size: 1.125rem;
+            padding: 8px 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: color 0.2s;
+            width: 100%;
+        }
+        .nav-menu-mobile a i {
+            width: 24px;
+            font-size: 1.1rem;
+        }
+        .nav-menu-mobile a:hover,
+        .nav-menu-mobile a.active {
+            color: #1a5f7a;
+        }
+        .menu-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 30px;
+            margin-bottom: 30px;
+            border-bottom: 3px solid rgba(0, 0, 0, 0.15);
+        }
+        .menu-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .menu-logo i {
+            font-size: 2rem;
+            color: #1a5f7a;
+        }
+        .menu-logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        .menu-logo-main {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #1a5f7a;
+            letter-spacing: -0.5px;
+        }
+        .menu-logo-sub {
+            font-size: 0.65rem;
+            color: rgba(6, 6, 6, 0.7);
+            font-weight: 500;
+        }
+        .menu-close-btn {
+            background: rgba(202, 201, 201, 0.163);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: rgb(100, 100, 100);
+            font-size: 1.125rem;
+        }
+        .menu-close-btn:hover {
+            background: #1a5f7a;
+            transform: rotate(90deg);
+            color: white;
+        }
 
-.footer-col p {
-    opacity: 0.8;
-    margin-bottom: 20px;
-    line-height: 1.6;
-}
+        @media (max-width: 900px) {
+            .nav-list {
+                display: none;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .container {
+                padding: 0 1.2rem;
+            }
+        }
 
-.footer-links {
-    list-style: none;
-}
+        @media (min-width: 901px) {
+            .nav-list {
+                display: flex !important;
+            }
+            .hamburger {
+                display: none !important;
+            }
+            .nav-menu-mobile {
+                display: none !important;
+            }
+            .menu-overlay {
+                display: none !important;
+            }
+        }
 
-.footer-links li {
-    margin-bottom: 12px;
-}
+        .main-footer {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: clamp(2rem, 6vw, 3.5rem) 0 1.5rem;
+            margin-top: 3rem;
+        }
 
-.footer-links a {
-    color: rgba(255, 255, 255, 0.8);
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: 2rem;
+        }
 
-.footer-links a:hover {
-    color: white;
-    padding-left: 5px;
-}
+        .footer-col h3 {
+            font-family: var(--font-heading);
+            font-size: clamp(1.1rem, 4vw, 1.3rem);
+            margin-bottom: 1rem;
+            color: white;
+        }
 
-.social-links {
-    display: flex;
-    gap: 15px;
-    margin-top: 20px;
-}
+        .footer-col p {
+            opacity: 0.8;
+            margin-bottom: 1.2rem;
+            line-height: 1.6;
+            font-size: clamp(0.85rem, 3vw, 0.95rem);
+        }
 
-.social-links a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    color: white;
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
-}
+        .footer-links {
+            list-style: none;
+        }
 
-.social-links a:hover {
-    background-color: var(--accent-color);
-    transform: translateY(-3px);
-}
+        .footer-links li {
+            margin-bottom: 0.7rem;
+        }
 
-.footer-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: var(--accent-color);
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: 500;
-    margin-top: 10px;
-    transition: all 0.3s ease;
-}
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: clamp(0.85rem, 3vw, 0.9rem);
+        }
 
-.footer-btn:hover {
-    background-color: #e68a2e;
-    transform: translateY(-2px);
-}
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
 
-.footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding-top: 20px;
-    text-align: center;
-    font-size: 0.9rem;
-    opacity: 0.7;
-}
+        .social-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 1.2rem;
+            flex-wrap: wrap;
+        }
 
-.footer-note {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: rgba(255, 154, 60, 0.1);
-    border-radius: 4px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
 
-/* ajustes pra telas menores (responsividade) */
-@media (max-width: 576px) {
-    .cards-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .hero-content h2 {
-        font-size: 2rem;
-    }
-    
-    .section-title {
-        font-size: 1.7rem;
-    }
-    
-    .footer-grid {
-        grid-template-columns: 1fr;
-    }
-}
+        .social-links a:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-3px);
+        }
 
+        .footer-btn {
+            display: inline-block;
+            padding: 8px 18px;
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            font-size: clamp(0.8rem, 3vw, 0.9rem);
+        }
+
+        .footer-btn:hover {
+            background-color: #e68a2e;
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1.2rem;
+            text-align: center;
+            font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+            opacity: 0.7;
+        }
+
+        .footer-note {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: rgba(255, 154, 60, 0.1);
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: clamp(0.7rem, 2.5vw, 0.8rem);
+        }
+
+        /* Ajustes finos para telas pequenas */
+        @media (max-width: 768px) {
+            .footer-grid {
+                gap: 1.8rem;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+            .footer-grid {
+                gap: 1.5rem;
+            }
+        }
+
+        main {
+            min-height: 50vh;
+            padding: 2rem 0;
+        }
     </style>
 </head>
 <body>
-    <!-- cabeçalho e menu de navegação -->
     <header class="main-header">
         <div class="container">
             <div class="logo">
@@ -284,19 +476,47 @@ body {
                     <li><a href="pages/dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
                 </ul>
                 
-                <div class="mobile-menu-btn">
-                    <i class="fas fa-bars"></i>
-                </div>
+                <!-- Botão hamburger -->
+                <button class="hamburger" id="hamburger" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </nav>
         </div>
     </header>
 
-    <!-- conteúdo principal (vai ser preenchido dinamicamente ou por outras páginas) -->
+    <!-- Overlay escuro (fundo do menu lateral) -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- Menu mobile que desliza da esquerda -->
+    <nav class="nav-menu-mobile" id="navMenuMobile">
+        <div class="menu-header">
+            <div class="menu-logo">
+                <i class="fas fa-chart-bar"></i>
+                <div class="menu-logo-text">
+                    <span class="menu-logo-main">IFPB Data Platform</span>
+                    <span class="menu-logo-sub">Dados Abertos</span>
+                </div>
+            </div>
+            <button class="menu-close-btn" id="menuCloseBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul>
+            <li><a href="index.html"><i class="fas fa-home"></i> Início</a></li>
+            <li><a href="pages/institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
+            <li><a href="pages/academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
+            <li><a href="pages/orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
+            <li><a href="pages/dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+        </ul>
+    </nav>
+
     <main class="container">
-   
+
     </main>
 
-    <!-- rodapé com informações institucionais e links -->
+
     <footer class="main-footer">
         <div class="container">
             <div class="footer-grid">
@@ -304,9 +524,9 @@ body {
                     <h3>IFPB Data Platform</h3>
                     <p>Plataforma de visualização e análise de dados públicos do Instituto Federal da Paraíba.</p>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-github"></i></a>
-                        <a href="#"><i class="fas fa-envelope"></i></a>
-                        <a href="#"><i class="fab fa-researchgate"></i></a>
+                        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" aria-label="E-mail"><i class="fas fa-envelope"></i></a>
+                        <a href="#" aria-label="ResearchGate"><i class="fab fa-researchgate"></i></a>
                     </div>
                 </div>
                 
@@ -332,23 +552,83 @@ body {
                 
                 <div class="footer-col">
                     <h3>Projeto de Pesquisa</h3>
-                    <p>Iniciação Científica - IFPB<br>
-                    Desenvolvimento de plataforma digital interativa para dados públicos.</p>
+                    <p>Iniciação Científica - IFPB<br>Desenvolvimento de plataforma digital interativa para dados públicos.</p>
                     <a href="pages/sobre.html" class="footer-btn">Saiba Mais</a>
                 </div>
             </div>
             
             <div class="footer-bottom">
                 <p>&copy; 2026 IFPB Data Platform. Desenvolvido com fins acadêmicos. Dados para transparência e análise.</p>
-                <p class="footer-note">
-                    <i class="fas fa-exclamation-circle"></i>
-                    Esta é uma versão de demonstração. Alguns dados são ilustrativos.
-                </p>
+                <div class="footer-note">
+                    <i class="fas fa-exclamation-circle"></i> Versão demonstrativa – dados ilustrativos.
+                </div>
             </div>
         </div>
     </footer>
 
-    <!-- scripts carregados no final pra não travar a página -->
+    <script>
+        (function() {
+            const hamburger = document.getElementById('hamburger');
+            const navMenuMobile = document.getElementById('navMenuMobile');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuCloseBtn = document.getElementById('menuCloseBtn');
+
+            function closeMenu() {
+                if (hamburger) hamburger.classList.remove('active');
+                if (navMenuMobile) navMenuMobile.classList.remove('active');
+                if (menuOverlay) menuOverlay.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            }
+
+            function openMenu() {
+                if (hamburger) hamburger.classList.add('active');
+                if (navMenuMobile) navMenuMobile.classList.add('active');
+                if (menuOverlay) menuOverlay.classList.add('active');
+                document.body.classList.add('menu-open');
+            }
+
+            function toggleMenu() {
+                if (navMenuMobile && navMenuMobile.classList.contains('active')) {
+                    closeMenu();
+                } else {
+                    openMenu();
+                }
+            }
+
+            if (hamburger) hamburger.addEventListener('click', toggleMenu);
+            if (menuCloseBtn) menuCloseBtn.addEventListener('click', closeMenu);
+            if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
+
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 900 && navMenuMobile && navMenuMobile.classList.contains('active')) {
+                    closeMenu();
+                }
+            });
+            
+            if (navMenuMobile) {
+                const links = navMenuMobile.querySelectorAll('a');
+                links.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        const href = this.getAttribute('href');
+                        if (href && href.startsWith('#')) {
+                            e.preventDefault();
+                            closeMenu();
+                            const target = document.querySelector(href);
+                            if (target) {
+                                setTimeout(() => {
+                                    window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+                                }, 150);
+                            }
+                        } else {
+                            closeMenu();
+                        }
+                    });
+                });
+            }
+        })();
+    </script>
+
+
     <script src="script.js"></script>
     <script src="assets/js/charts.js"></script>
 </body>

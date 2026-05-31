@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Sobre o Projeto - IFPB Data Platform</title>
     <link rel="shortcut icon" href="assets/img/logosite.png " type="image/x-icon">
     <link rel="stylesheet" href="../style.css">
@@ -10,12 +10,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
 
-        
-        /* Estilos específicos para a página Sobre */
+        :root {
+            --header-height: 72px;
+            --ifpb-green: #1a5f7a;
+            --ifpb-dark-green: #0e4a63;
+        }
+
         .project-hero {
-            background: linear-gradient(135deg, var(--ifpb-green), var(--ifpb-dark-green));
-            color: rgba(0, 0, 0, 0.808);
-            padding: 4rem 0;
+            padding: clamp(2rem, 8vw, 4rem) 0;
             margin-bottom: 3rem;
             border-radius: 0 0 15px 15px;
             position: relative;
@@ -39,29 +41,31 @@
         }
         
         .project-hero h1 {
-            font-size: 2.8rem;
+            font-size: clamp(1.8rem, 6vw, 2.8rem);
             margin-bottom: 1rem;
-            text-align: center;
+            text-align: center; 
         }
         
         .project-hero p {
-            font-size: 1.2rem;
-            max-width: 800px;
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            max-width: 1400px;
             margin: 0 auto;
             text-align: center;
             opacity: 0.9;
+            padding: 0 1rem;
         }
         
         .project-content {
-            max-width: 1000px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 0 1rem;
         }
         
+        /* Cada card de conteúdo tem sombra suave e um leve efeito ao passar o mouse */
         .section-card {
             background: white;
             border-radius: 12px;
-            padding: 2.5rem;
+            padding: clamp(1.5rem, 5vw, 2.5rem);
             margin-bottom: 2.5rem;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
             border: 1px solid #eaeaea;
@@ -73,29 +77,33 @@
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
         }
         
+        /* Títulos de cada seção, com ícone e borda inferior */
         .section-card h2 {
             color: var(--ifpb-dark-green);
-            margin-bottom: 1.5rem;
-            font-size: 1.8rem;
+            margin-bottom: clamp(1rem, 4vw, 1.5rem);
+            font-size: clamp(1.4rem, 5vw, 1.8rem);
             display: flex;
             align-items: center;
             gap: 12px;
             padding-bottom: 1rem;
             border-bottom: 2px solid #f0f0f0;
+            flex-wrap: wrap;
         }
         
         .section-card h2 i {
             color: var(--ifpb-green);
             background: rgba(0, 107, 62, 0.1);
-            padding: 12px;
+            padding: clamp(8px, 2vw, 12px);
             border-radius: 10px;
+            font-size: clamp(1.2rem, 4vw, 1.6rem);
         }
         
+        /* Textos e listas com espaçamento */
         .section-card p, .section-card ul {
             line-height: 1.7;
             color: #444;
             margin-bottom: 1.2rem;
-            font-size: 1.05rem;
+            font-size: clamp(0.95rem, 3vw, 1.05rem);
         }
         
         .section-card ul {
@@ -116,10 +124,11 @@
             left: -1.5rem;
         }
         
+        /* Caixinhas de destaque (como a missão) */
         .highlight-box {
             background: linear-gradient(135deg, #f8fff9, #f0f9ff);
             border-left: 4px solid var(--ifpb-green);
-            padding: 1.5rem;
+            padding: clamp(1rem, 4vw, 1.5rem);
             border-radius: 8px;
             margin: 2rem 0;
         }
@@ -127,12 +136,13 @@
         .highlight-box h4 {
             color: var(--ifpb-dark-green);
             margin-bottom: 0.8rem;
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 4vw, 1.2rem);
         }
         
+        /* Linha do tempo */
         .project-timeline {
             position: relative;
-            padding: 2rem 0;
+            padding: 2rem 0; 
         }
         
         .project-timeline::before {
@@ -141,7 +151,8 @@
             left: 50%;
             transform: translateX(-50%);
             width: 3px;
-            height: 100%;
+            height: 92%;
+            margin-left: 5px;
             background: linear-gradient(to bottom, var(--ifpb-green), var(--ifpb-dark-green));
         }
         
@@ -161,7 +172,7 @@
         
         .timeline-content {
             background: white;
-            padding: 1.5rem;
+            padding: clamp(1rem, 3vw, 1.5rem);
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             border: 1px solid #eaeaea;
@@ -170,18 +181,20 @@
         .timeline-content h4 {
             color: var(--ifpb-dark-green);
             margin-bottom: 0.8rem;
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 4vw, 1.2rem);
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
         }
         
         .timeline-content h4 i {
             color: var(--ifpb-green);
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
         }
         
         .timeline-content p {
-            font-size: 0.95rem;
+            font-size: clamp(0.85rem, 2.5vw, 0.95rem);
             color: #666;
         }
         
@@ -205,10 +218,11 @@
             right: -43px;
         }
         
+        /* Sessão da equipe – cards dos membros */
         .team-section {
             display: flex;
             flex-wrap: wrap;
-            gap: 2.5rem;
+            gap: clamp(1.5rem, 5vw, 2.5rem);
             justify-content: center;
             margin-top: 2rem;
         }
@@ -217,6 +231,7 @@
             text-align: center;
             max-width: 200px;
             transition: transform 0.3s ease;
+            flex: 1 1 160px;
         }
         
         .team-member:hover {
@@ -224,15 +239,15 @@
         }
         
         .member-avatar {
-            width: 140px;
-            height: 140px;
+            width: clamp(100px, 25vw, 140px);
+            height: clamp(100px, 25vw, 140px);
             background: linear-gradient(135deg, var(--ifpb-green), var(--ifpb-dark-green));
             border-radius: 50%;
             margin: 0 auto 1.2rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.8rem;
+            font-size: clamp(2rem, 6vw, 2.8rem);
             color: white;
             box-shadow: 0 8px 25px rgba(0, 107, 62, 0.2);
         }
@@ -241,31 +256,32 @@
             font-weight: 600;
             color: var(--ifpb-dark-green);
             margin-bottom: 0.3rem;
-            font-size: 1.1rem;
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
         }
         
         .member-role {
             color: #666;
-            font-size: 0.95rem;
+            font-size: clamp(0.75rem, 2.5vw, 0.95rem);
             background: #f8f9fa;
             padding: 0.3rem 0.8rem;
             border-radius: 15px;
             display: inline-block;
         }
         
+        /* Tecnologias – aquelas tags com as ferramentas usadas */
         .tech-stack {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 0.8rem;
             margin-top: 1.5rem;
             justify-content: center;
         }
         
         .tech-item {
             background: linear-gradient(135deg, #f1f8ff, #e8f4ff);
-            padding: 0.8rem 1.5rem;
+            padding: clamp(0.5rem, 2vw, 0.8rem) clamp(1rem, 3vw, 1.5rem);
             border-radius: 25px;
-            font-size: 0.95rem;
+            font-size: clamp(0.8rem, 2.5vw, 0.95rem);
             color: var(--ifpb-dark-green);
             border: 1px solid #d1e3ff;
             display: flex;
@@ -274,16 +290,11 @@
             transition: all 0.3s ease;
         }
         
-        .tech-item:hover {
-            background: linear-gradient(135deg, #e8f4ff, #d1e3ff);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 107, 62, 0.1);
-        }
-        
         .tech-item i {
-            color: var(--ifpb-green);
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
         }
         
+        /* Botão de voltar para o início */
         .back-link {
             display: inline-flex;
             align-items: center;
@@ -292,27 +303,23 @@
             text-decoration: none;
             font-weight: 500;
             margin: 3rem auto 2rem;
-            padding: 0.8rem 1.5rem;
+            padding: clamp(0.5rem, 2vw, 0.8rem) clamp(1rem, 3vw, 1.5rem);
             border: 2px solid var(--ifpb-green);
             border-radius: 25px;
             transition: all 0.3s ease;
             background: white;
+            font-size: clamp(0.85rem, 3vw, 1rem);
         }
         
-        .back-link:hover {
-            background: var(--ifpb-green);
-            color: white;
-            transform: translateX(-5px);
-        }
-        
+        /* Fluxo de dados – aquele diagrama de etapas */
         .data-flow {
             display: flex;
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
-            gap: 2rem;
+            gap: clamp(1rem, 4vw, 2rem);
             margin: 3rem 0;
-            padding: 2rem;
+            padding: clamp(1rem, 4vw, 2rem);
             background: linear-gradient(135deg, #f8fff9, #f0f9ff);
             border-radius: 15px;
             border: 1px solid #e0f0e5;
@@ -321,18 +328,28 @@
         .flow-step {
             text-align: center;
             max-width: 180px;
+            flex: 1 1 140px;
+        }
+        
+        .flow-step h4 {
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            margin-bottom: 0.5rem;
+        }
+        
+        .flow-step p {
+            font-size: clamp(0.75rem, 2.5vw, 0.85rem);
         }
         
         .flow-icon {
-            width: 70px;
-            height: 70px;
+            width: clamp(55px, 12vw, 70px);
+            height: clamp(55px, 12vw, 70px);
             background: white;
             border-radius: 50%;
             margin: 0 auto 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
+            font-size: clamp(1.4rem, 5vw, 1.8rem);
             color: var(--ifpb-green);
             border: 2px solid var(--ifpb-green);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
@@ -340,74 +357,395 @@
         
         .flow-arrow {
             color: var(--ifpb-green);
-            font-size: 1.5rem;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+        }
+        
+        /* cabeçalho mobile */
+        .main-header {
+            background-color: var(--bg-white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+        }
+        
+        .main-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        
+        /* Botão hamburger só aparece no celular/tablet */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 1002;
+            position: relative;
+        }
+        
+        .hamburger span {
+            width: 26px;
+            height: 2px;
+            background: var(--text-color);
+            transition: all 0.3s ease;
+            border-radius: 100px;
+        }
+        
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+        
+        /* Overlay escuro atrás do menu lateral */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Quando o menu está aberto, o body não rola */
+        body.menu-open {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+        }
+        
+        /* Menu lateral que aparece vindo da esquerda */
+        .nav-menu-mobile {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 280px;
+            height: 100dvh;
+            background: linear-gradient(135deg, #ffffff, #ffffff);
+            padding: 50px 24px 20px;
+            transition: left 0.3s ease;
+            z-index: 1001;
+            overflow-y: auto;
+            box-shadow: 5px 0 30px rgba(0,0,0,0.3);
+            display: block !important;
+        }
+        
+        .nav-menu-mobile.active {
+            left: 0;
+        }
+        
+        .nav-menu-mobile ul {
+            list-style: none;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            display: flex;
+            margin-top: 35px;
+        }
+        
+        .nav-menu-mobile li {
+            width: 100%;
+        }
+        
+        .nav-menu-mobile a {
+            color: rgb(29, 28, 28);
+            font-size: 1.125rem;
+            padding: 8px 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            transition: color 0.2s;
+            width: 100%;
+        }
+        
+        .nav-menu-mobile a i {
+            width: 24px;
+            font-size: 1.1rem;
+        }
+        
+        .nav-menu-mobile a:hover,
+        .nav-menu-mobile a.active {
+            color: var(--primary-color, #1a5f7a);
+        }
+        
+        .menu-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 30px;
+            margin-bottom: 30px;
+            border-bottom: 3px solid rgba(0, 0, 0, 0.15);
+        }
+        
+        .menu-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .menu-logo i {
+            font-size: 2rem;
+            color: var(--primary-color, #1a5f7a);
+        }
+        
+        .menu-logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .menu-logo-main {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--primary-color, #1a5f7a);
+            letter-spacing: -0.5px;
+        }
+        
+        .menu-logo-sub {
+            font-size: 0.65rem;
+            color: rgba(6, 6, 6, 0.7);
+            font-weight: 500;
+        }
+        
+        .menu-close-btn {
+            background: rgba(202, 201, 201, 0.163);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: rgb(100, 100, 100);
+            font-size: 1.125rem;
+        }
+        
+        .menu-close-btn:hover {
+            background: var(--primary-color, #1a5f7a);
+            transform: rotate(90deg);
+            color: white;
+        }
+        
+        @media (max-width: 900px) {
+            .main-nav ul.nav-list {
+                display: none;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .container {
+                padding: 0 1.5rem; 
+            }
+        }
+        
+        @media (min-width: 901px) {
+            .main-nav ul.nav-list {
+                display: flex !important;
+            }
+            .hamburger {
+                display: none !important;
+            }
+            .nav-menu-mobile {
+                display: none !important;
+            }
+            .menu-overlay {
+                display: none !important;
+            }
         }
         
         @media (max-width: 768px) {
-            .project-hero h1 {
-                font-size: 2.2rem;
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 28px;
             }
-            
-            .section-card {
-                padding: 1.8rem;
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
             }
-            
             .project-timeline::before {
-                left: 30px;
+                left: 20px;
             }
-            
             .timeline-item {
-                width: calc(100% - 60px);
-                margin-left: 60px !important;
+                width: calc(100% - 50px);
+                margin-left: 50px !important;
                 margin-right: 0 !important;
             }
-            
             .timeline-item::before {
-                left: -40px !important;
+                left: -35px !important;
                 right: auto !important;
             }
-            
+            .timeline-item:nth-child(odd)::before,
+            .timeline-item:nth-child(even)::before {
+                left: -35px !important;
+            }
             .flow-arrow {
                 transform: rotate(90deg);
             }
-            
             .data-flow {
-                gap: 1.5rem;
+                gap: 1rem;
             }
+            .section-card h2 {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.1rem;
+            }
+            .project-content {
+                padding: 0 0.1rem;
+            }
+            .section-card {
+                padding: 1.2rem;
+            }
+        }
+        
+        .main-footer {
+            background: var(--ifpb-dark-green);
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 3rem;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .footer-col h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            margin-bottom: 1rem;
+        }
+        .footer-links a {
+            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+        }
+        .footer-bottom {
+            text-align: center;
+            font-size: clamp(0.7rem, 2vw, 0.85rem);
+        }
+        /* Botões de chamada para ação */
+        .btn-primary, .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: var(--ifpb-green);
+            color: white;
+        }
+        .btn-secondary {
+            background: white;
+            color: var(--ifpb-green);
+            border: 2px solid var(--ifpb-green);
+        }
+        .footer-btn {
+            display: inline-block;
+            background: var(--ifpb-green);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
-    <!-- Cabeçalho e Navegação -->
+
     <header class="main-header">
         <div class="container">
-            <div class="logo">
-                
+            <a href="../../index.html" class="logo">
+                <div class="logo-icon-wrap">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
                 <div class="logo-text">
                     <h1>IFPB Data Platform</h1>
                     <p>Transparência • Análise • Inovação</p>
                 </div>
-            </div>
+            </a>
             
             <nav class="main-nav">
                 <ul class="nav-list">
-                    <li><a href="../index.html"><i class="fas fa-home"></i> Início</a></li>
-                    <li><a href="institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
-                    <li><a href="academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
-                    <li><a href="orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
-                    <li><a href="dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+                    <li><a href="../../index.html"><i class="fas fa-home"></i> Início</a></li>
+                    <li><a href="sobre.html" class="active"><i class="fas fa-university"></i>Sobre o Projeto</a></li>
+                    <li><a href="contato.html"><i class="fas fa-graduation-cap"></i>Contato</a></li>
+                    <li><a href="../dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
                 </ul>
                 
-                <div class="mobile-menu-btn">
-                    <i class="fas fa-bars"></i>
-                </div>
+                <!-- Botão do menu hamburger (aparece só no mobile) -->
+                <button class="hamburger" id="hamburger" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </nav>
         </div>
     </header>
 
-    <!-- Conteúdo Principal -->
+    <!-- Overlay escuro que cobre a tela quando o menu lateral está aberto -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <nav class="nav-menu-mobile" id="navMenuMobile">
+        <div class="menu-header">
+            <div class="menu-logo">
+                <i class="fas fa-chart-bar"></i>
+                <div class="menu-logo-text">
+                    <span class="menu-logo-main">IFPB Data Platform</span>
+                    <span class="menu-logo-sub">Dados Abertos</span>
+                </div>
+            </div>
+            <button class="menu-close-btn" id="menuCloseBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul>
+            <li><a href="../../index.html"><i class="fas fa-home"></i> Início</a></li>
+            <li><a href="sobre.html" class="active"><i class="fas fa-university"></i>Sobre o Projeto</a></li>
+            <li><a href="contato.html"><i class="fas fa-graduation-cap"></i>Contato</a></li>
+            <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+        </ul>
+    </nav>
+
     <main class="container">
-        <!-- Hero Section -->
+        <!-- Seção de título principal (hero) -->
         <section class="project-hero">
             <div class="container">
                 <h1>Transformando Dados em Conhecimento</h1>
@@ -415,21 +753,22 @@
             </div>
         </section>
 
-        <!-- Visão Geral -->
+        <!-- Cards de conteúdo organizados -->
         <section class="project-content">
+            <!-- Card: Visão do Projeto -->
             <div class="section-card">
                 <h2><i class="fas fa-lightbulb"></i> A Visão do Projeto</h2>
                 <p>O IFPB Data Platform nasceu da necessidade de transformar dados institucionais em ferramentas de transformação. Em um mundo cada vez mais orientado por informações, reconhecemos que os dados gerados diariamente pelo IFPB representam um patrimônio valioso, mas subutilizado.</p>
                 
                 <div class="highlight-box">
-                    <h4>Nossa Missão 🎯</h4>
+                    <h4>Nossa Missão</h4>
                     <p>Criar uma ponte entre dados técnicos complexos e decisões estratégicas, tornando a informação acessível, compreensível e útil para toda a comunidade acadêmica e sociedade em geral.</p>
                 </div>
                 
                 <p>Imagine poder explorar visualmente a evolução do número de matrículas, acompanhar a distribuição orçamentária em tempo real, ou entender as tendências acadêmicas através de gráficos interativos. Esta é a revolução que buscamos trazer para o IFPB.</p>
             </div>
 
-            <!-- O Desafio -->
+            <!-- Card: O Desafio -->
             <div class="section-card">
                 <h2><i class="fas fa-exclamation-triangle"></i> O Desafio que Enfrentamos</h2>
                 <p>Atualmente, os dados do IFPB estão dispersos em diversos sistemas, planilhas e relatórios. Esta fragmentação cria barreiras:</p>
@@ -444,7 +783,7 @@
                 <p>Este cenário limita o potencial dos dados como ferramenta de gestão, planejamento e transparência. A Lei de Acesso à Informação garante o direito aos dados, mas não garante sua compreensão ou utilidade prática.</p>
             </div>
 
-            <!-- Nossa Solução -->
+            <!-- Card: Nossa Solução (com fluxo visual) -->
             <div class="section-card">
                 <h2><i class="fas fa-rocket"></i> Nossa Solução Inovadora</h2>
                 <p>Criamos uma plataforma que transforma dados brutos em narrativas visuais poderosas. Mais do que um sistema de relatórios, desenvolvemos um ambiente interativo onde cada usuário pode:</p>
@@ -498,7 +837,7 @@
                 <p>A plataforma foi projetada para ser intuitiva, permitindo que desde estudantes até gestores possam explorar dados sem necessidade de conhecimentos técnicos em análise de dados.</p>
             </div>
 
-            <!-- Linha do Tempo do Projeto -->
+            <!-- Card: Linha do tempo do desenvolvimento -->
             <div class="section-card">
                 <h2><i class="fas fa-road"></i> Jornada de Desenvolvimento</h2>
                 <p>O projeto segue uma metodologia ágil e iterativa, com foco na entrega contínua de valor:</p>
@@ -541,7 +880,7 @@
                 </div>
             </div>
 
-            <!-- Tecnologias -->
+            <!-- Card: Tecnologias utilizadas -->
             <div class="section-card">
                 <h2><i class="fas fa-cogs"></i> Tecnologia de Ponta</h2>
                 <p>Utilizamos uma stack tecnológica moderna e robusta para garantir performance, escalabilidade e experiência do usuário excepcional:</p>
@@ -550,22 +889,18 @@
                     <span class="tech-item"><i class="fab fa-python"></i> Python</span>
                     <span class="tech-item"><i class="fab fa-js"></i> JavaScript ES6+</span>
                     <span class="tech-item"><i class="fas fa-chart-bar"></i> D3.js</span>
-                    <span class="tech-item"><i class="fas fa-database"></i> PostgreSQL</span>
                     <span class="tech-item"><i class="fas fa-server"></i> Flask API</span>
                     <span class="tech-item"><i class="fas fa-chart-line"></i> Chart.js</span>
-                    <span class="tech-item"><i class="fab fa-git-alt"></i> Git Flow</span>
-                    <span class="tech-item"><i class="fas fa-cloud"></i> Docker</span>
                     <span class="tech-item"><i class="fas fa-mobile-alt"></i> Design Responsivo</span>
                     <span class="tech-item"><i class="fas fa-bolt"></i> Performance</span>
                 </div>
                 
                 <div class="highlight-box">
-                    <h4>🔒 Segurança e Privacidade</h4>
+                    <h4>Segurança e Privacidade</h4>
                     <p>Todos os dados são tratados com conformidade à LGPD e às melhores práticas de segurança da informação. Implementamos criptografia, controle de acesso e anonimização de dados sensíveis.</p>
                 </div>
             </div>
 
-            <!-- Impacto Esperado -->
             <div class="section-card">
                 <h2><i class="fas fa-bullseye"></i> Impacto e Benefícios</h2>
                 <p>Esta plataforma representa mais do que uma ferramenta técnica - é um catalisador para mudanças positivas:</p>
@@ -581,13 +916,12 @@
                 <p>Estimamos que a plataforma possa influenciar positivamente a alocação de recursos, reduzir taxas de evasão e fortalecer a cultura de dados na instituição.</p>
             </div>
 
-            <!-- Equipe -->
+            <!-- Card: Equipe -->
             <div class="section-card">
                 <h2><i class="fas fa-users"></i> A Equipe por Trás da Inovação</h2>
                 <p>Este projeto é desenvolvido por uma equipe multidisciplinar apaixonada por dados e educação:</p>
               
                 <div class="team-section">
-
                     <div class="team-member">
                         <div class="member-avatar">
                             <i class="fas fa-chalkboard-teacher"></i>
@@ -603,15 +937,14 @@
                         <div class="member-name">Pesquisador</div>
                         <div class="member-role">Iniciação Científica</div>
                     </div>
-                
-                <p>Trabalhamos em colaboração com diversos setores do IFPB para garantir que a plataforma atenda às reais necessidades da comunidade acadêmica.</p>
                 </div>
+                <p>Trabalhamos em colaboração com diversos setores do IFPB para garantir que a plataforma atenda às reais necessidades da comunidade acadêmica.</p>
             </div>
 
-            <!-- Chamada para Ação -->
+            <!-- Card de chamada para ação (participação) -->
             <div class="section-card" style="text-align: center; background: linear-gradient(135deg, #f8fff9, #e8f4ff); border: 2px dashed var(--ifpb-green);">
                 <h2 style="border: none;"><i class="fas fa-hands-helping"></i> Participe Desta Transformação</h2>
-                <p style="font-size: 1.1rem; margin-bottom: 2rem;">Esta plataforma é viva e evolui com o uso. Sua participação é fundamental!</p>
+                <p style="font-size: clamp(1rem, 3vw, 1.1rem); margin-bottom: 2rem;">Esta plataforma é viva e evolui com o uso. Sua participação é fundamental!</p>
                 
                 <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
                     <a href="dashboard.html" class="btn-primary" style="display: inline-flex; align-items: center; gap: 10px;">
@@ -625,12 +958,11 @@
                     </a>
                 </div>
                 
-                <p style="margin-top: 2rem; color: #666; font-size: 0.95rem;">
+                <p style="margin-top: 2rem; color: #666; font-size: clamp(0.85rem, 2.5vw, 0.95rem);">
                     <i class="fas fa-info-circle"></i> Esta é uma versão em desenvolvimento ativo. Novos recursos são adicionados regularmente.
                 </p>
             </div>
 
-            <!-- Link de Voltar -->
             <div style="text-align: center;">
                 <a href="../index.html" class="back-link">
                     <i class="fas fa-arrow-left"></i> Voltar para a página inicial
@@ -639,7 +971,6 @@
         </section>
     </main>
 
-    <!-- Rodapé -->
     <footer class="main-footer">
         <div class="container">
             <div class="footer-grid">
@@ -687,10 +1018,72 @@
         </div>
     </footer>
 
-    <!-- JavaScript -->
-    <script src="../script.js"></script>
     <script>
-        // Animação suave para os cards
+        (function() {
+            const hamburger = document.getElementById('hamburger');
+            const navMenuMobile = document.getElementById('navMenuMobile');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuCloseBtn = document.getElementById('menuCloseBtn');
+
+            function closeMenu() {
+                if (hamburger) hamburger.classList.remove('active');
+                if (navMenuMobile) navMenuMobile.classList.remove('active');
+                if (menuOverlay) menuOverlay.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            }
+
+            function openMenu() {
+                if (hamburger) hamburger.classList.add('active');
+                if (navMenuMobile) navMenuMobile.classList.add('active');
+                if (menuOverlay) menuOverlay.classList.add('active');
+                document.body.classList.add('menu-open');
+            }
+
+            function toggleMenu() {
+                if (navMenuMobile && navMenuMobile.classList.contains('active')) {
+                    closeMenu();
+                } else {
+                    openMenu();
+                }
+            }
+
+            if (hamburger) hamburger.addEventListener('click', toggleMenu);
+            if (menuCloseBtn) menuCloseBtn.addEventListener('click', closeMenu);
+            if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
+
+            // Se a janela for redimensionada para desktop, fecha o menu automaticamente
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 900 && navMenuMobile && navMenuMobile.classList.contains('active')) {
+                    closeMenu();
+                }
+            });
+
+            // Ao clicar num link do menu mobile, fecha o menu (exceto se for âncora interna)
+            if (navMenuMobile) {
+                const links = navMenuMobile.querySelectorAll('a');
+                links.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        const href = this.getAttribute('href');
+                        if (href && href.startsWith('#')) {
+                            e.preventDefault();
+                            closeMenu();
+                            const target = document.querySelector(href);
+                            if (target) {
+                                setTimeout(() => {
+                                    window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+                                }, 150);
+                            }
+                        } else {
+                            closeMenu();
+                        }
+                    });
+                });
+            }
+        })();
+    </script>
+
+    <!-- Animação dos cards: quando eles entram na tela, ganham opacidade e sobem suavemente -->
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cards = document.querySelectorAll('.section-card');
             
