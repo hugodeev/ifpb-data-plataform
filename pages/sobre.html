@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Sobre o Projeto - IFPB Data Platform</title>
-    <link rel="shortcut icon" href="assets/img/logosite.png " type="image/x-icon">
+    <link rel="shortcut icon" href="../assets/img/logosite.png " type="image/x-icon">
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
@@ -18,10 +18,11 @@
 
         .project-hero {
             padding: clamp(2rem, 8vw, 4rem) 0;
-            margin-bottom: 3rem;
+            margin-bottom: 0.1rem;
             border-radius: 0 0 15px 15px;
             position: relative;
-            overflow: hidden;
+            overflow: hidden;   
+            color: var(--ifpb-dark-green);
         }
         
         .project-hero::before {
@@ -82,7 +83,6 @@
             color: var(--ifpb-dark-green);
             margin-bottom: clamp(1rem, 4vw, 1.5rem);
             font-size: clamp(1.4rem, 5vw, 1.8rem);
-            display: flex;
             align-items: center;
             gap: 12px;
             padding-bottom: 1rem;
@@ -103,7 +103,7 @@
             line-height: 1.7;
             color: #444;
             margin-bottom: 1.2rem;
-            font-size: clamp(0.95rem, 3vw, 1.05rem);
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
         }
         
         .section-card ul {
@@ -692,7 +692,7 @@
 
     <header class="main-header">
         <div class="container">
-            <a href="../../index.html" class="logo">
+            <a href="../index.html" class="logo">
                 <div class="logo-icon-wrap">
                     <i class="fas fa-chart-bar"></i>
                 </div>
@@ -704,10 +704,10 @@
             
             <nav class="main-nav">
                 <ul class="nav-list">
-                    <li><a href="../../index.html"><i class="fas fa-home"></i> Início</a></li>
+                    <li><a href="../index.html"><i class="fas fa-home"></i> Início</a></li>
                     <li><a href="sobre.html" class="active"><i class="fas fa-university"></i>Sobre o Projeto</a></li>
                     <li><a href="contato.html"><i class="fas fa-graduation-cap"></i>Contato</a></li>
-                    <li><a href="../dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+                    <li><a href="../pages/dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
                 </ul>
                 
                 <!-- Botão do menu hamburger (aparece só no mobile) -->
@@ -737,10 +737,10 @@
             </button>
         </div>
         <ul>
-            <li><a href="../../index.html"><i class="fas fa-home"></i> Início</a></li>
+            <li><a href="../index.html"><i class="fas fa-home"></i> Início</a></li>
             <li><a href="sobre.html" class="active"><i class="fas fa-university"></i>Sobre o Projeto</a></li>
             <li><a href="contato.html"><i class="fas fa-graduation-cap"></i>Contato</a></li>
-            <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+            <li><a href="../pages/dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
         </ul>
     </nav>
 

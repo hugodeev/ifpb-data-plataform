@@ -3,51 +3,353 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>IFPB Data Platform - Transparência e Análise de Dados</title>
-    <link rel="shortcut icon" href="assets/img/logosite.png " type="image/x-icon">
-    <link rel="stylesheet" href="style.css">
+    <title>Contato - IFPB Data Platform</title>
+    <link rel="shortcut icon" href="../assets/img/logosite.png" type="image/x-icon">
+    <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         :root {
-            --primary-color: #1a5f7a;
-            --primary-dark: #0e4a63;
-            --primary-light: #2a7a9a;
-            --secondary-color: #57cc99;
-            --accent-color: #ff9a3c;
-            --text-color: #333;
-            --text-light: #666;
-            --bg-light: #f8f9fa;
-            --bg-white: #ffffff;
-            --border-color: #e0e0e0;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.12);
-            --font-heading: 'Poppins', sans-serif;
-            --font-body: 'Roboto', sans-serif;
             --header-height: 72px;
+            --ifpb-green: #1a5f7a;
+            --ifpb-dark-green: #0e4a63;
         }
 
-        body {
-            font-family: var(--font-body);
-            color: var(--text-color);
-            line-height: 1.6;
-            background-color: var(--bg-light);
+        .project-hero {
+            padding: clamp(2rem, 8vw, 4rem) 0;
+            margin-bottom: 3rem;
+            border-radius: 0 0 15px 15px;
+            position: relative;
+            overflow: hidden;
         }
-
-        .container {
-            max-width: 1200px;
+        
+        .project-hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none" opacity="0.1"><path d="M0,0 L100,0 L100,100 Z" fill="white"/></svg>');
+            background-size: cover;
+        }
+        
+        .project-hero .container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .project-hero h1 {
+            font-size: clamp(1.8rem, 6vw, 2.8rem);
+            margin-bottom: 1rem;
+            text-align: center; 
+        }
+        
+        .project-hero p {
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 clamp(1rem, 4vw, 2rem);
-            width: 100%;
+            text-align: center;
+            opacity: 0.9;
+            padding: 0 1rem;
         }
-
+        
+        .project-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            padding: clamp(1.5rem, 5vw, 2.5rem);
+            margin-bottom: 2.5rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid #eaeaea;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .section-card h2 {
+            color: var(--ifpb-dark-green);
+            margin-bottom: clamp(1rem, 4vw, 1.5rem);
+            font-size: clamp(1.4rem, 5vw, 1.8rem);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+            flex-wrap: wrap;
+        }
+        
+        .section-card h2 i {
+            color: var(--ifpb-green);
+            background: rgba(0, 107, 62, 0.1);
+            padding: clamp(8px, 2vw, 12px);
+            border-radius: 10px;
+            font-size: clamp(1.2rem, 4vw, 1.6rem);
+        }
+        
+        .section-card p, .section-card ul {
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 1.2rem;
+            font-size: clamp(0.95rem, 3vw, 1.05rem);
+        }
+        
+        .section-card ul {
+            padding-left: 1.5rem;
+        }
+        
+        .section-card li {
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 10px;
+        }
+        
+        .section-card li:before {
+            content: "▸";
+            color: var(--ifpb-green);
+            font-weight: bold;
+            position: absolute;
+            left: -1.5rem;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #f8fff9, #f0f9ff);
+            border-left: 4px solid var(--ifpb-green);
+            padding: clamp(1rem, 4vw, 1.5rem);
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+        
+        .highlight-box h4 {
+            color: var(--ifpb-dark-green);
+            margin-bottom: 0.8rem;
+            font-size: clamp(1rem, 4vw, 1.2rem);
+        }
+        
+        .project-timeline {
+            position: relative;
+            padding: 2rem 0; 
+        }
+        
+        .project-timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 92%;
+            margin-left: 5px;
+            background: linear-gradient(to bottom, var(--ifpb-green), var(--ifpb-dark-green));
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            width: 45%;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            margin-left: 55%;
+        }
+        
+        .timeline-item:nth-child(even) {
+            margin-right: 55%;
+        }
+        
+        .timeline-content {
+            background: white;
+            padding: clamp(1rem, 3vw, 1.5rem);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid #eaeaea;
+        }
+        
+        .timeline-content h4 {
+            color: var(--ifpb-dark-green);
+            margin-bottom: 0.8rem;
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .timeline-content h4 i {
+            color: var(--ifpb-green);
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+        }
+        
+        .timeline-content p {
+            font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+            color: #666;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--ifpb-green);
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px var(--ifpb-green);
+            top: 20px;
+        }
+        
+        .timeline-item:nth-child(odd)::before {
+            left: -43px;
+        }
+        
+        .timeline-item:nth-child(even)::before {
+            right: -43px;
+        }
+        
+        .team-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: clamp(1.5rem, 5vw, 2.5rem);
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .team-member {
+            text-align: center;
+            max-width: 200px;
+            transition: transform 0.3s ease;
+            flex: 1 1 160px;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-8px);
+        }
+        
+        .member-avatar {
+            width: clamp(100px, 25vw, 140px);
+            height: clamp(100px, 25vw, 140px);
+            background: linear-gradient(135deg, var(--ifpb-green), var(--ifpb-dark-green));
+            border-radius: 50%;
+            margin: 0 auto 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(2rem, 6vw, 2.8rem);
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 107, 62, 0.2);
+        }
+        
+        .member-name {
+            font-weight: 600;
+            color: var(--ifpb-dark-green);
+            margin-bottom: 0.3rem;
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+        }
+        
+        .member-role {
+            color: #666;
+            font-size: clamp(0.75rem, 2.5vw, 0.95rem);
+            background: #f8f9fa;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            display: inline-block;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+        
+        .tech-item {
+            background: linear-gradient(135deg, #f1f8ff, #e8f4ff);
+            padding: clamp(0.5rem, 2vw, 0.8rem) clamp(1rem, 3vw, 1.5rem);
+            border-radius: 25px;
+            font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+            color: var(--ifpb-dark-green);
+            border: 1px solid #d1e3ff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .tech-item i {
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--ifpb-green);
+            text-decoration: none;
+            font-weight: 500;
+            margin: 3rem auto 2rem;
+            padding: clamp(0.5rem, 2vw, 0.8rem) clamp(1rem, 3vw, 1.5rem);
+            border: 2px solid var(--ifpb-green);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            background: white;
+            font-size: clamp(0.85rem, 3vw, 1rem);
+        }
+        
+        .data-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: clamp(1rem, 4vw, 2rem);
+            margin: 3rem 0;
+            padding: clamp(1rem, 4vw, 2rem);
+            background: linear-gradient(135deg, #f8fff9, #f0f9ff);
+            border-radius: 15px;
+            border: 1px solid #e0f0e5;
+        }
+        
+        .flow-step {
+            text-align: center;
+            max-width: 180px;
+            flex: 1 1 140px;
+        }
+        
+        .flow-step h4 {
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            margin-bottom: 0.5rem;
+        }
+        
+        .flow-step p {
+            font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+        }
+        
+        .flow-icon {
+            width: clamp(55px, 12vw, 70px);
+            height: clamp(55px, 12vw, 70px);
+            background: white;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(1.4rem, 5vw, 1.8rem);
+            color: var(--ifpb-green);
+            border: 2px solid var(--ifpb-green);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .flow-arrow {
+            color: var(--ifpb-green);
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
+        }
+        
         .main-header {
             background-color: var(--bg-white);
             box-shadow: var(--shadow);
@@ -58,87 +360,14 @@
             display: flex;
             align-items: center;
         }
-
+        
         .main-header .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
         }
-
-        /* Logo com texto responsivo */
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            text-decoration: none;
-        }
-
-        .logo-img {
-            height: 50px;
-            width: auto;
-        }
-
-        .logo-text h1 {
-            font-family: var(--font-heading);
-            font-size: clamp(1.2rem, 5vw, 1.5rem);
-            color: var(--primary-color);
-            margin-bottom: 2px;
-            line-height: 1.2;
-        }
-
-        .logo-text p {
-            font-size: clamp(0.7rem, 3vw, 0.85rem);
-            color: var(--text-light);
-        }
-
-        .main-nav {
-            display: flex;
-            align-items: center;
-        }
-        .nav-list {
-            display: flex;
-            list-style: none;
-            gap: 2px;
-            align-items: center;
-        }
-
-        .nav-list a {
-            text-decoration: none;
-            color: var(--text-color);
-            font-weight: 500;
-            padding: 8px 12px;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: clamp(0.85rem, 3vw, 0.95rem);
-        }
-
-        .nav-list a:hover {
-            color: var(--primary-color);
-            background-color: rgba(26, 95, 122, 0.05);
-        }
-
-        .nav-list a.active {
-            color: var(--primary-color);
-            background-color: rgba(26, 95, 122, 0.1);
-        }
-
-        /* Botão do Dashboard  */
-        .dashboard-btn {
-            background-color: var(--accent-color);
-            color: white !important;
-            padding: 10px 20px !important;
-            border-radius: 8px;
-        }
-
-        .dashboard-btn:hover {
-            background-color: #e68a2e !important;
-        }
-
-        /* menu hamburguer */
+        
         .hamburger {
             display: none;
             flex-direction: column;
@@ -150,6 +379,7 @@
             z-index: 1002;
             position: relative;
         }
+        
         .hamburger span {
             width: 26px;
             height: 2px;
@@ -157,17 +387,20 @@
             transition: all 0.3s ease;
             border-radius: 100px;
         }
+        
         .hamburger.active span:nth-child(1) {
             transform: rotate(45deg) translate(6px, 6px);
         }
+        
         .hamburger.active span:nth-child(2) {
             opacity: 0;
             transform: translateX(-10px);
         }
+        
         .hamburger.active span:nth-child(3) {
             transform: rotate(-45deg) translate(6px, -6px);
         }
-
+        
         .menu-overlay {
             position: fixed;
             top: 0;
@@ -181,17 +414,18 @@
             visibility: hidden;
             transition: all 0.3s ease;
         }
+        
         .menu-overlay.active {
             opacity: 1;
             visibility: visible;
         }
-
+        
         body.menu-open {
             overflow: hidden;
             position: fixed;
             width: 100%;
         }
-
+        
         .nav-menu-mobile {
             position: fixed;
             top: 0;
@@ -206,9 +440,11 @@
             box-shadow: 5px 0 30px rgba(0,0,0,0.3);
             display: block !important;
         }
+        
         .nav-menu-mobile.active {
             left: 0;
         }
+        
         .nav-menu-mobile ul {
             list-style: none;
             flex-direction: column;
@@ -220,9 +456,11 @@
             display: flex;
             margin-top: 35px;
         }
+        
         .nav-menu-mobile li {
             width: 100%;
         }
+        
         .nav-menu-mobile a {
             color: rgb(29, 28, 28);
             font-size: 1.125rem;
@@ -234,14 +472,17 @@
             transition: color 0.2s;
             width: 100%;
         }
+        
         .nav-menu-mobile a i {
             width: 24px;
             font-size: 1.1rem;
         }
+        
         .nav-menu-mobile a:hover,
         .nav-menu-mobile a.active {
-            color: #1a5f7a;
+            color: var(--primary-color, #1a5f7a);
         }
+        
         .menu-header {
             display: flex;
             align-items: center;
@@ -250,30 +491,36 @@
             margin-bottom: 30px;
             border-bottom: 3px solid rgba(0, 0, 0, 0.15);
         }
+        
         .menu-logo {
             display: flex;
             align-items: center;
             gap: 12px;
         }
+        
         .menu-logo i {
             font-size: 2rem;
-            color: #1a5f7a;
+            color: var(--primary-color, #1a5f7a);
         }
+        
         .menu-logo-text {
             display: flex;
             flex-direction: column;
         }
+        
         .menu-logo-main {
             font-size: 1rem;
             font-weight: 800;
-            color: #1a5f7a;
+            color: var(--primary-color, #1a5f7a);
             letter-spacing: -0.5px;
         }
+        
         .menu-logo-sub {
             font-size: 0.65rem;
             color: rgba(6, 6, 6, 0.7);
             font-weight: 500;
         }
+        
         .menu-close-btn {
             background: rgba(202, 201, 201, 0.163);
             border: none;
@@ -288,26 +535,27 @@
             color: rgb(100, 100, 100);
             font-size: 1.125rem;
         }
+        
         .menu-close-btn:hover {
-            background: #1a5f7a;
+            background: var(--primary-color, #1a5f7a);
             transform: rotate(90deg);
             color: white;
         }
-
+        
         @media (max-width: 900px) {
-            .nav-list {
+            .main-nav ul.nav-list {
                 display: none;
             }
             .hamburger {
                 display: flex;
             }
             .container {
-                padding: 0 1.2rem;
+                padding: 0 1.5rem; 
             }
         }
-
+        
         @media (min-width: 901px) {
-            .nav-list {
+            .main-nav ul.nav-list {
                 display: flex !important;
             }
             .hamburger {
@@ -320,163 +568,364 @@
                 display: none !important;
             }
         }
-
-        .main-footer {
-            background-color: var(--primary-dark);
-            color: white;
-            padding: clamp(2rem, 6vw, 3.5rem) 0 1.5rem;
-            margin-top: 3rem;
-        }
-
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: clamp(1.5rem, 4vw, 2.5rem);
-            margin-bottom: 2rem;
-        }
-
-        .footer-col h3 {
-            font-family: var(--font-heading);
-            font-size: clamp(1.1rem, 4vw, 1.3rem);
-            margin-bottom: 1rem;
-            color: white;
-        }
-
-        .footer-col p {
-            opacity: 0.8;
-            margin-bottom: 1.2rem;
-            line-height: 1.6;
-            font-size: clamp(0.85rem, 3vw, 0.95rem);
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.7rem;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: clamp(0.85rem, 3vw, 0.9rem);
-        }
-
-        .footer-links a:hover {
-            color: white;
-            padding-left: 5px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 12px;
-            margin-top: 1.2rem;
-            flex-wrap: wrap;
-        }
-
-        .social-links a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 38px;
-            height: 38px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: white;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            background-color: var(--accent-color);
-            transform: translateY(-3px);
-        }
-
-        .footer-btn {
-            display: inline-block;
-            padding: 8px 18px;
-            background-color: var(--accent-color);
-            color: white;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: 500;
-            margin-top: 10px;
-            transition: all 0.3s ease;
-            font-size: clamp(0.8rem, 3vw, 0.9rem);
-        }
-
-        .footer-btn:hover {
-            background-color: #e68a2e;
-            transform: translateY(-2px);
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 1.2rem;
-            text-align: center;
-            font-size: clamp(0.7rem, 2.5vw, 0.85rem);
-            opacity: 0.7;
-        }
-
-        .footer-note {
-            margin-top: 10px;
-            padding: 8px 12px;
-            background-color: rgba(255, 154, 60, 0.1);
-            border-radius: 30px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: clamp(0.7rem, 2.5vw, 0.8rem);
-        }
-
-        /* Ajustes finos para telas pequenas */
+        
         @media (max-width: 768px) {
             .footer-grid {
-                gap: 1.8rem;
+                grid-template-columns: 1fr;
+                gap: 28px;
             }
             .footer-bottom {
                 flex-direction: column;
                 text-align: center;
             }
+            .project-timeline::before {
+                left: 20px;
+            }
+            .timeline-item {
+                width: calc(100% - 50px);
+                margin-left: 50px !important;
+                margin-right: 0 !important;
+            }
+            .timeline-item::before {
+                left: -35px !important;
+                right: auto !important;
+            }
+            .timeline-item:nth-child(odd)::before,
+            .timeline-item:nth-child(even)::before {
+                left: -35px !important;
+            }
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+            .data-flow {
+                gap: 1rem;
+            }
+            .section-card h2 {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
-
+        
         @media (max-width: 480px) {
             .container {
-                padding: 0 1rem;
+                padding: 1.1rem;
             }
-            .footer-grid {
-                gap: 1.5rem;
+            .project-content {
+                padding: 0 0.1rem;
+            }
+            .section-card {
+                padding: 1.2rem;
             }
         }
+        
+        .main-footer {
+            background: var(--ifpb-dark-green);
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 3rem;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .footer-col h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            margin-bottom: 1rem;
+        }
+        .footer-links a {
+            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+        }
+        .footer-bottom {
+            text-align: center;
+            font-size: clamp(0.7rem, 2vw, 0.85rem);
+        }
+        
+        .btn-primary, .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: var(--ifpb-green);
+            color: white;
+        }
+        .btn-secondary {
+            background: white;
+            color: var(--ifpb-green);
+            border: 2px solid var(--ifpb-green);
+        }
+        .footer-btn {
+            display: inline-block;
+            background: var(--ifpb-green);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
 
-        main {
-            min-height: 50vh;
-            padding: 2rem 0;
+        .contact-hero {
+            color: var(--ifpb-dark-green);
+            padding: clamp(2rem, 8vw, 4rem) 0;
+            margin-bottom: 0.1rem;
+            border-radius: 0 0 20px 20px;
+            text-align: center;
+        }
+        .contact-hero h1 {
+            font-size: clamp(1.8rem, 6vw, 2.8rem);
+            margin-bottom: 1rem;
+        }
+        .contact-hero p {
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .info-card, .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eef2f6;
+            transition: transform 0.2s ease;
+        }
+        .info-card:hover, .form-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .info-card h2, .form-card h2 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--ifpb-dark-green);
+            font-size: clamp(1.4rem, 5vw, 1.8rem);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #eef2f6;
+            padding-bottom: 0.75rem;
+        }
+        .info-card h2 i, .form-card h2 i {
+            color: var(--ifpb-green);
+            background: rgba(26, 95, 122, 0.1);
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .contact-list {
+            list-style: none;
+            margin: 2rem 0;
+        }
+        .contact-list li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            color: #2c3e50;
+        }
+        .contact-list li i {
+            width: 40px;
+            height: 40px;
+            background: #f0f7ff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: var(--ifpb-green);
+            font-size: 1.2rem;
+            transition: 0.2s;
+        }
+        .contact-list li:hover i {
+            background: var(--ifpb-green);
+            color: white;
+        }
+        .contact-list a {
+            color: #2c3e50;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .contact-list a:hover {
+            color: var(--ifpb-green);
+        }
+
+        .social-links-section {
+            margin-top: 2rem;
+        }
+        .social-links-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--ifpb-dark-green);
+        }
+        .social-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .social-buttons a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: #f8fafc;
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            color: var(--ifpb-dark-green);
+            text-decoration: none;
+            font-weight: 500;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+        .social-buttons a i {
+            font-size: 1.2rem;
+        }
+        .social-buttons a:hover {
+            background: var(--ifpb-green);
+            color: white;
+            border-color: var(--ifpb-green);
+            transform: translateY(-2px);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #1e293b;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            background: #fff;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--ifpb-green);
+            box-shadow: 0 0 0 3px rgba(26, 95, 122, 0.1);
+        }
+        .submit-btn {
+            background: var(--ifpb-green);
+            color: white;
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .submit-btn:hover {
+            background: var(--ifpb-dark-green);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(26, 95, 122, 0.25);
+        }
+
+        .map-placeholder {
+            background: #eef2f6;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem 0;
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .map-placeholder .map-overlay {
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Mensagem de feedback após envio */
+        .form-message {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .form-message.success {
+            background: #e6f7e6;
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+        }
+        .form-message.error {
+            background: #fee;
+            color: #c62828;
+            border-left: 4px solid #c62828;
+        }
+
+        @media (max-width: 900px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .info-card, .form-card {
+                padding: 1rem;
+            }
+            .contact-list li {
+                font-size: 0.9rem;
+            }
+            .social-buttons a {
+                padding: 0.4rem 1rem;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
 <body>
+
     <header class="main-header">
         <div class="container">
-            <div class="logo">
+            <a href="../../index.html" class="logo">
+                <div class="logo-icon-wrap">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
                 <div class="logo-text">
                     <h1>IFPB Data Platform</h1>
                     <p>Transparência • Análise • Inovação</p>
                 </div>
-            </div>
+            </a>
             
             <nav class="main-nav">
                 <ul class="nav-list">
-                    <li><a href="index.html" class="active"><i class="fas fa-home"></i> Início</a></li>
-                    <li><a href="pages/institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
-                    <li><a href="pages/academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
-                    <li><a href="pages/orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
-                    <li><a href="pages/dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+                    <li><a href="../index.html"><i class="fas fa-home"></i> Início</a></li>
+                    <li><a href="sobre.html"><i class="fas fa-university"></i>Sobre o Projeto</a></li>
+                    <li><a href="contato.html" class="active"><i class="fas fa-graduation-cap"></i>Contato</a></li>
+                    <li><a href="../pages/dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
                 </ul>
                 
-                <!-- Botão hamburger -->
                 <button class="hamburger" id="hamburger" aria-label="Menu">
                     <span></span>
                     <span></span>
@@ -486,10 +935,8 @@
         </div>
     </header>
 
-    <!-- Overlay escuro (fundo do menu lateral) -->
     <div class="menu-overlay" id="menuOverlay"></div>
 
-    <!-- Menu mobile que desliza da esquerda -->
     <nav class="nav-menu-mobile" id="navMenuMobile">
         <div class="menu-header">
             <div class="menu-logo">
@@ -504,18 +951,86 @@
             </button>
         </div>
         <ul>
-            <li><a href="index.html"><i class="fas fa-home"></i> Início</a></li>
-            <li><a href="pages/institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
-            <li><a href="pages/academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
-            <li><a href="pages/orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
-            <li><a href="pages/dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+            <li><a href="../index.html"><i class="fas fa-home"></i> Início</a></li>
+            <li><a href="sobre.html"><i class="fas fa-university"></i>Sobre o Projeto</a></li>
+            <li><a href="contato.html" class="active"><i class="fas fa-graduation-cap"></i>Contato</a></li>
+            <li><a href="../pages/dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
         </ul>
     </nav>
 
-    <main class="container">
+    <main>
+        <section class="contact-hero">
+            <div class="container">
+                <h1>Entre em Contato</h1>
+                <p>Dúvidas, sugestões ou feedback? Adoraríamos ouvir você. A sua participação é essencial para melhorarmos cada vez mais a plataforma.</p>
+            </div>
+        </section>
 
+        <div class="container contact-content">
+            <div class="contact-grid">
+                <div class="info-card">
+                    <h2><i class="fas fa-map-marker-alt"></i> Onde Estamos</h2>
+                    <ul class="contact-list">
+                        <li><i class="fas fa-map-pin"></i> <strong>IFPB Campus Guarabira</strong><br>Rua Professor Carlos Leonardo Arcoverde, Rodovia PB 057 - KM-02 - S/N, Guarabira - PB, CEP: 58200-000</li>
+                        <li><i class="fas fa-envelope"></i> <a href="mailto:ifpb.dataplatform@gmail.com">ifpb.dataplatform@gmail.com</a></li>
+                        <li><i class="fas fa-phone-alt"></i> <a href="tel:+558336121200">(83) 3612-1200</a></li>
+                    </ul>
+                    <div class="social-links-section">
+                        <h3><i class="fas fa-share-alt"></i> Redes Sociais</h3>
+                        <div class="social-buttons">
+                            <a href="https://github.com/hugodeev/ifpb-data-plataform" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                            <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
+                            <a href="#" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+                            <a href="#" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <h2><i class="fas fa-paper-plane"></i> Envie uma Mensagem</h2>
+                    <form id="contactForm" method="POST">
+                        <div class="form-group">
+                            <label for="name">Nome completo *</label>
+                            <input type="text" id="name" name="name" required placeholder="Seu nome">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">E-mail *</label>
+                            <input type="email" id="email" name="email" required placeholder="seuemail@exemplo.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Assunto *</label>
+                            <input type="text" id="subject" name="subject" required placeholder="Dúvida, sugestão, parceria...">
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Mensagem *</label>
+                            <textarea id="message" name="message" rows="5" required placeholder="Escreva sua mensagem aqui..."></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Enviar Mensagem</button>
+                        <div id="formMessage" class="form-message"></div>
+                    </form>
+                    <p style="font-size: 0.8rem; margin-top: 1rem; color: #6c757d;"><i class="fas fa-lock"></i> Seus dados estão seguros e não serão compartilhados.</p>
+                </div>
+            </div>
+
+            <div class="map-placeholder" style="padding: 0; overflow: hidden;">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5111.502413037031!2d-35.473650923955375!3d-6.856353067080456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7adb5e6fd65ca27%3A0xee791c2eb871dc1a!2sIFPB%20-%20CAMPUS%20GUARABIRA!5e1!3m2!1spt-BR!2sbr!4v1780251301126!5m2!1spt-BR!2sbr" 
+                    width="100%" 
+                    height="500" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="../index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Voltar para a página inicial
+            </a>
+        </div>
     </main>
-
 
     <footer class="main-footer">
         <div class="container">
@@ -524,44 +1039,42 @@
                     <h3>IFPB Data Platform</h3>
                     <p>Plataforma de visualização e análise de dados públicos do Instituto Federal da Paraíba.</p>
                     <div class="social-links">
-                        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                        <a href="#" aria-label="E-mail"><i class="fas fa-envelope"></i></a>
-                        <a href="#" aria-label="ResearchGate"><i class="fab fa-researchgate"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                        <a href="#"><i class="fab fa-researchgate"></i></a>
                     </div>
                 </div>
                 
                 <div class="footer-col">
                     <h3>Navegação</h3>
                     <ul class="footer-links">
-                        <li><a href="index.html">Início</a></li>
-                        <li><a href="pages/institucional.html">A Instituição</a></li>
-                        <li><a href="pages/academico.html">Vida Acadêmica</a></li>
-                        <li><a href="pages/orcamento.html">Gestão e Orçamento</a></li>
+                        <li><a href="../index.html">Início</a></li>
+                        <li><a href="institucional.html">A Instituição</a></li>
+                        <li><a href="academico.html">Vida Acadêmica</a></li>
+                        <li><a href="orcamento.html">Gestão e Orçamento</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-col">
                     <h3>Recursos</h3>
                     <ul class="footer-links">
-                        <li><a href="pages/dashboard.html">Explorar Dados</a></li>
-                        <li><a href="pages/dados-abertos.html">Dados Abertos</a></li>
-                        <li><a href="pages/sobre.html">Sobre o Projeto</a></li>
-                        <li><a href="pages/contato.html">Contato</a></li>
+                        <li><a href="dashboard.html">Explorar Dados</a></li>
+                        <li><a href="dados-abertos.html">Dados Abertos</a></li>
+                        <li><a href="sobre.html">Sobre o Projeto</a></li>
+                        <li><a href="contato.html" class="active">Contato</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-col">
                     <h3>Projeto de Pesquisa</h3>
-                    <p>Iniciação Científica - IFPB<br>Desenvolvimento de plataforma digital interativa para dados públicos.</p>
-                    <a href="pages/sobre.html" class="footer-btn">Saiba Mais</a>
+                    <p>Iniciação Científica - IFPB<br>
+                    Desenvolvimento de plataforma digital interativa para dados públicos.</p>
+                    <a href="sobre.html" class="footer-btn">Saiba Mais</a>
                 </div>
             </div>
             
             <div class="footer-bottom">
                 <p>&copy; 2026 IFPB Data Platform. Desenvolvido com fins acadêmicos. Dados para transparência e análise.</p>
-                <div class="footer-note">
-                    <i class="fas fa-exclamation-circle"></i> Versão demonstrativa – dados ilustrativos.
-                </div>
             </div>
         </div>
     </footer>
@@ -604,32 +1117,69 @@
                     closeMenu();
                 }
             });
-            
+
             if (navMenuMobile) {
                 const links = navMenuMobile.querySelectorAll('a');
                 links.forEach(link => {
                     link.addEventListener('click', function(e) {
-                        const href = this.getAttribute('href');
-                        if (href && href.startsWith('#')) {
-                            e.preventDefault();
-                            closeMenu();
-                            const target = document.querySelector(href);
-                            if (target) {
-                                setTimeout(() => {
-                                    window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
-                                }, 150);
-                            }
-                        } else {
-                            closeMenu();
-                        }
+                        closeMenu();
                     });
                 });
             }
         })();
+
+        const form = document.getElementById('contactForm');
+        const messageDiv = document.getElementById('formMessage');
+
+        const FORM_ENDPOINT = "https://formsubmit.co/ajax/ifpb.dataplatform@gmail.com";
+
+        if (form) {
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Coleta os dados do formulário
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+                
+                // Exibe mensagem de "enviando..."
+                messageDiv.style.display = 'block';
+                messageDiv.className = 'form-message';
+                messageDiv.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Enviando mensagem...';
+                messageDiv.style.background = '#e3f2fd';
+                messageDiv.style.color = '#0d47a1';
+                messageDiv.style.borderLeftColor = '#0d47a1';
+                
+                // Envia via fetch para o Formspree
+                try {
+                    const response = await fetch(FORM_ENDPOINT, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    if (response.ok) {
+                        messageDiv.innerHTML = '<i class="fas fa-check-circle"></i> Mensagem enviada com sucesso! Obrigado pelo contato.';
+                        messageDiv.className = 'form-message success';
+                        form.reset();
+                   
+                        setTimeout(() => {
+                            messageDiv.style.display = 'none';
+                        }, 5000);
+                    } else {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'Erro ao enviar mensagem.');
+                    }
+                } catch (error) {
+                    messageDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Erro: ${error.message}. Tente novamente mais tarde.`;
+                    messageDiv.className = 'form-message error';
+                }
+            });
+        } else {
+            console.warn("Formulário não encontrado!");
+        }
     </script>
-
-
-    <script src="script.js"></script>
-    <script src="assets/js/charts.js"></script>
 </body>
 </html>
