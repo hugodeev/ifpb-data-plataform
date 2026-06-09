@@ -1866,25 +1866,19 @@
 
     async function carregarDados() {
         try {
-            const response = await fetch('../../assets/data/DadosFormularios/DadosDiscentes.json');
+            
+            const caminhoCorreto = '/ifpb-data-plataform/assets/data/DadosFormularios/DadosDiscentes.json';
+            console.log('Tentando carregar dados de:', caminhoCorreto); // Para debug
+            
+            const response = await fetch(caminhoCorreto);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
             const dadosRaw = await response.json();
             dadosCompletos = normalizarDados(dadosRaw);
-            const campiUnicos = [...new Set(dadosCompletos.map(d => d.campus).filter(Boolean))].sort();
-            const select = document.getElementById('campusFilter');
-            campiUnicos.forEach(campus => {
-                const opt = document.createElement('option');
-                opt.value = campus;
-                opt.textContent = campus;
-                select.appendChild(opt);
-            });
-            dadosFiltrados = [...dadosCompletos];
-            renderizarDashboard();
+     
         } catch (error) {
             console.error('Erro ao carregar JSON:', error);
-            document.querySelector('.filter-bar').insertAdjacentHTML('afterend',
-                `<div style="background:#fee;border-left:4px solid #e74a3b;padding:1rem;margin:1rem 0;border-radius:8px;"><i class="fas fa-exclamation-triangle"></i> Erro ao carregar os dados: ${error.message}<br>Verifique o arquivo <strong>DadosDiscentes.json</strong></div>`
-            );
+     
         }
     }
 
