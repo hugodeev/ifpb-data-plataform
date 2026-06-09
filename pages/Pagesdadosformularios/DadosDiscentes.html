@@ -1863,17 +1863,24 @@
         dadosFiltrados = campus === 'all' ? [...dadosCompletos] : dadosCompletos.filter(d => d.campus === campus);
         renderizarDashboard();
     }
-
+        
     async function carregarDados() {
         try {
-            const caminhoCorreto = '/ifpb-data-plataform/assets/data/DadosFormularios/DadosDiscentes.json';
+            let caminhoCorreto;
+            
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                caminhoCorreto = '../../assets/data/DadosFormularios/dadosDiscentes.json';
+            } else {
+                caminhoCorreto = '/ifpb-data-plataform/assets/data/DadosFormularios/dadosDiscentes.json';
+            }
+            
             console.log('Tentando carregar dados de:', caminhoCorreto);
             
             const response = await fetch(caminhoCorreto);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            if (!response.ok) throw new Error(`HTTP ${response.status} - Arquivo não encontrado`);
             
             const dadosRaw = await response.json();
-            console.log('Dados carregados:', dadosRaw.length, 'registros');
+            console.log('Dados carregados com sucesso!', dadosRaw.length, 'registros');
             
             dadosCompletos = normalizarDados(dadosRaw);
             
@@ -1894,9 +1901,8 @@
             console.error('Erro ao carregar JSON:', error);
             document.querySelector('.filter-bar').insertAdjacentHTML('afterend',
                 `<div style="background:#fee;border-left:4px solid #e74a3b;padding:1rem;margin:1rem 0;border-radius:8px;">
-                    <i class="fas fa-exclamation-triangle"></i> Erro ao carregar os dados: ${error.message}<br>
-                    Verifique se o arquivo <strong>DadosDiscentes.json</strong> está na pasta:<br>
-                    <code>/assets/data/DadosFormularios/DadosDiscentes.json</code>
+                    <i class="fas fa-exclamation-triangle"></i> <strong>Erro ao carregar os dados:</strong> ${error.message}<br>
+                    Arquivo esperado: <code>dadosDiscentes.json</code>
                 </div>`
             );
         }
