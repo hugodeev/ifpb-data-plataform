@@ -1,0 +1,2427 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Pesquisa IFPB - Dashboard Interativo com Filtro por Campus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.1/dist/chartjs-chart-treemap.min.js"></script>
+
+<style>
+    :root {
+        --primary-color: #387f1c;
+        --primary-light: #4ca32a;
+        --primary-dark: #1e4a0e;
+        --secondary-color: #59e462;
+        --accent-color: #ff9a3c;
+        --accent-dark: #e07c1a;
+        --success-color: #1cc88a;
+        --warning-color: #f6c23e;
+        --danger-color: #e74a3b;
+        --info-color: #36b9cc;
+        --dark-color: #2e3a59;
+        --medium-color: #5a5c69;
+        --light-color: #f8f9fc;
+        --white: #ffffff;
+        
+        --text-color: #2c3e50;
+        --text-light: #4a5568;
+        --text-muted: #718096;
+        --bg-light: #eef2ff;
+        --border-color: #dde3ea;
+        
+        --header-height: 72px;
+        --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+        --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+        --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+        --radius: 10px;
+        --radius-sm: 6px;
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        --t-base: 0.3s ease;
+        --t-fast: 0.2s ease;
+        --font-heading: 'Poppins', sans-serif;
+        --font-body: 'Roboto', sans-serif;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+        font-family: var(--font-body);
+        background: linear-gradient(135deg, var(--light-color) 0%, #eef2ff 100%);
+        color: var(--text-color);
+        line-height: 1.5;
+        overflow-x: hidden;
+    }
+    
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 clamp(1rem, 4vw, 2rem);
+        width: 100%;
+    }
+    
+    /* header */
+    .main-header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-color);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        height: var(--header-height);
+        display: flex;
+        align-items: center;
+        transition: box-shadow var(--t-base);
+    }
+    
+    .main-header.scrolled {
+        box-shadow: 0 4px 24px rgba(26, 95, 122, 0.12);
+    }
+    
+    .main-header .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    /* Logo */
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: clamp(8px, 2vw, 12px);
+        text-decoration: none;
+    }
+    
+    .logo-icon, .logo-icon-wrap {
+        width: clamp(36px, 6vw, 42px);
+        height: clamp(36px, 6vw, 42px);
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: clamp(1rem, 4vw, 1.2rem);
+        transition: transform var(--t-base);
+        flex-shrink: 0;
+    }
+    
+    .logo:hover .logo-icon,
+    .logo:hover .logo-icon-wrap { transform: rotate(-5deg) scale(1.05); }
+    
+    .logo-text h1 {
+        font-family: var(--font-heading);
+        font-size: clamp(1rem, 4vw, 1.3rem);
+        font-weight: 700;
+        color: var(--primary-color);
+        line-height: 1.2;
+    }
+    
+    .logo-text p {
+        font-size: clamp(0.6rem, 2.5vw, 0.72rem);
+        color: var(--text-muted);
+        letter-spacing: 0.3px;
+    }
+    
+    .main-nav { display: flex; align-items: center; }
+    
+    .nav-list {
+        display: flex;
+        list-style: none;
+        gap: 2px;
+        align-items: center;
+    }
+    
+    .nav-list a {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 8px 13px;
+        border-radius: var(--radius-sm);
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-light);
+        transition: color var(--t-fast), background var(--t-fast);
+    }
+    
+    .nav-list a:hover { color: var(--primary-color); background: rgba(56, 127, 28, 0.06); }
+    .nav-list a.active {
+        color: var(--primary-color);
+        background: rgba(56, 127, 28, 0.08);
+        font-weight: 600;
+    }
+    
+    .dashboard-btn {
+        background: var(--accent-color) !important;
+        color: white !important;
+        border-radius: var(--radius-sm) !important;
+        padding: 9px 18px !important;
+        font-weight: 600 !important;
+        margin-left: 8px;
+        transition: background var(--t-fast), transform var(--t-base), box-shadow var(--t-base) !important;
+    }
+    
+    .dashboard-btn:hover {
+        background: var(--accent-dark) !important;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(255, 154, 60, 0.35) !important;
+    }
+    
+    /* Hamburger Menu */
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 6px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        z-index: 1002;
+    }
+    
+    .hamburger span {
+        width: 26px;
+        height: 2px;
+        background: var(--text-color);
+        transition: all 0.3s ease;
+        border-radius: 100px;
+    }
+    
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; transform: translateX(-10px); }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
+    
+    /* Mobile Menu */
+    .menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+        z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .menu-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .nav-menu-mobile {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 280px;
+        height: 100dvh;
+        background: #ffffff;
+        padding: 50px 24px 20px;
+        transition: left 0.3s ease;
+        z-index: 1001;
+        overflow-y: auto;
+        box-shadow: 5px 0 30px rgba(0,0,0,0.3);
+        display: none;
+    }
+    
+    .nav-menu-mobile.active { left: 0; }
+    
+    .nav-menu-mobile ul {
+        list-style: none;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 30px;
+        margin: 35px 0 0 0;
+        padding: 0;
+        width: 100%;
+        display: flex;
+    }
+    
+    .nav-menu-mobile li { width: 100%; }
+    
+    .nav-menu-mobile a {
+        color: #1d1c1c;
+        font-size: 1.125rem;
+        padding: 8px 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        transition: color 0.2s;
+        width: 100%;
+    }
+    
+    .nav-menu-mobile a i { width: 24px; font-size: 1.1rem; }
+    .nav-menu-mobile a:hover,
+    .nav-menu-mobile a.active { color: var(--primary-color); }
+    
+    .menu-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 30px;
+        margin-bottom: 30px;
+        border-bottom: 3px solid rgba(0, 0, 0, 0.15);
+    }
+    
+    .menu-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .menu-logo i { font-size: 2rem; color: var(--primary-color); }
+    
+    .menu-logo-text { display: flex; flex-direction: column; }
+    
+    .menu-logo-main {
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        letter-spacing: -0.5px;
+    }
+    
+    .menu-logo-sub {
+        font-size: 0.65rem;
+        color: rgba(6, 6, 6, 0.7);
+        font-weight: 500;
+    }
+    
+    .menu-close-btn {
+        background: rgba(202, 201, 201, 0.163);
+        border: none;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: #333;
+        font-size: 1.125rem;
+    }
+    
+    .menu-close-btn:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: rotate(90deg);
+    }
+    
+    .page-header, .dashboard-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        padding: clamp(1rem, 5vw, 2rem);
+        border-radius: var(--radius);
+        margin: clamp(1rem, 3vw, 1.5rem) 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .page-header::before, .dashboard-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+        pointer-events: none;
+    }
+    
+    .dashboard-title, .page-title {
+        font-family: var(--font-heading);
+        font-size: clamp(1.3rem, 5vw, 2rem);
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .last-update {
+        font-size: clamp(0.7rem, 3vw, 0.9rem);
+        opacity: 0.9;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.9rem;
+        opacity: 0.9;
+        flex-wrap: wrap;
+    }
+    
+    .breadcrumb a { color: white; text-decoration: none; transition: var(--transition); }
+    .breadcrumb a:hover { opacity: 0.8; }
+    
+    .page-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        max-width: 800px;
+        line-height: 1.6;
+    }
+    
+    /* Filter bar*/
+    .filter-bar, .filter-section {
+        background: var(--white);
+        border-radius: var(--radius);
+        padding: clamp(0.8rem, 3vw, 1rem) clamp(1rem, 4vw, 1.5rem);
+        margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid #e3e6f0;
+        position: relative;
+    }
+    
+    .filter-bar::before, .filter-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+    }
+    
+    .filter-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .filter-bar label {
+        font-weight: 600;
+        color: var(--primary-color);
+        font-size: clamp(0.8rem, 3vw, 0.9rem);
+        font-family: var(--font-heading);
+    }
+    
+    .campus-select {
+        padding: clamp(6px, 2vw, 10px) clamp(10px, 3vw, 16px);
+        border-radius: var(--radius-sm);
+        border: 1px solid #d1d3e2;
+        background: var(--white);
+        font-size: clamp(0.8rem, 3vw, 0.9rem);
+        min-width: 160px;
+        cursor: pointer;
+        transition: var(--transition);
+        font-family: var(--font-body);
+    }
+    
+    .campus-select:hover {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(56, 127, 28, 0.1);
+    }
+    
+    .filter-bar span {
+        font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+        color: var(--medium-color);
+    }
+    
+    .filter-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .filter-header h3 {
+        font-size: 1.2rem;
+        color: var(--dark-color);
+        margin: 0;
+    }
+    
+    /* cards */
+    .cards-grid, .indicators-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+        gap: clamp(1rem, 3vw, 1.5rem);
+        margin-bottom: 2rem;
+    }
+    
+    .indicator-card, .stat-card {
+        background: var(--white);
+        border-radius: var(--radius);
+        padding: clamp(1rem, 3vw, 1.5rem);
+        box-shadow: var(--shadow-md);
+        transition: var(--transition);
+        border: 1px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .indicator-card:hover, .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--secondary-color);
+    }
+    
+    .indicator-card::before, .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+    }
+    
+    .card-value, .indicator-value, .stat-number {
+        font-size: clamp(1.3rem, 5vw, 2rem);
+        font-weight: 700;
+        color: var(--dark-color);
+        margin-top: 0.5rem;
+        font-family: var(--font-heading);
+    }
+    
+    .card-label, .indicator-label, .stat-label {
+        font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+        color: var(--medium-color);
+        text-transform: uppercase;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+        letter-spacing: 0.5px;
+    }
+    
+    .indicator-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+    
+    .indicator-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, var(--light-color), #e8f1ff);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        color: var(--secondary-color);
+    }
+    
+    .indicator-trend {
+        font-size: 0.85rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+    
+    .trend-up {
+        background: rgba(28, 200, 138, 0.1);
+        color: var(--success-color);
+    }
+    
+    .trend-down {
+        background: rgba(231, 74, 59, 0.1);
+        color: var(--danger-color);
+    }
+    
+    .indicator-detail {
+        font-size: 0.85rem;
+        color: var(--medium-color);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid #e3e6f0;
+        padding-bottom: 0.5rem;
+    }
+    
+    .tab-btn, .filter-tab {
+        background: none;
+        border: none;
+        padding: clamp(6px, 2vw, 10px) clamp(12px, 4vw, 20px);
+        font-size: clamp(0.75rem, 3vw, 0.9rem);
+        font-weight: 600;
+        color: var(--medium-color);
+        cursor: pointer;
+        border-radius: var(--radius-sm);
+        transition: var(--transition);
+        white-space: nowrap;
+        font-family: var(--font-heading);
+    }
+    
+    .tab-btn:hover, .filter-tab:hover {
+        background: rgba(56, 127, 28, 0.05);
+        color: var(--primary-color);
+    }
+    
+    .tab-btn.active, .filter-tab.active {
+        background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+        color: white;
+        box-shadow: 0 2px 8px rgba(56, 127, 28, 0.3);
+    }
+    
+    .filter-tabs {
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .tab-content {
+        display: none;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    .tab-content.active { display: block; }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* charts */
+    .charts-grid, .charts-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr));
+        gap: clamp(1rem, 3vw, 1.8rem);
+        margin: 1.5rem 0;
+    }
+    
+    .chart-card, .chart-container {
+        background: var(--white);
+        border-radius: var(--radius);
+        padding: clamp(1rem, 3vw, 1.5rem);
+        box-shadow: var(--shadow-md);
+        transition: var(--transition);
+        border: 1px solid #e3e6f0;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .chart-card:hover, .chart-container:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--secondary-color);
+    }
+    
+    .chart-title {
+        font-family: var(--font-heading);
+        font-size: clamp(1rem, 3.5vw, 1.2rem);
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border-left: 4px solid var(--primary-color);
+        padding-left: 0.8rem;
+        color: var(--dark-color);
+        flex-wrap: wrap;
+    }
+    
+    .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+    
+    .chart-wrapper {
+        position: relative;
+        width: 100%;
+        min-height: clamp(240px, 40vh, 300px);
+    }
+    
+    canvas, .vega-chart {
+        max-width: 100%;
+        height: auto;
+        max-height: 280px;
+        width: 100% !important;
+        min-height: 300px;
+    }
+    
+    .chart-actions {
+        position: absolute;
+        top: 0.8rem;
+        right: 0.8rem;
+        z-index: 10;
+        display: flex;
+        gap: 0.4rem;
+    }
+    
+    .chart-btn {
+        width: clamp(28px, 8vw, 36px);
+        height: clamp(28px, 8vw, 36px);
+        border-radius: 6px;
+        border: 1px solid #e3e6f0;
+        background: var(--white);
+        color: var(--medium-color);
+        cursor: pointer;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: clamp(0.7rem, 3vw, 0.9rem);
+    }
+    
+    .chart-btn:hover {
+        background: var(--light-color);
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+        transform: scale(1.05);
+    }
+    
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(4px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.3s;
+    }
+    
+    .modal-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    .modal-content {
+        background: var(--white);
+        border-radius: var(--radius);
+        width: 95%;
+        max-width: 800px;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: clamp(1rem, 4vw, 1.5rem);
+        box-shadow: var(--shadow-lg);
+        animation: modalSlideUp 0.3s ease;
+    }
+    
+    @keyframes modalSlideUp {
+        from { transform: translateY(30px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #e3e6f0;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border-radius: var(--radius) var(--radius) 0 0;
+        margin: -1rem -1rem 1rem -1rem;
+        padding: 1.5rem 2rem;
+    }
+    
+    .modal-header h3, .modal-title {
+        font-family: var(--font-heading);
+        font-size: clamp(1rem, 4vw, 1.3rem);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: clamp(1.2rem, 5vw, 1.5rem);
+        cursor: pointer;
+        transition: var(--transition);
+        padding: 0.5rem;
+        border-radius: 50%;
+        color: white;
+    }
+    
+    .modal-close:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: rotate(90deg);
+    }
+    
+    .modal-body { padding: 0 1rem 1rem 1rem; }
+    
+    .modal-actions, .filter-actions {
+        display: flex;
+        justify-content: center;
+        gap: 0.8rem;
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e3e6f0;
+        flex-wrap: wrap;
+    }
+    
+    .modal-action-btn {
+        padding: clamp(6px, 2vw, 10px) clamp(12px, 4vw, 20px);
+        border-radius: 6px;
+        font-size: clamp(0.75rem, 3vw, 0.9rem);
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        border: 1px solid #e3e6f0;
+        background: var(--white);
+        color: var(--dark-color);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--font-heading);
+    }
+    
+    .modal-action-btn:hover {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+    
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+        color: white;
+        box-shadow: 0 4px 12px rgba(56, 127, 28, 0.3);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(56, 127, 28, 0.4);
+    }
+    
+    .btn-secondary {
+        background: var(--light-color);
+        color: var(--medium-color);
+        border: 1px solid #d1d3e2;
+    }
+    
+    .btn-secondary:hover { background: #e3e6f0; }
+    
+    .footer-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 18px;
+        background: var(--accent-color);
+        color: white;
+        font-size: 0.84rem;
+        font-weight: 600;
+        border-radius: var(--radius-sm);
+        margin-top: 4px;
+        transition: background var(--t-fast), transform var(--t-base), box-shadow var(--t-base);
+    }
+    
+    .footer-btn:hover {
+        background: var(--accent-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(255, 154, 60, 0.3);
+    }
+    
+    /* table */
+    .table-section {
+        background: var(--white);
+        border-radius: var(--radius);
+        padding: 2rem;
+        margin: 3rem 0;
+        box-shadow: var(--shadow-md);
+    }
+    
+    .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .table-title {
+        font-size: 1.2rem;
+        color: var(--dark-color);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .table-controls {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    
+    .search-box {
+        position: relative;
+    }
+    
+    .search-box input {
+        padding: 0.5rem 1rem 0.5rem 2.5rem;
+        border: 1px solid #d1d3e2;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        width: 200px;
+    }
+    
+    .search-box i {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--medium-color);
+    }
+    
+    .table-responsive {
+        overflow-x: auto;
+        margin: 1.5rem 0;
+        border-radius: 8px;
+        border: 1px solid #e3e6f0;
+    }
+    
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 800px;
+    }
+    
+    .data-table th {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        text-align: left;
+        padding: 1.25rem 1.5rem;
+        font-weight: 600;
+        font-size: 0.95rem;
+        position: sticky;
+        top: 0;
+    }
+    
+    .data-table td {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #e3e6f0;
+        color: var(--medium-color);
+        font-size: 0.95rem;
+    }
+    
+    .data-table tr:hover td { background-color: var(--light-color); }
+    
+    .table-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e3e6f0;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .table-info {
+        color: var(--medium-color);
+        font-size: 0.9rem;
+    }
+    
+    /* footer */
+    .main-footer {
+        background: var(--primary-dark);
+        color: white;
+        padding: 56px 0 24px;
+        margin-top: 0;
+    }
+    
+    .footer-grid {
+        display: grid;
+        grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
+        gap: 40px;
+        margin-bottom: 40px;
+        padding-bottom: 40px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    
+    .footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+    
+    .footer-logo-icon {
+        width: 36px;
+        height: 36px;
+        background: rgba(255,255,255,0.12);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        color: white;
+    }
+    
+    .footer-col h3 {
+        font-family: var(--font-heading);
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: white;
+        margin-bottom: 18px;
+    }
+    
+    .footer-col > p {
+        font-size: 0.875rem;
+        color: rgba(255,255,255,0.6);
+        line-height: 1.7;
+        margin-bottom: 20px;
+    }
+    
+    .footer-links {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .footer-links a {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.875rem;
+        color: rgba(255,255,255,0.6);
+        transition: color var(--t-fast), padding-left var(--t-fast);
+    }
+    
+    .footer-links a i { font-size: 0.65rem; }
+    .footer-links a:hover { color: white; padding-left: 4px; }
+    
+    .social-links {
+        display: flex;
+        gap: 8px;
+        margin-top: 4px;
+    }
+    
+    .social-links a {
+        width: 36px;
+        height: 36px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255,255,255,0.7);
+        font-size: 0.9rem;
+        transition: background var(--t-base), color var(--t-fast), transform var(--t-base);
+    }
+    
+    .social-links a:hover {
+        background: var(--accent-color);
+        border-color: var(--accent-color);
+        color: white;
+        transform: translateY(-2px);
+    }
+    
+    .footer-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.4);
+    }
+    
+    /* notification */
+    .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        border-radius: 8px;
+        padding: 0.8rem 1.2rem;
+        box-shadow: var(--shadow-lg);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        z-index: 10001;
+        transform: translateX(120%);
+        transition: transform 0.3s ease;
+        font-size: clamp(0.75rem, 3vw, 0.85rem);
+        max-width: 90vw;
+        font-family: var(--font-body);
+    }
+    
+    .notification.show { transform: translateX(0); }
+    
+    .notification.success { border-left: 4px solid var(--success-color); }
+    .notification.error { border-left: 4px solid var(--danger-color); }
+    .notification.warning { border-left: 4px solid var(--warning-color); }
+    .notification.info { border-left: 4px solid var(--info-color); }
+    
+    .loading, .no-results {
+        text-align: center;
+        padding: 2rem;
+        color: var(--medium-color);
+    }
+    
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--success-color);
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+    
+    .status-indicators {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .status-indicator {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+        color: var(--dark-color);
+        margin: 2.5rem 0 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid var(--light-color);
+        position: relative;
+    }
+    
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 60px;
+        height: 2px;
+        background: var(--secondary-color);
+    }
+    
+    .methodology-section {
+        background: linear-gradient(135deg, var(--light-color), #eef2ff);
+        border-radius: var(--radius);
+        padding: 2.5rem;
+        margin: 3rem 0;
+        border-left: 5px solid var(--secondary-color);
+    }
+    
+    .methodology-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .methodology-item h4 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+    }
+    
+    .methodology-list {
+        list-style: none;
+        padding-left: 0;
+    }
+    
+    .methodology-list li {
+        margin-bottom: 0.75rem;
+        color: var(--medium-color);
+        line-height: 1.6;
+        padding-left: 1.5rem;
+        position: relative;
+    }
+    
+    .methodology-list li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: var(--success-color);
+        font-weight: bold;
+    }
+    
+    .source-info {
+        background: var(--white);
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+        border-left: 4px solid var(--success-color);
+        box-shadow: var(--shadow-sm);
+    }
+    
+    .source-info p {
+        margin-bottom: 0.75rem;
+        color: var(--medium-color);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .source-info strong {
+        color: var(--dark-color);
+        min-width: 140px;
+        display: inline-block;
+    }
+    
+    .badge {
+        display: inline-block;
+        padding: 6px 12px;
+        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        color: var(--primary-color);
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: 1px solid rgba(44, 62, 143, 0.1);
+    }
+    
+    .municipio-tag {
+        display: inline-block;
+        padding: 6px 12px;
+        background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+        color: #2e7d32;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: 1px solid rgba(46, 125, 50, 0.1);
+    }
+    
+    .info-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--dark-color);
+        color: white;
+        font-size: 0.7rem;
+        font-weight: bold;
+        cursor: help;
+        transition: var(--transition);
+    }
+    
+    .info-icon:hover {
+        background: var(--primary-color);
+        transform: scale(1.05);
+    }
+    
+    body.menu-open {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+    }
+    
+    /* responsive */
+    @media (min-width: 901px) {
+        .nav-list { display: flex !important; }
+        .hamburger { display: none !important; }
+        .nav-menu-mobile { display: none !important; }
+        .menu-overlay { display: none !important; }
+    }
+    
+    @media (max-width: 900px) {
+        .nav-list { display: none; }
+        .hamburger { display: flex; }
+        .nav-menu-mobile { display: block !important; }
+    }
+    
+    @media (max-width: 768px) {
+        .filter-bar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .campus-select { width: 100%; }
+        
+        .charts-grid,
+        .charts-section {
+            grid-template-columns: 1fr;
+        }
+        
+        .chart-wrapper { min-height: 260px; }
+        
+        .tabs {
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 8px;
+        }
+        
+        .tab-btn { white-space: nowrap; }
+        
+        .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+        
+        .footer-bottom { flex-direction: column; text-align: center; }
+        
+        .page-header { padding: 2rem 1.5rem; margin: 1rem 0; }
+        
+        .table-section { padding: 1.5rem; margin: 2rem 0; }
+        
+        .table-header { flex-direction: column; align-items: flex-start; }
+        
+        .table-controls { width: 100%; justify-content: space-between; }
+        
+        .search-box input { width: 100%; }
+        
+        .filter-tabs { flex-direction: column; }
+        
+        .filter-tab { width: 100%; justify-content: center; }
+        
+        .methodology-section { padding: 1.5rem; margin: 2rem 0; }
+        
+        .methodology-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    }
+    
+    @media (max-width: 480px) {
+        .container { padding: 0 12px; }
+        
+        .cards-grid,
+        .indicators-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+        
+        .chart-card,
+        .chart-container {
+            padding: 0.8rem;
+        }
+        
+        .chart-title {
+            font-size: 0.9rem;
+            padding-right: 35px;
+        }
+        
+        .chart-btn {
+            width: 28px;
+            height: 28px;
+        }
+        
+        .modal-action-btn {
+            padding: 5px 10px;
+            font-size: 0.7rem;
+        }
+        
+        .notification {
+            right: 20px;
+            left: 90px;
+        }
+        
+        .page-header { padding: 1.5rem 1rem; }
+        
+        .page-title { font-size: 1.6rem; }
+        
+        .page-subtitle { font-size: 0.9rem; }
+        
+        .breadcrumb { font-size: 0.75rem; gap: 0.3rem; }
+        
+        .section-title { font-size: 1.4rem; }
+        
+        .section-title::after { width: 50px; }
+        
+        .indicator-card,
+        .stat-card {
+            padding: 1rem;
+        }
+        
+        .indicator-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 1rem;
+        }
+        
+        .indicator-value,
+        .stat-number {
+            font-size: 1.5rem;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 0.6rem;
+            font-size: 0.75rem;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+        
+        .btn-primary,
+        .btn-secondary {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .filter-tab {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+        
+        .filter-actions { flex-direction: column; }
+        
+        .filter-actions .btn { width: 100%; }
+        
+        .methodology-list li {
+            font-size: 0.85rem;
+            padding-left: 1.5rem;
+        }
+        
+        .source-info p { font-size: 0.85rem; }
+        
+        .source-info strong { min-width: 120px; }
+    }
+    
+    @media (max-width: 380px) {
+        .cards-grid,
+        .indicators-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    @media (max-width: 1200px) {
+        .charts-grid,
+        .charts-section {
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        }
+        
+        .indicators-grid { gap: 1.2rem; }
+    }
+    
+    @media (max-width: 1024px) {
+        .page-title { font-size: 2.2rem; }
+        .section-title { font-size: 1.7rem; }
+    }
+</style>
+
+</head>
+<body>
+
+<!-- Cabeçalho e Menu-->
+<header class="main-header">
+    <div class="container">
+        <a href="../../index.html" class="logo">
+            <div class="logo-icon-wrap"><i class="fas fa-chart-bar"></i></div>
+            <div class="logo-text"><h1>IFPB Data Platform</h1><p>Transparência • Análise • Inovação</p></div>
+        </a>
+        <nav class="main-nav">
+            <ul class="nav-list">
+                <li><a href="Dadosforms.html"><i class="fas fa-home"></i> Início</a></li>
+                <li><a href="DadosDiscentes.html"><i class="fas fa-university"></i>Dados Discentes</a></li>
+                <li><a href="DadosDocentes.html"><i class="fas fa-graduation-cap"></i>Dados Docentes</a></li>
+                <li><a href="../dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+            </ul>
+            <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+        </nav>
+    </div>
+</header>
+<div class="menu-overlay" id="menuOverlay"></div>
+<nav class="nav-menu-mobile" id="navMenuMobile">
+    <div class="menu-header">
+        <div class="menu-logo"><i class="fas fa-chart-bar"></i><div class="menu-logo-text"><span class="menu-logo-main">IFPB Data Platform</span><span class="menu-logo-sub">Dados Abertos</span></div></div>
+        <button class="menu-close-btn" id="menuCloseBtn"><i class="fas fa-times"></i></button>
+    </div>
+    <ul>
+        <li><a href="Dadosforms.html"><i class="fas fa-home"></i> Início</a></li>
+        <li><a href="DadosDiscentes.html"><i class="fas fa-university"></i>Dados Discentes</a></li>
+        <li><a href="DadosDocentes.html"><i class="fas fa-graduation-cap"></i>Dados Docentes</a></li>
+        <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+    </ul>
+</nav>
+
+<div class="container">
+    <div class="dashboard-header">
+         <div class="breadcrumb">
+            <a href="Dadosforms.html">Início</a> <i class="fas fa-chevron-right"></i> <span>Formulário Docente</span>
+        </div>
+        <h1 class="page-title">Pesquisa com Docentes do IFPB</h1>
+        <p class="page-subtitle">
+            Perfil socioeconômico, deslocamento, assistência estudantil, participação em projetos e percepção sobre a permanência no curso.<br>
+            Dados coletados por meio de questionário aplicado aos docentes.
+        </p>
+        <div class="status-indicators">
+            <div class="status-indicator"><span class="status-dot"></span><span>Dados Anonimizados</span></div>
+            <div class="status-indicator"><i class="fas fa-chart-bar"></i><span>Visualizações Interativas</span></div>
+            <div class="status-indicator"><i class="fas fa-download"></i><span>Exportação CSV</span></div>
+        </div>
+    </div>
+
+    <div class="filter-bar">
+        <label><i class="fas fa-filter"></i> Filtrar por campus:</label>
+        <select id="campusFilter" class="campus-select">
+            <option value="all">📌 Todos os campi</option>
+        </select>
+        <span><i class="fas fa-chart-line"></i> Os gráficos serão atualizados automaticamente</span>
+    </div>
+
+    <div class="cards-grid" id="cardsGrid"></div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="perfil">👤 Perfil</button>
+        <button class="tab-btn" data-tab="deslocamento">🚌 Deslocamento</button>
+        <button class="tab-btn" data-tab="trabalho">💼 Trabalho & Estudo</button>
+        <button class="tab-btn" data-tab="assistencia">🎓 Assistência</button>
+        <button class="tab-btn" data-tab="projetos">🔬 Projetos</button>
+        <button class="tab-btn" data-tab="evasao">⚠️ Evasão</button>
+    </div>
+
+    <div id="tab-perfil" class="tab-content active"><div class="charts-grid" id="perfilGrid"></div></div>
+    <div id="tab-deslocamento" class="tab-content"><div class="charts-grid" id="deslocamentoGrid"></div></div>
+    <div id="tab-trabalho" class="tab-content"><div class="charts-grid" id="trabalhoGrid"></div></div>
+    <div id="tab-assistencia" class="tab-content"><div class="charts-grid" id="assistenciaGrid"></div></div>
+    <div id="tab-projetos" class="tab-content"><div class="charts-grid" id="projetosGrid"></div></div>
+    <div id="tab-evasao" class="tab-content"><div class="charts-grid" id="evasaoGrid"></div></div>
+</div>
+
+    <!-- rodapé final da pages -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">
+                        <div class="footer-logo-icon" aria-hidden="true">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3>IFPB Data Platform</h3>
+                    </div>
+                    <p>Plataforma de visualização e análise de dados públicos do Instituto Federal da Paraíba.</p>
+                    <div class="social-links">
+                        <a href="https://github.com/hugodeev/ifpb-data-plataform" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="mailto:ifpbdata@gmail.com" aria-label="E-mail"><i class="fas fa-envelope"></i></a>
+                        <a href="#" aria-label="ResearchGate"><i class="fab fa-researchgate"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Navegação</h3>
+                    <ul class="footer-links">
+                        <li><a href="../../index.html"><i class="fas fa-chevron-right"></i> Início</a></li>
+                        <li><a href="../pages dados abertos/institucional.html"><i class="fas fa-chevron-right"></i> A Instituição</a></li>
+                        <li><a href="../pages dados abertos/academico.html"><i class="fas fa-chevron-right"></i> Vida Acadêmica</a></li>
+                        <li><a href="../pages dados abertos/orcamento.html"><i class="fas fa-chevron-right"></i> Gestão e Orçamento</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Recursos</h3>
+                    <ul class="footer-links">
+                        <li><a href="Dadosabertosifpb.html"><i class="fas fa-chevron-right"></i> Dados Abertos IFPB</a></li>
+                        <li><a href="../Pages Enade/DadosENADE.html"><i class="fas fa-chevron-right"></i> Dados ENADE</a></li>
+                        <li><a href="../Pagesdadosformularios/Dadosforms.html"><i class="fas fa-chevron-right"></i> Dados de Pesquisa</a></li>
+                        <li><a href="../sobre.html"><i class="fas fa-chevron-right"></i> Sobre o Projeto</a></li>
+                        <li><a href="../contato.html"><i class="fas fa-chevron-right"></i> Contato</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Projeto de Pesquisa</h3>
+                    <p>Iniciação Científica — IFPB<br>
+                    Desenvolvimento de plataforma digital interativa para dados públicos.</p>
+                    <a href="../sobre.html" class="footer-btn">Saiba Mais <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+    </footer> 
+
+<div id="modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle">Gráfico Expandido</h3>
+            <button class="modal-close" id="closeModalBtn"><i class="fas fa-times"></i></button>
+        </div>
+        <div style="position: relative; min-height: 50vh;">
+            <canvas id="modalCanvas" width="800" height="500" style="width:100%; height:auto; max-height:70vh;"></canvas>
+        </div>
+        <div class="modal-actions">
+            <button class="modal-action-btn" id="downloadPngBtn"><i class="fas fa-image"></i> Baixar PNG</button>
+            <button class="modal-action-btn" id="downloadJsonBtn"><i class="fas fa-code"></i> Baixar JSON</button>
+            <button class="modal-action-btn" id="downloadCsvBtn"><i class="fas fa-table"></i> Baixar CSV</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let dadosCompletos = [];
+    let dadosFiltrados = [];
+    let charts = {};
+    let modalChart = null;
+    let currentModalCanvasId = null;
+    let currentModalRawData = null;
+    let currentModalTitle = "";
+
+    const perguntasMap = {
+        "Distribuição por Campus": "📌 Em qual campus do IFPB você estuda?",
+        "Cursos mais frequentes": "📚 Qual é o seu curso no IFPB?",
+        "Turno de estudo": "⏰ Em qual turno você realiza a maior parte das disciplinas do curso?",
+        "Cidades de residência": "🏠 Em qual cidade você reside atualmente?",
+        "Reside na mesma cidade": "🏙️ Sobre a cidade onde você estuda:",
+        "Distância (km)": "📏 Qual é a distância aproximada (em km) da sua cidade até a cidade onde você estuda?",
+        "Tempo de deslocamento": "⏱️ Quanto tempo, em média, você gasta no deslocamento (ida e volta)?",
+        "Meio de transporte": "🚌 Qual meio de transporte você utiliza com mais frequência para esse deslocamento?",
+        "Situação de trabalho/estágio": "💼 Durante o Ensino Médio, você trabalha?",
+        "Horas de estudo extraclasse": "📖 Quantas horas por dia você dedica aos estudos (fora da sala de aula)?",
+        "Impacto de trabalhar e estudar": "⚖️ Como você avalia o impacto de trabalhar e estudar no seu desempenho acadêmico?",
+        "Impacto × Situação de trabalho": "📊 Cruzamento: Trabalho vs Impacto no desempenho",
+        "Conhecimento sobre assistência": "🎓 Você conhece os programas de assistência estudantil oferecidos pelo IFPB?",
+        "Auxílios recebidos": "💰 Você já recebeu ou recebe algum dos seguintes auxílios/benefícios do IFPB?",
+        "Importância do auxílio": "⭐ Como você avalia a importância do auxílio para sua permanência no curso?",
+        "Participa de projetos": "🔬 Você participa ou já participou de algum projeto no IFPB?",
+        "Motivos para participar": "🚀 Qual o principal motivo que levou você a participar de projetos?",
+        "Motivos para NÃO participar": "❌ Qual o principal motivo para não participar?",
+        "Já pensou em desistir": "😟 Você já pensou em desistir do curso?",
+        "Principais motivos de desistência": "📋 Quais os principais motivos para pensar em desistir?",
+        "Desistência por campus": "🏫 Comparação da intenção de desistência por campus"
+    };
+
+    function showNotification(msg, type = "success") {
+        const notif = document.createElement("div");
+        notif.className = "notification";
+        notif.innerHTML = `<i class="fas fa-${type === "success" ? "check-circle" : "info-circle"}"></i><span>${msg}</span>`;
+        document.body.appendChild(notif);
+        setTimeout(() => notif.classList.add("show"), 10);
+        setTimeout(() => { notif.classList.remove("show"); setTimeout(() => notif.remove(), 300); }, 3000);
+    }
+
+    function downloadCanvasAsPNG(canvas, filename) {
+        const link = document.createElement("a");
+        link.download = filename;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    }
+
+    function downloadJSON(data, filename) {
+        const jsonStr = JSON.stringify(data, null, 2);
+        const blob = new Blob([jsonStr], { type: "application/json" });
+        const link = document.createElement("a");
+        link.download = filename;
+        link.href = URL.createObjectURL(blob);
+        link.click();
+        URL.revokeObjectURL(link.href);
+    }
+
+    function downloadCSV(data, filename) {
+        if (!data || data.length === 0) return;
+        const headers = Object.keys(data[0]);
+        const csvRows = [];
+        csvRows.push(headers.join(","));
+        for (const row of data) {
+            const values = headers.map(header => `"${String(row[header] || '').replace(/"/g, '""')}"`);
+            csvRows.push(values.join(","));
+        }
+        const blob = new Blob(["\uFEFF" + csvRows.join("\n")], { type: "text/csv;charset=utf-8" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    }
+
+    function normalizarDados(dadosRaw) {
+        return dadosRaw.map(item => ({
+            campus: item["Em qual campus do IFPB você estuda?"] || "",
+            cidade: item["Em qual cidade você reside atualmente?"] || "",
+            curso: item["Qual é o seu curso no IFPB? (Exemplo: Técnico em Informática, Sistemas para Internet, etc.)"] || "",
+            estudaPropriaCidade: item["Sobre a cidade onde você estuda:"] || "",
+            distancia: item["[Se deslocamento] Qual é a distância aproximada (em km) da sua cidade até a cidade onde você estuda?"] || "",
+            tempoDeslocamento: item["[Se deslocamento] Quanto tempo, em média, você gasta no deslocamento (ida e volta) para frequentar as aulas presenciais ou atividades no polo?"] || "",
+            transporte: item["[Se deslocamento] Qual meio de transporte você utiliza com mais frequência para esse deslocamento?"] || "",
+            trabalha: item["Durante o Ensino Médio, você trabalha?"] || "",
+            turno: item["Em qual turno você realiza a maior parte das disciplinas do curso?"] || "",
+            conciliaOutroCurso: item["Você concilia o estudo no IFPB com outro curso ?    "] || "",
+            horasEstudo: item["Quantas horas por dia você dedica aos estudos (fora da sala de aula)?"] || "",
+            impacto: item["Como você avalia o impacto de trabalhar e estudar (se for o caso) no seu desempenho acadêmico?"] || "",
+            conheceAssistencia: item["Você conhece os programas de assistência estudantil oferecidos pelo IFPB?"] || "",
+            auxiliosRecebidos: item["Você já recebeu ou recebe algum dos seguintes auxílios/benefícios do IFPB? (Pode marcar mais de uma opção)"] || "",
+            importanciaAuxilio: item["[Se recebe algum auxílio] Como você avalia a importância do auxílio para sua permanência no curso?"] || "",
+            participaProjetos: item["Você participa ou já participou de algum projeto no IFPB? (Pode marcar mais de uma opção)"] || "",
+            motivoParticipacao: item["[Se participa de projeto] Qual o principal motivo que levou você a participar de projetos?"] || "",
+            motivoNaoParticipar: item["[Se NÃO participa de projetos] Qual o principal motivo para não participar?"] || "",
+            areaProfissional: item["Em qual área você pretende atuar profissionalmente?"] || "",
+            pensouDesistir: item["Você já pensou em desistir do curso?"] || "",
+            motivosDesistencia: item["[Se já pensou em desistir] Qual o principal motivo?"] || ""
+        }));
+    }
+
+    function contarFrequencia(data, campo) {
+        const freq = {};
+        data.forEach(item => {
+            let val = item[campo];
+            if (val !== undefined && val !== null && val !== "") {
+                if (typeof val === 'string' && (val.includes(',') || val.includes(';'))) {
+                    const itens = val.split(/[,;]/).map(v => v.trim());
+                    itens.forEach(v => { if (v) freq[v] = (freq[v] || 0) + 1; });
+                } else {
+                    freq[val] = (freq[val] || 0) + 1;
+                }
+            }
+        });
+        const sorted = Object.entries(freq).sort((a,b) => b[1] - a[1]);
+        return { labels: sorted.map(s => s[0]), values: sorted.map(s => s[1]) };
+    }
+
+    function criarPie(canvasId, labels, values, cores = null) {
+        const ctx = document.getElementById(canvasId)?.getContext('2d');
+        if (!ctx) return;
+        if (charts[canvasId]) charts[canvasId].destroy();
+        const defaultCores = ['#387f1c', '#59e462', '#f6c23e', '#36b9cc', '#4e73df', '#e74a3b'];
+        const bgCores = cores || labels.map((_, i) => defaultCores[i % defaultCores.length]);
+        charts[canvasId] = new Chart(ctx, {
+            type: 'pie',
+            data: { labels, datasets: [{ data: values, backgroundColor: bgCores, borderWidth: 0 }] },
+            options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.raw} (${((ctx.raw / values.reduce((a,b)=>a+b,0))*100).toFixed(1)}%)` } } } }
+        });
+        return charts[canvasId];
+    }
+
+    function criarBarraVertical(canvasId, labels, values, tituloY = 'Quantidade') {
+        const ctx = document.getElementById(canvasId)?.getContext('2d');
+        if (!ctx) return;
+        if (charts[canvasId]) charts[canvasId].destroy();
+        charts[canvasId] = new Chart(ctx, {
+            type: 'bar',
+            data: { labels, datasets: [{ label: tituloY, data: values, backgroundColor: '#4e73df', borderRadius: 6 }] },
+            options: { responsive: true, maintainAspectRatio: true, scales: { y: { beginAtZero: true, title: { display: true, text: tituloY } }, x: { ticks: { autoSkip: true, maxRotation: 45, minRotation: 45 } } }, plugins: { tooltip: { callbacks: { label: ctx => `${ctx.raw} respostas` } } } }
+        });
+        return charts[canvasId];
+    }
+
+    function criarLinha(canvasId, labels, values, titulo = 'Frequência') {
+        const ctx = document.getElementById(canvasId)?.getContext('2d');
+        if (!ctx) return;
+        if (charts[canvasId]) charts[canvasId].destroy();
+        charts[canvasId] = new Chart(ctx, {
+            type: 'line',
+            data: { labels, datasets: [{ label: titulo, data: values, borderColor: '#387f1c', backgroundColor: 'rgba(56,127,28,0.1)', borderWidth: 3, fill: true, tension: 0.3, pointBackgroundColor: '#387f1c', pointRadius: 5 }] },
+            options: { responsive: true, maintainAspectRatio: true, scales: { y: { beginAtZero: true, title: { display: true, text: titulo } } } }
+        });
+        return charts[canvasId];
+    }
+
+    function criarBarraHorizontal(canvasId, labels, values) {
+        const ctx = document.getElementById(canvasId)?.getContext('2d');
+        if (!ctx) return;
+        if (charts[canvasId]) charts[canvasId].destroy();
+        charts[canvasId] = new Chart(ctx, {
+            type: 'bar',
+            data: { labels, datasets: [{ label: 'Respostas', data: values, backgroundColor: '#36b9cc', borderRadius: 6 }] },
+            options: { indexAxis: 'y', responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${ctx.raw} respostas` } } }, scales: { x: { beginAtZero: true, title: { display: true, text: 'Contagem' } } } }
+        });
+        return charts[canvasId];
+    }
+
+    function criarBarraEmpilhada(canvasId, labels, datasets) {
+        const ctx = document.getElementById(canvasId)?.getContext('2d');
+        if (!ctx) return;
+        if (charts[canvasId]) charts[canvasId].destroy();
+        charts[canvasId] = new Chart(ctx, {
+            type: 'bar',
+            data: { labels, datasets },
+            options: { responsive: true, maintainAspectRatio: true, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Número de alunos' } } }, plugins: { tooltip: { mode: 'index' } } }
+        });
+        return charts[canvasId];
+    }
+
+    function criarTreemap(canvasId, labels, values) {
+        console.log('criando treemap');
+        console.log('Canvas:', canvasId);
+        console.log('Labels:', labels);
+        console.log('Values:', values);
+        
+        const canvas = document.getElementById(canvasId);
+        const ctx = canvas?.getContext('2d');
+        if (!ctx) {
+            console.error('Canvas não encontrado:', canvasId);
+            return;
+        }
+        
+        if (charts[canvasId]) {
+            try { charts[canvasId].destroy(); } catch(e) {}
+            delete charts[canvasId];
+        }
+        
+        const dadosValidos = [];
+        let total = 0;
+        
+        for (let i = 0; i < labels.length && i < values.length; i++) {
+            const valor = Number(values[i]);
+            if (!isNaN(valor) && valor > 0 && labels[i] && labels[i] !== "") {
+                dadosValidos.push({ name: labels[i], value: valor });
+                total += valor;
+            }
+        }
+        
+        if (dadosValidos.length === 0) {
+            console.warn('Nenhum dado válido para o treemap!');
+            return criarBarraVertical(canvasId, labels.slice(0, 12), values.slice(0, 12), 'Quantidade de alunos');
+        }
+        
+        try {
+            charts[canvasId] = new Chart(ctx, {
+                type: 'treemap',
+                data: {
+                    datasets: [{
+                        label: 'Cursos',
+                        tree: dadosValidos,
+                        key: 'value',
+                        groups: ['name'],
+                        backgroundColor: (context) => {
+                            const cores = ['#387f1c', '#59e462', '#f6c23e', '#36b9cc', '#4e73df', '#e74a3b', '#1cc88a', '#ff9a3c'];
+                            return cores[context.dataIndex % cores.length];
+                        },
+                        borderWidth: 2,
+                        borderColor: '#fff',
+                        spacing: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { display: false } }
+                }
+            });
+            
+            console.log('Treemap criado com sucesso!');
+
+            setTimeout(() => {
+                if (charts[canvasId]) {
+                    charts[canvasId].resize();
+                    charts[canvasId].update();
+                }
+            }, 100);
+            
+            return charts[canvasId];
+            
+        } catch (error) {
+            console.error('Erro ao criar treemap:', error);
+            return criarBarraVertical(canvasId, labels.slice(0, 12), values.slice(0, 12), 'Quantidade de alunos');
+        }
+    }
+
+    // função para criar gráfico radar
+    function criarRadarPerfilCursos(canvasId, dados) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        
+        if (charts[canvasId]) {
+            try { charts[canvasId].destroy(); } catch(e) {}
+            delete charts[canvasId];
+        }
+        
+        // Obter cursos com pelo menos 2 alunos
+        const cursosContagem = contarFrequencia(dados, 'curso');
+        const cursosFiltrados = cursosContagem.labels.filter((curso, i) => cursosContagem.values[i] >= 2);
+        
+        if (cursosFiltrados.length === 0) {
+            console.warn('Sem cursos com dados suficientes para o radar');
+            return;
+        }
+        
+        // Limitar a 5 cursos 
+        const cursosTop = cursosFiltrados.slice(0, 5);
+        
+        const metricas = [
+            "Trabalha/estagia",
+            "Transporte público",
+            "Conhece assistência",
+            "Já pensou em desistir",
+            "Participa de projetos"
+        ];
+        
+        const datasets = [];
+        const cores = ['#387f1c', '#36b9cc', '#f6c23e', '#e74a3b', '#4e73df'];
+        
+        cursosTop.forEach((curso, idx) => {
+            const dadosCurso = dados.filter(d => d.curso === curso);
+            const total = dadosCurso.length;
+            
+            const valores = metricas.map(metrica => {
+                if (metrica === "Trabalha/estagia") {
+                    return (dadosCurso.filter(d => d.trabalha !== "Não, apenas estudo" && d.trabalha !== "").length / total) * 100;
+                }
+                if (metrica === "Transporte público") {
+                    return (dadosCurso.filter(d => d.transporte === "Transporte público (ônibus, trem, metrô)").length / total) * 100;
+                }
+                if (metrica === "Conhece assistência") {
+                    return (dadosCurso.filter(d => d.conheceAssistencia === "Sim, conheço todos" || d.conheceAssistencia === "Conheço alguns").length / total) * 100;
+                }
+                if (metrica === "Já pensou em desistir") {
+                    return (dadosCurso.filter(d => d.pensouDesistir !== "Nunca pensei" && d.pensouDesistir !== "").length / total) * 100;
+                }
+                if (metrica === "Participa de projetos") {
+                    return (dadosCurso.filter(d => d.participaProjetos !== "Nunca participei" && d.participaProjetos !== "").length / total) * 100;
+                }
+                return 0;
+            });
+            
+            datasets.push({
+                label: curso.length > 30 ? curso.substring(0, 27) + '...' : curso,
+                data: valores,
+                backgroundColor: `${cores[idx % cores.length]}20`,
+                borderColor: cores[idx % cores.length],
+                borderWidth: 2,
+                pointBackgroundColor: cores[idx % cores.length],
+                pointBorderColor: '#fff',
+                pointRadius: 4,
+                pointHoverRadius: 6
+            });
+        });
+        
+        try {
+            charts[canvasId] = new Chart(canvas.getContext('2d'), {
+                type: 'radar',
+                data: { labels: metricas, datasets: datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { stepSize: 20, callback: (val) => val + '%' },
+                            title: { display: true, text: 'Percentual (%)' }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `${ctx.dataset.label}: ${ctx.raw.toFixed(1)}%`
+                            }
+                        },
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+            console.log('Radar criado com sucesso!');
+        } catch (error) {
+            console.error('Erro ao criar radar:', error);
+        }
+    }
+
+    // função para criar gráfico radar de motivos de desistência por campus
+function criarRadarMotivosDesistencia(canvasId, dados) {
+   
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    
+    if (charts[canvasId]) {
+        try { charts[canvasId].destroy(); } catch(e) {}
+        delete charts[canvasId];
+    }
+    
+    const motivos = [
+        "Falta de identificação com o curso",
+        "Dificuldade acadêmica (notas, reprovações)",
+        "Deslocamento/cansaço",
+        "Dificuldades financeiras",
+        "Problemas de saúde física ou mental",
+        "Problemas familiares/pessoais"
+    ];
+    
+    // Obter campi ÚNICOS com dados
+    const campi = [...new Set(dados.map(d => d.campus).filter(c => c && c !== ""))];
+    
+    console.log('Campi encontrados:', campi);
+    console.log('Total de registros:', dados.length);
+    
+    const datasets = [];
+    const cores = ['#e74a3b', '#f6c23e', '#36b9cc', '#4e73df', '#1cc88a', '#387f1c'];
+    
+    campi.forEach((campus, idx) => {
+        const dadosCampus = dados.filter(d => d.campus === campus);
+        
+        const contagem = motivos.map(motivo => {
+
+            const count = dadosCampus.filter(d => {
+                const motivoAluno = d.motivosDesistencia || "";
+                return motivoAluno.toLowerCase().includes(motivo.toLowerCase());
+            }).length;
+            console.log(`Campus ${campus}, Motivo "${motivo}": ${count} alunos`);
+            return count;
+        });
+        
+        datasets.push({
+            label: campus,
+            data: contagem,
+            backgroundColor: `${cores[idx % cores.length]}20`,
+            borderColor: cores[idx % cores.length],
+            borderWidth: 2,
+            pointBackgroundColor: cores[idx % cores.length],
+            pointBorderColor: '#fff',
+            pointRadius: 5,
+            pointHoverRadius: 7
+        });
+    });
+    
+    try {
+        charts[canvasId] = new Chart(canvas.getContext('2d'), {
+            type: 'radar',
+            data: { labels: motivos, datasets: datasets },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Número de alunos' }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: (ctx) => `${ctx.dataset.label}: ${ctx.raw} alunos`
+                        }
+                    },
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+        console.log('Radar de Motivos de Desistência criado com sucesso!');
+    } catch (error) {
+        console.error('Erro ao criar radar de desistência:', error);
+    }
+}
+
+    function adicionarInfoIcon(cardId, chartTitle) {
+        const card = document.getElementById(cardId);
+        if (!card) return;
+        const pergunta = perguntasMap[chartTitle] || "Informação não disponível";
+        const chartTitleDiv = card.querySelector('.chart-title');
+        if (chartTitleDiv) {
+            const infoSpan = document.createElement('span');
+            infoSpan.className = 'info-icon';
+            infoSpan.innerHTML = 'ⓘ';
+            infoSpan.title = pergunta;
+            chartTitleDiv.appendChild(infoSpan);
+        }
+    }
+
+    function adicionarBotaoExpandir(cardId, canvasId, chartTitle, rawData) {
+        const card = document.getElementById(cardId);
+        if (!card) return;
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'chart-actions';
+        actionsDiv.innerHTML = `<button class="chart-btn" data-expand="${canvasId}" title="Expandir gráfico"><i class="fas fa-expand"></i></button>`;
+        const chartHeader = card.querySelector('.chart-title');
+        if (chartHeader) {
+            chartHeader.parentNode.insertBefore(actionsDiv, chartHeader.nextSibling);
+        } else {
+            card.insertBefore(actionsDiv, card.firstChild);
+        }
+        const canvas = document.getElementById(canvasId);
+        if (canvas) {
+            canvas._rawData = rawData;
+            canvas._chartTitle = chartTitle;
+        }
+    }
+
+    function expandirGrafico(canvasId) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        const chartObj = charts[canvasId];
+        if (!chartObj) return;
+        const modalCanvas = document.getElementById("modalCanvas");
+        if (modalChart) modalChart.destroy();
+        modalChart = new Chart(modalCanvas.getContext("2d"), {
+            type: chartObj.config.type,
+            data: JSON.parse(JSON.stringify(chartObj.config.data)),
+            options: { ...chartObj.config.options, responsive: true, maintainAspectRatio: true }
+        });
+        document.getElementById("modalTitle").innerText = canvas._chartTitle || "Gráfico Expandido";
+        currentModalCanvasId = canvasId;
+        currentModalRawData = canvas._rawData;
+        currentModalTitle = canvas._chartTitle || "grafico";
+        document.getElementById("modal").classList.add("show");
+    }
+
+    function renderizarDashboard() {
+       
+        if (!dadosFiltrados.length) {
+            const grids = ['perfilGrid', 'deslocamentoGrid', 'trabalhoGrid', 'assistenciaGrid', 'projetosGrid', 'evasaoGrid'];
+            grids.forEach(gridId => {
+                const el = document.getElementById(gridId);
+                if (el) el.innerHTML = '<div class="chart-card" style="text-align:center; padding:2rem;"><i class="fas fa-chart-simple"></i> Nenhum dado disponível para este filtro</div>';
+            });
+            document.getElementById('cardsGrid').innerHTML = '<div class="indicator-card">Sem dados</div>';
+            return;
+        }
+
+        const total = dadosFiltrados.length;
+        const pensouDesistir = dadosFiltrados.filter(d => d.pensouDesistir !== "Nunca pensei" && d.pensouDesistir !== "").length;
+        const trabalha = dadosFiltrados.filter(d => d.trabalha !== "Não, apenas estudo" && d.trabalha !== "").length;
+        const conheceAssistencia = dadosFiltrados.filter(d => d.conheceAssistencia === "Sim, conheço todos" || d.conheceAssistencia === "Conheço alguns").length;
+        const transportePublico = dadosFiltrados.filter(d => d.transporte === "Transporte público (ônibus, trem, metrô)").length;
+        
+        document.getElementById('cardsGrid').innerHTML = `
+            <div class="indicator-card"><div class="card-label"><i class="fas fa-exclamation-triangle"></i> Pensou em desistir</div><div class="card-value">${Math.round(pensouDesistir/total*100)}%</div></div>
+            <div class="indicator-card"><div class="card-label"><i class="fas fa-briefcase"></i> Trabalha/estagia</div><div class="card-value">${Math.round(trabalha/total*100)}%</div></div>
+            <div class="indicator-card"><div class="card-label"><i class="fas fa-hand-holding-heart"></i> Conhece assistência</div><div class="card-value">${Math.round(conheceAssistencia/total*100)}%</div></div>
+            <div class="indicator-card"><div class="card-label"><i class="fas fa-bus"></i> Transporte público</div><div class="card-value">${Math.round(transportePublico/total*100)}%</div></div>
+        `;
+
+        // Perfil - com gráfico radar 
+        const campusFreq = contarFrequencia(dadosFiltrados, 'campus');
+        const cursoFreq = contarFrequencia(dadosFiltrados, 'curso');
+        const turnoFreq = contarFrequencia(dadosFiltrados, 'turno');
+        const cidadeFreq = contarFrequencia(dadosFiltrados, 'cidade');
+        const topCidades = { labels: cidadeFreq.labels.slice(0,30), values: cidadeFreq.values.slice(0,30) };
+        
+        document.getElementById('perfilGrid').innerHTML = `
+            <div class="chart-card" id="card_perfilCampus"><div class="chart-title"><i class="fas fa-university"></i> Distribuição por Campus</div><div class="chart-wrapper"><canvas id="perfilCampus"></canvas></div></div>
+            <div class="chart-card" id="card_perfilCurso"><div class="chart-title"><i class="fas fa-graduation-cap"></i> Cursos mais frequentes</div><div class="chart-wrapper"><canvas id="perfilCurso"></canvas></div></div>
+            <div class="chart-card" id="card_perfilTurno"><div class="chart-title"><i class="fas fa-clock"></i> Turno de estudo</div><div class="chart-wrapper"><canvas id="perfilTurno"></canvas></div></div>
+            <div class="chart-card" id="card_perfilCidade"><div class="chart-title"><i class="fas fa-city"></i> Cidades de residência</div><div class="chart-wrapper"><canvas id="perfilCidade"></canvas></div></div>
+            <div class="chart-card" id="card_radarPerfilCursos"><div class="chart-title"><i class="fas fa-chart-line"></i> Comparativo: Perfil dos Cursos (Radar)</div><div class="chart-wrapper"><canvas id="radarPerfilCursos"></canvas></div></div>
+        `;
+        criarPie('perfilCampus', campusFreq.labels, campusFreq.values);
+        criarTreemap('perfilCurso', cursoFreq.labels.slice(0,30), cursoFreq.values.slice(0,30));
+        criarPie('perfilTurno', turnoFreq.labels, turnoFreq.values);
+        criarBarraVertical('perfilCidade', topCidades.labels, topCidades.values);
+        
+        
+        criarRadarPerfilCursos('radarPerfilCursos', dadosFiltrados);
+        
+        adicionarInfoIcon('card_perfilCampus', 'Distribuição por Campus');
+        adicionarInfoIcon('card_perfilCurso', 'Cursos mais frequentes');
+        adicionarInfoIcon('card_perfilTurno', 'Turno de estudo');
+        adicionarInfoIcon('card_perfilCidade', 'Cidades de residência');
+        adicionarInfoIcon('card_radarPerfilCursos', 'Comparativo: Perfil dos Cursos');
+        
+        adicionarBotaoExpandir('card_perfilCampus', 'perfilCampus', 'Distribuição por Campus', dadosFiltrados);
+        adicionarBotaoExpandir('card_perfilCurso', 'perfilCurso', 'Cursos mais frequentes', dadosFiltrados);
+        adicionarBotaoExpandir('card_perfilTurno', 'perfilTurno', 'Turno de estudo', dadosFiltrados);
+        adicionarBotaoExpandir('card_perfilCidade', 'perfilCidade', 'Cidades de residência', dadosFiltrados);
+        adicionarBotaoExpandir('card_radarPerfilCursos', 'radarPerfilCursos', 'Comparativo: Perfil dos Cursos', dadosFiltrados);
+
+        // Deslocamento
+        const estudaPropria = contarFrequencia(dadosFiltrados, 'estudaPropriaCidade');
+        const distanciaFreq = contarFrequencia(dadosFiltrados, 'distancia');
+        const tempoFreq = contarFrequencia(dadosFiltrados, 'tempoDeslocamento');
+        const transporteFreq = contarFrequencia(dadosFiltrados, 'transporte');
+        const ordemTempo = ["Menos de 1 hora por dia", "Entre 1 e 2 horas por dia", "Entre 2 e 3 horas por dia", "Mais de 3 horas por dia", "Outro"];
+        const tempoOrdenado = ordemTempo.map(t => tempoFreq.values[tempoFreq.labels.indexOf(t)] || 0);
+        
+        document.getElementById('deslocamentoGrid').innerHTML = `
+            <div class="chart-card" id="card_deslPropria"><div class="chart-title"><i class="fas fa-home"></i> Reside na mesma cidade?</div><div class="chart-wrapper"><canvas id="deslPropria"></canvas></div></div>
+            <div class="chart-card" id="card_deslDistancia"><div class="chart-title"><i class="fas fa-route"></i> Distância (km)</div><div class="chart-wrapper"><canvas id="deslDistancia"></canvas></div></div>
+            <div class="chart-card" id="card_deslTempo"><div class="chart-title"><i class="fas fa-hourglass-half"></i> Tempo de deslocamento (ida+volta)</div><div class="chart-wrapper"><canvas id="deslTempo"></canvas></div></div>
+            <div class="chart-card" id="card_deslTransporte"><div class="chart-title"><i class="fas fa-car"></i> Meio de transporte</div><div class="chart-wrapper"><canvas id="deslTransporte"></canvas></div></div>
+        `;
+        criarPie('deslPropria', estudaPropria.labels, estudaPropria.values);
+        criarBarraVertical('deslDistancia', distanciaFreq.labels, distanciaFreq.values);
+        criarLinha('deslTempo', ordemTempo, tempoOrdenado, 'Número de alunos');
+        criarBarraHorizontal('deslTransporte', transporteFreq.labels, transporteFreq.values);
+        
+        adicionarInfoIcon('card_deslPropria', 'Reside na mesma cidade');
+        adicionarInfoIcon('card_deslDistancia', 'Distância (km)');
+        adicionarInfoIcon('card_deslTempo', 'Tempo de deslocamento');
+        adicionarInfoIcon('card_deslTransporte', 'Meio de transporte');
+        
+        adicionarBotaoExpandir('card_deslPropria', 'deslPropria', 'Reside na mesma cidade', dadosFiltrados);
+        adicionarBotaoExpandir('card_deslDistancia', 'deslDistancia', 'Distância (km)', dadosFiltrados);
+        adicionarBotaoExpandir('card_deslTempo', 'deslTempo', 'Tempo de deslocamento', dadosFiltrados);
+        adicionarBotaoExpandir('card_deslTransporte', 'deslTransporte', 'Meio de transporte', dadosFiltrados);
+
+        // Trabalho e estudo
+        const trabalhaFreq = contarFrequencia(dadosFiltrados, 'trabalha');
+        const horasFreq = contarFrequencia(dadosFiltrados, 'horasEstudo');
+        const impactoFreq = contarFrequencia(dadosFiltrados, 'impacto');
+        const ordemHoras = ["Menos de 1 hora por dia", "Entre 1 e 2 horas por dia", "Entre 2 e 3 horas por dia", "Mais de 3 horas por dia", "Não estudo fora da sala de aula"];
+        const horasOrdenadas = ordemHoras.map(h => horasFreq.values[horasFreq.labels.indexOf(h)] || 0);
+        const trabalhaSim = dadosFiltrados.filter(d => d.trabalha !== "Não, apenas estudo" && d.trabalha !== "");
+        const trabalhaNao = dadosFiltrados.filter(d => d.trabalha === "Não, apenas estudo");
+        const impactos = ["Não trabalho, apenas estudo", "Impacto positivo", "Impacto neutro", "Impacto negativo", "Impacto muito negativo"];
+        const impactoSIM = impactos.map(i => trabalhaSim.filter(d => d.impacto === i).length);
+        const impactoNAO = impactos.map(i => trabalhaNao.filter(d => d.impacto === i).length);
+        
+        document.getElementById('trabalhoGrid').innerHTML = `
+            <div class="chart-card" id="card_trabTrabalha"><div class="chart-title"><i class="fas fa-briefcase"></i> Situação de trabalho/estágio</div><div class="chart-wrapper"><canvas id="trabTrabalha"></canvas></div></div>
+            <div class="chart-card" id="card_trabHoras"><div class="chart-title"><i class="fas fa-book-open"></i> Horas de estudo extraclasse</div><div class="chart-wrapper"><canvas id="trabHoras"></canvas></div></div>
+            <div class="chart-card" id="card_trabImpacto"><div class="chart-title"><i class="fas fa-chart-line"></i> Impacto de trabalhar e estudar</div><div class="chart-wrapper"><canvas id="trabImpacto"></canvas></div></div>
+            <div class="chart-card" id="card_trabCruzamento"><div class="chart-title"><i class="fas fa-chart-simple"></i> Impacto × Situação de trabalho</div><div class="chart-wrapper"><canvas id="trabCruzamento"></canvas></div></div>
+        `;
+        criarBarraHorizontal('trabTrabalha', trabalhaFreq.labels, trabalhaFreq.values);
+        criarLinha('trabHoras', ordemHoras, horasOrdenadas, 'Número de alunos');
+        criarBarraVertical('trabImpacto', impactoFreq.labels, impactoFreq.values);
+        criarBarraEmpilhada('trabCruzamento', impactos, [
+            { label: 'Trabalha ou estagia', data: impactoSIM, backgroundColor: '#e74a3b' },
+            { label: 'Não trabalha', data: impactoNAO, backgroundColor: '#36b9cc' }
+        ]);
+        
+        adicionarInfoIcon('card_trabTrabalha', 'Situação de trabalho/estágio');
+        adicionarInfoIcon('card_trabHoras', 'Horas de estudo extraclasse');
+        adicionarInfoIcon('card_trabImpacto', 'Impacto de trabalhar e estudar');
+        adicionarInfoIcon('card_trabCruzamento', 'Impacto × Situação de trabalho');
+        
+        adicionarBotaoExpandir('card_trabTrabalha', 'trabTrabalha', 'Situação de trabalho/estágio', dadosFiltrados);
+        adicionarBotaoExpandir('card_trabHoras', 'trabHoras', 'Horas de estudo extraclasse', dadosFiltrados);
+        adicionarBotaoExpandir('card_trabImpacto', 'trabImpacto', 'Impacto de trabalhar e estudar', dadosFiltrados);
+        adicionarBotaoExpandir('card_trabCruzamento', 'trabCruzamento', 'Impacto × Situação de trabalho', dadosFiltrados);
+
+        // Assistência
+        const conheceFreq = contarFrequencia(dadosFiltrados, 'conheceAssistencia');
+        let auxilioFreq = {};
+        dadosFiltrados.forEach(d => {
+            if (d.auxiliosRecebidos && d.auxiliosRecebidos !== "") {
+                const itens = d.auxiliosRecebidos.split(/[,;]/).map(s => s.trim());
+                itens.forEach(a => { if (a) auxilioFreq[a] = (auxilioFreq[a] || 0) + 1; });
+            }
+        });
+        const importanciaFreq = contarFrequencia(dadosFiltrados, 'importanciaAuxilio');
+        const ordemImportancia = ["Essencial - sem ele, não conseguiria continuar estudando", "Muito importante - ajuda significativamente", "Importante - contribui, mas conseguiria continuar sem ele", "Pouco importante - faz pouca diferença", "Não se aplica/não recebo auxílio"];
+        const importanciaOrdenada = ordemImportancia.map(i => importanciaFreq.values[importanciaFreq.labels.indexOf(i)] || 0);
+        
+        document.getElementById('assistenciaGrid').innerHTML = `
+            <div class="chart-card" id="card_assistConhece"><div class="chart-title"><i class="fas fa-eye"></i> Conhecimento sobre assistência</div><div class="chart-wrapper"><canvas id="assistConhece"></canvas></div></div>
+            <div class="chart-card" id="card_assistAuxilios"><div class="chart-title"><i class="fas fa-hand-holding-usd"></i> Auxílios recebidos (múltipla)</div><div class="chart-wrapper"><canvas id="assistAuxilios"></canvas></div></div>
+            <div class="chart-card" id="card_assistImportancia"><div class="chart-title"><i class="fas fa-star"></i> Importância do auxílio</div><div class="chart-wrapper"><canvas id="assistImportancia"></canvas></div></div>
+        `;
+        criarPie('assistConhece', conheceFreq.labels, conheceFreq.values);
+        criarBarraHorizontal('assistAuxilios', Object.keys(auxilioFreq), Object.values(auxilioFreq));
+        criarBarraVertical('assistImportancia', ordemImportancia, importanciaOrdenada);
+        
+        adicionarInfoIcon('card_assistConhece', 'Conhecimento sobre assistência');
+        adicionarInfoIcon('card_assistAuxilios', 'Auxílios recebidos');
+        adicionarInfoIcon('card_assistImportancia', 'Importância do auxílio');
+        
+        adicionarBotaoExpandir('card_assistConhece', 'assistConhece', 'Conhecimento sobre assistência', dadosFiltrados);
+        adicionarBotaoExpandir('card_assistAuxilios', 'assistAuxilios', 'Auxílios recebidos', dadosFiltrados);
+        adicionarBotaoExpandir('card_assistImportancia', 'assistImportancia', 'Importância do auxílio', dadosFiltrados);
+
+        // Projetos
+        const participaFreq = contarFrequencia(dadosFiltrados, 'participaProjetos');
+        let motivPart = {};
+        dadosFiltrados.filter(d => d.participaProjetos !== "Nunca participei" && d.motivoParticipacao && d.motivoParticipacao !== "").forEach(d => {
+            motivPart[d.motivoParticipacao] = (motivPart[d.motivoParticipacao] || 0) + 1;
+        });
+        const motivoNaoFreq = contarFrequencia(dadosFiltrados.filter(d => d.participaProjetos === "Nunca participei" || d.motivoNaoParticipar !== ""), 'motivoNaoParticipar');
+        
+        document.getElementById('projetosGrid').innerHTML = `
+            <div class="chart-card" id="card_projParticipa"><div class="chart-title"><i class="fas fa-flask"></i> Participa de projetos?</div><div class="chart-wrapper"><canvas id="projParticipa"></canvas></div></div>
+            <div class="chart-card" id="card_projMotivos"><div class="chart-title"><i class="fas fa-rocket"></i> Motivos para participar</div><div class="chart-wrapper"><canvas id="projMotivos"></canvas></div></div>
+            <div class="chart-card" id="card_projNao"><div class="chart-title"><i class="fas fa-question-circle"></i> Motivos para NÃO participar</div><div class="chart-wrapper"><canvas id="projNao"></canvas></div></div>
+        `;
+        criarPie('projParticipa', participaFreq.labels, participaFreq.values);
+        criarBarraVertical('projMotivos', Object.keys(motivPart), Object.values(motivPart));
+        criarBarraHorizontal('projNao', motivoNaoFreq.labels, motivoNaoFreq.values);
+        
+        adicionarInfoIcon('card_projParticipa', 'Participa de projetos');
+        adicionarInfoIcon('card_projMotivos', 'Motivos para participar');
+        adicionarInfoIcon('card_projNao', 'Motivos para NÃO participar');
+        
+        adicionarBotaoExpandir('card_projParticipa', 'projParticipa', 'Participa de projetos', dadosFiltrados);
+        adicionarBotaoExpandir('card_projMotivos', 'projMotivos', 'Motivos para participar', dadosFiltrados);
+        adicionarBotaoExpandir('card_projNao', 'projNao', 'Motivos para NÃO participar', dadosFiltrados);
+
+        // Evasão 
+        const pensouFreq = contarFrequencia(dadosFiltrados, 'pensouDesistir');
+        const campiList = [...new Set(dadosFiltrados.map(d => d.campus).filter(c => c))];
+        const simPorCampus = campiList.map(c => dadosFiltrados.filter(d => d.campus === c && d.pensouDesistir !== "Nunca pensei").length);
+        const naoPorCampus = campiList.map(c => dadosFiltrados.filter(d => d.campus === c && d.pensouDesistir === "Nunca pensei").length);
+        
+        document.getElementById('evasaoGrid').innerHTML = `
+            <div class="chart-card" id="card_evasaoPensou"><div class="chart-title"><i class="fas fa-brain"></i> Já pensou em desistir?</div><div class="chart-wrapper"><canvas id="evasaoPensou"></canvas></div></div>
+            <div class="chart-card" id="card_radarMotivosDesistencia"><div class="chart-title"><i class="fas fa-chart-line"></i> Motivos de Desistência por Campus (Radar)</div><div class="chart-wrapper"><canvas id="radarMotivosDesistencia"></canvas></div></div>
+            <div class="chart-card" id="card_evasaoCampus"><div class="chart-title"><i class="fas fa-chart-simple"></i> Desistência por campus</div><div class="chart-wrapper"><canvas id="evasaoCampus"></canvas></div></div>
+        `;
+        criarPie('evasaoPensou', pensouFreq.labels, pensouFreq.values);
+        criarRadarMotivosDesistencia('radarMotivosDesistencia', dadosFiltrados);
+        criarBarraEmpilhada('evasaoCampus', campiList, [
+            { label: 'Já pensou em desistir', data: simPorCampus, backgroundColor: '#e74a3b' },
+            { label: 'Nunca pensou', data: naoPorCampus, backgroundColor: '#1cc88a' }
+        ]);
+        
+        adicionarInfoIcon('card_evasaoPensou', 'Já pensou em desistir');
+        adicionarInfoIcon('card_radarMotivosDesistencia', 'Motivos de Desistência por Campus');
+        adicionarInfoIcon('card_evasaoCampus', 'Desistência por campus');
+        
+        adicionarBotaoExpandir('card_evasaoPensou', 'evasaoPensou', 'Já pensou em desistir', dadosFiltrados);
+        adicionarBotaoExpandir('card_radarMotivosDesistencia', 'radarMotivosDesistencia', 'Motivos de Desistência por Campus', dadosFiltrados);
+        adicionarBotaoExpandir('card_evasaoCampus', 'evasaoCampus', 'Desistência por campus', dadosFiltrados);
+    }
+
+    function aplicarFiltro() {
+        const campusSelecionado = document.getElementById('campusFilter').value;
+        dadosFiltrados = campusSelecionado === 'all' ? [...dadosCompletos] : dadosCompletos.filter(d => d.campus === campusSelecionado);
+        renderizarDashboard();
+    }
+
+    async function carregarDados() {
+        try {
+            const response = await fetch('../../assets/data/DadosFormularios/DadosDiscentes.json');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const dadosRaw = await response.json();
+            dadosCompletos = normalizarDados(dadosRaw);
+            const campiUnicos = [...new Set(dadosCompletos.map(d => d.campus).filter(c => c && c !== ""))].sort();
+            const select = document.getElementById('campusFilter');
+            campiUnicos.forEach(campus => {
+                const option = document.createElement('option');
+                option.value = campus;
+                option.textContent = campus;
+                select.appendChild(option);
+            });
+            dadosFiltrados = [...dadosCompletos];
+            renderizarDashboard();
+        } catch (error) {
+            console.error('Erro ao carregar JSON:', error);
+            document.querySelector('.filter-bar').insertAdjacentHTML('afterend', `<div style="background:#fee; border-left:4px solid #e74a3b; padding:1rem; margin:1rem 0; border-radius:8px;"><i class="fas fa-exclamation-triangle"></i> Erro ao carregar os dados: ${error.message}<br>Verifique o arquivo <strong>formDiscentes.json</strong></div>`);
+        }
+    }
+
+    function setupEventListeners() {
+        document.getElementById("closeModalBtn").addEventListener("click", () => {
+            document.getElementById("modal").classList.remove("show");
+            if (modalChart) { modalChart.destroy(); modalChart = null; }
+        });
+        document.getElementById("downloadPngBtn").addEventListener("click", () => {
+            if (modalChart) downloadCanvasAsPNG(document.getElementById("modalCanvas"), `${currentModalTitle || "grafico"}.png`);
+        });
+        document.getElementById("downloadJsonBtn").addEventListener("click", () => {
+            if (currentModalRawData) downloadJSON(currentModalRawData, `${currentModalTitle || "dados"}.json`);
+        });
+        document.getElementById("downloadCsvBtn").addEventListener("click", () => {
+            if (currentModalRawData && currentModalRawData.length) downloadCSV(currentModalRawData, `${currentModalTitle || "dados"}.csv`);
+        });
+        document.getElementById("modal").addEventListener("click", (e) => {
+            if (e.target === document.getElementById("modal")) {
+                document.getElementById("modal").classList.remove("show");
+                if (modalChart) { modalChart.destroy(); modalChart = null; }
+            }
+        });
+        document.addEventListener("click", (e) => {
+            const btn = e.target.closest(".chart-btn");
+            if (btn && btn.getAttribute("data-expand")) expandirGrafico(btn.getAttribute("data-expand"));
+        });
+    }
+
+    function initTabs() {
+        const tabs = document.querySelectorAll('.tab-btn');
+        const contents = document.querySelectorAll('.tab-content');
+        tabs.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
+                tabs.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                contents.forEach(content => content.classList.remove('active'));
+                document.getElementById(`tab-${tabId}`).classList.add('active');
+                setTimeout(() => Object.values(charts).forEach(c => { if (c && c.resize) c.resize(); }), 100);
+            });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initTabs();
+        carregarDados();
+        document.getElementById('campusFilter').addEventListener('change', aplicarFiltro);
+        setupEventListeners();
+    });
+
+     (function() {
+            const hamburger = document.getElementById('hamburger');
+            const navMenuMobile = document.getElementById('navMenuMobile');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuCloseBtn = document.getElementById('menuCloseBtn');
+
+            function closeMenu() {
+                if (hamburger) hamburger.classList.remove('active');
+                if (navMenuMobile) navMenuMobile.classList.remove('active');
+                if (menuOverlay) menuOverlay.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            }
+
+            function openMenu() {
+                if (hamburger) hamburger.classList.add('active');
+                if (navMenuMobile) navMenuMobile.classList.add('active');
+                if (menuOverlay) menuOverlay.classList.add('active');
+                document.body.classList.add('menu-open');
+            }
+
+            function toggleMenu() {
+                if (navMenuMobile && navMenuMobile.classList.contains('active')) {
+                    closeMenu();
+                } else {
+                    openMenu();
+                }
+            }
+
+            if (hamburger) hamburger.addEventListener('click', toggleMenu);
+            if (menuCloseBtn) menuCloseBtn.addEventListener('click', closeMenu);
+            if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
+
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 900 && navMenuMobile && navMenuMobile.classList.contains('active')) {
+                    closeMenu();
+                }
+            });
+
+            if (navMenuMobile) {
+                const links = navMenuMobile.querySelectorAll('a');
+                links.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        closeMenu();
+                    });
+                });
+            }
+        })();
+        
+</script>
+</body>
+</html>

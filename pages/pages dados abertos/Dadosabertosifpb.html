@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IFPB Data Platform - Transparência e Análise de Dados</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>IFPB Data Platform - Dados Abertos | Transparência e Análise</title>
     <link rel="shortcut icon" href="../../assets/img/logosite.png" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
@@ -11,6 +12,272 @@
     <link rel="stylesheet" href="../../assets/css/Dadosabertosifpb.css">
     <link rel="stylesheet" href="../../style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+    
+        :root {
+            --primary-color: #387f1c;
+            --secondary-color: #59e462;
+            --success-color: #1cc88a;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --info-color: #36b9cc;
+            --dark-color: #2e3a59;
+            --medium-color: #5a5c69;
+            --light-color: #f8f9fc;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --radius: 10px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* hero section */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            padding: 3rem 0 2rem;
+        }
+
+        .hero-badge {
+            background: var(--light-color);
+            color: var(--primary-color);
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            line-height: 1.2;
+            color: var(--dark-color);
+        }
+
+        .hero h1 span {
+            color: var(--primary-color);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--medium-color);
+            margin: 1.5rem 0;
+            max-width: 90%;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-outline {
+            border: 1.5px solid var(--light-color);
+            background: white;
+            color: var(--dark-color);
+            padding: 0.8rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .hero-stats {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--light-color);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.8rem;
+            margin: 2rem 0;
+        }
+
+        .card-modern {
+            background: var(--white);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            transition: var(--transition);
+            border: 1px solid var(--light-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card-modern:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--secondary-color);
+        }
+
+        .card-icon {
+            width: 54px;
+            height: 54px;
+            background: var(--light-color);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.7rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .card-modern h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+        }
+
+        .card-modern p {
+            color: var(--medium-color);
+            margin-bottom: 1.2rem;
+            font-size: 0.95rem;
+        }
+
+        .card-link {
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .highlights {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin: 3rem 0;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--light-color);
+        }
+
+        .charts-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .chart-box {
+            background: var(--light-color);
+            border-radius: 1rem;
+            padding: 1rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 2rem 0 1rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            position: relative;
+            display: inline-block;
+            margin: 0;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--secondary-color);
+            border-radius: 3px;
+        }
+
+        .transparencia-box {
+            background: linear-gradient(135deg, #f8f9fc, #eef2ff);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            border-left: 5px solid var(--secondary-color);
+        }
+
+        canvas {
+            max-height: 260px;
+            width: 100%;
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .hero p {
+                max-width: 100%;
+            }
+            .hero-buttons {
+                justify-content: center;
+            }
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
+            .section-title {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .stat-number {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -43,40 +310,120 @@
                 </button>
             </nav>
         </div>
-
     </header>
 
     <div class="menu-overlay" id="menuOverlay"></div>
 
-            <!-- Menu Mobile (lateral deslizante) -->
-        <nav class="nav-menu-mobile" id="navMenuMobile">
-            <div class="menu-header">
-                <div class="menu-logo">
-                    <i class="fas fa-chart-bar"></i>
-                    <div class="menu-logo-text">
-                        <span class="menu-logo-main">IFPB Data Platform</span>
-                        <span class="menu-logo-sub">Dados Abertos</span>
+    <!-- Menu Mobile lateral -->
+    <nav class="nav-menu-mobile" id="navMenuMobile">
+        <div class="menu-header">
+            <div class="menu-logo">
+                <i class="fas fa-chart-bar"></i>
+                <div class="menu-logo-text">
+                    <span class="menu-logo-main">IFPB Data Platform</span>
+                    <span class="menu-logo-sub">Dados Abertos</span>
+                </div>
+            </div>
+            <button class="menu-close-btn" id="menuCloseBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul>
+            <li><a href="../../index.html"><i class="fas fa-home"></i> Início</a></li>
+            <li><a href="institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
+            <li><a href="academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
+            <li><a href="orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
+            <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+        </ul>
+    </nav>
+
+    <!-- conteúdo principal -->
+    <main class="container">
+        <!-- Seção Hero -->
+        <section class="hero">
+            <div>
+                <div class="hero-badge"><i class="fas fa-database"></i> Dados Abertos IFPB</div>
+                <h1>Dados para <span>transformar</span> conhecimento</h1>
+                <p>Plataforma oficial de visualização, análise e transparência dos dados institucionais, acadêmicos e orçamentários do Instituto Federal da Paraíba. Acompanhe indicadores em tempo real.</p>
+                <div class="hero-buttons">
+                    <a href="../dashboard.html" class="btn-primary" id="exploreMainBtn"><i class="fas fa-chart-simple"></i> Explorar Agora</a>
+                    <a href="#dados-destaque" class="btn-outline"><i class="fas fa-arrow-trend-down"></i> Ver Indicadores</a>
+                </div>
+            </div>
+            <div class="hero-stats">
+                <div style="display: flex; justify-content: space-around;">
+                    <div class="stat-item">
+                        <div class="stat-number" id="statCampi">23</div>
+                        <div>Campi Ativos</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="statEstudantes">+18k</div>
+                        <div>Estudantes</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="statCursos">+120</div>
+                        <div>Cursos</div>
                     </div>
                 </div>
-                <button class="menu-close-btn" id="menuCloseBtn">
-                    <i class="fas fa-times"></i>
-                </button>
+                <div style="margin-top: 1.5rem; background: var(--light-color); padding: 0.8rem; border-radius: 20px; text-align: center; font-size: 0.8rem;">
+                    <i class="fas fa-calendar-alt"></i> Dados consolidados – atualização contínua
+                </div>
             </div>
-            <ul>
-                <li><a href="../../index.html"><i class="fas fa-home"></i> Início</a></li>
-                <li><a href="institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
-                <li><a href="academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
-                <li><a href="orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
-                <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
-            </ul>
-        </nav>
-            
-    <!-- conteúdo do main -->
-    <main class="container">
+        </section>
 
+        <!-- Cards de navegação -->
+        <div class="cards-grid" id="dados-destaque">
+            <div class="card-modern">
+                <div class="card-icon"><i class="fas fa-building-columns"></i></div>
+                <h3>Institucional</h3>
+                <p>Estrutura organizacional, campi, servidores, CNPJ, indicadores de gestão e muito mais.</p>
+                <a href="institucional.html" class="card-link">Ver dados <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="card-modern">
+                <div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
+                <h3>Vida Acadêmica</h3>
+                <p>Matrículas, evasão, corpo docente, cursos técnicos, graduação e pós-graduação.</p>
+                <a href="academico.html" class="card-link">Explorar <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="card-modern">
+                <div class="card-icon"><i class="fas fa-chart-pie"></i></div>
+                <h3>Gestão e Orçamento</h3>
+                <p>Receitas, despesas, investimentos, execução orçamentária e transparência financeira.</p>
+                <a href="orcamento.html" class="card-link">Acessar dados <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+
+        <!-- Seção de destaques -->
+        <div class="highlights">
+            <div class="section-header">
+                <h2 class="section-title">Indicadores em Destaque</h2>
+                <span style="color: var(--medium-color); font-size: 0.85rem;"><i class="fas fa-chart-line"></i> Visão interativa</span>
+            </div>
+            <div class="charts-row">
+                <div class="chart-box">
+                    <h4 style="margin-bottom: 1rem;"><i class="fas fa-chart-bar"></i> Distribuição de Servidores por Categoria</h4>
+                    <canvas id="servidoresChartHome" width="400" height="240" style="max-height:240px"></canvas>
+                </div>
+                <div class="chart-box">
+                    <h4 style="margin-bottom: 1rem;"><i class="fas fa-chart-pie"></i> Receitas vs Despesas (2024)</h4>
+                    <canvas id="orcamentoChartHome" width="400" height="240" style="max-height:240px"></canvas>
+                </div>
+            </div>
+            <div style="margin-top: 1rem; text-align: center; font-size: 0.8rem; color: var(--medium-color);">
+                <i class="fas fa-database"></i> Fonte: SIGAA / Portal da Transparência IFPB | Dados sujeitos a atualização mensal
+            </div>
+        </div>
+
+        <!-- Chamada para transparência -->
+        <div class="transparencia-box">
+            <i class="fas fa-hand-holding-heart" style="font-size: 2rem; color: var(--secondary-color);"></i>
+            <h3 style="margin: 0.5rem 0; color: var(--dark-color);">Compromisso com a Transparência</h3>
+            <p>Todos os dados disponíveis seguem a Lei de Acesso à Informação (LAI) e são extraídos de fontes oficiais do IFPB, MEC e SIAFI. Consulte também os portais de dados abertos da instituição.</p>
+            <a href="../sobre.html" style="margin-top: 1rem; display: inline-block; color: var(--primary-color); font-weight: 600;">Saiba mais sobre o projeto <i class="fas fa-chevron-right"></i></a>
+        </div>
     </main>
 
-    <!-- rodapé final da pages -->
+    <!-- rodapé final -->
     <footer class="main-footer">
         <div class="container">
             <div class="footer-grid">
@@ -99,9 +446,9 @@
                     <h3>Navegação</h3>
                     <ul class="footer-links">
                         <li><a href="../../index.html"><i class="fas fa-chevron-right"></i> Início</a></li>
-                        <li><a href="../pages dados abertos/institucional.html"><i class="fas fa-chevron-right"></i> A Instituição</a></li>
-                        <li><a href="../pages dados abertos/academico.html"><i class="fas fa-chevron-right"></i> Vida Acadêmica</a></li>
-                        <li><a href="../pages dados abertos/orcamento.html"><i class="fas fa-chevron-right"></i> Gestão e Orçamento</a></li>
+                        <li><a href="institucional.html"><i class="fas fa-chevron-right"></i> A Instituição</a></li>
+                        <li><a href="academico.html"><i class="fas fa-chevron-right"></i> Vida Acadêmica</a></li>
+                        <li><a href="orcamento.html"><i class="fas fa-chevron-right"></i> Gestão e Orçamento</a></li>
                     </ul>
                 </div>
 
@@ -123,67 +470,123 @@
                     <a href="../sobre.html" class="footer-btn">Saiba Mais <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
-    </footer> 
+        </div>
+    </footer>
 
     <script>
-    // Elementos
-    const hamburger = document.getElementById('hamburger');
-    const navMenuMobile = document.getElementById('navMenuMobile');
-    const menuOverlay = document.getElementById('menuOverlay');
-    const menuCloseBtn = document.getElementById('menuCloseBtn');
+        // Menu mobile 
+        const hamburger = document.getElementById('hamburger');
+        const navMenuMobile = document.getElementById('navMenuMobile');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const menuCloseBtn = document.getElementById('menuCloseBtn');
 
-    function closeMenu() {
-        hamburger?.classList.remove('active');
-        navMenuMobile?.classList.remove('active');
-        menuOverlay?.classList.remove('active');
-        document.body.classList.remove('menu-open');
-    }
-
-    function openMenu() {
-        hamburger?.classList.add('active');
-        navMenuMobile?.classList.add('active');
-        menuOverlay?.classList.add('active');
-        document.body.classList.add('menu-open');
-    }
-
-    function toggleMenu() {
-        if (navMenuMobile?.classList.contains('active')) {
-            closeMenu();
-        } else {
-            openMenu();
+        function closeMenu() {
+            hamburger?.classList.remove('active');
+            navMenuMobile?.classList.remove('active');
+            menuOverlay?.classList.remove('active');
+            document.body.classList.remove('menu-open');
         }
-    }
 
-    if (hamburger) hamburger.addEventListener('click', toggleMenu);
-    if (menuCloseBtn) menuCloseBtn.addEventListener('click', closeMenu);
-    if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
-
-    // Fecha o menu ao redimensionar para desktop
-    window.addEventListener('resize', function() {
-        if (window.innerWidth > 900 && navMenuMobile?.classList.contains('active')) {
-            closeMenu();
+        function openMenu() {
+            hamburger?.classList.add('active');
+            navMenuMobile?.classList.add('active');
+            menuOverlay?.classList.add('active');
+            document.body.classList.add('menu-open');
         }
-    });
 
-    // Fecha o menu ao clicar em qualquer link interno
-    document.querySelectorAll('.nav-menu-mobile a').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            const href = this.getAttribute('href');
-            if (href && href.startsWith('#')) {
-                e.preventDefault();
+        function toggleMenu() {
+            if (navMenuMobile?.classList.contains('active')) {
                 closeMenu();
-                const target = document.querySelector(href);
-                if (target) {
-                    setTimeout(() => {
-                        window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
-                    }, 150);
-                }
             } else {
-                closeMenu(); // para links normais, apenas fecha o menu
+                openMenu();
+            }
+        }
+
+        if (hamburger) hamburger.addEventListener('click', toggleMenu);
+        if (menuCloseBtn) menuCloseBtn.addEventListener('click', closeMenu);
+        if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
+
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 900 && navMenuMobile?.classList.contains('active')) {
+                closeMenu();
             }
         });
-    });
-</script>
 
+        document.querySelectorAll('.nav-menu-mobile a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    closeMenu();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        setTimeout(() => {
+                            window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
+                        }, 150);
+                    }
+                } else {
+                    closeMenu();
+                }
+            });
+        });
+
+        // Gráficos com Chart.js
+        const ctxServ = document.getElementById('servidoresChartHome')?.getContext('2d');
+        if(ctxServ) {
+            new Chart(ctxServ, {
+                type: 'bar',
+                data: {
+                    labels: ['Docentes', 'Técnico-Admin.'],
+                    datasets: [{
+                        label: 'Quantidade de servidores',
+                        data: [1248, 902],
+                        backgroundColor: ['#387f1c', '#c9a03d'],
+                        borderRadius: 10,
+                        barPercentage: 0.65
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top' } } }
+            });
+        }
+
+        const ctxOrc = document.getElementById('orcamentoChartHome')?.getContext('2d');
+        if(ctxOrc) {
+            new Chart(ctxOrc, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Receitas Arrecadadas', 'Despesas Empenhadas'],
+                    datasets: [{
+                        data: [312.4, 287.0],
+                        backgroundColor: ['#387f1c', '#dc843a'],
+                        borderWidth: 0,
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: { callbacks: { label: (ctx) => `R$ ${ctx.raw} milhões` } }
+                    },
+                    cutout: '55%'
+                }
+            });
+        }
+
+        // Rolagem suave para âncoras internas
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if(targetId !== "#" && targetId !== "" && targetId !== "#dados-destaque" && targetId !== "#institucional" && targetId !== "#academico" && targetId !== "#orcamento") {
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        e.preventDefault();
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>

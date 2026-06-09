@@ -13,9 +13,10 @@
     <link rel="stylesheet" href="../../style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+
         :root {
-            --primary-color: #387f1c;
-            --secondary-color: #59e462;
+            --primary-color: #1c7f5e;
+            --secondary-color: #59e49a;
             --success-color: #1cc88a;
             --warning-color: #f6c23e;
             --danger-color: #e74a3b;
@@ -31,7 +32,7 @@
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* hero section  */
+        /* hero section*/
         .hero {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -295,11 +296,10 @@
 
             <nav class="main-nav" role="navigation">
                 <ul class="nav-list">
-                    <li><a href="../../index.html" class="active"><i class="fas fa-home"></i>Início</a></li>
-                    <li><a href="institucional.html"><i class="fas fa-university"></i>A instituição</a></li>
-                    <li><a href="academico.html"><i class="fas fa-graduation-cap"></i>Vida Acadêmica</a></li>
-                    <li><a href="orcamento.html"><i class="fas fa-chart-pie"></i>Gestão e Orçamento</a></li>
-                    <li><a href="../dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+                <li><a href="Dadosforms.html"><i class="fas fa-home"></i> Início</a></li>
+                <li><a href="DadosDiscentes.html"><i class="fas fa-university"></i>Dados Discentes</a></li>
+                <li><a href="DadosDocentes.html"><i class="fas fa-graduation-cap"></i>Dados Docentes</a></li>
+                <li><a href="../dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
                 </ul>
 
                 <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -313,7 +313,7 @@
 
     <div class="menu-overlay" id="menuOverlay"></div>
 
-    <!-- Menu Mobilelateral -->
+    <!-- Menu Mobile lateral -->
     <nav class="nav-menu-mobile" id="navMenuMobile">
         <div class="menu-header">
             <div class="menu-logo">
@@ -328,10 +328,9 @@
             </button>
         </div>
         <ul>
-            <li><a href="../../index.html"><i class="fas fa-home"></i> Início</a></li>
-            <li><a href="institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
-            <li><a href="academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
-            <li><a href="orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
+            <li><a href="Dadosforms.html"><i class="fas fa-home"></i> Início</a></li>
+            <li><a href="DadosDiscentes.html"><i class="fas fa-university"></i>Dados Discentes</a></li>
+            <li><a href="DadosDocentes.html"><i class="fas fa-graduation-cap"></i>Dados Docentes</a></li>
             <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
         </ul>
     </nav>
@@ -341,9 +340,9 @@
         <!-- Seção Hero -->
         <section class="hero">
             <div>
-                <div class="hero-badge"><i class="fas fa-database"></i> Dados ENADE</div>
-                <h1>Dados <span>ENADE</span> Para Análise do Conhecimento</h1>
-                <p>Plataforma oficial de visualização, análise e transparência dos dados institucionais, acadêmicos e orçamentários do Instituto Federal da Paraíba. Acompanhe indicadores em tempo real.</p>
+                <div class="hero-badge"><i class="fas fa-database"></i> Dados Abertos IFPB</div>
+                <h1>Pesquisas com a Comunidade <span>Acadêmica</span></h1>
+                <p>Acompanhe os resultados das consultas realizadas com discentes e docentes do IFPB. Dados sobre perfil socioeconômico, deslocamento, assistência estudantil, projetos e permanência nos cursos.</p>
                 <div class="hero-buttons">
                     <a href="../dashboard.html" class="btn-primary" id="exploreMainBtn"><i class="fas fa-chart-simple"></i> Explorar Agora</a>
                     <a href="#dados-destaque" class="btn-outline"><i class="fas fa-arrow-trend-down"></i> Ver Indicadores</a>
@@ -374,25 +373,20 @@
         <div class="cards-grid" id="dados-destaque">
             <div class="card-modern">
                 <div class="card-icon"><i class="fas fa-building-columns"></i></div>
-                <h3>Institucional</h3>
-                <p>Estrutura organizacional, campi, servidores, CNPJ, indicadores de gestão e muito mais.</p>
-                <a href="institucional.html" class="card-link">Ver dados <i class="fas fa-arrow-right"></i></a>
+                <h3>Formulário Discentes</h3>
+                <p>Perfil dos estudantes, trabalho, deslocamento, assistência estudantil, projetos e desistência.</p>
+                <a href="DadosDiscentes.html" class="card-link">Ver dados <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="card-modern">
                 <div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
-                <h3>Vida Acadêmica</h3>
-                <p>Matrículas, evasão, corpo docente, cursos técnicos, graduação e pós-graduação.</p>
-                <a href="academico.html" class="card-link">Explorar <i class="fas fa-arrow-right"></i></a>
+                <h3>Formulário Docentes</h3>
+                <p>Perfil profissional, formação, condições de trabalho, uso de tecnologias e percepções sobre a carreira.</p>
+                <a href="DadosDocentes.html" class="card-link">Explorar <i class="fas fa-arrow-right"></i></a>
             </div>
-            <div class="card-modern">
-                <div class="card-icon"><i class="fas fa-chart-pie"></i></div>
-                <h3>Gestão e Orçamento</h3>
-                <p>Receitas, despesas, investimentos, execução orçamentária e transparência financeira.</p>
-                <a href="orcamento.html" class="card-link">Acessar dados <i class="fas fa-arrow-right"></i></a>
-            </div>
+
         </div>
 
-        <!-- Seção de destaques interativos com gráficos -->
+        <!-- Seção de destaques -->
         <div class="highlights">
             <div class="section-header">
                 <h2 class="section-title">Indicadores em Destaque</h2>
@@ -473,7 +467,7 @@
     </footer>
 
     <script>
-        // Menu mobile 
+        // Menu mobile
         const hamburger = document.getElementById('hamburger');
         const navMenuMobile = document.getElementById('navMenuMobile');
         const menuOverlay = document.getElementById('menuOverlay');
@@ -529,7 +523,7 @@
             });
         });
 
-        // Gráficos com Chart.js 
+        // Gráficos com Chart.js
         const ctxServ = document.getElementById('servidoresChartHome')?.getContext('2d');
         if(ctxServ) {
             new Chart(ctxServ, {
