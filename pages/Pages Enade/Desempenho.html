@@ -27,6 +27,8 @@
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        * { box-sizing: border-box; }
+
         .page-header {
             background: linear-gradient(135deg, var(--primary-color), #2a5f14);
             color: white;
@@ -68,6 +70,7 @@
             font-size: 0.95rem;
             background: var(--white);
             min-width: 160px;
+            max-width: 100%;
         }
         .filters button {
             background: var(--primary-color);
@@ -83,7 +86,7 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 1.5rem;
             margin: 2rem 0;
         }
@@ -100,7 +103,7 @@
 
         .chart-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 2rem;
             margin: 2rem 0;
         }
@@ -110,29 +113,62 @@
             padding: 1.5rem;
             border-radius: var(--radius);
             box-shadow: var(--shadow-sm);
+            min-width: 0; 
         }
         .chart-box h3 { margin-bottom: 1rem; color: var(--dark-color); font-size: 1.1rem; }
 
-        .ranking-table {
-            background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-            margin: 2rem 0;
+        /* tabela com rolagem */
+        .table-wrapper-scroll-y {
+            display: block;
+            max-height: 500px;
+            overflow-y: auto;
+            -ms-overflow-style: -ms-autohiding-scrollbar;
         }
-        .ranking-table-scroll { overflow-x: auto; }
-        .ranking-table table { width: 100%; border-collapse: collapse; }
-        .ranking-table th {
-            background: var(--light-color);
-            padding: 1rem;
+
+        .tableFixHead {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .tableFixHead thead th {
+            position: sticky;
+            top: 0;
+            background: var(--primary-color);
+            color: white;
+            z-index: 10;
+            padding: 0.8rem 0.5rem;
             text-align: left;
-            font-weight: 600;
-            color: var(--dark-color);
-            border-bottom: 2px solid #e9ecef;
             white-space: nowrap;
         }
-        .ranking-table td { padding: 1rem; border-bottom: 1px solid #f1f3f5; white-space: nowrap; }
-        .ranking-table tr:hover { background: #f8f9fc; }
+        .tableFixHead tbody td {
+            padding: 0.6rem 0.5rem;
+            border-bottom: 1px solid #e3e6f0;
+            white-space: nowrap;
+        }
+        .tableFixHead tbody tr:hover {
+            background: var(--light-color);
+        }
+
+        .my-custom-scrollbar {
+            position: relative;
+            height: 500px;
+            overflow: auto;
+        }
+        .my-custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .my-custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .my-custom-scrollbar::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+        .my-custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #2a5f14;
+        }
 
         .badge-conceito {
             display: inline-block;
@@ -245,11 +281,62 @@
         .heatmap-legend span { display: inline-flex; align-items: center; gap: 0.3rem; }
         .heatmap-legend .color-box { display: inline-block; width: 16px; height: 16px; border-radius: 3px; }
 
+        .chart-scroll-wrapper {
+            max-height: 380px;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 8px;
+        }
+
+        .chart-scroll-inner {
+            width: 700px;   
+            height: 340px;  
+            position: relative;
+        }
+
+        .chart-scroll-inner canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .chart-scroll-wrapper::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .chart-scroll-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .chart-scroll-wrapper::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+        .chart-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #2a5f14;
+        }
+
+       /*responsividade*/
+        @media (max-width: 992px) {
+            .chart-container { grid-template-columns: 1fr; }
+        }
+
         @media (max-width: 768px) {
             .chart-container { grid-template-columns: 1fr; }
             .filters { flex-direction: column; align-items: stretch; }
             .filters select { width: 100%; }
+            .filters button { width: 100%; }
             .page-header h1 { font-size: 1.8rem; }
+            .page-header p { font-size: 1rem; }
+            .my-custom-scrollbar { height: 350px; }
+            .chart-scroll-wrapper { max-height: 720px; }
+            .chart-scroll-inner { width: 640px; height: 300px; }
+        }
+
+        @media (max-width: 500px) {
+            .tableFixHead { font-size: 0.75rem; }
+            .tableFixHead th, .tableFixHead td { padding: 0.3rem 0.2rem; white-space: normal; }
+            .chart-scroll-inner { width: 560px; height: 600px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
@@ -340,11 +427,19 @@
         <div class="chart-container">
             <div class="chart-box">
                 <h3><i class="fas fa-chart-line"></i> Evolução das Notas por Curso</h3>
-                <canvas id="evolucaoChart" height="250"></canvas>
+                <div class="chart-scroll-wrapper">
+                    <div class="chart-scroll-inner">
+                        <canvas id="evolucaoChart"></canvas>
+                    </div>
+                </div>
             </div>
             <div class="chart-box">
                 <h3><i class="fas fa-chart-scatter"></i> Correlação: FG vs Conhecimento Específico</h3>
-                <canvas id="fgCeChart" height="250"></canvas>
+                <div class="chart-scroll-wrapper">
+                    <div class="chart-scroll-inner">
+                        <canvas id="fgCeChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -352,11 +447,19 @@
         <div class="chart-container">
             <div class="chart-box">
                 <h3><i class="fas fa-chart-pie"></i> Distribuição de Conceitos por Curso</h3>
-                <canvas id="conceitosChart" height="250"></canvas>
+                <div class="chart-scroll-wrapper">
+                    <div class="chart-scroll-inner">
+                        <canvas id="conceitosChart"></canvas>
+                    </div>
+                </div>
             </div>
             <div class="chart-box">
                 <h3><i class="fas fa-fire"></i> Média Geral Anual</h3>
-                <canvas id="mediaGeralChart" height="250"></canvas>
+                <div class="chart-scroll-wrapper">
+                    <div class="chart-scroll-inner">
+                        <canvas id="mediaGeralChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -369,13 +472,33 @@
         </div>
 
         <!-- Ranking -->
-        <div class="ranking-table">
-            <h3 style="padding: 1rem 1rem 0 1rem;"><i class="fas fa-trophy"></i> Ranking de Desempenho</h3>
-            <p style="padding: 0 1rem; color: var(--medium-color); font-size: 0.9rem;">
-                Clique em "Perfil" para ver todas as respostas do questionário já convertidas de código para texto.
+        <div class="ranking-table" style="margin: 2rem 0; background: white; border-radius: var(--radius); box-shadow: var(--shadow-sm); padding: 1.5rem;">
+            <h3 style="margin-bottom: 0.5rem;"><i class="fas fa-trophy"></i> Ranking de Desempenho</h3>
+            <p style="color: var(--medium-color); font-size: 0.9rem; margin-bottom: 1rem;">
+                Clique em "Perfil" para ver todas as respostas do questionário.
             </p>
-            <div id="rankingContainer">
-                <div class="loading"><i class="fas fa-spinner fa-spin"></i> Carregando dados...</div>
+            <div class="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
+                <table id="rankingTable" class="tableFixHead" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Curso</th>
+                            <th>Cidade</th>
+                            <th>Ano</th>
+                            <th>Nota Geral</th>
+                            <th>FG</th>
+                            <th>CE</th>
+                            <th>Sexo</th>
+                            <th>Idade</th>
+                            <th>Cor/Raça</th>
+                            <th>Renda</th>
+                            <th>Conceito</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rankingBody">
+                    </tbody>
+                </table>
             </div>
         </div>
     </main>
@@ -589,79 +712,78 @@
                 })
                 .catch(error => {
                     console.error('Erro ao carregar dados:', error);
-                    document.getElementById('rankingContainer').innerHTML = `
-                        <div style="padding: 2rem; text-align: center; color: #e74a3b;">
-                            <i class="fas fa-exclamation-circle" style="font-size: 2rem; display: block; margin-bottom: 1rem;"></i>
+                    document.getElementById('rankingBody').innerHTML = `
+                        <tr><td colspan="13" style="text-align:center;padding:2rem;color:#e74a3b;">
+                            <i class="fas fa-exclamation-circle" style="font-size:2rem;display:block;margin-bottom:1rem;"></i>
                             <p>Erro ao carregar os dados: ${error.message}</p>
-                            <p style="font-size: 0.9rem;">Verifique se o arquivo DADOSENADEGERAL.json existe em: assets/data/DadosENADE/</p>
-                        </div>
-                    `;
+                            <p style="font-size:0.9rem;">Verifique se o arquivo DADOSENADEGERAL.json existe em: assets/data/DadosENADE/</p>
+                        </td></tr>`;
                 });
         }
 
-function preencherFiltros() {
-    const anos = [...new Set(
-        dadosCompletos.map(d => String(d.ANO_EXAME || '').replace(/\.0$/, ''))
-            .filter(a => /^\d{4}$/.test(a))
-    )].sort();
+        function preencherFiltros() {
+            const anos = [...new Set(
+                dadosCompletos.map(d => String(d.ANO_EXAME || '').replace(/\.0$/, ''))
+                    .filter(a => /^\d{4}$/.test(a))
+            )].sort();
 
-    const nomesCursos = [...new Set(
-        dadosCompletos.map(d => getNomeCurso(d.CODIGO_CURSO))
-            .filter(n => n && n !== '')
-    )].sort();
+            const nomesCursos = [...new Set(
+                dadosCompletos.map(d => getNomeCurso(d.CODIGO_CURSO))
+                    .filter(n => n && n !== '')
+            )].sort();
 
-    const campi = [...new Set(
-        dadosCompletos.map(d => String(d.CO_MUNIC_CURSO || ''))
-            .filter(c => c && c !== '')
-    )];
+            const campi = [...new Set(
+                dadosCompletos.map(d => String(d.CO_MUNIC_CURSO || ''))
+                    .filter(c => c && c !== '')
+            )];
 
-    // IDs corretos: anoFilter, cursoFilter, campusFilter
-    const selA = document.getElementById('anoFilter');
-    selA.innerHTML = '<option value="todos">Todos os Anos</option>';
-    anos.forEach(ano => {
-        const opt = document.createElement('option');
-        opt.value = ano;
-        opt.textContent = ano;
-        selA.appendChild(opt);
-    });
+            const selA = document.getElementById('anoFilter');
+            selA.innerHTML = '<option value="todos">Todos os Anos</option>';
+            anos.forEach(ano => {
+                const opt = document.createElement('option');
+                opt.value = ano;
+                opt.textContent = ano;
+                selA.appendChild(opt);
+            });
 
-    const selC = document.getElementById('cursoFilter');
-    selC.innerHTML = '<option value="todos">Todos os Cursos</option>';
-    nomesCursos.forEach(nome => {
-        const opt = document.createElement('option');
-        opt.value = nome;
-        opt.textContent = nome;
-        selC.appendChild(opt);
-    });
+            const selC = document.getElementById('cursoFilter');
+            selC.innerHTML = '<option value="todos">Todos os Cursos</option>';
+            nomesCursos.forEach(nome => {
+                const opt = document.createElement('option');
+                opt.value = nome;
+                opt.textContent = nome;
+                selC.appendChild(opt);
+            });
 
-    const selCamp = document.getElementById('campusFilter');
-    selCamp.innerHTML = '<option value="todos">Todos</option>';
-    campi.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c;
-        opt.textContent = getNomeCampus(c) || c;
-        selCamp.appendChild(opt);
-    });
-}
-function aplicarFiltros() {
-    const ano = document.getElementById('anoFilter').value;
-    const curso = document.getElementById('cursoFilter').value;
-    const campus = document.getElementById('campusFilter').value;
+            const selCamp = document.getElementById('campusFilter');
+            selCamp.innerHTML = '<option value="todos">Todos</option>';
+            campi.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c;
+                opt.textContent = getNomeCampus(c) || c;
+                selCamp.appendChild(opt);
+            });
+        }
 
-    dadosFiltrados = dadosCompletos.filter(d => {
-        const anoDado = String(d.ANO_EXAME || '').replace(/\.0$/, '');
-        const nomeCurso = getNomeCurso(d.CODIGO_CURSO);
-        const campusDado = String(d.CO_MUNIC_CURSO || '');
+        function aplicarFiltros() {
+            const ano = document.getElementById('anoFilter').value;
+            const curso = document.getElementById('cursoFilter').value;
+            const campus = document.getElementById('campusFilter').value;
 
-        let ok = true;
-        if (ano !== 'todos' && anoDado !== ano) ok = false;
-        if (curso !== 'todos' && nomeCurso !== curso) ok = false;
-        if (campus !== 'todos' && campusDado !== campus) ok = false;
-        return ok;
-    });
+            dadosFiltrados = dadosCompletos.filter(d => {
+                const anoDado = String(d.ANO_EXAME || '').replace(/\.0$/, '');
+                const nomeCurso = getNomeCurso(d.CODIGO_CURSO);
+                const campusDado = String(d.CO_MUNIC_CURSO || '');
 
-    atualizarTudo();
-}
+                let ok = true;
+                if (ano !== 'todos' && anoDado !== ano) ok = false;
+                if (curso !== 'todos' && nomeCurso !== curso) ok = false;
+                if (campus !== 'todos' && campusDado !== campus) ok = false;
+                return ok;
+            });
+
+            atualizarTudo();
+        }
 
         // Resetar filtros
         function resetarFiltros() {
@@ -698,41 +820,29 @@ function aplicarFiltros() {
             }
         }
 
-        // Ranking
+        // ranking
         function renderRanking() {
-            const container = document.getElementById('rankingContainer');
+            const tbody = document.getElementById('rankingBody');
             if (!dadosFiltrados.length) {
-                container.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--medium-color);">
+                tbody.innerHTML = `<tr><td colspan="13" style="text-align:center;padding:2rem;color:var(--medium-color);">
                     <i class="fas fa-info-circle" style="font-size:1.5rem;display:block;margin-bottom:0.5rem;"></i>
-                    <p>Nenhum dado encontrado para os filtros selecionados.</p>
-                </div>`;
+                    Nenhum dado encontrado para os filtros selecionados.
+                </td></tr>`;
                 return;
             }
 
-            const sorted = [...dadosFiltrados].sort((a, b) => {
-                const na = parseNota(a.NOTA_GERAL) ?? parseNota(a.NOTA_FORMACAO_GERAL) ?? -1;
-                const nb = parseNota(b.NOTA_GERAL) ?? parseNota(b.NOTA_FORMACAO_GERAL) ?? -1;
-                return nb - na;
-            });
+            const sorted = [...dadosFiltrados].sort((a, b) => 
+                (parseNota(b.NOTA_GERAL) || -1) - (parseNota(a.NOTA_GERAL) || -1)
+            );
 
-            let html = `
-                <div class="ranking-table-scroll">
-                <table>
-                    <thead><tr>
-                        <th>#</th><th>Curso</th><th>Ano</th><th>Nota Geral</th>
-                        <th>Formação Geral</th><th>Conhec. Específico</th>
-                        <th>Sexo</th><th>Idade</th><th>Cor/Raça</th><th>Renda</th>
-                        <th>Conceito</th><th>Perfil</th>
-                    </tr></thead>
-                    <tbody>
-            `;
-
+            let html = '';
             sorted.forEach((d, i) => {
                 const notaGeral = parseNota(d.NOTA_GERAL);
                 const notaFG = parseNota(d.NOTA_FORMACAO_GERAL);
                 const notaCE = parseNota(d.NOTA_COMP_ESPECIFICO);
                 const conceito = getConceito(notaFG ?? notaGeral);
                 const nomeCurso = getNomeCurso(d.CODIGO_CURSO);
+                const cidade = getNomeCampus(d.CO_MUNIC_CURSO) || 'N/D';
                 const anoReg = window.detectarAno(d);
                 const sexo = window.getTexto(d, 'SEXO', anoReg);
                 const idade = window.getTexto(d, 'IDADE', anoReg);
@@ -741,8 +851,9 @@ function aplicarFiltros() {
                 const anoTexto = String(d.ANO_EXAME || '').replace(/\.0$/, '');
 
                 html += `<tr>
-                    <td>${i+1}</td>
+                    <td>${i + 1}</td>
                     <td>${nomeCurso}</td>
+                    <td>${cidade}</td>
                     <td>${anoTexto}</td>
                     <td>${notaGeral !== null ? notaGeral.toFixed(1) : 'N/D'}</td>
                     <td>${notaFG !== null ? notaFG.toFixed(1) : 'N/D'}</td>
@@ -752,12 +863,19 @@ function aplicarFiltros() {
                     <td>${cor}</td>
                     <td>${renda}</td>
                     <td><span class="badge-conceito ${conceito.class}">${conceito.label}</span></td>
-                    <td><button class="btn-perfil" onclick="abrirPerfil(${i})"><i class="fas fa-id-card"></i> Perfil</button></td>
+                    <td><button class="btn-perfil" data-index="${i}"><i class="fas fa-id-card"></i> Perfil</button></td>
                 </tr>`;
             });
 
-            html += `</tbody></table></div>`;
-            container.innerHTML = html;
+            tbody.innerHTML = html;
+
+            document.querySelectorAll('.btn-perfil').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const idx = parseInt(this.dataset.index);
+                    abrirPerfil(idx);
+                });
+            });
+
             window.__rankingAtual = sorted;
         }
 
@@ -821,7 +939,7 @@ function aplicarFiltros() {
                 chartEvolucao = new Chart(ctx, {
                     type: 'line',
                     data: { labels: ['Sem dados'], datasets: [{ label: 'Sem dados', data: [0] }] },
-                    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } } }
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
                 });
                 return;
             }
@@ -870,7 +988,7 @@ function aplicarFiltros() {
                 data: { labels: anos.map(a => String(a).replace(/\.0$/, '')), datasets },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     interaction: { mode: 'index', intersect: false },
                     plugins: {
                         legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8, padding: 16, font: { size: 10 } } },
@@ -905,7 +1023,7 @@ function aplicarFiltros() {
                 chartFgCe = new Chart(ctx, {
                     type: 'scatter',
                     data: { datasets: [{ label: 'Sem dados', data: [{ x: 0, y: 0 }] }] },
-                    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } } }
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
                 });
                 return;
             }
@@ -931,7 +1049,7 @@ function aplicarFiltros() {
                 data: { datasets },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8, padding: 12, font: { size: 10 } } },
                         tooltip: {
@@ -973,7 +1091,7 @@ function aplicarFiltros() {
                 chartConceitos = new Chart(ctx, {
                     type: 'bar',
                     data: { labels: ['Sem dados'], datasets: [{ data: [0], backgroundColor: '#ccc' }] },
-                    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } } }
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
                 });
                 return;
             }
@@ -993,7 +1111,7 @@ function aplicarFiltros() {
                 data: { labels, datasets },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8, font: { size: 10 } } },
                         tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y} alunos` } }
@@ -1016,7 +1134,7 @@ function aplicarFiltros() {
                 chartMediaGeral = new Chart(ctx, {
                     type: 'line',
                     data: { labels: ['Sem dados'], datasets: [{ data: [0], borderColor: '#ccc' }] },
-                    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } } }
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
                 });
                 return;
             }
@@ -1048,7 +1166,7 @@ function aplicarFiltros() {
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
                         tooltip: { callbacks: { label: (ctx) => `Média: ${ctx.parsed.y?.toFixed(1) || 'N/D'}` } }
