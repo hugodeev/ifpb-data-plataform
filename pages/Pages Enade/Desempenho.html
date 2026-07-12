@@ -599,57 +599,69 @@
                 });
         }
 
-        // Preencher filtros
-        function preencherFiltros() {
-            const anos = [...new Set(dadosCompletos.map(d => String(d.ANO_EXAME || '').replace(/\.0$/, ''))
-                    .filter(a => /^\d{4}$/.test(a)))].sort();
-            const cursos = [...new Set(dadosCompletos.map(d => String(d.CODIGO_CURSO)).filter(c => c))];
-            const campi = [...new Set(dadosCompletos.map(d => String(d.CO_MUNIC_CURSO)).filter(c => c && c !== ''))];
+function preencherFiltros() {
+    const anos = [...new Set(
+        dadosCompletos.map(d => String(d.ANO_EXAME || '').replace(/\.0$/, ''))
+            .filter(a => /^\d{4}$/.test(a))
+    )].sort();
 
-            const anoSelect = document.getElementById('anoFilter');
-            anoSelect.innerHTML = '<option value="todos">Todos os Anos</option>';
-            anos.forEach(ano => {
-                const opt = document.createElement('option');
-                opt.value = ano; opt.textContent = ano;
-                anoSelect.appendChild(opt);
-            });
+    const nomesCursos = [...new Set(
+        dadosCompletos.map(d => getNomeCurso(d.CODIGO_CURSO))
+            .filter(n => n && n !== '')
+    )].sort();
 
-            const cursoSelect = document.getElementById('cursoFilter');
-            cursoSelect.innerHTML = '<option value="todos">Todos os Cursos</option>';
-            cursos.forEach(curso => {
-                const opt = document.createElement('option');
-                opt.value = curso;
-                opt.textContent = getNomeCurso(curso);
-                cursoSelect.appendChild(opt);
-            });
+    const campi = [...new Set(
+        dadosCompletos.map(d => String(d.CO_MUNIC_CURSO || ''))
+            .filter(c => c && c !== '')
+    )];
 
-            const campusSelect = document.getElementById('campusFilter');
-            campusSelect.innerHTML = '<option value="todos">Todos</option>';
-            campi.forEach(c => {
-                const opt = document.createElement('option');
-                opt.value = c;
-                opt.textContent = getNomeCampus(c);
-                campusSelect.appendChild(opt);
-            });
-        }
+    // IDs corretos: anoFilter, cursoFilter, campusFilter
+    const selA = document.getElementById('anoFilter');
+    selA.innerHTML = '<option value="todos">Todos os Anos</option>';
+    anos.forEach(ano => {
+        const opt = document.createElement('option');
+        opt.value = ano;
+        opt.textContent = ano;
+        selA.appendChild(opt);
+    });
 
-        // Aplicar filtros
-        function aplicarFiltros() {
-            const ano = document.getElementById('anoFilter').value;
-            const curso = document.getElementById('cursoFilter').value;
-            const campus = document.getElementById('campusFilter').value;
-            dadosFiltrados = dadosCompletos.filter(d => {
-                const anoDado = String(d.ANO_EXAME || '').replace(/\.0$/, '');
-                const cursoDado = String(d.CODIGO_CURSO || '');
-                const campusDado = String(d.CO_MUNIC_CURSO || '');
-                let match = true;
-                if (ano !== 'todos' && anoDado !== ano) match = false;
-                if (curso !== 'todos' && cursoDado !== curso) match = false;
-                if (campus !== 'todos' && campusDado !== campus) match = false;
-                return match;
-            });
-            atualizarTudo();
-        }
+    const selC = document.getElementById('cursoFilter');
+    selC.innerHTML = '<option value="todos">Todos os Cursos</option>';
+    nomesCursos.forEach(nome => {
+        const opt = document.createElement('option');
+        opt.value = nome;
+        opt.textContent = nome;
+        selC.appendChild(opt);
+    });
+
+    const selCamp = document.getElementById('campusFilter');
+    selCamp.innerHTML = '<option value="todos">Todos</option>';
+    campi.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = getNomeCampus(c) || c;
+        selCamp.appendChild(opt);
+    });
+}
+function aplicarFiltros() {
+    const ano = document.getElementById('anoFilter').value;
+    const curso = document.getElementById('cursoFilter').value;
+    const campus = document.getElementById('campusFilter').value;
+
+    dadosFiltrados = dadosCompletos.filter(d => {
+        const anoDado = String(d.ANO_EXAME || '').replace(/\.0$/, '');
+        const nomeCurso = getNomeCurso(d.CODIGO_CURSO);
+        const campusDado = String(d.CO_MUNIC_CURSO || '');
+
+        let ok = true;
+        if (ano !== 'todos' && anoDado !== ano) ok = false;
+        if (curso !== 'todos' && nomeCurso !== curso) ok = false;
+        if (campus !== 'todos' && campusDado !== campus) ok = false;
+        return ok;
+    });
+
+    atualizarTudo();
+}
 
         // Resetar filtros
         function resetarFiltros() {
