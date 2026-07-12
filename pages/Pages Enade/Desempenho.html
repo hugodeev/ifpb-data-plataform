@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ENADE - Desempenho e Conceitos | IFPB Data Platform</title>
+    <link rel="shortcut icon" href="../../assets/img/logosite.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/Dadosabertosifpb.css">
+    <link rel="stylesheet" href="../../style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/conversor.js"></script>
+    <style>
+        :root {
+            --primary-color: #387f1c;
+            --secondary-color: #59e462;
+            --dark-color: #2e3a59;
+            --medium-color: #5a5c69;
+            --light-color: #f8f9fc;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --radius: 10px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color), #2a5f14);
+            color: white;
+            padding: 2.5rem 0;
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .page-header h1 { font-size: 2.4rem; font-weight: 700; }
+        .page-header p { opacity: 0.9; font-size: 1.1rem; max-width: 700px; margin: 0.5rem auto; }
+
+        .breadcrumb {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--medium-color);
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .breadcrumb a { color: var(--primary-color); text-decoration: none; }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+        }
+        .filters label { font-weight: 600; color: var(--dark-color); font-size: 0.9rem; }
+        .filters select {
+            padding: 0.6rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: var(--white);
+            min-width: 160px;
+        }
+        .filters button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .filters button:hover { background: #2a5f14; transform: translateY(-2px); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--primary-color);
+        }
+        .stat-card .number { font-size: 2rem; font-weight: 700; color: var(--primary-color); }
+        .stat-card .label { color: var(--medium-color); font-size: 0.9rem; }
+
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .chart-container.single { grid-template-columns: 1fr; }
+        .chart-box {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+        }
+        .chart-box h3 { margin-bottom: 1rem; color: var(--dark-color); font-size: 1.1rem; }
+
+        .ranking-table {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+        .ranking-table-scroll { overflow-x: auto; }
+        .ranking-table table { width: 100%; border-collapse: collapse; }
+        .ranking-table th {
+            background: var(--light-color);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark-color);
+            border-bottom: 2px solid #e9ecef;
+            white-space: nowrap;
+        }
+        .ranking-table td { padding: 1rem; border-bottom: 1px solid #f1f3f5; white-space: nowrap; }
+        .ranking-table tr:hover { background: #f8f9fc; }
+
+        .badge-conceito {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .conceito-5 { background: #1cc88a; color: white; }
+        .conceito-4 { background: #36b9cc; color: white; }
+        .conceito-3 { background: #f6c23e; color: #2e3a59; }
+        .conceito-2 { background: #e74a3b; color: white; }
+        .conceito-1 { background: #858796; color: white; }
+
+        .btn-perfil {
+            background: var(--dark-color);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-perfil:hover { background: var(--primary-color); }
+
+        .loading { text-align: center; padding: 3rem; color: var(--medium-color); }
+        .loading i { font-size: 2rem; margin-bottom: 1rem; display: block; }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(46,58,89,0.55);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: var(--white);
+            border-radius: var(--radius);
+            max-width: 720px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            background: var(--white);
+        }
+        .modal-header h3 { color: var(--dark-color); font-size: 1.2rem; }
+        .modal-close { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--medium-color); }
+        .modal-body { padding: 1.5rem; }
+        .modal-section-title {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin: 1.2rem 0 0.6rem 0;
+        }
+        .modal-section-title:first-child { margin-top: 0; }
+        .modal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 0.8rem;
+        }
+        .modal-item {
+            background: var(--light-color);
+            border-radius: 8px;
+            padding: 0.6rem 0.8rem;
+        }
+        .modal-item .label { display: block; font-size: 0.75rem; color: var(--medium-color); margin-bottom: 0.2rem; }
+        .modal-item .value { display: block; font-size: 0.9rem; color: var(--dark-color); font-weight: 600; }
+
+        .heatmap-container {
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        .heatmap-container table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .heatmap-container th {
+            position: sticky;
+            top: 0;
+            background: var(--light-color);
+            padding: 8px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .heatmap-container td { padding: 6px 8px; text-align: center; border-bottom: 1px solid #f1f3f5; }
+        .heatmap-container .curso-label { font-weight: 500; white-space: nowrap; }
+        .heatmap-legend {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
+            color: var(--medium-color);
+        }
+        .heatmap-legend span { display: inline-flex; align-items: center; gap: 0.3rem; }
+        .heatmap-legend .color-box { display: inline-block; width: 16px; height: 16px; border-radius: 3px; }
+
+        @media (max-width: 768px) {
+            .chart-container { grid-template-columns: 1fr; }
+            .filters { flex-direction: column; align-items: stretch; }
+            .filters select { width: 100%; }
+            .page-header h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header" id="main-header">
+        <div class="container">
+            <a href="../../index.html" class="logo">
+                <div class="logo-icon-wrap"><i class="fas fa-chart-bar"></i></div>
+                <div class="logo-text">
+                    <h1>IFPB Data Platform</h1>
+                    <p>Transparência • Análise • Inovação</p>
+                </div>
+            </a>
+            <nav class="main-nav" role="navigation">
+                <ul class="nav-list">
+                    <li><a href="dadosenade.html"><i class="fas fa-home"></i>Início</a></li>
+                    <li><a href="desempenho.html"><i class="fas fa-graduation-cap"></i>Desempenho</a></li>
+                    <li><a href="infraestrutura.html"><i class="fas fa-database"></i>Infraestrutura</a></li>
+                    <li><a href="perfil-estudante.html"><i class="fas fa-chart-pie"></i>Perfil Estudante</a></li>
+                    <li><a href="../PagesGeral/dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i>Explorar</a></li>
+                </ul>
+                <button class="hamburger" id="hamburger" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <nav class="nav-menu-mobile" id="navMenuMobile">
+        <div class="menu-header">
+            <div class="menu-logo">
+                <i class="fas fa-chart-bar"></i>
+                <div class="menu-logo-text">
+                    <span class="menu-logo-main">IFPB Data Platform</span>
+                    <span class="menu-logo-sub">Dados Abertos</span>
+                </div>
+            </div>
+            <button class="menu-close-btn" id="menuCloseBtn"><i class="fas fa-times"></i></button>
+        </div>
+        <ul>
+            <li><a href="../../index.html"><i class="fas fa-home"></i> Início</a></li>
+            <li><a href="dadosenade.html"><i class="fas fa-graduation-cap"></i> ENADE</a></li>
+            <li><a href="desempenho.html"><i class="fas fa-chart-bar"></i> Desempenho</a></li>
+            <li><a href="perfil-estudante.html"><i class="fas fa-user-graduate"></i> Perfil</a></li>
+            <li><a href="infraestrutura.html"><i class="fas fa-building"></i> Infraestrutura</a></li>
+            <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i> Explorar</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <div class="breadcrumb">
+            <a href="../../index.html">Início</a> <i class="fas fa-chevron-right"></i>
+            <a href="dadosenade.html">ENADE</a> <i class="fas fa-chevron-right"></i>
+            <span>Desempenho e Conceitos</span>
+        </div>
+
+        <div class="page-header">
+            <h1>Desempenho e Conceitos ENADE</h1>
+            <p>Análise da evolução das notas, conceitos e distribuição de desempenho dos cursos do IFPB</p>
+        </div>
+
+        <div class="filters">
+            <div>
+                <label for="anoFilter">Ano:</label>
+                <select id="anoFilter"><option value="todos">Todos os Anos</option></select>
+            </div>
+            <div>
+                <label for="cursoFilter">Curso:</label>
+                <select id="cursoFilter"><option value="todos">Todos os Cursos</option></select>
+            </div>
+            <div>
+                <label for="campusFilter">Campus:</label>
+                <select id="campusFilter"><option value="todos">Todos</option></select>
+            </div>
+            <button onclick="aplicarFiltros()"><i class="fas fa-filter"></i> Aplicar Filtros</button>
+            <button onclick="resetarFiltros()" style="background: #6c757d;"><i class="fas fa-undo"></i> Resetar</button>
+        </div>
+
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card"><div class="number" id="totalRegistros">-</div><div class="label">Total de Registros</div></div>
+            <div class="stat-card"><div class="number" id="mediaGeral">-</div><div class="label">Média Geral</div></div>
+            <div class="stat-card"><div class="number" id="melhorNota">-</div><div class="label">Melhor Nota</div></div>
+            <div class="stat-card"><div class="number" id="totalCursos">-</div><div class="label">Cursos Distintos</div></div>
+        </div>
+
+        <!-- Gráficos: Evolução + Scatter -->
+        <div class="chart-container">
+            <div class="chart-box">
+                <h3><i class="fas fa-chart-line"></i> Evolução das Notas por Curso</h3>
+                <canvas id="evolucaoChart" height="250"></canvas>
+            </div>
+            <div class="chart-box">
+                <h3><i class="fas fa-chart-scatter"></i> Correlação: FG vs Conhecimento Específico</h3>
+                <canvas id="fgCeChart" height="250"></canvas>
+            </div>
+        </div>
+
+        <!-- Gráficos: Conceitos + Média Geral -->
+        <div class="chart-container">
+            <div class="chart-box">
+                <h3><i class="fas fa-chart-pie"></i> Distribuição de Conceitos por Curso</h3>
+                <canvas id="conceitosChart" height="250"></canvas>
+            </div>
+            <div class="chart-box">
+                <h3><i class="fas fa-fire"></i> Média Geral Anual</h3>
+                <canvas id="mediaGeralChart" height="250"></canvas>
+            </div>
+        </div>
+
+        <!-- Heatmap -->
+        <div class="chart-container single">
+            <div class="chart-box">
+                <h3><i class="fas fa-table"></i> Heatmap: Notas por Curso × Ano</h3>
+                <div id="heatmapContainer"></div>
+            </div>
+        </div>
+
+        <!-- Ranking -->
+        <div class="ranking-table">
+            <h3 style="padding: 1rem 1rem 0 1rem;"><i class="fas fa-trophy"></i> Ranking de Desempenho</h3>
+            <p style="padding: 0 1rem; color: var(--medium-color); font-size: 0.9rem;">
+                Clique em "Perfil" para ver todas as respostas do questionário já convertidas de código para texto.
+            </p>
+            <div id="rankingContainer">
+                <div class="loading"><i class="fas fa-spinner fa-spin"></i> Carregando dados...</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Perfil -->
+    <div class="modal-overlay" id="perfilModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="perfilModalTitulo">Perfil do estudante</h3>
+                <button class="modal-close" onclick="fecharPerfil()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="perfilModalCorpo"></div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">
+                        <div class="footer-logo-icon"><i class="fas fa-chart-bar"></i></div>
+                        <h3>IFPB Data Platform</h3>
+                    </div>
+                    <p>Plataforma de visualização e análise de dados públicos do Instituto Federal da Paraíba.</p>
+                    <div class="social-links">
+                        <a href="https://github.com/hugodeev/ifpb-data-plataform" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="mailto:ifpbdata@gmail.com" aria-label="E-mail"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>ENADE</h3>
+                    <ul class="footer-links">
+                        <li><a href="desempenho.html"><i class="fas fa-chevron-right"></i> Desempenho</a></li>
+                        <li><a href="perfil-estudante.html"><i class="fas fa-chevron-right"></i> Perfil do Estudante</a></li>
+                        <li><a href="infraestrutura.html"><i class="fas fa-chevron-right"></i> Infraestrutura</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Links Úteis</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.gov.br/inep" target="_blank"><i class="fas fa-chevron-right"></i> INEP</a></li>
+                        <li><a href="https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enade" target="_blank"><i class="fas fa-chevron-right"></i> Portal ENADE</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Configurações
+        let dadosCompletos = [];
+        let dadosFiltrados = [];
+        let chartEvolucao = null;
+        let chartFgCe = null;
+        let chartConceitos = null;
+        let chartMediaGeral = null;
+
+        // Mapeamento campus
+        const campusMap = {
+            '2507507': 'João Pessoa',
+            '2503704': 'Cajazeiras',
+            '2512309': 'Princesa Isabel',
+            '2506301': 'Guarabira',
+            '2503209': 'Cabedelo',
+            '2504009': 'Campina Grande',
+            '2509701': 'Monteiro',
+            '2516201': 'Sousa',
+            '2510808': 'Patos'
+        };
+
+        // Mapeamento cursos
+        const cursosMap = {
+            '49960': 'Design de Interiores',
+            '58391': 'Redes de Computadores',
+            '81312': 'Química',
+            '95089': 'Automação Industrial',
+            '95093': 'Automação Industrial',
+            '95104': 'Análise e Desenvolvimento de Sistemas',
+            '1166614': 'Análise e Desenvolvimento de Sistemas',
+            '114944': 'Construção de Edifícios',
+            '1167926': 'Gestão Comercial',
+            '123002': 'Gestão Ambiental',
+            '123105': 'Design Gráfico',
+            '123116': 'Segurança no Trabalho',
+            '123120': 'Gestão Ambiental',
+            '103481': 'Engenharia Elétrica',
+            '1262856': 'Engenharia Civil',
+            '1342196': 'Engenharia de Computação',
+            '1457168': 'Engenharia Civil',
+            '1457169': 'Engenharia Civil',
+            '1457171': 'Engenharia Mecânica',
+            '1128030': 'Matemática',
+            '1128096': 'Matemática',
+            '1176228': 'Letras - Língua Portuguesa',
+            '1188374': 'Física',
+            '1188396': 'Educação Física',
+            '123233': 'Química',
+            '1307356': 'Computação e Informática',
+            '1341255': 'Ciências Biológicas',
+            '100260': 'Administração',
+            '123237': 'Medicina Veterinária',
+            '1261262': 'Administração Pública'
+        };
+
+        // Cores por curso
+        const coresCursos = {
+            '49960':'#e74a3b','58391':'#36b9cc','81312':'#f39c12','95089':'#9b59b6','95093':'#9b59b6',
+            '95104':'#2ecc71','1166614':'#2ecc71','114944':'#e67e22','1167926':'#1abc9c',
+            '123002':'#387f1c','123105':'#e74a3b','123116':'#3498db','123120':'#387f1c',
+            '103481':'#1cc88a','1262856':'#8e44ad','1342196':'#d35400','1457168':'#2c3e50','1457169':'#2c3e50',
+            '1457171':'#16a085','1128030':'#f1c40f','1128096':'#f1c40f','1176228':'#e74a3b',
+            '1188374':'#3498db','1188396':'#2ecc71','123233':'#f39c12','1307356':'#9b59b6',
+            '1341255':'#1abc9c','100260':'#f6c23e','123237':'#e74a3b','1261262':'#36b9cc'
+        };
+
+        // Campos do perfil
+        const CAMPOS_PERFIL = {
+            'Dados Gerais': ['SEXO','IDADE','ESTADO_CIVIL','COR_RACA'],
+            'Condição Socioeconômica': ['MORADIA','PESSOAS_FAMILIA','RENDA_FAMILIAR','SITUACAO_FINANCEIRA','SITUACAO_TRABALHO','BOLSA_FINANCIAMENTO_TIPO','BOLSA_CUSTEIO','ACAO_AFIRMATIVA'],
+            'Trajetória Acadêmica': ['ESCOLARIDADE_PAI','ESCOLARIDADE_MAE','UF_ENSINO_MEDIO','TIPO_ESCOLA_EM','TIPO_CURSO_EM','LIVROS_LIDOS_ANO','HORAS_ESTUDO_SEMANA','ESTAGIO','MUDANCA_CIDADE_CURSO','TURNO_CONCENTRADO'],
+            'Percepção da Prova': ['PERCEPCAO_DIFICULDADE_FG','PERCEPCAO_DIFICULDADE_CE','PERCEPCAO_EXTENSAO_PROVA','PERCEPCAO_CLAREZA_FG','PERCEPCAO_CLAREZA_CE','PERCEPCAO_SUFICIENCIA_INFO','PERCEPCAO_DIFICULDADE_RESPONDER','PERCEPCAO_CONHECIMENTO_CONTEUDO','PERCEPCAO_TEMPO_GASTO'],
+            'Presença e Situação da Prova': ['PRESENCA_ENADE','PRESENCA_PROVA','PRESENCA_OBJ_FG','PRESENCA_DISC_FG','PRESENCA_OBJ_CE','PRESENCA_DISC_CE','SITUACAO_FG_Q1','SITUACAO_FG_Q2','SITUACAO_CE_Q1','SITUACAO_CE_Q2','SITUACAO_CE_Q3']
+        };
+
+        const LABELS_CAMPOS = {
+            SEXO:'Sexo', IDADE:'Idade', ESTADO_CIVIL:'Estado civil', COR_RACA:'Cor/Raça',
+            MORADIA:'Moradia', PESSOAS_FAMILIA:'Pessoas na família', RENDA_FAMILIAR:'Renda familiar',
+            SITUACAO_FINANCEIRA:'Situação financeira', SITUACAO_TRABALHO:'Situação de trabalho',
+            BOLSA_FINANCIAMENTO_TIPO:'Bolsa/Financiamento', BOLSA_CUSTEIO:'Bolsa acadêmica',
+            ACAO_AFIRMATIVA:'Ação afirmativa', ESCOLARIDADE_PAI:'Escolaridade do pai',
+            ESCOLARIDADE_MAE:'Escolaridade da mãe', UF_ENSINO_MEDIO:'UF do ensino médio',
+            TIPO_ESCOLA_EM:'Tipo de escola (EM)', TIPO_CURSO_EM:'Modalidade do EM',
+            LIVROS_LIDOS_ANO:'Livros lidos no ano', HORAS_ESTUDO_SEMANA:'Horas de estudo/semana',
+            ESTAGIO:'Fez estágio', MUDANCA_CIDADE_CURSO:'Mudou de cidade para o curso',
+            TURNO_CONCENTRADO:'Turno concentrado',
+            PERCEPCAO_DIFICULDADE_FG:'Dificuldade - Formação Geral',
+            PERCEPCAO_DIFICULDADE_CE:'Dificuldade - Comp. Específico',
+            PERCEPCAO_EXTENSAO_PROVA:'Extensão da prova',
+            PERCEPCAO_CLAREZA_FG:'Clareza - Formação Geral',
+            PERCEPCAO_CLAREZA_CE:'Clareza - Comp. Específico',
+            PERCEPCAO_SUFICIENCIA_INFO:'Suficiência das informações',
+            PERCEPCAO_DIFICULDADE_RESPONDER:'Dificuldade ao responder',
+            PERCEPCAO_CONHECIMENTO_CONTEUDO:'Conhecimento do conteúdo',
+            PERCEPCAO_TEMPO_GASTO:'Tempo gasto na prova',
+            PRESENCA_ENADE:'Presença no Enade', PRESENCA_PROVA:'Presença na prova',
+            PRESENCA_OBJ_FG:'Presença obj. Formação Geral', PRESENCA_DISC_FG:'Presença disc. Formação Geral',
+            PRESENCA_OBJ_CE:'Presença obj. Comp. Específico', PRESENCA_DISC_CE:'Presença disc. Comp. Específico',
+            SITUACAO_FG_Q1:'Situação FG - Questão 1', SITUACAO_FG_Q2:'Situação FG - Questão 2',
+            SITUACAO_CE_Q1:'Situação CE - Questão 1', SITUACAO_CE_Q2:'Situação CE - Questão 2',
+            SITUACAO_CE_Q3:'Situação CE - Questão 3'
+        };
+
+        // Funções auxiliares
+        function getConceito(nota) {
+            if (!nota || nota === '') return { label: 'N/A', class: '' };
+            const n = parseFloat(nota);
+            if (isNaN(n)) return { label: 'N/A', class: '' };
+            if (n >= 45) return { label: '5', class: 'conceito-5' };
+            if (n >= 35) return { label: '4', class: 'conceito-4' };
+            if (n >= 25) return { label: '3', class: 'conceito-3' };
+            if (n >= 15) return { label: '2', class: 'conceito-2' };
+            return { label: '1', class: 'conceito-1' };
+        }
+
+        function parseNota(valor) {
+            if (!valor || valor === '') return null;
+            let str = String(valor).trim();
+            str = str.replace(/[^0-9.,]/g, '');
+            str = str.replace(',', '.');
+            const parts = str.split('.');
+            if (parts.length > 2) str = parts.slice(0, -1).join('') + '.' + parts[parts.length - 1];
+            const parsed = parseFloat(str);
+            if (isNaN(parsed)) return null;
+            if (parsed < 0 || parsed > 100) return null;
+            return parsed;
+        }
+
+        function getNomeCurso(codigo) {
+            return cursosMap[codigo] || window.converterValor('CODIGO_CURSO', codigo, null) || codigo;
+        }
+
+        function getNomeCampus(codigo) {
+            return campusMap[codigo] || codigo;
+        }
+
+        function getPaletaCores(index) {
+            const paleta = [
+                '#e74a3b','#3498db','#2ecc71','#f39c12','#9b59b6',
+                '#1abc9c','#e67e22','#e84393','#00b894','#6c5ce7',
+                '#fdcb6e','#e17055','#0984e3','#00cec9','#fd79a8',
+                '#a29bfe','#55efc4','#fab1a0','#81ecec','#ff7675',
+                '#74b9ff','#55a3e0','#f8a5c2','#7bed9f','#70a1ff',
+                '#ff6b81','#2ed573','#ffa502','#1e90ff','#ff4757'
+            ];
+            return paleta[index % paleta.length];
+        }
+
+        // Carregar dados
+        function carregarDados() {
+            const url = '../../assets/data/DadosENADE/DADOSENADEGERAL.json';
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    dadosCompletos = data;
+                    dadosFiltrados = [...dadosCompletos];
+                    preencherFiltros();
+                    atualizarTudo();
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar dados:', error);
+                    document.getElementById('rankingContainer').innerHTML = `
+                        <div style="padding: 2rem; text-align: center; color: #e74a3b;">
+                            <i class="fas fa-exclamation-circle" style="font-size: 2rem; display: block; margin-bottom: 1rem;"></i>
+                            <p>Erro ao carregar os dados: ${error.message}</p>
+                            <p style="font-size: 0.9rem;">Verifique se o arquivo DADOSENADEGERAL.json existe em: assets/data/DadosENADE/</p>
+                        </div>
+                    `;
+                });
+        }
+
+        // Preencher filtros
+        function preencherFiltros() {
+            const anos = [...new Set(dadosCompletos.map(d => String(d.ANO_EXAME || '').replace(/\.0$/, ''))
+                    .filter(a => /^\d{4}$/.test(a)))].sort();
+            const cursos = [...new Set(dadosCompletos.map(d => String(d.CODIGO_CURSO)).filter(c => c))];
+            const campi = [...new Set(dadosCompletos.map(d => String(d.CO_MUNIC_CURSO)).filter(c => c && c !== ''))];
+
+            const anoSelect = document.getElementById('anoFilter');
+            anoSelect.innerHTML = '<option value="todos">Todos os Anos</option>';
+            anos.forEach(ano => {
+                const opt = document.createElement('option');
+                opt.value = ano; opt.textContent = ano;
+                anoSelect.appendChild(opt);
+            });
+
+            const cursoSelect = document.getElementById('cursoFilter');
+            cursoSelect.innerHTML = '<option value="todos">Todos os Cursos</option>';
+            cursos.forEach(curso => {
+                const opt = document.createElement('option');
+                opt.value = curso;
+                opt.textContent = getNomeCurso(curso);
+                cursoSelect.appendChild(opt);
+            });
+
+            const campusSelect = document.getElementById('campusFilter');
+            campusSelect.innerHTML = '<option value="todos">Todos</option>';
+            campi.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c;
+                opt.textContent = getNomeCampus(c);
+                campusSelect.appendChild(opt);
+            });
+        }
+
+        // Aplicar filtros
+        function aplicarFiltros() {
+            const ano = document.getElementById('anoFilter').value;
+            const curso = document.getElementById('cursoFilter').value;
+            const campus = document.getElementById('campusFilter').value;
+            dadosFiltrados = dadosCompletos.filter(d => {
+                const anoDado = String(d.ANO_EXAME || '').replace(/\.0$/, '');
+                const cursoDado = String(d.CODIGO_CURSO || '');
+                const campusDado = String(d.CO_MUNIC_CURSO || '');
+                let match = true;
+                if (ano !== 'todos' && anoDado !== ano) match = false;
+                if (curso !== 'todos' && cursoDado !== curso) match = false;
+                if (campus !== 'todos' && campusDado !== campus) match = false;
+                return match;
+            });
+            atualizarTudo();
+        }
+
+        // Resetar filtros
+        function resetarFiltros() {
+            document.getElementById('anoFilter').value = 'todos';
+            document.getElementById('cursoFilter').value = 'todos';
+            document.getElementById('campusFilter').value = 'todos';
+            dadosFiltrados = [...dadosCompletos];
+            atualizarTudo();
+        }
+
+        // Atualizar tudo
+        function atualizarTudo() {
+            atualizarStats();
+            renderRanking();
+            renderGraficos();
+        }
+
+        // Estatísticas
+        function atualizarStats() {
+            const total = dadosFiltrados.length;
+            document.getElementById('totalRegistros').textContent = total;
+
+            const notas = dadosFiltrados.map(d => parseNota(d.NOTA_GERAL)).filter(n => n !== null && !isNaN(n));
+            const cursos = new Set(dadosFiltrados.map(d => String(d.CODIGO_CURSO)).filter(c => c));
+            document.getElementById('totalCursos').textContent = cursos.size;
+
+            if (notas.length) {
+                const media = notas.reduce((a,b) => a+b, 0) / notas.length;
+                document.getElementById('mediaGeral').textContent = media.toFixed(1);
+                document.getElementById('melhorNota').textContent = Math.max(...notas).toFixed(1);
+            } else {
+                document.getElementById('mediaGeral').textContent = '-';
+                document.getElementById('melhorNota').textContent = '-';
+            }
+        }
+
+        // Ranking
+        function renderRanking() {
+            const container = document.getElementById('rankingContainer');
+            if (!dadosFiltrados.length) {
+                container.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--medium-color);">
+                    <i class="fas fa-info-circle" style="font-size:1.5rem;display:block;margin-bottom:0.5rem;"></i>
+                    <p>Nenhum dado encontrado para os filtros selecionados.</p>
+                </div>`;
+                return;
+            }
+
+            const sorted = [...dadosFiltrados].sort((a, b) => {
+                const na = parseNota(a.NOTA_GERAL) ?? parseNota(a.NOTA_FORMACAO_GERAL) ?? -1;
+                const nb = parseNota(b.NOTA_GERAL) ?? parseNota(b.NOTA_FORMACAO_GERAL) ?? -1;
+                return nb - na;
+            });
+
+            let html = `
+                <div class="ranking-table-scroll">
+                <table>
+                    <thead><tr>
+                        <th>#</th><th>Curso</th><th>Ano</th><th>Nota Geral</th>
+                        <th>Formação Geral</th><th>Conhec. Específico</th>
+                        <th>Sexo</th><th>Idade</th><th>Cor/Raça</th><th>Renda</th>
+                        <th>Conceito</th><th>Perfil</th>
+                    </tr></thead>
+                    <tbody>
+            `;
+
+            sorted.forEach((d, i) => {
+                const notaGeral = parseNota(d.NOTA_GERAL);
+                const notaFG = parseNota(d.NOTA_FORMACAO_GERAL);
+                const notaCE = parseNota(d.NOTA_COMP_ESPECIFICO);
+                const conceito = getConceito(notaFG ?? notaGeral);
+                const nomeCurso = getNomeCurso(d.CODIGO_CURSO);
+                const anoReg = window.detectarAno(d);
+                const sexo = window.getTexto(d, 'SEXO', anoReg);
+                const idade = window.getTexto(d, 'IDADE', anoReg);
+                const cor = window.getTexto(d, 'COR_RACA', anoReg);
+                const renda = window.getTexto(d, 'RENDA_FAMILIAR', anoReg);
+                const anoTexto = String(d.ANO_EXAME || '').replace(/\.0$/, '');
+
+                html += `<tr>
+                    <td>${i+1}</td>
+                    <td>${nomeCurso}</td>
+                    <td>${anoTexto}</td>
+                    <td>${notaGeral !== null ? notaGeral.toFixed(1) : 'N/D'}</td>
+                    <td>${notaFG !== null ? notaFG.toFixed(1) : 'N/D'}</td>
+                    <td>${notaCE !== null ? notaCE.toFixed(1) : 'N/D'}</td>
+                    <td>${sexo}</td>
+                    <td>${idade}</td>
+                    <td>${cor}</td>
+                    <td>${renda}</td>
+                    <td><span class="badge-conceito ${conceito.class}">${conceito.label}</span></td>
+                    <td><button class="btn-perfil" onclick="abrirPerfil(${i})"><i class="fas fa-id-card"></i> Perfil</button></td>
+                </tr>`;
+            });
+
+            html += `</tbody></table></div>`;
+            container.innerHTML = html;
+            window.__rankingAtual = sorted;
+        }
+
+        // Modal Perfil
+        function abrirPerfil(indice) {
+            const registro = window.__rankingAtual[indice];
+            if (!registro) return;
+            const ano = window.detectarAno(registro);
+            const nomeCurso = getNomeCurso(registro.CODIGO_CURSO);
+
+            document.getElementById('perfilModalTitulo').textContent =
+                `${nomeCurso} • Edição ${String(registro.ANO_EXAME || '').replace(/\.0$/, '')}`;
+
+            let corpo = '';
+            Object.keys(CAMPOS_PERFIL).forEach(secao => {
+                const campos = CAMPOS_PERFIL[secao].filter(c => registro[c] !== undefined && registro[c] !== '');
+                if (!campos.length) return;
+                corpo += `<div class="modal-section-title">${secao}</div><div class="modal-grid">`;
+                campos.forEach(campo => {
+                    const texto = window.getTexto(registro, campo, ano);
+                    const label = LABELS_CAMPOS[campo] || campo;
+                    corpo += `
+                        <div class="modal-item">
+                            <span class="label">${label}</span>
+                            <span class="value">${texto}</span>
+                        </div>
+                    `;
+                });
+                corpo += `</div>`;
+            });
+
+            if (!corpo) corpo = '<p style="color:var(--medium-color);">Não há respostas de questionário disponíveis.</p>';
+            document.getElementById('perfilModalCorpo').innerHTML = corpo;
+            document.getElementById('perfilModal').classList.add('active');
+        }
+
+        function fecharPerfil() {
+            document.getElementById('perfilModal').classList.remove('active');
+        }
+        document.getElementById('perfilModal').addEventListener('click', (e) => {
+            if (e.target.id === 'perfilModal') fecharPerfil();
+        });
+
+        // Gráficos
+        function renderGraficos() {
+            renderEvolucao();
+            renderFgCe();
+            renderConceitos();
+            renderMediaGeral();
+            renderHeatmap();
+        }
+
+        // 1. Evolução das notas
+        function renderEvolucao() {
+            const ctx = document.getElementById('evolucaoChart').getContext('2d');
+            const anos = [...new Set(dadosFiltrados.map(d => d.ANO_EXAME).filter(a => a && a !== ''))].sort();
+            const cursos = [...new Set(dadosFiltrados.map(d => d.CODIGO_CURSO).filter(c => c && c !== ''))];
+
+            if (!anos.length || !cursos.length) {
+                if (chartEvolucao) chartEvolucao.destroy();
+                chartEvolucao = new Chart(ctx, {
+                    type: 'line',
+                    data: { labels: ['Sem dados'], datasets: [{ label: 'Sem dados', data: [0] }] },
+                    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } } }
+                });
+                return;
+            }
+
+            const datasets = cursos.map((curso, idx) => {
+                const data = anos.map(ano => {
+                    const reg = dadosFiltrados.find(d => d.ANO_EXAME === ano && d.CODIGO_CURSO === curso);
+                    return reg ? (parseNota(reg.NOTA_GERAL) ?? parseNota(reg.NOTA_FORMACAO_GERAL)) : null;
+                });
+                const cor = getPaletaCores(idx);
+                return {
+                    label: getNomeCurso(curso),
+                    data: data,
+                    borderColor: cor,
+                    backgroundColor: cor + '33',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    spanGaps: true,
+                    borderWidth: 2
+                };
+            });
+
+            // Média geral
+            const mediaGeral = anos.map(ano => {
+                const notas = dadosFiltrados.filter(d => d.ANO_EXAME === ano)
+                    .map(d => parseNota(d.NOTA_GERAL) ?? parseNota(d.NOTA_FORMACAO_GERAL))
+                    .filter(n => n !== null);
+                return notas.length ? notas.reduce((a,b) => a+b,0) / notas.length : null;
+            });
+            datasets.push({
+                label: 'Média Geral',
+                data: mediaGeral,
+                borderColor: '#1a1a2e',
+                backgroundColor: 'rgba(26,26,46,0.05)',
+                borderDash: [8, 5],
+                borderWidth: 3,
+                pointRadius: 0,
+                fill: false,
+                tension: 0.3
+            });
+
+            if (chartEvolucao) chartEvolucao.destroy();
+            chartEvolucao = new Chart(ctx, {
+                type: 'line',
+                data: { labels: anos.map(a => String(a).replace(/\.0$/, '')), datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8, padding: 16, font: { size: 10 } } },
+                        tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(1) || 'N/D'}` } }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)' }, title: { display: true, text: 'Nota' } },
+                        x: { grid: { display: false }, title: { display: true, text: 'Ano' } }
+                    }
+                }
+            });
+        }
+
+        // 2. Scatter FG vs CE
+        function renderFgCe() {
+            const ctx = document.getElementById('fgCeChart').getContext('2d');
+
+            const pontos = [];
+            dadosFiltrados.forEach(d => {
+                const fg = parseNota(d.NOTA_FORMACAO_GERAL);
+                const ce = parseNota(d.NOTA_COMP_ESPECIFICO);
+                if (fg !== null && ce !== null) {
+                    const curso = getNomeCurso(d.CODIGO_CURSO);
+                    const ano = String(d.ANO_EXAME).replace(/\.0$/, '');
+                    const cor = coresCursos[d.CODIGO_CURSO] || '#888';
+                    pontos.push({ x: fg, y: ce, label: `${curso} (${ano})`, curso, cor });
+                }
+            });
+
+            if (!pontos.length) {
+                if (chartFgCe) chartFgCe.destroy();
+                chartFgCe = new Chart(ctx, {
+                    type: 'scatter',
+                    data: { datasets: [{ label: 'Sem dados', data: [{ x: 0, y: 0 }] }] },
+                    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } } }
+                });
+                return;
+            }
+
+            const cursosUnicos = [...new Set(pontos.map(p => p.curso))];
+            const datasets = cursosUnicos.map(curso => {
+                const pts = pontos.filter(p => p.curso === curso);
+                const cor = pts[0].cor;
+                return {
+                    label: curso,
+                    data: pts.map(p => ({ x: p.x, y: p.y })),
+                    backgroundColor: cor,
+                    borderColor: cor,
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    showLine: false
+                };
+            });
+
+            if (chartFgCe) chartFgCe.destroy();
+            chartFgCe = new Chart(ctx, {
+                type: 'scatter',
+                data: { datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8, padding: 12, font: { size: 10 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    const ponto = pontos.find(p => p.x === context.parsed.x && p.y === context.parsed.y);
+                                    return ponto ? `${ponto.label} – FG: ${ponto.x.toFixed(1)}, CE: ${ponto.y.toFixed(1)}` : '';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Formação Geral' }, min: 0, max: 100 },
+                        y: { title: { display: true, text: 'Conhecimento Específico' }, min: 0, max: 100 }
+                    }
+                }
+            });
+        }
+
+        // 3. Distribuição de conceitos
+        function renderConceitos() {
+            const ctx = document.getElementById('conceitosChart').getContext('2d');
+
+            const cursos = [...new Set(dadosFiltrados.map(d => d.CODIGO_CURSO).filter(c => c && c !== ''))];
+            const dadosConceitos = cursos.map(curso => {
+                const registros = dadosFiltrados.filter(d => d.CODIGO_CURSO === curso);
+                const conceitos = registros.map(d => {
+                    const nota = parseNota(d.NOTA_GERAL) ?? parseNota(d.NOTA_FORMACAO_GERAL);
+                    return getConceito(nota).label;
+                }).filter(c => c !== 'N/A');
+                const total = conceitos.length;
+                const contagem = { '5': 0, '4': 0, '3': 0, '2': 0, '1': 0 };
+                conceitos.forEach(c => { if (contagem[c] !== undefined) contagem[c]++; });
+                return { curso: getNomeCurso(curso), ...contagem, total };
+            }).filter(d => d.total > 0);
+
+            if (!dadosConceitos.length) {
+                if (chartConceitos) chartConceitos.destroy();
+                chartConceitos = new Chart(ctx, {
+                    type: 'bar',
+                    data: { labels: ['Sem dados'], datasets: [{ data: [0], backgroundColor: '#ccc' }] },
+                    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } } }
+                });
+                return;
+            }
+
+            const labels = dadosConceitos.map(d => d.curso);
+            const datasets = [
+                { label: 'Conceito 5', data: dadosConceitos.map(d => d['5']), backgroundColor: '#1cc88a' },
+                { label: 'Conceito 4', data: dadosConceitos.map(d => d['4']), backgroundColor: '#36b9cc' },
+                { label: 'Conceito 3', data: dadosConceitos.map(d => d['3']), backgroundColor: '#f6c23e' },
+                { label: 'Conceito 2', data: dadosConceitos.map(d => d['2']), backgroundColor: '#e74a3b' },
+                { label: 'Conceito 1', data: dadosConceitos.map(d => d['1']), backgroundColor: '#858796' }
+            ];
+
+            if (chartConceitos) chartConceitos.destroy();
+            chartConceitos = new Chart(ctx, {
+                type: 'bar',
+                data: { labels, datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8, font: { size: 10 } } },
+                        tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y} alunos` } }
+                    },
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Quantidade de Alunos' } }
+                    }
+                }
+            });
+        }
+
+        // 4. Média Geral Anual
+        function renderMediaGeral() {
+            const ctx = document.getElementById('mediaGeralChart').getContext('2d');
+            const anos = [...new Set(dadosFiltrados.map(d => d.ANO_EXAME).filter(a => a && a !== ''))].sort();
+
+            if (!anos.length) {
+                if (chartMediaGeral) chartMediaGeral.destroy();
+                chartMediaGeral = new Chart(ctx, {
+                    type: 'line',
+                    data: { labels: ['Sem dados'], datasets: [{ data: [0], borderColor: '#ccc' }] },
+                    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } } }
+                });
+                return;
+            }
+
+            const medias = anos.map(ano => {
+                const registros = dadosFiltrados.filter(d => d.ANO_EXAME === ano);
+                const notas = registros.map(d => parseNota(d.NOTA_GERAL) ?? parseNota(d.NOTA_FORMACAO_GERAL))
+                                       .filter(n => n !== null);
+                return notas.length ? notas.reduce((a,b) => a+b, 0) / notas.length : null;
+            });
+
+            const labels = anos.map(a => String(a).replace(/\.0$/, ''));
+
+            if (chartMediaGeral) chartMediaGeral.destroy();
+            chartMediaGeral = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Média Geral',
+                        data: medias,
+                        borderColor: '#2c3e50',
+                        backgroundColor: 'rgba(44,62,80,0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#2c3e50'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: (ctx) => `Média: ${ctx.parsed.y?.toFixed(1) || 'N/D'}` } }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Nota' } },
+                        x: { title: { display: true, text: 'Ano' } }
+                    }
+                }
+            });
+        }
+
+        // 5. Heatmap
+        function renderHeatmap() {
+            const container = document.getElementById('heatmapContainer');
+
+            const anos = [...new Set(dadosFiltrados.map(d => d.ANO_EXAME).filter(a => a && a !== ''))].sort();
+            const cursos = [...new Set(dadosFiltrados.map(d => d.CODIGO_CURSO).filter(c => c && c !== ''))];
+
+            if (!anos.length || !cursos.length) {
+                container.innerHTML = '<p style="text-align:center;color:var(--medium-color);padding:2rem;">Nenhum dado para heatmap</p>';
+                return;
+            }
+
+            let html = `
+                <div class="heatmap-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Curso</th>
+                                ${anos.map(ano => `<th>${String(ano).replace(/\.0$/,'')}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            cursos.forEach(curso => {
+                const nome = getNomeCurso(curso);
+                html += `<tr><td class="curso-label">${nome}</td>`;
+                anos.forEach(ano => {
+                    const reg = dadosFiltrados.find(d => d.ANO_EXAME === ano && d.CODIGO_CURSO === curso);
+                    const nota = reg ? (parseNota(reg.NOTA_GERAL) ?? parseNota(reg.NOTA_FORMACAO_GERAL)) : null;
+                    let cor = '#f1f3f5', texto = '—';
+                    if (nota !== null) {
+                        texto = nota.toFixed(1);
+                        const intensidade = Math.min(1, nota / 50);
+                        const r = Math.round(255 * (1 - intensidade));
+                        const g = Math.round(255 * intensidade);
+                        cor = `rgb(${r}, ${g}, 80)`;
+                    }
+                    html += `<td style="background:${cor};color:${nota !== null && nota > 40 ? '#fff' : '#333'};">${texto}</td>`;
+                });
+                html += `</tr>`;
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+                <div class="heatmap-legend">
+                    <span><span class="color-box" style="background:rgb(255,80,80);"></span> Baixa</span>
+                    <span><span class="color-box" style="background:rgb(168,168,80);"></span> Média</span>
+                    <span><span class="color-box" style="background:rgb(80,255,80);"></span> Alta</span>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // Menu mobile
+        const hamburger = document.getElementById('hamburger');
+        const navMenuMobile = document.getElementById('navMenuMobile');
+        const menuOverlay = document.getElementById('menuOverlay');
+
+        function closeMenu() {
+            hamburger?.classList.remove('active');
+            navMenuMobile?.classList.remove('active');
+            menuOverlay?.classList.remove('active');
+            document.body.classList.remove('menu-open');
+        }
+
+        function openMenu() {
+            hamburger?.classList.add('active');
+            navMenuMobile?.classList.add('active');
+            menuOverlay?.classList.add('active');
+            document.body.classList.add('menu-open');
+        }
+
+        hamburger?.addEventListener('click', () => {
+            navMenuMobile?.classList.contains('active') ? closeMenu() : openMenu();
+        });
+        menuOverlay?.addEventListener('click', closeMenu);
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', carregarDados);
+    </script>
+</body>
+</html>
