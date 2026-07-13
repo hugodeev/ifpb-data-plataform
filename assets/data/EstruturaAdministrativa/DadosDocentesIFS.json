@@ -1,0 +1,209 @@
+[
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Areia",
+    "Total de Servidores": 21,
+    "TAEs": 2,
+    "Docentes": 19,
+    "Docentes Efetivos": 13,
+    "ITCD": 4.3
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Avançado João Pessoa Mangabeira",
+    "Total de Servidores": 28,
+    "TAEs": 8,
+    "Docentes": 20,
+    "Docentes Efetivos": 16,
+    "ITCD": 4.3
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Avançado Soledade",
+    "Total de Servidores": 12,
+    "TAEs": 2,
+    "Docentes": 10,
+    "Docentes Efetivos": 7,
+    "ITCD": 4.3
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Cabedelo",
+    "Total de Servidores": 138,
+    "TAEs": 41,
+    "Docentes": 97,
+    "Docentes Efetivos": 89,
+    "ITCD": 4.5
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Cabedelo Centro",
+    "Total de Servidores": 47,
+    "TAEs": 10,
+    "Docentes": 37,
+    "Docentes Efetivos": 32,
+    "ITCD": 4.4
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Cajazeiras",
+    "Total de Servidores": 171,
+    "TAEs": 64,
+    "Docentes": 107,
+    "Docentes Efetivos": 94,
+    "ITCD": 4.3
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Campina Grande",
+    "Total de Servidores": 284,
+    "TAEs": 95,
+    "Docentes": 189,
+    "Docentes Efetivos": 168,
+    "ITCD": 4.5
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Catolé do Rocha",
+    "Total de Servidores": 59,
+    "TAEs": 20,
+    "Docentes": 39,
+    "Docentes Efetivos": 28,
+    "ITCD": 4.2
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Esperança",
+    "Total de Servidores": 53,
+    "TAEs": 17,
+    "Docentes": 36,
+    "Docentes Efetivos": 33,
+    "ITCD": 4.3
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Guarabira",
+    "Total de Servidores": 79,
+    "TAEs": 24,
+    "Docentes": 55,
+    "Docentes Efetivos": 46,
+    "ITCD": 4.3
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Itabaiana",
+    "Total de Servidores": 60,
+    "TAEs": 17,
+    "Docentes": 43,
+    "Docentes Efetivos": 31,
+    "ITCD": 4.5
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Itaporanga",
+    "Total de Servidores": 53,
+    "TAEs": 16,
+    "Docentes": 37,
+    "Docentes Efetivos": 28,
+    "ITCD": 4.1
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus João Pessoa",
+    "Total de Servidores": 656,
+    "TAEs": 212,
+    "Docentes": 444,
+    "Docentes Efetivos": 419,
+    "ITCD": 4.4
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Monteiro",
+    "Total de Servidores": 93,
+    "TAEs": 24,
+    "Docentes": 69,
+    "Docentes Efetivos": 52,
+    "ITCD": 4.1
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Patos",
+    "Total de Servidores": 113,
+    "TAEs": 37,
+    "Docentes": 76,
+    "Docentes Efetivos": 61,
+    "ITCD": 4.3
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Pedras de Fogo",
+    "Total de Servidores": 23,
+    "TAEs": 3,
+    "Docentes": 20,
+    "Docentes Efetivos": 16,
+    "ITCD": 4.1
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Picuí",
+    "Total de Servidores": 92,
+    "TAEs": 23,
+    "Docentes": 69,
+    "Docentes Efetivos": 57,
+    "ITCD": 4.5
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Princesa Isabel",
+    "Total de Servidores": 80,
+    "TAEs": 28,
+    "Docentes": 52,
+    "Docentes Efetivos": 42,
+    "ITCD": 4.4
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Santa Luzia",
+    "Total de Servidores": 36,
+    "TAEs": 11,
+    "Docentes": 25,
+    "Docentes Efetivos": 22,
+    "ITCD": 4.5
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Santa Rita",
+    "Total de Servidores": 62,
+    "TAEs": 20,
+    "Docentes": 42,
+    "Docentes Efetivos": 35,
+    "ITCD": 4.4
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Campus Sousa",
+    "Total de Servidores": 196,
+    "TAEs": 89,
+    "Docentes": 107,
+    "Docentes Efetivos": 90,
+    "ITCD": 4.5
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Polo de Inovação João Pessoa",
+    "Total de Servidores": 4,
+    "TAEs": 4,
+    "Docentes": "(Em branco)",
+    "Docentes Efetivos": "(Em branco)",
+    "ITCD": "(Em branco)"
+  },
+  {
+    "Instituição": "IFPB",
+    "Estrutura": "Reitoria do Instituto Federal da Paraíba",
+    "Total de Servidores": 254,
+    "TAEs": 254,
+    "Docentes": "(Em branco)",
+    "Docentes Efetivos": "(Em branco)",
+    "ITCD": "(Em branco)"
+  }
+]
