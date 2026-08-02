@@ -1,107 +1,850 @@
 'use strict';
 
-/* um truque pra não executar funções muitas vezes seguidas (debounce) */
+// ============================================================
+// FUNÇÕES AUXILIARES
+// ============================================================
+
 function debounce(fn, delay = 100) {
     let t;
     return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), delay); };
 }
 
-/* suavidade na animação (easing) */
 function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 
-/* TELA DE CARREGAMENTO INICIAL */
-function initPageLoader() {
-    const loader = document.getElementById('page-loader');
-    if (!loader) return;
-
-    // espera a barra de progresso terminar antes de sumir
-    const hideAfter = window.performance?.now() < 100 ? 1400 : 800;
-
-    window.addEventListener('load', () => {
-        setTimeout(() => {
-            loader.classList.add('hidden');
-            setTimeout(() => loader.remove(), 600);
-        }, hideAfter);
-    });
-
-    // segurança: esconde depois de 3s caso o evento 'load' não role
-    setTimeout(() => loader.classList.add('hidden'), 3000);
+function formatarNumero(num) {
+    if (num === undefined || num === null || isNaN(num)) return '---';
+    return num.toLocaleString('pt-BR');
 }
 
-/* cursor personalizado (só pra telas grandes, sem toque) */
-function initCursor() {
-    // detecta se é dispositivo touch - aí não usamos cursor customizado
-    if (window.matchMedia('(pointer: coarse)').matches) return;
+function abreviarCampus(nome) {
+    const siglas = {
+        'CAMPUS JOÃO PESSOA': 'JP',
+        'CAMPUS CAMPINA GRANDE': 'CG',
+        'CAMPUS CABEDELO': 'CB',
+        'CAMPUS SOUSA': 'SS',
+        'CAMPUS CAJAZEIRAS': 'CZ',
+        'CAMPUS PATOS': 'PT',
+        'CAMPUS MONTEIRO': 'MT',
+        'CAMPUS PICUÍ': 'PC',
+        'CAMPUS GUARABIRA': 'GB',
+        'CAMPUS SANTA RITA': 'SR',
+        'CAMPUS ESPERANÇA': 'ES',
+        'CAMPUS ITABAIANA': 'IB',
+        'CAMPUS CATOLÉ DO ROCHA': 'CR',
+        'CAMPUS ITAPORANGA': 'IP',
+        'CAMPUS SANTA LUZIA': 'SL',
+        'CAMPUS PEDRAS DE FOGO': 'PF',
+        'CAMPUS SOLEDADE': 'SD',
+        'CAMPUS AREIA': 'AR',
+        'CAMPUS MANGABEIRA': 'MG',
+        'CAMPUS SAPÉ': 'SP',
+        'CAMPUS QUEIMADAS': 'QM',
+        'CAMPUS CABEDELO CENTRO': 'CC',
+        'CAMPUS ALAGOA GRANDE': 'AG',
+        'CAMPUS MAMANGUAPE': 'MM'
+    };
+    return siglas[nome] || nome.substring(0, 3).toUpperCase();
+}
 
-    const cursor = document.getElementById('cursor');
-    const follower = document.getElementById('cursor-follower');
-    if (!cursor || !follower) return;
+// ============================================================
+// COORDENADAS (mesmas da institucional)
+// ============================================================
+const coordenadas = {
+    'JOÃO PESSOA': [-7.1355914, -34.8737658],
+    'MANGABEIRA': [-7.144524049356752, -34.84309308192913],
+    'CABEDELO': [-7.004253756122571, -34.83429622482614],
+    'CABEDELO CENTRO': [-6.972477256482318, -34.83284496251898],
+    'SANTA RITA': [-7.146405401696038, -35.00017880373486],
+    'PEDRAS DE FOGO': [-7.402130107282982, -35.116958997056194],
+    'SAPÉ': [-7.088087839399216, -35.24219855045258],
+    'MAMANGUAPE': [-6.8430, -35.1322],
+    'CAMPINA GRANDE': [-7.240083292649547, -35.916440283654204],
+    'GUARABIRA': [-6.85614486154378, -35.47118560492858],
+    'ESPERANÇA': [-7.036382672849143, -35.87264400018975],
+    'QUEIMADAS': [-7.363718929525841, -35.902364405575426],
+    'ALAGOA GRANDE': [-7.050440678515558, -35.62812103768465],
+    'AREIA': [-6.971811416211238, -35.69208555256188],
+    'ITABAIANA': [-7.304585270376579, -35.34658406045916],
+    'PATOS': [-7.074063937163226, -37.286673292057856],
+    'SOUSA': [-6.77972656614948, -38.230661598562975],
+    'CAJAZEIRAS': [-6.889503178694285, -38.545272237752144],
+    'CATOLÉ DO ROCHA': [-6.34076246254725, -37.75561476257022],
+    'MONTEIRO': [-7.905585607948157, -37.12096978124849],
+    'PRINCESA ISABEL': [-7.757790284177818, -38.01746961671981],
+    'ITAPORANGA': [-7.318675434110364, -38.14184020323397],
+    'PICUÍ': [-6.508625031820252, -36.360657868318356],
+    'SANTA LUZIA': [-6.8624879022738785, -36.911487582678966],
+    'SOLEDADE': [-7.060223036828175, -36.35652361471836]
+};
 
-    let mouseX = -100, mouseY = -100;
-    let followerX = -100, followerY = -100;
-    let rafId;
+// ============================================================
+// DADOS REAIS (variável global)
+// ============================================================
 
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
+let dadosReais = {
+    totalCampi: 0,
+    totalEstudantes: 0,
+    totalDocentes: 0,
+    totalTAEs: 0,
+    totalServidores: 0,
+    ultimoAno: null,
+    topCampi: [],
+    mapaDados: {},
+    orcamento: {
+        totalGeral: 0,
+        anoMaisRecente: null,
+        valorNoAno: 0,
+        porAno: {}
+    },
+    pesquisa: {
+        alunosRespondentes: 0,
+        professoresRespondentes: 0,
+        satisfacaoMedia: 0,
+        dataColeta: null
+    },
+    enade: {
+        faixaAnos: '',
+        cursosAvaliados: 0,
+        notaMedia: 0,
+        cursosConceitoMaximo: 0
+    },
+    dadosCampiMapa: [] // array com os dados do mapa
+};
 
-    function animateCursor() {
-        cursor.style.left = mouseX + 'px';
-        cursor.style.top = mouseY + 'px';
-
-        // o seguidor tem um movimento mais suave, atrasadinho
-        followerX += (mouseX - followerX) * 0.12;
-        followerY += (mouseY - followerY) * 0.12;
-        follower.style.left = followerX + 'px';
-        follower.style.top = followerY + 'px';
-
-        rafId = requestAnimationFrame(animateCursor);
+// ============================================================
+// RENDERIZAR MAPA COMPLETO (IGUAL À INSTITUCIONAL)
+// ============================================================
+function renderizarMapaPreview() {
+    const container = document.getElementById('map-preview-container');
+    if (!container) {
+        console.warn('Container do mapa não encontrado.');
+        return;
     }
-    rafId = requestAnimationFrame(animateCursor);
 
-    // aumenta o cursor quando passar em cima de elementos clicáveis
-    const hoverTargets = 'a, button, [role="button"], .db-card, .viz-card, .highlight-card';
-    document.addEventListener('mouseover', (e) => {
-        if (e.target.closest(hoverTargets)) {
-            cursor.style.transform = 'translate(-50%, -50%) scale(2)';
-            cursor.style.opacity = '0.5';
-            follower.style.width = '56px';
-            follower.style.height = '56px';
+    if (typeof L === 'undefined') {
+        console.warn('Leaflet não carregado. Tentando novamente em 1s...');
+        setTimeout(renderizarMapaPreview, 1000);
+        return;
+    }
+
+    if (container._leaflet_id) {
+        container.innerHTML = '';
+    }
+
+    const dadosCampi = dadosReais.dadosCampiMapa || [];
+    if (dadosCampi.length === 0) {
+        console.warn('Nenhum dado de campi disponível. Usando fallback.');
+        const fallbackCampi = Object.keys(coordenadas).map(nome => ({
+            Nome: nome,
+            Municipio: nome,
+            Situacao: 'Campus Regular',
+            AreaFisica: '',
+            Total_Servidores: 0,
+            Docentes: 0,
+            TAEs: 0
+        }));
+        dadosReais.dadosCampiMapa = fallbackCampi;
+        renderizarMapaPreview();
+        return;
+    }
+
+    const map = L.map(container, {
+        zoomControl: true,
+        attributionControl: true
+    }).setView([-7.2, -36.5], 7);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    const cores = {
+        'Campus Regular': '#1cc88a',
+        'Campus Avançado': '#f6c23e',
+        'Em implatação': '#e74a3b',
+        'Em implantação': '#e74a3b',
+        'Centro administrativo e executivo': '#36b9cc'
+    };
+
+    const ordenados = [...dadosCampi].sort((a, b) => a.Nome.localeCompare(b.Nome, 'pt-BR'));
+
+    let marcadores = [];
+    ordenados.forEach((campus, idx) => {
+        let cidade = (campus.Municipio || '').toUpperCase().trim();
+        let coords = coordenadas[cidade];
+        if (!coords) {
+            const nomeSemCampus = campus.Nome.replace(/^CAMPUS\s+/i, '').toUpperCase().trim();
+            coords = coordenadas[nomeSemCampus];
+        }
+        if (!coords) {
+            console.warn('Coordenadas não encontradas para:', campus.Nome);
+            return;
+        }
+        const situacao = (campus.Situacao || '').trim();
+        const cor = cores[situacao] || '#858796';
+        const numero = idx + 1;
+
+        const icon = L.divIcon({
+            html: `<div style="background-color: ${cor}; color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">${numero}</div>`,
+            className: 'custom-marker',
+            iconSize: [28, 28],
+            iconAnchor: [14, 14]
+        });
+
+        const marker = L.marker(coords, { icon: icon })
+            .bindPopup(`
+                <strong>${campus.Nome}</strong><br>
+                Município: ${campus.Municipio || ''}<br>
+                Situação: ${situacao}<br>
+                Servidores: ${campus.Total_Servidores || 'N/D'}<br>
+                Docentes: ${campus.Docentes || 'N/D'}<br>
+                TAEs: ${campus.TAEs || 'N/D'}<br>
+                Área: ${campus.AreaFisica || 'N/D'}
+            `);
+        marker.addTo(map);
+        marcadores.push({ numero, nome: campus.Nome, coords });
+    });
+
+    if (marcadores.length > 0) {
+        const group = L.featureGroup(marcadores.map(m => L.marker(m.coords)));
+        map.fitBounds(group.getBounds().pad(0.1));
+    }
+
+    const legendContainer = document.getElementById('map-legend');
+    if (legendContainer) {
+        const situacoes = ['Campus Regular', 'Campus Avançado', 'Em implantação', 'Centro administrativo e executivo'];
+        let legendHtml = '';
+        situacoes.forEach(sit => {
+            const cor = cores[sit] || '#858796';
+            legendHtml += `<span><span style="display:inline-block;width:16px;height:16px;background:${cor};border-radius:4px;vertical-align:middle;"></span> ${sit}</span>`;
+        });
+        legendContainer.innerHTML = legendHtml;
+    }
+
+    // ===== REDIRECIONAMENTO PARA A PÁGINA INSTITUCIONAL =====
+    container.style.cursor = 'pointer';
+    container.addEventListener('click', function(e) {
+        if (!e.target.closest('.leaflet-marker-icon')) {
+window.location.href = 'institucional.html#chart-mapa';
         }
     });
-    document.addEventListener('mouseout', (e) => {
-        if (e.target.closest(hoverTargets)) {
-            cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-            cursor.style.opacity = '1';
-            follower.style.width = '36px';
-            follower.style.height = '36px';
+
+    console.log(`🗺️ Mapa renderizado com ${marcadores.length} marcadores.`);
+}
+
+// ============================================================
+// CARREGAR DADOS (incluindo institucional e servidores)
+// ============================================================
+async function carregarDadosReais() {
+    try {
+        const basePath = 'assets/data/';
+        const caminhoCampi = basePath + 'Campi/campi.json';
+        const caminhoServ = basePath + 'EstruturaAdministrativa/DadosDocentesIFS.json';
+        const caminhoMat = basePath + 'EstruturaAdministrativa/dadosAdministrativos.json';
+        const caminhoOrc = basePath + 'DadosOrçamentario/dadosOrcamentario.json';
+        const caminhoDiscentes = basePath + 'DadosFormularios/dadosDiscentes.json';
+        const caminhoDocentes = basePath + 'DadosFormularios/dadosDocentes.json';
+        const caminhoEnade = basePath + 'DadosENADE/DADOSENADEGERAL.json';
+        // JSON institucional (AnoCriaçãoAreaFísica.json) – opcional
+        const caminhoInst = basePath + 'Dadosinstitucionais/AnoCriaçãoAreaFísica.json';
+
+        console.log('📥 Carregando dados...');
+
+        const [resCampi, resServ, resMat, resOrc, resDiscentes, resDocentes, resEnade, resInst] = await Promise.all([
+            fetch(caminhoCampi),
+            fetch(caminhoServ),
+            fetch(caminhoMat),
+            fetch(caminhoOrc),
+            fetch(caminhoDiscentes),
+            fetch(caminhoDocentes),
+            fetch(caminhoEnade),
+            fetch(caminhoInst).catch(() => ({ ok: false }))
+        ]);
+
+        if (!resCampi.ok || !resServ.ok || !resMat.ok || !resOrc.ok) {
+            throw new Error(`HTTP ${resCampi.status} / ${resServ.status} / ${resMat.status} / ${resOrc.status}`);
+        }
+
+        const campi = await resCampi.json();
+        const dadosServ = await resServ.json();
+        const dadosMat = await resMat.json();
+        const dadosOrc = await resOrc.json();
+
+        // ----- CARREGAR DADOS INSTITUCIONAIS (mapa) -----
+        let dadosInst = [];
+        if (resInst && resInst.ok) {
+            dadosInst = await resInst.json();
+            console.log(`✅ Institucional (AnoCriaçãoAreaFísica.json): ${dadosInst.length} registros carregados`);
+        } else {
+            console.warn('⚠️ Arquivo institucional (AnoCriaçãoAreaFísica.json) não encontrado. Usando fallback.');
+        }
+
+        // ----- DADOS DE PESQUISA (formulários) -----
+        let discentes = [];
+        let docentes = [];
+        let dataColeta = null;
+
+        if (resDiscentes.ok) {
+            discentes = await resDiscentes.json();
+            console.log(`✅ Discentes: ${discentes.length} respostas`);
+        } else {
+            console.warn('⚠️ Arquivo de discentes não encontrado. Usando fallback.');
+        }
+
+        if (resDocentes.ok) {
+            docentes = await resDocentes.json();
+            console.log(`✅ Docentes: ${docentes.length} respostas`);
+        } else {
+            console.warn('⚠️ Arquivo de docentes não encontrado. Usando fallback.');
+        }
+
+        // Processa datas de coleta
+        const todasRespostas = [...discentes, ...docentes];
+        if (todasRespostas.length > 0) {
+            const timestamps = todasRespostas
+                .map(r => r['Carimbo de data/hora'])
+                .filter(ts => ts && ts.trim() !== '')
+                .map(ts => new Date(ts).getTime())
+                .filter(ts => !isNaN(ts));
+            if (timestamps.length > 0) {
+                const maisRecente = new Date(Math.max(...timestamps));
+                dataColeta = maisRecente.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+            }
+        }
+
+        // Calcula satisfação média dos docentes
+        let somaSatisfacao = 0;
+        let countSatisfacao = 0;
+        const mapaSatisfacao = {
+            'Muito satisfeito': 5,
+            'Satisfeito': 4,
+            'Neutro': 3,
+            'Insatisfeito': 2,
+            'Muito insatisfeito': 1
+        };
+        docentes.forEach(d => {
+            const nivel = d['Qual seu nível de satisfação com o trabalho no IFPB?'];
+            if (nivel && mapaSatisfacao[nivel] !== undefined) {
+                somaSatisfacao += mapaSatisfacao[nivel];
+                countSatisfacao++;
+            }
+        });
+        const satisfacaoMedia = countSatisfacao > 0 ? (somaSatisfacao / countSatisfacao) : 0;
+
+        // ----- DADOS ENADE (TODOS OS ANOS) -----
+        let dadosEnade = [];
+        let faixaAnos = 'Todos os anos';
+        let cursosAvaliados = 0;
+        let notaMedia = 0;
+        let cursosConceitoMaximo = 0;
+
+        if (resEnade.ok) {
+            dadosEnade = await resEnade.json();
+            console.log(`✅ ENADE: ${dadosEnade.length} registros carregados`);
+
+            let minAno = Infinity;
+            let maxAno = 0;
+            dadosEnade.forEach(item => {
+                const ano = parseInt(item.ANO_EXAME);
+                if (!isNaN(ano) && ano >= 1000) {
+                    if (ano < minAno) minAno = ano;
+                    if (ano > maxAno) maxAno = ano;
+                }
+            });
+            if (minAno !== Infinity && maxAno > 0) {
+                faixaAnos = minAno === maxAno ? `${minAno}` : `${minAno} – ${maxAno}`;
+            } else {
+                faixaAnos = 'Dados indisponíveis';
+            }
+
+            const cursosSet = new Set();
+            dadosEnade.forEach(item => {
+                cursosSet.add(item.CODIGO_CURSO);
+            });
+            cursosAvaliados = cursosSet.size;
+
+            let somaNotas = 0;
+            let countNotas = 0;
+            dadosEnade.forEach(item => {
+                let nota = parseFloat(item.NOTA_GERAL);
+                if (isNaN(nota)) nota = parseFloat(item.NOTA_DISC_FG);
+                if (!isNaN(nota)) {
+                    somaNotas += nota;
+                    countNotas++;
+                }
+            });
+            notaMedia = countNotas > 0 ? somaNotas / countNotas : 0;
+
+            const notasPorCurso = {};
+            dadosEnade.forEach(item => {
+                let nota = parseFloat(item.NOTA_GERAL);
+                if (isNaN(nota)) nota = parseFloat(item.NOTA_DISC_FG);
+                if (!isNaN(nota)) {
+                    const curso = item.CODIGO_CURSO;
+                    if (!notasPorCurso[curso]) notasPorCurso[curso] = [];
+                    notasPorCurso[curso].push(nota);
+                }
+            });
+            let cursosAlta = 0;
+            for (let curso in notasPorCurso) {
+                const medias = notasPorCurso[curso];
+                const mediaCurso = medias.reduce((a, b) => a + b, 0) / medias.length;
+                if (mediaCurso >= 80) cursosAlta++;
+            }
+            cursosConceitoMaximo = cursosAlta;
+
+        } else {
+            console.warn('⚠️ Arquivo ENADE não encontrado. Usando fallback.');
+        }
+
+        // ----- PROCESSAMENTO DOS DADOS INSTITUCIONAIS (para o mapa) -----
+        // Mapa de servidores (consolidado)
+        const mapaServ = {};
+        dadosServ.forEach(item => {
+            const nome = item.Estrutura.trim().toUpperCase();
+            mapaServ[nome] = {
+                Total_Servidores: parseFloat(item['Total de Servidores']) || 0,
+                TAEs: parseFloat(item['TAEs']) || 0,
+                Docentes: parseFloat(item['Docentes']) || 0,
+                Docentes_Efetivos: parseFloat(item['Docentes Efetivos']) || 0,
+                ITCD: item.ITCD || null
+            };
+        });
+
+        // ===== CONSTRUIR OS DADOS DO MAPA =====
+        let dadosCampiParaMapa = [];
+
+        // Tenta usar dadosInst (AnoCriaçãoAreaFísica.json) se existir
+        if (dadosInst && dadosInst.length > 0) {
+            dadosCampiParaMapa = dadosInst
+                .filter(c => c.Nome && c.Nome.trim() !== '')
+                .map(c => {
+                    const nome = c.Nome || c.Campi || '';
+                    const nomeLimpo = nome.trim().toUpperCase();
+                    const serv = mapaServ[nomeLimpo] || {};
+                    // Tenta extrair município do nome
+                    let municipio = '';
+                    const cidades = Object.keys(coordenadas);
+                    for (let cidade of cidades) {
+                        if (nome.toUpperCase().includes(cidade)) {
+                            municipio = cidade;
+                            break;
+                        }
+                    }
+                    if (!municipio) {
+                        const partes = nome.replace(/^CAMPUS\s+/i, '').trim().split(' ');
+                        municipio = partes[0] || '';
+                    }
+                    return {
+                        Nome: nome.trim(),
+                        Municipio: municipio,
+                        Situacao: c.Situação || 'Campus Regular',
+                        AreaFisica: c['Área física (m²)'] || '',
+                        Ano: c.Ano || '',
+                        Total_Servidores: serv.Total_Servidores || 0,
+                        TAEs: serv.TAEs || 0,
+                        Docentes: serv.Docentes || 0,
+                        Docentes_Efetivos: serv.Docentes_Efetivos || 0,
+                        ITCD: serv.ITCD || null
+                    };
+                });
+        }
+
+        // Se ainda não houver dados, usa campi.json como fallback
+        if (dadosCampiParaMapa.length === 0) {
+            console.warn('⚠️ Usando campi.json como fallback para o mapa.');
+            dadosCampiParaMapa = campi
+                .filter(item => item.Nome && item.Nome.toUpperCase().includes('CAMPUS'))
+                .map(c => {
+                    const nomeLimpo = c.Nome.trim().toUpperCase();
+                    const serv = mapaServ[nomeLimpo] || {};
+                    let municipio = c.Municipio || '';
+                    if (!municipio) {
+                        const partes = c.Nome.replace(/^CAMPUS\s+/i, '').trim().split(' ');
+                        municipio = partes[0] || '';
+                    }
+                    return {
+                        Nome: c.Nome.trim(),
+                        Municipio: municipio,
+                        Situacao: c.Situação || 'Campus Regular',
+                        AreaFisica: c['Área física (m²)'] || '',
+                        Ano: c.Ano || '',
+                        Total_Servidores: serv.Total_Servidores || 0,
+                        TAEs: serv.TAEs || 0,
+                        Docentes: serv.Docentes || 0,
+                        Docentes_Efetivos: serv.Docentes_Efetivos || 0,
+                        ITCD: serv.ITCD || null
+                    };
+                });
+            // Adiciona a Reitoria manualmente se não existir
+            if (!dadosCampiParaMapa.some(d => d.Nome.toUpperCase().includes('REITORIA'))) {
+                dadosCampiParaMapa.push({
+                    Nome: 'REITORIA',
+                    Municipio: 'João Pessoa',
+                    Situacao: 'Centro administrativo e executivo',
+                    AreaFisica: '1,63 hectare = 16.315 m²',
+                    Ano: '29 de dezembro de 2008',
+                    Total_Servidores: mapaServ['REITORIA'] ? mapaServ['REITORIA'].Total_Servidores : 0,
+                    TAEs: mapaServ['REITORIA'] ? mapaServ['REITORIA'].TAEs : 0,
+                    Docentes: mapaServ['REITORIA'] ? mapaServ['REITORIA'].Docentes : 0,
+                    Docentes_Efetivos: mapaServ['REITORIA'] ? mapaServ['REITORIA'].Docentes_Efetivos : 0,
+                    ITCD: null
+                });
+            }
+        }
+
+        // Guarda para uso no mapa
+        dadosReais.dadosCampiMapa = dadosCampiParaMapa;
+        console.log(`🗺️ ${dadosCampiParaMapa.length} campi preparados para o mapa.`);
+
+        // ----- PROCESSAMENTO DOS DADOS INSTITUCIONAIS (cards) -----
+        const campiFiltrados = campi.filter(item => 
+            item.Nome && item.Nome.toUpperCase().includes('CAMPUS')
+        );
+        const totalCampi = campiFiltrados.length;
+
+        let totalServidores = 0;
+        let totalDocentes = 0;
+        let totalTAEs = 0;
+        Object.values(mapaServ).forEach(d => {
+            totalServidores += d.Total_Servidores;
+            totalDocentes += d.Docentes;
+            totalTAEs += d.TAEs;
+        });
+
+        let totalEstudantes = 0;
+        dadosMat.forEach(item => {
+            const mat = item.Matrículas;
+            const num = parseFloat(mat);
+            if (!isNaN(num)) {
+                totalEstudantes += num;
+            }
+        });
+
+        let totalOrcamento = 0;
+        dadosOrc.forEach(item => {
+            const valor = parseFloat(item.valor_empenhado) || 0;
+            totalOrcamento += valor;
+        });
+
+        let ultimoAno = 0;
+        dadosMat.forEach(item => {
+            if (item.Ano && parseInt(item.Ano) > ultimoAno) ultimoAno = parseInt(item.Ano);
+        });
+
+        // Top campi para comparativos
+        const topCampi = campiFiltrados
+            .map(c => {
+                const nome = c.Nome.trim().toUpperCase();
+                const dados = mapaServ[nome] || {};
+                return {
+                    Nome: c.Nome,
+                    Total_Servidores: dados.Total_Servidores || 0,
+                    Docentes: dados.Docentes || 0,
+                    TAEs: dados.TAEs || 0,
+                    Docentes_Efetivos: dados.Docentes_Efetivos || 0
+                };
+            })
+            .sort((a, b) => b.Total_Servidores - a.Total_Servidores)
+            .slice(0, 8);
+        dadosReais.topCampi = topCampi;
+
+        // ----- ATUALIZAR CARDS -----
+        const ifpbCard = document.querySelector('.data-card[data-type="ifpb"]');
+        if (ifpbCard) {
+            const valores = ifpbCard.querySelectorAll('.data-stat-value');
+            if (valores.length >= 4) {
+                valores[0].textContent = totalCampi + ' unidades';
+                valores[1].textContent = totalEstudantes.toLocaleString('pt-BR') + ' mil';
+                valores[2].textContent = totalServidores.toLocaleString('pt-BR');
+                let orcFormatado;
+                if (totalOrcamento >= 1e9) {
+                    orcFormatado = 'R$ ' + (totalOrcamento / 1e9).toFixed(2) + ' bi';
+                } else if (totalOrcamento >= 1e6) {
+                    orcFormatado = 'R$ ' + (totalOrcamento / 1e6).toFixed(2) + ' mi';
+                } else {
+                    orcFormatado = 'R$ ' + totalOrcamento.toLocaleString('pt-BR');
+                }
+                valores[3].textContent = orcFormatado;
+            }
+        }
+
+        const enadeCard = document.querySelector('.data-card[data-type="enade"]');
+        if (enadeCard) {
+            const valores = enadeCard.querySelectorAll('.data-stat-value');
+            if (valores.length >= 4) {
+                valores[0].textContent = faixaAnos;
+                valores[1].textContent = cursosAvaliados || '23';
+                valores[2].textContent = notaMedia > 0 ? notaMedia.toFixed(1) : '62.5';
+                valores[3].textContent = cursosConceitoMaximo > 0 ? cursosConceitoMaximo + ' cursos' : '5 cursos';
+            }
+        }
+
+        const pesquisaCard = document.querySelector('.data-card[data-type="pesquisa"]');
+        if (pesquisaCard) {
+            const valores = pesquisaCard.querySelectorAll('.data-stat-value');
+            if (valores.length >= 4) {
+                valores[0].textContent = discentes.length.toLocaleString('pt-BR');
+                valores[1].textContent = docentes.length.toLocaleString('pt-BR');
+                valores[2].textContent = satisfacaoMedia > 0 ? satisfacaoMedia.toFixed(1) + ' / 5' : '---';
+                valores[3].textContent = dataColeta || '---';
+            }
+        }
+
+        const campiEl = document.getElementById('campi-count');
+        if (campiEl) campiEl.textContent = totalCampi;
+
+        const studentsEl = document.getElementById('students-count');
+        if (studentsEl) studentsEl.textContent = totalEstudantes.toLocaleString('pt-BR') + ' mil';
+
+        const teachersEl = document.getElementById('teachers-count');
+        if (teachersEl) teachersEl.textContent = totalServidores.toLocaleString('pt-BR');
+
+        const budgetEl = document.getElementById('budget-value');
+        if (budgetEl) {
+            let orcFormatado;
+            if (totalOrcamento >= 1e9) {
+                orcFormatado = (totalOrcamento / 1e9).toFixed(2) + ' bi';
+            } else if (totalOrcamento >= 1e6) {
+                orcFormatado = (totalOrcamento / 1e6).toFixed(2) + ' mi';
+            } else {
+                orcFormatado = totalOrcamento.toLocaleString('pt-BR');
+            }
+            budgetEl.textContent = orcFormatado;
+            const card = budgetEl.closest('.card');
+            if (card) {
+                const h3 = card.querySelector('h3');
+                if (h3) h3.textContent = `Orçamento ${ultimoAno}`;
+            }
+        }
+
+        // Atualiza variável global
+        dadosReais.totalCampi = totalCampi;
+        dadosReais.totalEstudantes = totalEstudantes;
+        dadosReais.totalServidores = totalServidores;
+        dadosReais.totalDocentes = totalDocentes;
+        dadosReais.totalTAEs = totalTAEs;
+        dadosReais.orcamento.totalGeral = totalOrcamento;
+        dadosReais.orcamento.anoMaisRecente = ultimoAno;
+        dadosReais.pesquisa.alunosRespondentes = discentes.length;
+        dadosReais.pesquisa.professoresRespondentes = docentes.length;
+        dadosReais.pesquisa.satisfacaoMedia = satisfacaoMedia;
+        dadosReais.pesquisa.dataColeta = dataColeta;
+        dadosReais.enade.faixaAnos = faixaAnos;
+        dadosReais.enade.cursosAvaliados = cursosAvaliados;
+        dadosReais.enade.notaMedia = notaMedia;
+        dadosReais.enade.cursosConceitoMaximo = cursosConceitoMaximo;
+
+        console.log('✅ Dados atualizados:');
+        console.log(`Campi: ${totalCampi}, Estudantes: ${totalEstudantes}, Servidores: ${totalServidores}, Docentes: ${totalDocentes}, TAEs: ${totalTAEs}, Orçamento: ${totalOrcamento}`);
+        console.log(`Pesquisa: ${discentes.length} alunos, ${docentes.length} docentes, satisfação: ${satisfacaoMedia.toFixed(1)}/5, coleta: ${dataColeta}`);
+        console.log(`ENADE: ${faixaAnos} | ${cursosAvaliados} cursos | nota média: ${notaMedia.toFixed(1)} | ${cursosConceitoMaximo} cursos com nota >= 80`);
+
+        // ----- RENDERIZAR MAPA COMPLETO -----
+        renderizarMapaPreview();
+
+        // Outros gráficos (se quiser manter)
+        renderizarEvolucao(dadosMat);
+        renderizarComparativos();
+
+        return true;
+    } catch (erro) {
+        console.warn('⚠️ Falha ao carregar dados. Usando fallback estático.', erro);
+        return false;
+    }
+}
+
+// ============================================================
+// ATUALIZAR ELEMENTOS (fallback)
+// ============================================================
+function atualizarElementosComDadosReais() {
+    const campiEl = document.getElementById('campi-count');
+    if (campiEl) campiEl.textContent = dadosReais.totalCampi || '23';
+
+    const studentsEl = document.getElementById('students-count');
+    if (studentsEl) {
+        studentsEl.textContent = dadosReais.totalEstudantes > 0 ? formatarNumero(dadosReais.totalEstudantes) + ' mil' : '305.450 mil';
+    }
+
+    const teachersEl = document.getElementById('teachers-count');
+    if (teachersEl) {
+        teachersEl.textContent = dadosReais.totalServidores > 0 ? formatarNumero(dadosReais.totalServidores) : '2.614';
+    }
+
+    const budgetEl = document.getElementById('budget-value');
+    if (budgetEl && dadosReais.orcamento) {
+        const total = dadosReais.orcamento.totalGeral;
+        let valorFormatado;
+        if (total >= 1e9) {
+            valorFormatado = (total / 1e9).toFixed(2) + ' bi';
+        } else if (total >= 1e6) {
+            valorFormatado = (total / 1e6).toFixed(2) + ' mi';
+        } else {
+            valorFormatado = total.toLocaleString('pt-BR');
+        }
+        budgetEl.textContent = valorFormatado;
+    }
+
+    const yearEl = document.querySelector('.hero-card-year');
+    if (yearEl) yearEl.textContent = dadosReais.ultimoAno || '2025';
+
+    const trendBadge = document.querySelector('.trend-badge');
+    if (trendBadge && dadosReais.ultimoAno) {
+        trendBadge.innerHTML = `<i class="fas fa-calendar-alt"></i> Dados de ${dadosReais.ultimoAno}`;
+    }
+
+    const pesquisaCard = document.querySelector('.data-card[data-type="pesquisa"]');
+    if (pesquisaCard) {
+        const valores = pesquisaCard.querySelectorAll('.data-stat-value');
+        if (valores.length >= 4) {
+            valores[0].textContent = dadosReais.pesquisa.alunosRespondentes > 0 ? formatarNumero(dadosReais.pesquisa.alunosRespondentes) : '1.247';
+            valores[1].textContent = dadosReais.pesquisa.professoresRespondentes > 0 ? formatarNumero(dadosReais.pesquisa.professoresRespondentes) : '342';
+            valores[2].textContent = dadosReais.pesquisa.satisfacaoMedia > 0 ? dadosReais.pesquisa.satisfacaoMedia.toFixed(1) + ' / 5' : '4.2 / 5';
+            valores[3].textContent = dadosReais.pesquisa.dataColeta || 'Março/2026';
+        }
+    }
+
+    const enadeCard = document.querySelector('.data-card[data-type="enade"]');
+    if (enadeCard) {
+        const valores = enadeCard.querySelectorAll('.data-stat-value');
+        if (valores.length >= 4) {
+            valores[0].textContent = dadosReais.enade.faixaAnos || '2023';
+            valores[1].textContent = dadosReais.enade.cursosAvaliados > 0 ? formatarNumero(dadosReais.enade.cursosAvaliados) : '23';
+            valores[2].textContent = dadosReais.enade.notaMedia > 0 ? dadosReais.enade.notaMedia.toFixed(1) : '62.5';
+            valores[3].textContent = dadosReais.enade.cursosConceitoMaximo > 0 ? dadosReais.enade.cursosConceitoMaximo + ' cursos' : '5 cursos';
+        }
+    }
+}
+
+// ============================================================
+// DEMAIS FUNÇÕES (menu, scroll, etc.) – mantidas
+// ============================================================
+
+function renderizarEvolucao(dadosMat) {
+    const ctx = document.getElementById('timelineChart')?.getContext('2d');
+    if (!ctx) return;
+
+    if (typeof Chart === 'undefined') {
+        console.warn('Chart.js não carregado. Gráfico de evolução não renderizado.');
+        return;
+    }
+
+    const getMatriculasPorAno = (dados) => {
+        const mapa = {};
+        dados.forEach(item => {
+            const ano = item.Ano;
+            const mat = parseFloat(item.Matrículas);
+            if (!isNaN(mat) && ano) {
+                mapa[ano] = (mapa[ano] || 0) + mat;
+            }
+        });
+        const anos = Object.keys(mapa).sort((a, b) => a - b);
+        return anos.map(a => ({ ano: parseInt(a), total: mapa[a] }));
+    };
+
+    const dados = getMatriculasPorAno(dadosMat);
+    const anos = dados.map(d => d.ano);
+    const valores = dados.map(d => d.total);
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: anos,
+            datasets: [{
+                label: 'Matrículas',
+                data: valores,
+                borderColor: '#4e73df',
+                backgroundColor: 'rgba(78,115,223,0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => ctx.parsed.y.toLocaleString('pt-BR')
+                    }
+                }
+            },
+            scales: {
+                y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                x: { grid: { display: false } }
+            }
         }
     });
 }
 
-/* cabeçalho: efeito de rolagem */
-function initHeader() {
-    const header = document.getElementById('main-header');
-    if (!header) return;
+function renderizarComparativos() {
+    const ctx = document.getElementById('comparisonChart')?.getContext('2d');
+    if (!ctx) return;
 
-    const onScroll = debounce(() => {
-        header.classList.toggle('scrolled', window.scrollY > 20);
-    }, 16);
+    if (typeof Chart === 'undefined') {
+        console.warn('Chart.js não carregado. Gráfico de comparativos não renderizado.');
+        return;
+    }
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll(); 
+    const top = dadosReais.topCampi || [];
+    const labels = top.map(c => c.Nome || c.campus);
+    const servidores = top.map(c => c.Total_Servidores || c.servidores || 0);
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Servidores',
+                data: servidores,
+                backgroundColor: '#36b9cc',
+                borderColor: '#2c9faf',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => ctx.parsed.y.toLocaleString('pt-BR')
+                    }
+                }
+            },
+            scales: {
+                y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
 }
 
-/* menu que abre no celular */
+function atualizarGraficoAnimado() {
+    const container = document.querySelector('.chart-animation');
+    if (!container) return;
+    console.log('Gráfico animado mantido estático.');
+}
+
+function atualizarDataAtualizacao() {
+    const now = new Date();
+    const opts = { day: '2-digit', month: 'long', year: 'numeric' };
+    const dataStr = now.toLocaleDateString('pt-BR', opts);
+    const statusEl = document.querySelector('.status-indicator:last-child');
+    if (statusEl) {
+        statusEl.innerHTML = `<i class="fas fa-calendar-alt"></i> Atualizado em ${dataStr}`;
+    }
+}
+
 function initMobileMenu() {
     const btn = document.getElementById('mobile-menu-btn');
     const nav = document.getElementById('mobile-nav');
     if (!btn || !nav) return;
-
     let isOpen = false;
-
-    function toggleMenu(open) {
+    function toggle(open) {
         isOpen = open;
         btn.classList.toggle('active', open);
         btn.setAttribute('aria-expanded', String(open));
@@ -109,221 +852,68 @@ function initMobileMenu() {
         nav.setAttribute('aria-hidden', String(!open));
         document.body.style.overflow = open ? 'hidden' : '';
     }
-
-    btn.addEventListener('click', () => toggleMenu(!isOpen));
-
-    // clicou fora do menu? fecha ele.
+    btn.addEventListener('click', () => toggle(!isOpen));
     document.addEventListener('click', (e) => {
-        if (isOpen && !btn.contains(e.target) && !nav.contains(e.target)) {
-            toggleMenu(false);
-        }
+        if (isOpen && !btn.contains(e.target) && !nav.contains(e.target)) toggle(false);
     });
-
-    // tecla ESC também fecha
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && isOpen) toggleMenu(false);
+        if (e.key === 'Escape' && isOpen) toggle(false);
     });
-
-    // se redimensionar a tela e ela ficar grande, fecha o menu mobile
     window.addEventListener('resize', debounce(() => {
-        if (window.innerWidth > 900 && isOpen) toggleMenu(false);
+        if (window.innerWidth > 900 && isOpen) toggle(false);
     }, 200));
 }
 
-/* efeito de revelar elementos ao rolar a página */
 function initScrollReveal() {
     const elements = document.querySelectorAll('.reveal-up, .reveal-right');
     if (!elements.length) return;
-
-    // se a pessoa já tiver pedido menos animação, já exibe tudo sem frescura
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         elements.forEach(el => el.classList.add('visible'));
         return;
     }
-
     const observer = new IntersectionObserver(
         (entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    observer.unobserve(entry.target); // só ativa uma vez
+                    observer.unobserve(entry.target);
                 }
             });
         },
         { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
     );
-
     elements.forEach(el => observer.observe(el));
 }
 
-/* animação de contador (vai aumentando o número) */
-function animateCounter(element, finalValue, duration = 1800, suffix = '') {
-    if (!element) return;
-
-    const isDecimal = !Number.isInteger(finalValue);
-    let startTime = null;
-
-    function step(timestamp) {
-        if (!startTime) startTime = timestamp;
-        const elapsed = timestamp - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const current = easeOutCubic(progress) * finalValue;
-
-        if (isDecimal) {
-            element.textContent = current.toFixed(1) + suffix;
-        } else {
-            element.textContent = Math.floor(current).toLocaleString('pt-BR') + suffix;
-        }
-
-        if (progress < 1) requestAnimationFrame(step);
-        else element.textContent = (isDecimal ? finalValue.toFixed(1) : finalValue.toLocaleString('pt-BR')) + suffix;
-    }
-
-    requestAnimationFrame(step);
+function initHeaderScroll() {
+    const header = document.getElementById('main-header');
+    if (!header) return;
+    const onScroll = debounce(() => {
+        header.classList.toggle('scrolled', window.scrollY > 20);
+    }, 16);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
 }
 
-/* contadores dos cards de destaque */
-function initHighlightCounters() {
-    const counterMap = {
-        'campi-count':    { value: 23,     suffix: '' },
-        'students-count': { value: 28456,  suffix: '' },
-        'teachers-count': { value: 1452,   suffix: '' },
-        'budget-value':   { value: 382.7,  suffix: '' }
-    };
+// ============================================================
+// INICIALIZAÇÃO PRINCIPAL
+// ============================================================
 
-    // só começa a contar quando o card aparecer na tela
-    const observer = new IntersectionObserver(
-        (entries) => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
-                const el = entry.target;
-                const id = el.id;
-                const config = counterMap[id];
-                if (config) animateCounter(el, config.value, 1800, config.suffix);
-                observer.unobserve(el);
-            });
-        },
-        { threshold: 0.5 }
-    );
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('🚀 IFPB Data Platform - Inicializando...');
 
-    Object.keys(counterMap).forEach(id => {
-        const el = document.getElementById(id);
-        if (el) observer.observe(el);
-    });
-}
-
-/* contadores da seção hero */
-function initHeroCounters() {
-    const stats = document.querySelectorAll('.hero-stat-number[data-target]');
-    if (!stats.length) return;
-
-    const observer = new IntersectionObserver(
-        (entries) => {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
-                const el = entry.target;
-                const target = parseFloat(el.dataset.target);
-                const suffix = el.dataset.suffix || '';
-                const isDecimal = !Number.isInteger(target);
-                animateCounter(el, target, 2000, suffix);
-                observer.unobserve(el);
-            });
-        },
-        { threshold: 0.5 }
-    );
-
-    stats.forEach(el => observer.observe(el));
-}
-
-/* marca no menu qual é a página atual */
-function highlightCurrentPage() {
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    document.querySelectorAll('.nav-link').forEach(link => {
-        const href = (link.getAttribute('href') || '').split('/').pop();
-        if (href === currentPage || (currentPage === '' && href === 'index.html')) {
-            link.classList.add('active');
-        } else {
-            link.classList.remove('active');
-        }
-    });
-}
-
-/* dados de exemplo (deixei aqui pra não quebrar nada) */
-function loadSampleData() {
-    return {
-        campuses: [
-            { name: 'João Pessoa',    students: 5200, courses: 42 },
-            { name: 'Campina Grande', students: 4800, courses: 38 },
-            { name: 'Patos',          students: 2100, courses: 22 },
-            { name: 'Cajazeiras',     students: 1800, courses: 20 },
-            { name: 'Sousa',          students: 1600, courses: 18 }
-        ],
-        budget: { 2010: 320.5, 2022: 345.2, 2023: 368.9, 2026: 382.7 }
-    };
-}
-
-function updateDashboard(data) {
-    console.log('Dashboard atualizado com:', data);
-}
-
-/* micro-interação: card inclina com o mouse (só desktop) */
-function initCardTilt() {
-    if (window.matchMedia('(pointer: coarse)').matches) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    const cards = document.querySelectorAll('.db-card, .highlight-card, .viz-card');
-
-    cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = (y - centerY) / centerY * -4;
-            const rotateY = (x - centerX) / centerX * 4;
-
-            card.style.transform = `translateY(-8px) perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        });
-
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = '';
-        });
-    });
-}
-
-/* rolagem suave para links internos (âncoras) */
-function initSmoothLinks() {
-    document.querySelectorAll('a[href^="#"]').forEach(link => {
-        link.addEventListener('click', (e) => {
-            const target = document.querySelector(link.getAttribute('href'));
-            if (!target) return;
-            e.preventDefault();
-            const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 72;
-            window.scrollTo({
-                top: target.offsetTop - headerH - 16,
-                behavior: 'smooth'
-            });
-        });
-    });
-}
-
-/* tudo começa a rodar assim que o DOM estiver pronto */
-document.addEventListener('DOMContentLoaded', () => {
-    initPageLoader();
-    initCursor();
-    initHeader();
     initMobileMenu();
     initScrollReveal();
-    initHeroCounters();
-    initHighlightCounters();
-    highlightCurrentPage();
-    initCardTilt();
-    initSmoothLinks();
+    initHeaderScroll();
 
-    // carregar dados de exemplo (compatibilidade com versões anteriores)
-    setTimeout(() => {
-        const data = loadSampleData();
-        updateDashboard(data);
-    }, 1200);
+    try {
+        await carregarDadosReais();
+        atualizarElementosComDadosReais();
+        atualizarDataAtualizacao();
+    } catch (e) {
+        console.warn('Erro no carregamento de dados, mas página continua funcionando.', e);
+        atualizarElementosComDadosReais();
+    }
+
+    window.recarregarDados = carregarDadosReais;
 });

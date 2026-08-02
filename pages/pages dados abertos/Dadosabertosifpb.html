@@ -297,7 +297,7 @@
             <nav class="main-nav" role="navigation">
                 <ul class="nav-list">
                     <li><a href="../../index.html" class="active"><i class="fas fa-home"></i>Início</a></li>
-                    <li><a href="institucional.html"><i class="fas fa-university"></i>A instituição</a></li>
+                    <li><a href="../../institucional.html"><i class="fas fa-university"></i>A instituição</a></li>
                     <li><a href="academico.html"><i class="fas fa-graduation-cap"></i>Vida Acadêmica</a></li>
                     <li><a href="orcamento.html"><i class="fas fa-chart-pie"></i>Gestão e Orçamento</a></li>
                     <li><a href="../dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
@@ -330,7 +330,7 @@
         </div>
         <ul>
             <li><a href="../../index.html"><i class="fas fa-home"></i> Início</a></li>
-            <li><a href="institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
+            <li><a href="../../institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
             <li><a href="academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
             <li><a href="orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
             <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
@@ -353,16 +353,16 @@
             <div class="hero-stats">
                 <div style="display: flex; justify-content: space-around;">
                     <div class="stat-item">
-                        <div class="stat-number" id="statCampi">23</div>
+                        <div class="stat-number" id="statCampi">26</div>
                         <div>Campi Ativos</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number" id="statEstudantes">+18k</div>
+                        <div class="stat-number" id="statEstudantes">37.541</div>
                         <div>Estudantes</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number" id="statCursos">+120</div>
-                        <div>Cursos</div>
+                        <div>Orçamentos</div>
                     </div>
                 </div>
                 <div style="margin-top: 1.5rem; background: var(--light-color); padding: 0.8rem; border-radius: 20px; text-align: center; font-size: 0.8rem;">
@@ -377,7 +377,7 @@
                 <div class="card-icon"><i class="fas fa-building-columns"></i></div>
                 <h3>Institucional</h3>
                 <p>Estrutura organizacional, campi, servidores, CNPJ, indicadores de gestão e muito mais.</p>
-                <a href="institucional.html" class="card-link">Ver dados <i class="fas fa-arrow-right"></i></a>
+                <a href="../../institucional.html" class="card-link">Ver dados <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="card-modern">
                 <div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
@@ -473,120 +473,240 @@
         </div>
     </footer>
 
-    <script>
-        // Menu mobile 
-        const hamburger = document.getElementById('hamburger');
-        const navMenuMobile = document.getElementById('navMenuMobile');
-        const menuOverlay = document.getElementById('menuOverlay');
-        const menuCloseBtn = document.getElementById('menuCloseBtn');
+<script>
+// ============================================================
+// 1. CARREGAR DADOS DOS JSONs (com orçamento)
+// ============================================================
+async function carregarDados() {
+    try {
+        const basePath = '../../assets/data/';
 
-        function closeMenu() {
-            hamburger?.classList.remove('active');
-            navMenuMobile?.classList.remove('active');
-            menuOverlay?.classList.remove('active');
-            document.body.classList.remove('menu-open');
+        // Carrega campi, matrículas e orçamento em paralelo
+        const [resCampi, resMatriculas, resOrc] = await Promise.all([
+            fetch(basePath + 'Campi/campi.json'),
+            fetch(basePath + 'EstruturaAdministrativa/DadosMatriculasDiscentes.json'),
+            fetch(basePath + 'DadosOrçamentario/dadosOrcamentario.json')   // <-- NOVO
+        ]);
+
+        if (!resCampi.ok) throw new Error(`HTTP ${resCampi.status} - Campi`);
+        if (!resMatriculas.ok) throw new Error(`HTTP ${resMatriculas.status} - Matrículas`);
+        if (!resOrc.ok) throw new Error(`HTTP ${resOrc.status} - Orçamento`);
+
+        const campi = await resCampi.json();
+        const matriculas = await resMatriculas.json();
+        const orcamento = await resOrc.json();   // <-- NOVO
+
+        processarDados(campi, matriculas, orcamento);   // <-- NOVO
+    } catch (erro) {
+        console.error('Erro ao carregar dados:', erro);
+        // Fallback mantém valores estáticos
+        document.getElementById('statCampi').textContent = '26';
+        document.getElementById('statCursos').textContent = 'R$ 0,00';
+        const fonteEl = document.querySelector('.highlights > div:last-child');
+        if (fonteEl) {
+            fonteEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Não foi possível carregar os dados. Exibindo versão estática.';
         }
+    }
+}
 
-        function openMenu() {
-            hamburger?.classList.add('active');
-            navMenuMobile?.classList.add('active');
-            menuOverlay?.classList.add('active');
-            document.body.classList.add('menu-open');
-        }
+// ============================================================
+// 2. PROCESSAR DADOS (incluindo orçamento)
+// ============================================================
+function processarDados(campi, matriculas, orcamento) {
+    // ---- CAMPOS ----
+    const campiFiltrados = campi.filter(item => 
+        item.Nome && item.Nome.includes('CAMPUS')
+    );
+    const totalCampi = campiFiltrados.length;
 
-        function toggleMenu() {
-            if (navMenuMobile?.classList.contains('active')) {
-                closeMenu();
-            } else {
-                openMenu();
+    // ---- MATRÍCULAS ----
+    const validos = matriculas.filter(item => {
+        const mat = parseInt(item.Matrículas);
+        return !isNaN(mat) && mat > 0;
+    });
+
+    const porAno = {};
+    validos.forEach(item => {
+        const ano = item.Ano;
+        const mat = parseInt(item.Matrículas);
+        if (!porAno[ano]) porAno[ano] = 0;
+        porAno[ano] += mat;
+    });
+
+    const anos = Object.keys(porAno).map(Number).sort((a, b) => a - b);
+    const ultimoAno = anos[anos.length - 1] || 2025;
+    const totalMatriculasUltimoAno = porAno[ultimoAno] || 0;
+
+    // Matrículas por campus no último ano (para gráfico)
+    const porCampusUltimoAno = {};
+    validos.filter(item => item.Ano === ultimoAno).forEach(item => {
+        const campus = item['Estrutura com Matrícula'];
+        const mat = parseInt(item.Matrículas);
+        porCampusUltimoAno[campus] = (porCampusUltimoAno[campus] || 0) + mat;
+    });
+    const campiOrdenados = Object.keys(porCampusUltimoAno).sort((a, b) => porCampusUltimoAno[b] - porCampusUltimoAno[a]);
+
+    // ---- ORÇAMENTO ----
+    let totalEmpenhado = 0;
+    let totalLiquidado = 0;
+    let totalPago = 0;
+    let anoMaisRecente = 0;
+
+    orcamento.forEach(item => {
+        // Soma valores (convertendo para número)
+        const empenhado = parseFloat(item.valor_empenhado) || 0;
+        const liquidado = parseFloat(item.valor_liquidado) || 0;
+        const pago = parseFloat(item.valor_pago) || 0;
+        totalEmpenhado += empenhado;
+        totalLiquidado += liquidado;
+        totalPago += pago;
+
+        // Extrai o ano do campo mes_ano (ex: "01/2014")
+        const partes = item.mes_ano.split('/');
+        if (partes.length === 2) {
+            const ano = parseInt(partes[1]);
+            if (!isNaN(ano) && ano > anoMaisRecente) {
+                anoMaisRecente = ano;
             }
         }
+    });
 
-        if (hamburger) hamburger.addEventListener('click', toggleMenu);
-        if (menuCloseBtn) menuCloseBtn.addEventListener('click', closeMenu);
-        if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
+// Formata o total para exibição (ex: 382.7 mi)
+let valorFormatado;
+if (totalEmpenhado >= 1e9) {
+    valorFormatado = 'R$ ' + (totalEmpenhado / 1e9).toFixed(1) + ' bi';
+} else if (totalEmpenhado >= 1e6) {
+    valorFormatado = 'R$ ' + (totalEmpenhado / 1e6).toFixed(2) + ' mi';
+} else {
+    valorFormatado = 'R$ ' + totalEmpenhado.toLocaleString('pt-BR');
+}
 
-        window.addEventListener('resize', function() {
-            if (window.innerWidth > 900 && navMenuMobile?.classList.contains('active')) {
-                closeMenu();
-            }
-        });
+        // ============================================================
+        // 3. ATUALIZAR ELEMENTOS HTML (HERO)
+        // ============================================================
+        document.getElementById('statCampi').textContent = totalCampi;
+        document.getElementById('statEstudantes').textContent = totalMatriculasUltimoAno.toLocaleString('pt-BR');
+        document.getElementById('statCursos').textContent = valorFormatado;
 
-        document.querySelectorAll('.nav-menu-mobile a').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
-                if (href && href.startsWith('#')) {
-                    e.preventDefault();
-                    closeMenu();
-                    const target = document.querySelector(href);
-                    if (target) {
-                        setTimeout(() => {
-                            window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
-                        }, 150);
-                    }
-                } else {
-                    closeMenu();
-                }
-            });
-        });
-
-        // Gráficos com Chart.js
-        const ctxServ = document.getElementById('servidoresChartHome')?.getContext('2d');
-        if(ctxServ) {
-            new Chart(ctxServ, {
-                type: 'bar',
-                data: {
-                    labels: ['Docentes', 'Técnico-Admin.'],
-                    datasets: [{
-                        label: 'Quantidade de servidores',
-                        data: [1248, 902],
-                        backgroundColor: ['#387f1c', '#c9a03d'],
-                        borderRadius: 10,
-                        barPercentage: 0.65
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top' } } }
-            });
+        // Atualizar rodapé do hero
+        const infoData = document.querySelector('.hero-stats div:last-child');
+        if (infoData) {
+            infoData.innerHTML = `</i> Campi Ativos`;
         }
 
-        const ctxOrc = document.getElementById('orcamentoChartHome')?.getContext('2d');
-        if(ctxOrc) {
-            new Chart(ctxOrc, {
-                type: 'doughnut',
+        // ============================================================
+        // 4. ATUALIZAR GRÁFICOS
+        // ============================================================
+
+        // 4.1 Evolução anual (linha)
+        const chartBoxEvolucao = document.querySelector('.charts-row .chart-box:first-child');
+        if (chartBoxEvolucao) {
+            const oldCanvas = chartBoxEvolucao.querySelector('canvas');
+            if (oldCanvas) oldCanvas.remove();
+            const canvas = document.createElement('canvas');
+            canvas.style.maxHeight = '240px';
+            canvas.style.width = '100%';
+            chartBoxEvolucao.appendChild(canvas);
+
+            const h4 = chartBoxEvolucao.querySelector('h4');
+            if (h4) h4.innerHTML = '<i class="fas fa-chart-line"></i> Evolução das Matrículas (total)';
+
+            new Chart(canvas, {
+                type: 'line',
                 data: {
-                    labels: ['Receitas Arrecadadas', 'Despesas Empenhadas'],
+                    labels: anos,
                     datasets: [{
-                        data: [312.4, 287.0],
-                        backgroundColor: ['#387f1c', '#dc843a'],
-                        borderWidth: 0,
-                        hoverOffset: 8
+                        label: 'Total de matrículas',
+                        data: anos.map(ano => porAno[ano] || 0),
+                        borderColor: '#387f1c',
+                        backgroundColor: 'rgba(56,127,28,0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#387f1c'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
                     plugins: {
-                        legend: { position: 'bottom' },
-                        tooltip: { callbacks: { label: (ctx) => `R$ ${ctx.raw} milhões` } }
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `Matrículas: ${ctx.raw.toLocaleString('pt-BR')}`
+                            }
+                        }
                     },
-                    cutout: '55%'
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Matrículas' } },
+                        x: { ticks: { autoSkip: true, maxTicksLimit: 10 } }
+                    }
                 }
             });
         }
 
-        // Rolagem suave para âncoras internas
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const targetId = this.getAttribute('href');
-                if(targetId !== "#" && targetId !== "" && targetId !== "#dados-destaque" && targetId !== "#institucional" && targetId !== "#academico" && targetId !== "#orcamento") {
-                    const targetElement = document.querySelector(targetId);
-                    if(targetElement) {
-                        e.preventDefault();
-                        targetElement.scrollIntoView({ behavior: 'smooth' });
+        // 4.2 Matrículas por campus (barras – top 10)
+        const chartBoxCampus = document.querySelector('.charts-row .chart-box:last-child');
+        if (chartBoxCampus) {
+            const oldCanvas = chartBoxCampus.querySelector('canvas');
+            if (oldCanvas) oldCanvas.remove();
+            const canvas = document.createElement('canvas');
+            canvas.style.maxHeight = '240px';
+            canvas.style.width = '100%';
+            chartBoxCampus.appendChild(canvas);
+
+            const h4 = chartBoxCampus.querySelector('h4');
+            if (h4) h4.innerHTML = `<i class="fas fa-chart-bar"></i> Matrículas por Campus (${ultimoAno})`;
+
+            const topCampi = campiOrdenados.slice(0, 10);
+            const topValores = topCampi.map(c => porCampusUltimoAno[c]);
+
+            new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: topCampi.map(c => c.replace('Campus ', '')),
+                    datasets: [{
+                        label: 'Matrículas',
+                        data: topValores,
+                        backgroundColor: '#387f1c',
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `Matrículas: ${ctx.raw.toLocaleString('pt-BR')}`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'Matrículas' } },
+                        x: { ticks: { autoSkip: true, maxRotation: 45, minRotation: 30 } }
                     }
                 }
             });
-        });
-    </script>
+        }
+
+        // ============================================================
+        // 5. ATUALIZAR FONTE NO RODAPÉ DA SEÇÃO
+        // ============================================================
+        const fonteEl = document.querySelector('.highlights > div:last-child');
+        if (fonteEl) {
+            fonteEl.innerHTML = `<i class="fas fa-database"></i> Fonte: Dados institucionais IFPB (SIGAA) | Último ano: ${ultimoAno} | ${totalCampi} campi ativos`;
+        }
+
+        console.log('✅ Dados atualizados com sucesso!');
+    }
+
+    // ============================================================
+    // 6. INICIALIZAR
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', carregarDados);
+</script>
 </body>
 </html>

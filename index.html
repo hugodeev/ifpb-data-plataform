@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IFPB Data Platform - Transparência e Análise de Dados</title>
+    <!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Leaflet CSS e JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="shortcut icon" href="assets/img/logosite.png" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
@@ -65,10 +73,10 @@
                 <h2>Plataforma de Dados do<br><span class="hero-title-highlight">Instituto Federal da Paraíba</span></h2>
                 <p>Visualização interativa de dados institucionais, acadêmicos e orçamentários para transparência e análise estratégica.</p>
                 <div class="hero-buttons">
-                    <a href="pages/dashboard.html" class="btn-primary">
+                    <a href="pages/PagesGeral/dashboard.html" class="btn-primary">
                         <i class="fas fa-chart-line"></i> Acessar Dashboard
                     </a>
-                    <a href="pages/sobre.html" class="btn-secondary">
+                    <a href="pages/PagesGeral/sobre.html" class="btn-secondary">
                         <i class="fas fa-info-circle"></i> Sobre o Projeto
                     </a>
                 </div>
@@ -147,10 +155,10 @@
                         </div>
                         <div class="data-stat">
                             <span class="data-stat-label"><i class="fas fa-users"></i> Estudantes</span>
-                            <span class="data-stat-value">28.456</span>
+                            <span class="data-stat-value">28.456 mil</span>
                         </div>
                         <div class="data-stat">
-                            <span class="data-stat-label"><i class="fas fa-chalkboard-teacher"></i> Docentes</span>
+                            <span class="data-stat-label"><i class="fas fa-chalkboard-teacher"></i> Servidores</span>
                             <span class="data-stat-value">1.847</span>
                         </div>
                         <div class="data-stat">
@@ -176,7 +184,7 @@
                     </div>
                     <div class="data-card-body">
                         <div class="data-stat">
-                            <span class="data-stat-label"><i class="fas fa-calendar"></i> Último ciclo</span>
+                            <span class="data-stat-label"><i class="fas fa-calendar"></i>Período</span>
                             <span class="data-stat-value">2023</span>
                         </div>
                         <div class="data-stat">
@@ -278,50 +286,48 @@
                         <i class="fas fa-money-bill-wave"></i>
                     </div>
                     <h3>Orçamento 2022</h3>
-                    <div class="card-value">R$ <span id="budget-value">382.7</span> mi</div>
+                    <div class="card-value">R$ <span id="budget-value">382.7</span></div>
                     <p class="card-desc">Recursos investidos na educação</p>
                     <a href="pages/orcamento.html" class="card-link">Ver detalhes <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </section>
 
-        <!-- visualizações -->
-        <section class="visualizations">
-            <div class="section-header reveal-up" style="--delay: 0s">
-                <span class="section-tag">Dashboard</span>
-                <h2 class="section-title">Visualizações Interativas</h2>
-                <p class="section-subtitle">Explore dados através de gráficos e painéis interativos</p>
+<!-- visualizações -->
+<section class="visualizations">
+    <div class="section-header reveal-up" style="--delay: 0s">
+        <span class="section-tag">Dashboard</span>
+        <h2 class="section-title">Visualizações Interativas</h2>
+        <p class="section-subtitle">Explore dados através de gráficos e painéis interativos</p>
+    </div>
+
+    <div class="viz-container">
+        <!-- Mapa dos Campi -->
+        <div class="viz-preview reveal-up" style="--delay: 0.05s">
+          <div id="map-preview-container" style="height:250px;width:100%;border-radius:8px;overflow:hidden;"></div>
+            <p>Localização geográfica de todas as unidades do IFPB</p>
+          <span class="btn-small" onclick="window.location.href='institucional.html#chart-mapa'">Explorar Mapa <i class="fas fa-arrow-right"></i></span>
+        </div>
+
+        <!-- Evolução Temporal -->
+        <div class="viz-preview reveal-up" style="--delay: 0.1s">
+            <div class="chart-container" style="height:200px;position:relative;">
+                <canvas id="timelineChart"></canvas>
             </div>
+            <p>Análise histórica de matrículas, orçamento e investimentos</p>
+            <span class="btn-small" onclick="window.location.href='pages/dashboard.html?view=timeline'">Ver Gráficos <i class="fas fa-arrow-right"></i></span>
+        </div>
 
-            <div class="viz-container">
-                <a href="pages/dashboard.html?view=map" class="viz-preview reveal-up" style="--delay: 0.05s">
-                    <div class="viz-placeholder" id="map-preview">
-                        <i class="fas fa-map"></i>
-                        <h4>Mapa dos Campi</h4>
-                    </div>
-                    <p>Localização geográfica de todas as unidades do IFPB</p>
-                    <span class="btn-small">Explorar Mapa <i class="fas fa-arrow-right"></i></span>
-                </a>
-
-                <a href="pages/dashboard.html?view=timeline" class="viz-preview reveal-up" style="--delay: 0.1s">
-                    <div class="viz-placeholder" id="timeline-preview">
-                        <i class="fas fa-chart-line"></i>
-                        <h4>Evolução Temporal</h4>
-                    </div>
-                    <p>Análise histórica de matrículas, orçamento e investimentos</p>
-                    <span class="btn-small">Ver Gráficos <i class="fas fa-arrow-right"></i></span>
-                </a>
-
-                <a href="pages/dashboard.html?view=comparison" class="viz-preview reveal-up" style="--delay: 0.15s">
-                    <div class="viz-placeholder" id="comparison-preview">
-                        <i class="fas fa-balance-scale"></i>
-                        <h4>Comparativos</h4>
-                    </div>
-                    <p>Compare indicadores entre campi, cursos e períodos</p>
-                    <span class="btn-small">Comparar Dados <i class="fas fa-arrow-right"></i></span>
-                </a>
+        <!-- Comparativos -->
+        <div class="viz-preview reveal-up" style="--delay: 0.15s">
+            <div class="chart-container" style="height:200px;position:relative;">
+                <canvas id="comparisonChart"></canvas>
             </div>
-        </section>
+            <p>Compare indicadores entre campi, cursos e períodos</p>
+            <span class="btn-small" onclick="window.location.href='pages/dashboard.html?view=comparison'">Comparar Dados <i class="fas fa-arrow-right"></i></span>
+        </div>
+    </div>
+</section>
 
         <!-- CTA dados abertos para todos-->
         <section class="cta reveal-up" style="--delay: 0s">
@@ -335,7 +341,7 @@
                     <a href="pages/dados-abertos.html" class="btn-primary">
                         <i class="fas fa-download"></i> Baixar Dados
                     </a>
-                    <a href="pages/sobre.html" class="btn-secondary">
+                    <a href="https://github.com/hugodeev/ifpb-data-plataform" target="_blank" class="btn-secondary">
                         <i class="fas fa-code"></i> Ver Código-Fonte
                     </a>
                 </div>

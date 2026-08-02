@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa dos Campi do IFPB</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f7fc;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #2e5a2b, #4a8c3f);
+            color: white;
+            padding: 20px 30px;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        .header p {
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+        .map-wrapper {
+            padding: 20px;
+        }
+        #map {
+            height: 600px;
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 16px;
+            padding: 12px 20px;
+            background: #f8f9fc;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #2e3a59;
+        }
+        .legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .legend .dot {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #5a5c69;
+        }
+        .loading i {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .footer {
+            text-align: center;
+            padding: 16px;
+            font-size: 0.85rem;
+            color: #858796;
+            border-top: 1px solid #e3e6f0;
+        }
+        @media (max-width: 768px) {
+            #map { height: 400px; }
+            .header h1 { font-size: 1.4rem; }
+            .legend { gap: 1rem; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗺️ Mapa dos Campi do IFPB</h1>
+            <p>26 unidades (25 campi + Reitoria) • Numeração em ordem alfabética</p>
+        </div>
+
+        <div class="map-wrapper">
+            <div id="map">
+                <div class="loading">
+                    <i>⏳</i>
+                    <p>Carregando dados e mapa...</p>
+                </div>
+            </div>
+            <div id="legend" class="legend">
+                <span><span class="dot" style="background:#1cc88a;"></span> Campus Regular</span>
+                <span><span class="dot" style="background:#f6c23e;"></span> Campus Avançado</span>
+                <span><span class="dot" style="background:#e74a3b;"></span> Em implantação</span>
+                <span><span class="dot" style="background:#36b9cc;"></span> Centro administrativo</span>
+                <span><span class="dot" style="background:#858796;"></span> Outros</span>
+            </div>
+        </div>
+        <div class="footer">
+            Dados: AnoCriaçãoAreaFísica.json + DadosDocentesIFS.json • IFPB Data Platform
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // COORDENADAS (mesmas da página institucional)
+        // ============================================================
+        const coordenadas = {
+            'JOÃO PESSOA': [-7.1355914, -34.8737658],
+            'MANGABEIRA': [-7.144524049356752, -34.84309308192913],
+            'CABEDELO': [-7.004253756122571, -34.83429622482614],
+            'CABEDELO CENTRO': [-6.972477256482318, -34.83284496251898],
+            'SANTA RITA': [-7.146405401696038, -35.00017880373486],
+            'PEDRAS DE FOGO': [-7.402130107282982, -35.116958997056194],
+            'SAPÉ': [-7.088087839399216, -35.24219855045258],
+            'MAMANGUAPE': [-6.8430, -35.1322],
+            'CAMPINA GRANDE': [-7.240083292649547, -35.916440283654204],
+            'GUARABIRA': [-6.85614486154378, -35.47118560492858],
+            'ESPERANÇA': [-7.036382672849143, -35.87264400018975],
+            'QUEIMADAS': [-7.363718929525841, -35.902364405575426],
+            'ALAGOA GRANDE': [-7.050440678515558, -35.62812103768465],
+            'AREIA': [-6.971811416211238, -35.69208555256188],
+            'ITABAIANA': [-7.304585270376579, -35.34658406045916],
+            'PATOS': [-7.074063937163226, -37.286673292057856],
+            'SOUSA': [-6.77972656614948, -38.230661598562975],
+            'CAJAZEIRAS': [-6.889503178694285, -38.545272237752144],
+            'CATOLÉ DO ROCHA': [-6.34076246254725, -37.75561476257022],
+            'MONTEIRO': [-7.905585607948157, -37.12096978124849],
+            'PRINCESA ISABEL': [-7.757790284177818, -38.01746961671981],
+            'ITAPORANGA': [-7.318675434110364, -38.14184020323397],
+            'PICUÍ': [-6.508625031820252, -36.360657868318356],
+            'SANTA LUZIA': [-6.8624879022738785, -36.911487582678966],
+            'SOLEDADE': [-7.060223036828175, -36.35652361471836]
+        };
+
+        // ============================================================
+        // CORES POR SITUAÇÃO
+        // ============================================================
+        const cores = {
+            'Campus Regular': '#1cc88a',
+            'Campus Avançado': '#f6c23e',
+            'Em implatação': '#e74a3b',
+            'Em implantação': '#e74a3b',
+            'Centro administrativo e executivo': '#36b9cc'
+        };
+
+        // ============================================================
+        // CARREGAR DADOS E RENDERIZAR MAPA
+        // ============================================================
+        async function carregarMapa() {
+            const mapContainer = document.getElementById('map');
+
+            // Mostra loading enquanto carrega
+            mapContainer.innerHTML = `<div class="loading"><i>⏳</i><p>Carregando dados...</p></div>`;
+
+            try {
+                // Caminhos relativos (ajuste se necessário)
+                const basePath = 'assets/data/';
+                const urlInst = basePath + 'Dadosinstitucionais/AnoCriaçãoAreaFísica.json';
+                const urlServ = basePath + 'EstruturaAdministrativa/DadosDocentesIFS.json';
+
+                // Busca os dois JSONs
+                const [resInst, resServ] = await Promise.all([
+                    fetch(urlInst).catch(() => ({ ok: false })),
+                    fetch(urlServ).catch(() => ({ ok: false }))
+                ]);
+
+                let dadosInst = [];
+                let dadosServ = [];
+
+                if (resInst.ok) {
+                    dadosInst = await resInst.json();
+                    console.log(`✅ Institucional: ${dadosInst.length} registros`);
+                } else {
+                    console.warn('⚠️ AnoCriaçãoAreaFísica.json não encontrado. Usando fallback.');
+                    // Fallback manual com dados básicos (apenas para demonstração)
+                    dadosInst = [
+                        { "Campi": "CAMPUS ALAGOA GRANDE", "Situação": "Em implantação" },
+                        { "Campi": "CAMPUS AREIA", "Situação": "Campus Avançado" },
+                        { "Campi": "CAMPUS CABEDELO", "Situação": "Campus Regular" },
+                        { "Campi": "CAMPUS CABEDELO CENTRO", "Situação": "Campus Regular" },
+                        { "Campi": "CAMPUS CAJAZEIRAS", "Situação": "Campus Regular" },
+                        { "Campi": "CAMPUS CAMPINA GRANDE", "Situação": "Campus Regular" },
+                        { "Campi": "CAMPUS CATOLÉ DO ROCHA", "Situação": "Campus Regular" },
+                        { "Campi": "CAMPUS ESPERANÇA", "Situação": "Campus Regular" },
+                        { "Campi": "CAMPUS GUARABIRA", "Situação": "Campus Regular" },
+                        { "Campi": "CAMPUS ITABAIANA", "Situação": "Campus Regular" },
+                        { "Campi": "CAMPUS ITAPORANGA", "Situação": "Campus Regular" },
+                        { "Campi": "CAMPUS JOÃO PESSOA", "Situação": "Campus Regular" },
+                        { "Campi": "CAMPUS MAMANGUAPE", "Situação": "Em implantação" },
+                        { "Campi": "CAMPUS MANGABEIRA", "Situação": "Campus Avançado" },
+                        { "Campi": "CAMPUS MONTEIRO", "Situação": "Campus Regular" },
+                        { "Campi": "CAMPUS PATOS", "Situação": "Campus Regular" },
+                        { "Campi": "CAMPUS PEDRAS DE FOGO", "Situação": "Campus Regular" },
+                        { "Campi": "CAMPUS PICUÍ", "Situação": "Campus Regular" },
+                        { "Campi": "CAMPUS PRINCESA ISABEL", "Situação": "Campus Regular" },
+                        { "Campi": "CAMPUS QUEIMADAS", "Situação": "Em implantação" },
+                        { "Campi": "CAMPUS SANTA LUZIA", "Situação": "Campus Regular" },
+                        { "Campi": "CAMPUS SANTA RITA", "Situação": "Campus Regular" },
+                        { "Campi": "CAMPUS SAPÉ", "Situação": "Em implantação" },
+                        { "Campi": "CAMPUS SOLEDADE", "Situação": "Campus Avançado" },
+                        { "Campi": "CAMPUS SOUSA", "Situação": "Campus Regular" },
+                        { "Campi": "REITORIA", "Situação": "Centro administrativo e executivo" }
+                    ];
+                }
+
+                if (resServ.ok) {
+                    dadosServ = await resServ.json();
+                    console.log(`✅ Servidores: ${dadosServ.length} registros`);
+                } else {
+                    console.warn('⚠️ DadosDocentesIFS.json não encontrado. Servidores serão 0.');
+                }
+
+                // Monta mapa de servidores
+                const mapaServ = {};
+                dadosServ.forEach(item => {
+                    const nome = (item.Estrutura || '').trim().toUpperCase();
+                    mapaServ[nome] = {
+                        Total_Servidores: parseFloat(item['Total de Servidores']) || 0,
+                        Docentes: parseFloat(item['Docentes']) || 0,
+                        TAEs: parseFloat(item['TAEs']) || 0,
+                        Docentes_Efetivos: parseFloat(item['Docentes Efetivos']) || 0
+                    };
+                });
+
+                // Cria array de campi para o mapa
+                const campiParaMapa = dadosInst
+                    .filter(c => c.Campi && c.Campi.trim() !== '')
+                    .map(c => {
+                        const nomeLimpo = c.Campi.trim().toUpperCase();
+                        const serv = mapaServ[nomeLimpo] || {};
+                        // Tenta extrair município do nome (fallback)
+                        let municipio = '';
+                        // Se o nome contém "CAMPUS", tenta pegar a parte após o nome
+                        const partes = c.Campi.split(' ');
+                        if (partes.length > 1) {
+                            // Tenta encontrar um nome de cidade conhecido
+                            const cidades = Object.keys(coordenadas);
+                            for (let cidade of cidades) {
+                                if (c.Campi.toUpperCase().includes(cidade)) {
+                                    municipio = cidade;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!municipio) municipio = c.Campi.replace(/^CAMPUS\s+/i, '').trim();
+
+                        return {
+                            Nome: c.Campi.trim(),
+                            Municipio: municipio,
+                            Situacao: c.Situação || 'Campus Regular',
+                            AreaFisica: c['Área física (m²)'] || '',
+                            Ano: c.Ano || '',
+                            Total_Servidores: serv.Total_Servidores || 0,
+                            Docentes: serv.Docentes || 0,
+                            TAEs: serv.TAEs || 0,
+                            Docentes_Efetivos: serv.Docentes_Efetivos || 0
+                        };
+                    });
+
+                // Ordena alfabeticamente
+                const ordenados = campiParaMapa.sort((a, b) => a.Nome.localeCompare(b.Nome, 'pt-BR'));
+
+                // === RENDERIZA O MAPA ===
+                mapContainer.innerHTML = ''; // remove loading
+
+                const map = L.map(mapContainer, {
+                    zoomControl: true,
+                    attributionControl: true
+                }).setView([-7.2, -36.5], 7);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 18,
+                    attribution: '© OpenStreetMap'
+                }).addTo(map);
+
+                let marcadores = [];
+
+                ordenados.forEach((campus, idx) => {
+                    // Tenta encontrar coordenadas pelo município ou pelo nome do campus
+                    let cidade = campus.Municipio ? campus.Municipio.toUpperCase().trim() : '';
+                    let coords = coordenadas[cidade] || coordenadas[campus.Nome.toUpperCase()] || null;
+
+                    // Se não encontrou, tenta remover "CAMPUS" do nome
+                    if (!coords) {
+                        const nomeSemCampus = campus.Nome.replace(/^CAMPUS\s+/i, '').toUpperCase().trim();
+                        coords = coordenadas[nomeSemCampus];
+                    }
+
+                    if (!coords) {
+                        console.warn('Coordenadas não encontradas para:', campus.Nome);
+                        return;
+                    }
+
+                    const situacao = (campus.Situacao || '').trim();
+                    const cor = cores[situacao] || '#858796';
+                    const numero = idx + 1;
+
+                    const icon = L.divIcon({
+                        html: `<div style="background-color: ${cor}; color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; border: 2px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">${numero}</div>`,
+                        className: 'custom-marker',
+                        iconSize: [28, 28],
+                        iconAnchor: [14, 14]
+                    });
+
+                    const marker = L.marker(coords, { icon: icon })
+                        .bindPopup(`
+                            <strong>${campus.Nome}</strong><br>
+                            Município: ${campus.Municipio || ''}<br>
+                            Situação: ${situacao}<br>
+                            Servidores: ${campus.Total_Servidores || 'N/D'}<br>
+                            Docentes: ${campus.Docentes || 'N/D'}<br>
+                            TAEs: ${campus.TAEs || 'N/D'}<br>
+                            Área: ${campus.AreaFisica || 'N/D'}
+                        `);
+                    marker.addTo(map);
+                    marcadores.push({ numero, nome: campus.Nome, coords });
+                });
+
+                // Ajusta o zoom para mostrar todos os marcadores
+                if (marcadores.length > 0) {
+                    const group = L.featureGroup(
+                        marcadores.map(m => L.marker(m.coords))
+                    );
+                    map.fitBounds(group.getBounds().pad(0.1));
+                }
+
+                // Atualiza a legenda com os números dos marcadores
+                const legendContainer = document.getElementById('legend');
+                if (legendContainer) {
+                    let html = '';
+                    const situacoes = ['Campus Regular', 'Campus Avançado', 'Em implantação', 'Centro administrativo e executivo'];
+                    situacoes.forEach(sit => {
+                        const cor = cores[sit] || '#858796';
+                        html += `<span><span class="dot" style="background:${cor};"></span> ${sit}</span>`;
+                    });
+                    legendContainer.innerHTML = html;
+                }
+
+                console.log(`🗺️ Mapa renderizado com ${marcadores.length} marcadores.`);
+
+            } catch (erro) {
+                console.error('Erro ao carregar o mapa:', erro);
+                mapContainer.innerHTML = `<div class="loading"><i>❌</i><p>Erro ao carregar dados. Verifique o console.</p></div>`;
+            }
+        }
+
+        // Inicializa quando a página carregar
+        document.addEventListener('DOMContentLoaded', carregarMapa);
+    </script>
+</body>
+</html>
