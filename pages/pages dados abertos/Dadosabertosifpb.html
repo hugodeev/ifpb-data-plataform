@@ -1,491 +1,806 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>IFPB Data Platform - Dados Abertos | Transparência e Análise</title>
-    <link rel="shortcut icon" href="../../assets/img/logosite.png" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../../assets/css/Dadosabertosifpb.css">
-    <link rel="stylesheet" href="../../style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-    
-        :root {
-            --primary-color: #387f1c;
-            --secondary-color: #59e462;
-            --success-color: #1cc88a;
-            --warning-color: #f6c23e;
-            --danger-color: #e74a3b;
-            --info-color: #36b9cc;
-            --dark-color: #2e3a59;
-            --medium-color: #5a5c69;
-            --light-color: #f8f9fc;
-            --white: #ffffff;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
-            --radius: 10px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>IFPB Data Platform - Dados Abertos | Transparência e Análise</title>
+  <link rel="shortcut icon" href="../../assets/img/logosite.png" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../../assets/css/Dadosabertosifpb.css">
+  <link rel="stylesheet" href="../../style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        /* hero section */
-        .hero {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-            padding: 3rem 0 2rem;
-        }
+  <style>
+    :root {
+      --primary-color: #1a5f7a;
+      --primary-dark: #0e4a63;
+      --primary-light: #2a7a9a;
+      --secondary-color: #1b2a4d;
+      --accent-color: #ff9a3c;
+      --accent-dark: #e68a2e;
+      --success-color: #1cc88a;
+      --warning-color: #f6c23e;
+      --danger-color: #e74a3b;
+      --info-color: #36b9cc;
+      --dark-color: #2e3a59;
+      --medium-color: #5a5c69;
+      --light-color: #f8f9fc;
+      --white: #ffffff;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+      --radius: 10px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-        .hero-badge {
-            background: var(--light-color);
-            color: var(--primary-color);
-            padding: 0.3rem 1rem;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 1rem;
-        }
+    /* ===== Hero ===== */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      padding: 3rem 0 2rem;
+    }
 
-        .hero h1 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-            line-height: 1.2;
-            color: var(--dark-color);
-        }
+    .hero-badge {
+      background: var(--light-color);
+      color: var(--primary-color);
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
 
-        .hero h1 span {
-            color: var(--primary-color);
-        }
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      letter-spacing: -1px;
+      line-height: 1.2;
+      color: var(--dark-color);
+    }
 
-        .hero p {
-            font-size: 1.1rem;
-            color: var(--medium-color);
-            margin: 1.5rem 0;
-            max-width: 90%;
-        }
+    .hero h1 span {
+      color: var(--primary-color);
+    }
 
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--medium-color);
+      margin: 1.5rem 0;
+      max-width: 90%;
+    }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 0.8rem 1.8rem;
-            border-radius: 40px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-            border: none;
-            cursor: pointer;
-        }
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
 
-        .btn-outline {
-            border: 1.5px solid var(--light-color);
-            background: white;
-            color: var(--dark-color);
-            padding: 0.8rem 1.8rem;
-            border-radius: 40px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 0.8rem 1.8rem;
+      border-radius: 40px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      border: none;
+      cursor: pointer;
+    }
 
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
-        }
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
 
-        .hero-stats {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 2rem;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--light-color);
-        }
+    .btn-outline {
+      border: 1.5px solid var(--light-color);
+      background: white;
+      color: var(--dark-color);
+      padding: 0.8rem 1.8rem;
+      border-radius: 40px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
 
-        .stat-item {
-            text-align: center;
-        }
+    .hero-stats {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--light-color);
+    }
 
-        .stat-number {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
+    .stat-item {
+      text-align: center;
+    }
 
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.8rem;
-            margin: 2rem 0;
-        }
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
 
-        .card-modern {
-            background: var(--white);
-            border-radius: 1.25rem;
-            padding: 1.5rem;
-            transition: var(--transition);
-            border: 1px solid var(--light-color);
-            box-shadow: var(--shadow-sm);
-        }
+    /* ===== Cards ===== */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.8rem;
+      margin: 2rem 0;
+    }
 
-        .card-modern:hover {
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--secondary-color);
-        }
+    .card-modern {
+      background: var(--white);
+      border-radius: 1.25rem;
+      padding: 1.5rem;
+      transition: var(--transition);
+      border: 1px solid var(--light-color);
+      box-shadow: var(--shadow-sm);
+    }
 
-        .card-icon {
-            width: 54px;
-            height: 54px;
-            background: var(--light-color);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-color);
-            font-size: 1.7rem;
-            margin-bottom: 1.2rem;
-        }
+    .card-modern:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--secondary-color);
+    }
 
-        .card-modern h3 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--dark-color);
-        }
+    .card-icon {
+      width: 54px;
+      height: 54px;
+      background: var(--light-color);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-color);
+      font-size: 1.7rem;
+      margin-bottom: 1.2rem;
+    }
 
-        .card-modern p {
-            color: var(--medium-color);
-            margin-bottom: 1.2rem;
-            font-size: 0.95rem;
-        }
+    .card-modern h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--dark-color);
+    }
 
-        .card-link {
-            font-weight: 600;
-            color: var(--primary-color);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
+    .card-modern p {
+      color: var(--medium-color);
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+    }
 
-        .highlights {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 2rem;
-            margin: 3rem 0;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--light-color);
-        }
+    .card-link {
+      font-weight: 600;
+      color: var(--primary-color);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
 
-        .charts-row {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
-            margin-top: 1.5rem;
-        }
+    /* ===== Destaques / gráficos ===== */
+    .highlights {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem;
+      margin: 3rem 0;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--light-color);
+    }
 
-        .chart-box {
-            background: var(--light-color);
-            border-radius: 1rem;
-            padding: 1rem;
-        }
+    .charts-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
 
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            margin: 2rem 0 1rem;
-        }
+    .chart-box {
+      background: var(--light-color);
+      border-radius: 1rem;
+      padding: 1rem;
+    }
 
-        .section-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--dark-color);
-            position: relative;
-            display: inline-block;
-            margin: 0;
-        }
+    canvas {
+      max-height: 260px;
+      width: 100%;
+    }
 
-        .section-title:after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: var(--secondary-color);
-            border-radius: 3px;
-        }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin: 2rem 0 1rem;
+    }
 
-        .transparencia-box {
-            background: linear-gradient(135deg, #f8f9fc, #eef2ff);
-            border-radius: var(--radius);
-            padding: 2rem;
-            margin: 2rem 0;
-            text-align: center;
-            border-left: 5px solid var(--secondary-color);
-        }
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--dark-color);
+      position: relative;
+      display: inline-block;
+      margin: 0;
+    }
 
-        canvas {
-            max-height: 260px;
-            width: 100%;
-        }
+    .section-title:after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: var(--secondary-color);
+      border-radius: 3px;
+    }
 
-        @media (max-width: 900px) {
-            .hero {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            .hero p {
-                max-width: 100%;
-            }
-            .hero-buttons {
-                justify-content: center;
-            }
-            .charts-row {
-                grid-template-columns: 1fr;
-            }
-            .section-title {
-                font-size: 1.6rem;
-            }
-        }
+    /* ===== Container padrão das seções ===== */
+    .modulo-descricao {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 2rem 2.5rem;
+      margin: 2.5rem 0 1.5rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--light-color);
+      transition: var(--transition);
+    }
 
-        @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-            .stat-number {
-                font-size: 1.8rem;
-            }
-        }
-    </style>
+    .modulo-descricao:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .descricao-texto-only p {
+      color: var(--medium-color);
+      line-height: 1.8;
+      margin-bottom: 1.2rem;
+      font-size: 0.98rem;
+      text-align: justify;
+    }
+
+    .descricao-texto-only strong {
+      color: var(--dark-color);
+      font-weight: 600;
+    }
+
+    .descricao-texto-only em {
+      color: var(--primary-color);
+      font-style: italic;
+    }
+
+    /* ===== FAQ ===== */
+    .faq-list {
+      overflow: hidden;
+    }
+
+    .faq-item {
+      border-bottom: 1px solid var(--light-color);
+      transition: var(--transition);
+    }
+
+    .faq-item:last-child {
+      border-bottom: none;
+    }
+
+    .faq-question {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.2rem 0.5rem;
+      cursor: pointer;
+      background: transparent;
+      transition: var(--transition);
+      font-weight: 500;
+      color: var(--dark-color);
+      font-size: 1rem;
+    }
+
+    .faq-question:hover {
+      background: var(--light-color);
+      border-radius: var(--radius);
+    }
+
+    .faq-question .faq-icon {
+      color: var(--primary-color);
+      font-size: 1.2rem;
+      width: 1.8rem;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .faq-question .faq-toggle {
+      margin-left: auto;
+      color: var(--medium-color);
+      transition: transform 0.3s ease;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .faq-item.active .faq-toggle {
+      transform: rotate(180deg);
+    }
+
+    .faq-question span {
+      flex: 1;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s ease;
+      padding: 0 0.5rem;
+      background: transparent;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 300px;
+      padding: 0 0.5rem 1.2rem;
+    }
+
+    .faq-answer p {
+      color: var(--medium-color);
+      line-height: 1.7;
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .faq-answer a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .faq-answer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== Tutorial ===== */
+    .tutorial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0 0.5rem;
+    }
+
+    .tutorial-step {
+      background: var(--light-color);
+      padding: 1.5rem 1.2rem;
+      border-radius: var(--radius);
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .tutorial-step:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .tutorial-step .step-number {
+      background: var(--primary-color);
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.8rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .tutorial-step strong {
+      display: block;
+      font-size: 1rem;
+      color: var(--dark-color);
+      margin-bottom: 0.3rem;
+    }
+
+    .tutorial-step p {
+      font-size: 0.85rem;
+      color: var(--medium-color);
+      margin: 0;
+    }
+
+    /* ===== Responsividade ===== */
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .hero p {
+        max-width: 100%;
+      }
+      .hero-buttons {
+        justify-content: center;
+      }
+      .charts-row {
+        grid-template-columns: 1fr;
+      }
+      .section-title {
+        font-size: 1.6rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .modulo-descricao {
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      .stat-number {
+        font-size: 1.8rem;
+      }
+      .faq-question {
+        font-size: 0.9rem;
+        padding: 1rem 0.2rem;
+        gap: 0.6rem;
+      }
+      .faq-answer {
+        padding: 0 0.2rem;
+      }
+      .faq-item.active .faq-answer {
+        padding: 0 0.2rem 1rem;
+      }
+      .faq-question .faq-icon {
+        font-size: 1rem;
+        width: 1.4rem;
+      }
+      .tutorial-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- cabeçalho e navegação -->
-    <header class="main-header" id="main-header">
-        <div class="container">
-            <a href="../../index.html" class="logo">
-                <div class="logo-icon-wrap">
-                    <i class="fas fa-chart-bar"></i>
-                </div>
-                <div class="logo-text">
-                    <h1>IFPB Data Platform</h1>
-                    <p>Transparência • Análise • Inovação</p>
-                </div>
-            </a>
-
-            <nav class="main-nav" role="navigation">
-                <ul class="nav-list">
-                    <li><a href="../../index.html" class="active"><i class="fas fa-home"></i>Início</a></li>
-                    <li><a href="../../institucional.html"><i class="fas fa-university"></i>A instituição</a></li>
-                    <li><a href="academico.html"><i class="fas fa-graduation-cap"></i>Vida Acadêmica</a></li>
-                    <li><a href="orcamento.html"><i class="fas fa-chart-pie"></i>Gestão e Orçamento</a></li>
-                    <li><a href="../dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
-                </ul>
-
-                <button class="hamburger" id="hamburger" aria-label="Menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </nav>
+  <!-- cabeçalho e navegação -->
+  <header class="main-header" id="main-header">
+    <div class="container">
+      <a href="../../index.html" class="logo">
+        <div class="logo-icon-wrap">
+          <i class="fas fa-chart-bar"></i>
         </div>
-    </header>
-
-    <div class="menu-overlay" id="menuOverlay"></div>
-
-    <!-- Menu Mobile lateral -->
-    <nav class="nav-menu-mobile" id="navMenuMobile">
-        <div class="menu-header">
-            <div class="menu-logo">
-                <i class="fas fa-chart-bar"></i>
-                <div class="menu-logo-text">
-                    <span class="menu-logo-main">IFPB Data Platform</span>
-                    <span class="menu-logo-sub">Dados Abertos</span>
-                </div>
-            </div>
-            <button class="menu-close-btn" id="menuCloseBtn">
-                <i class="fas fa-times"></i>
-            </button>
+        <div class="logo-text">
+          <h1>IFPB Data Platform</h1>
+          <p>Transparência • Análise • Inovação</p>
         </div>
-        <ul>
-            <li><a href="../../index.html"><i class="fas fa-home"></i> Início</a></li>
-            <li><a href="../../institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
-            <li><a href="academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
-            <li><a href="orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
-            <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+      </a>
+
+      <nav class="main-nav" role="navigation">
+        <ul class="nav-list">
+          <li><a href="../../index.html" class="active"><i class="fas fa-home"></i>Início</a></li>
+          <li><a href="institucional.html"><i class="fas fa-university"></i>instituição</a></li>
+          <li><a href="academico.html"><i class="fas fa-graduation-cap"></i>Vida Acadêmica</a></li>
+          <li><a href="orcamento.html"><i class="fas fa-chart-pie"></i>Gestão e Orçamento</a></li>
+          <li><a href="../dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
         </ul>
-    </nav>
 
-    <!-- conteúdo principal -->
-    <main class="container">
-        <!-- Seção Hero -->
-        <section class="hero">
-            <div>
-                <div class="hero-badge"><i class="fas fa-database"></i> Dados Abertos IFPB</div>
-                <h1>Dados para <span>transformar</span> conhecimento</h1>
-                <p>Plataforma oficial de visualização, análise e transparência dos dados institucionais, acadêmicos e orçamentários do Instituto Federal da Paraíba. Acompanhe indicadores em tempo real.</p>
-                <div class="hero-buttons">
-                    <a href="../dashboard.html" class="btn-primary" id="exploreMainBtn"><i class="fas fa-chart-simple"></i> Explorar Agora</a>
-                    <a href="#dados-destaque" class="btn-outline"><i class="fas fa-arrow-trend-down"></i> Ver Indicadores</a>
-                </div>
-            </div>
-            <div class="hero-stats">
-                <div style="display: flex; justify-content: space-around;">
-                    <div class="stat-item">
-                        <div class="stat-number" id="statCampi">26</div>
-                        <div>Campi Ativos</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="statEstudantes">37.541</div>
-                        <div>Estudantes</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number" id="statCursos">+120</div>
-                        <div>Orçamentos</div>
-                    </div>
-                </div>
-                <div style="margin-top: 1.5rem; background: var(--light-color); padding: 0.8rem; border-radius: 20px; text-align: center; font-size: 0.8rem;">
-                    <i class="fas fa-calendar-alt"></i> Dados consolidados – atualização contínua
-                </div>
-            </div>
-        </section>
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </nav>
+    </div>
+  </header>
 
-        <!-- Cards de navegação -->
-        <div class="cards-grid" id="dados-destaque">
-            <div class="card-modern">
-                <div class="card-icon"><i class="fas fa-building-columns"></i></div>
-                <h3>Institucional</h3>
-                <p>Estrutura organizacional, campi, servidores, CNPJ, indicadores de gestão e muito mais.</p>
-                <a href="../../institucional.html" class="card-link">Ver dados <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="card-modern">
-                <div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
-                <h3>Vida Acadêmica</h3>
-                <p>Matrículas, evasão, corpo docente, cursos técnicos, graduação e pós-graduação.</p>
-                <a href="academico.html" class="card-link">Explorar <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="card-modern">
-                <div class="card-icon"><i class="fas fa-chart-pie"></i></div>
-                <h3>Gestão e Orçamento</h3>
-                <p>Receitas, despesas, investimentos, execução orçamentária e transparência financeira.</p>
-                <a href="orcamento.html" class="card-link">Acessar dados <i class="fas fa-arrow-right"></i></a>
-            </div>
+  <div class="menu-overlay" id="menuOverlay"></div>
+
+  <!-- Menu Mobile lateral -->
+  <nav class="nav-menu-mobile" id="navMenuMobile">
+    <div class="menu-header">
+      <div class="menu-logo">
+        <i class="fas fa-chart-bar"></i>
+        <div class="menu-logo-text">
+          <span class="menu-logo-main">IFPB Data Platform</span>
+          <span class="menu-logo-sub">Dados Abertos</span>
         </div>
+      </div>
+      <button class="menu-close-btn" id="menuCloseBtn">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <ul>
+      <li><a href="../../index.html"><i class="fas fa-home"></i> Início</a></li>
+      <li><a href="../../institucional.html"><i class="fas fa-university"></i>Instituição</a></li>
+      <li><a href="academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
+      <li><a href="orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
+      <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+    </ul>
+  </nav>
 
-        <!-- Seção de destaques -->
-        <div class="highlights">
+  <!-- conteúdo principal -->
+  <main class="container">
+
+    <!-- Seção Hero -->
+    <section class="hero">
+      <div>
+        <div class="hero-badge"><i class="fas fa-database"></i> Última atualização: Agosto/2026</div>
+        <h1>Dados Abertos IFPB</h1>
+        <p>Plataforma oficial de visualização, análise e transparência dos dados institucionais, acadêmicos e orçamentários do Instituto Federal da Paraíba. Acompanhe indicadores em tempo real.</p>
+        <div class="hero-buttons">
+          <a href="../PagesGeral/dashboard.html" class="btn-primary" id="exploreMainBtn"><i class="fas fa-chart-simple"></i> Explorar Agora</a>
+          <a href="#Indicadores-destaque" class="btn-outline"><i class="fas fa-arrow-trend-down"></i> Ver Indicadores</a>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div style="display: flex; justify-content: space-around;">
+          <div class="stat-item">
+            <div class="stat-number" id="statCampi"></div>
+            <div>Campi</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="statEstudantes"></div>
+            <div>Estudantes</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number" id="statCursos"></div>
+            <div>Orçamentos</div>
+          </div>
+        </div>
+        <div style="margin-top: 1.5rem; background: var(--light-color); padding: 0.8rem; border-radius: 20px; text-align: center; font-size: 0.8rem;">
+          <i class="fas fa-calendar-alt"></i> Dados oficiais do IFPB – atualizados conforme fontes institucionais
+        </div>
+      </div>
+    </section>
+
+    <!-- Cards de navegação -->
+    <div class="cards-grid" id="dados-destaque">
+      <div class="card-modern">
+        <div class="card-icon"><i class="fas fa-building-columns"></i></div>
+        <h3>Institucional</h3>
+        <p>Estrutura organizacional, campi, servidores, CNPJ, indicadores de gestão e muito mais.</p>
+        <a href="institucional.html" class="card-link">Ver dados <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="card-modern">
+        <div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
+        <h3>Vida Acadêmica</h3>
+        <p>Matrículas, evasão, corpo docente, cursos técnicos, graduação e pós-graduação.</p>
+        <a href="academico.html" class="card-link">Explorar <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="card-modern">
+        <div class="card-icon"><i class="fas fa-chart-pie"></i></div>
+        <h3>Gestão e Orçamento</h3>
+        <p>Receitas, despesas, investimentos, execução orçamentária e transparência financeira.</p>
+        <a href="orcamento.html" class="card-link">Acessar dados <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+
+        <!-- DESCRIÇÃO – Sobre o Módulo Dados Abertos do IFPB -->
+        <div class="modulo-descricao">
             <div class="section-header">
-                <h2 class="section-title">Indicadores em Destaque</h2>
-                <span style="color: var(--medium-color); font-size: 0.85rem;"><i class="fas fa-chart-line"></i> Visão interativa</span>
+                <h2 class="section-title">Sobre o Módulo Dados Abertos do IFPB</h2>
             </div>
-            <div class="charts-row">
-                <div class="chart-box">
-                    <h4 style="margin-bottom: 1rem;"><i class="fas fa-chart-bar"></i> Distribuição de Servidores por Categoria</h4>
-                    <canvas id="servidoresChartHome" width="400" height="240" style="max-height:240px"></canvas>
-                </div>
-                <div class="chart-box">
-                    <h4 style="margin-bottom: 1rem;"><i class="fas fa-chart-pie"></i> Receitas vs Despesas (2024)</h4>
-                    <canvas id="orcamentoChartHome" width="400" height="240" style="max-height:240px"></canvas>
-                </div>
-            </div>
-            <div style="margin-top: 1rem; text-align: center; font-size: 0.8rem; color: var(--medium-color);">
-                <i class="fas fa-database"></i> Fonte: SIGAA / Portal da Transparência IFPB | Dados sujeitos a atualização mensal
-            </div>
-        </div>
-
-        <!-- Chamada para transparência -->
-        <div class="transparencia-box">
-            <i class="fas fa-hand-holding-heart" style="font-size: 2rem; color: var(--secondary-color);"></i>
-            <h3 style="margin: 0.5rem 0; color: var(--dark-color);">Compromisso com a Transparência</h3>
-            <p>Todos os dados disponíveis seguem a Lei de Acesso à Informação (LAI) e são extraídos de fontes oficiais do IFPB, MEC e SIAFI. Consulte também os portais de dados abertos da instituição.</p>
-            <a href="../sobre.html" style="margin-top: 1rem; display: inline-block; color: var(--primary-color); font-weight: 600;">Saiba mais sobre o projeto <i class="fas fa-chevron-right"></i></a>
-        </div>
-    </main>
-
-    <!-- rodapé final -->
-    <footer class="main-footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <div class="footer-brand">
-                        <div class="footer-logo-icon" aria-hidden="true">
-                            <i class="fas fa-chart-bar"></i>
-                        </div>
-                        <h3>IFPB Data Platform</h3>
-                    </div>
-                    <p>Plataforma de visualização e análise de dados públicos do Instituto Federal da Paraíba.</p>
-                    <div class="social-links">
-                        <a href="https://github.com/hugodeev/ifpb-data-plataform" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                        <a href="mailto:ifpbdata@gmail.com" aria-label="E-mail"><i class="fas fa-envelope"></i></a>
-                        <a href="#" aria-label="ResearchGate"><i class="fab fa-researchgate"></i></a>
-                    </div>
-                </div>
-
-                <div class="footer-col">
-                    <h3>Navegação</h3>
-                    <ul class="footer-links">
-                        <li><a href="../../index.html"><i class="fas fa-chevron-right"></i> Início</a></li>
-                        <li><a href="institucional.html"><i class="fas fa-chevron-right"></i> A Instituição</a></li>
-                        <li><a href="academico.html"><i class="fas fa-chevron-right"></i> Vida Acadêmica</a></li>
-                        <li><a href="orcamento.html"><i class="fas fa-chevron-right"></i> Gestão e Orçamento</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-col">
-                    <h3>Recursos</h3>
-                    <ul class="footer-links">
-                        <li><a href="Dadosabertosifpb.html"><i class="fas fa-chevron-right"></i> Dados Abertos IFPB</a></li>
-                        <li><a href="../Pages Enade/DadosENADE.html"><i class="fas fa-chevron-right"></i> Dados ENADE</a></li>
-                        <li><a href="../Pagesdadosformularios/Dadosforms.html"><i class="fas fa-chevron-right"></i> Dados de Pesquisa</a></li>
-                        <li><a href="../sobre.html"><i class="fas fa-chevron-right"></i> Sobre o Projeto</a></li>
-                        <li><a href="../contato.html"><i class="fas fa-chevron-right"></i> Contato</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-col">
-                    <h3>Projeto de Pesquisa</h3>
-                    <p>Iniciação Científica — IFPB<br>
-                    Desenvolvimento de plataforma digital interativa para dados públicos.</p>
-                    <a href="../sobre.html" class="footer-btn">Saiba Mais <i class="fas fa-arrow-right"></i></a>
-                </div>
+            <div class="descricao-texto-only">
+                <p>
+                    O módulo <strong>Dados Abertos do IFPB</strong> é um espaço da <strong>IFPB Data Platform</strong> que reúne, organiza e disponibiliza, de forma simples e visual, as principais informações públicas do Instituto Federal da Paraíba. Os dados são extraídos diretamente de fontes oficiais, como o <strong>Portal de Dados Abertos</strong> (dados.ifpb.edu.br), o <strong>Portal da Transparência</strong>, os <strong>Relatórios Anuais de Gestão</strong> e sistemas institucionais, garantindo a rastreabilidade e a confiabilidade das informações apresentadas.
+                </p>
+                <p>
+                    Com este módulo, você pode consultar dados sobre a estrutura organizacional, campi, cursos, matrículas, servidores, orçamento e muito mais, tudo em um único lugar. As informações são organizadas em três grandes áreas: <strong>Institucional</strong>, <strong>Vida Acadêmica</strong> e <strong>Gestão e Orçamento</strong>. Na área Institucional, você encontra a lista completa dos campi, sua localização, ano de criação, além de dados detalhados sobre os servidores (quantidade, titulação e regime de trabalho). Na área Vida Acadêmica, estão disponíveis informações sobre cursos oferecidos em cada modalidade (técnico, graduação e pós-graduação), número de vagas, evolução histórica das matrículas, distribuição de estudantes por campus, curso, gênero e faixa etária, além de taxas de evasão e conclusão. Na área Gestão e Orçamento, é possível acompanhar receitas, despesas, investimentos e a execução orçamentária da instituição, com detalhamento por campus e por tipo de gasto.
+                </p>
+                <p>
+                    Todas as visualizações foram desenvolvidas para serem intuitivas e acessíveis a qualquer usuário, mesmo sem conhecimento técnico em análise de dados. Gráficos de barras comparam os campi entre si, gráficos de pizza mostram distribuições proporcionais, e gráficos de linha revelam a evolução dos indicadores ao longo do tempo. Além disso, você pode filtrar as informações por campus, navegar por abas temáticas, ampliar qualquer gráfico para ver os detalhes e exportar os dados nos formatos <strong>PNG</strong>, <strong>JSON</strong> ou <strong>CSV</strong>, facilitando o uso das informações em pesquisas, relatórios e análises aprofundadas.
+                </p>
+                <p>
+                    Os dados apresentados vêm diretamente de fontes oficiais do IFPB, como o Portal de Dados Abertos (dados.ifpb.edu.br), o Portal da Transparência e os Relatórios Anuais de Gestão. Todo o conteúdo está em conformidade com a <strong>Lei de Acesso à Informação (LAI)</strong> e com os princípios da transparência pública, assegurando que você tenha acesso a informações confiáveis, auditáveis e atualizadas sobre a instituição. A plataforma também respeita a <strong>Lei Geral de Proteção de Dados (LGPD)</strong>, garantindo a privacidade e o tratamento ético das informações pessoais quando aplicável.
+                </p>
+                <p>
+                    O módulo já está concluído e totalmente integrado com dados reais, permitindo que você acompanhe a realidade do IFPB de forma clara e transparente. Todas as informações disponíveis refletem os dados oficiais mais recentes da instituição, com atualização contínua conforme novas bases são disponibilizadas pelas fontes oficiais. A interface foi projetada para oferecer uma experiência fluida, tanto em computadores quanto em dispositivos móveis, garantindo que o acesso à informação pública seja verdadeiramente universal.
+                </p>
+                <p>
+                    O módulo Dados Abertos do IFPB foi feito para facilitar o acesso de <strong>estudantes, professores, servidores, pesquisadores e qualquer cidadão</strong> que queira conhecer melhor a instituição. Ele cumpre o papel de transformar números e planilhas em conhecimento prático, contribuindo para uma gestão mais transparente e para o controle social das atividades do IFPB. Ao disponibilizar dados públicos de forma acessível e interativa, a plataforma fortalece o diálogo entre a instituição e a sociedade, promovendo a participação cidadã e a melhoria contínua da educação pública.
+                </p>
             </div>
         </div>
-    </footer>
+    <!-- INDICADORES EM DESTAQUE -->
+    <section id="Indicadores-destaque">
+      <div class="highlights">
+        <div class="section-header">
+          <h2 class="section-title">Indicadores em Destaque</h2>
+          <span style="color: var(--medium-color); font-size: 0.85rem;"><i class="fas fa-chart-line"></i> Visão interativa</span>
+        </div>
+        <div class="charts-row">
+          <div class="chart-box">
+            <h4 style="margin-bottom: 1rem;"><i class="fas fa-chart-bar"></i> Distribuição de Servidores por Categoria</h4>
+            <canvas id="servidoresChartHome" width="400" height="240" style="max-height:240px"></canvas>
+          </div>
+          <div class="chart-box">
+            <h4 style="margin-bottom: 1rem;"><i class="fas fa-chart-pie"></i> Receitas vs Despesas (2024)</h4>
+            <canvas id="orcamentoChartHome" width="400" height="240" style="max-height:240px"></canvas>
+          </div>
+        </div>
+        <div style="margin-top: 1rem; text-align: center; font-size: 0.8rem; color: var(--medium-color);">
+          <i class="fas fa-database"></i> Fonte: IFPB, como o Portal de Dados Abertos (dados.ifpb.edu.br), o Portal da Transparência e os Relatórios Anuais de Gestão | Dados sujeitos a atualização mensal
+        </div>
+      </div>
+    </section>
+    <!-- ===== PERGUNTAS FREQUENTES (nova estrutura padronizada) ===== -->
+    <div class="modulo-descricao">
+      <div class="section-header">
+        <h2 class="section-title">Perguntas Frequentes</h2>
+        <span style="color: var(--medium-color); font-size: 0.85rem;"><i class="fas fa-question-circle"></i> Dúvidas comuns</span>
+      </div>
 
-<script>
-// ============================================================
-// 1. CARREGAR DADOS DOS JSONs (com orçamento)
-// ============================================================
-async function carregarDados() {
-    try {
+      <div class="faq-list">
+        <!-- Item 1 -->
+        <div class="faq-item">
+          <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+            <i class="fas fa-sync-alt faq-icon"></i>
+            <span>Os dados são atualizados com que frequência?</span>
+            <i class="fas fa-chevron-down faq-toggle"></i>
+          </div>
+          <div class="faq-answer">
+            <p>Os dados são revisados periodicamente conforme a disponibilização pelas fontes oficiais (IFPB, Portal da Transparência e Relatórios Anuais de Gestão do IFPB). A data da última atualização de cada indicador fica indicada junto aos gráficos e tabelas.</p>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="faq-item">
+          <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+            <i class="fas fa-download faq-icon"></i>
+            <span>Posso baixar os dados para usar em pesquisas ou relatórios?</span>
+            <i class="fas fa-chevron-down faq-toggle"></i>
+          </div>
+          <div class="faq-answer">
+            <p>Sim. As visualizações permitem exportação nos formatos PNG, JSON e CSV, disponíveis diretamente nas páginas de cada área (Institucional, Vida Acadêmica e Gestão e Orçamento).</p>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="faq-item">
+          <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+            <i class="fas fa-balance-scale faq-icon"></i>
+            <span>Os dados podem ser usados livremente, inclusive para fins comerciais?</span>
+            <i class="fas fa-chevron-down faq-toggle"></i>
+          </div>
+          <div class="faq-answer">
+            <p>Os dados seguem a Lei de Acesso à Informação (LAI) e são de natureza pública. Recomendamos citar o <strong>IFPB Data Platform</strong> e o <strong>IFPB</strong> como fonte ao utilizá-los.</p>
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="faq-item">
+          <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+            <i class="fas fa-exclamation-triangle faq-icon"></i>
+            <span>Encontrei uma divergência ou erro em algum dado. Como reporto?</span>
+            <i class="fas fa-chevron-down faq-toggle"></i>
+          </div>
+          <div class="faq-answer">
+            <p>Você pode entrar em contato pelo e-mail <a href="mailto:ifpbdata@gmail.com">ifpbdata@gmail.com</a> ou pela <a href="../contato.html">página de Contato</a>, informando a página, o gráfico ou dataset em questão.</p>
+          </div>
+        </div>
+
+        <!-- Item 5 -->
+        <div class="faq-item">
+          <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+            <i class="fas fa-file-signature faq-icon"></i>
+            <span>Os dados aqui substituem um pedido formal via Lei de Acesso à Informação (LAI)?</span>
+            <i class="fas fa-chevron-down faq-toggle"></i>
+          </div>
+          <div class="faq-answer">
+            <p>Não necessariamente. Para informações não disponibilizadas na plataforma, é possível fazer um pedido formal através do canal oficial do <a href="https://www.ifpb.edu.br/sic" target="_blank">e-SIC do IFPB</a>.</p>
+          </div>
+        </div>
+
+        <!-- Item 6 -->
+        <div class="faq-item">
+          <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+            <i class="fas fa-quote-right faq-icon"></i>
+            <span>Como cito os dados desta plataforma em um trabalho acadêmico?</span>
+            <i class="fas fa-chevron-down faq-toggle"></i>
+          </div>
+          <div class="faq-answer">
+            <p>Sugerimos a citação: <em>"Dados extraídos do IFPB Data Platform (hugodeev.github.io/ifpb-data-plataform), com base em fontes oficiais do Instituto Federal da Paraíba, acessado em [data]."</em></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== COMO EXPLORAR OS DADOS (nova estrutura padronizada) ===== -->
+    <div class="modulo-descricao" id="como-explorar">
+      <div class="section-header">
+        <h2 class="section-title">Como Explorar os Dados</h2>
+        <span style="color: var(--medium-color); font-size: 0.85rem;"><i class="fas fa-lightbulb"></i> Passo a passo</span>
+      </div>
+
+      <div class="tutorial-grid">
+        <div class="tutorial-step">
+          <div class="step-number">1</div>
+          <strong>Escolha um tema</strong>
+          <p>Clique em Institucional, Vida Acadêmica ou Gestão</p>
+        </div>
+        <div class="tutorial-step">
+          <div class="step-number">2</div>
+          <strong>Explore gráficos e tabelas</strong>
+          <p>Use filtros, abas e amplie os gráficos</p>
+        </div>
+        <div class="tutorial-step">
+          <div class="step-number">3</div>
+          <strong>Baixe os dados</strong>
+          <p>Exporte em PNG, JSON ou CSV</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- rodapé final -->
+  <footer class="main-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="footer-brand">
+            <div class="footer-logo-icon" aria-hidden="true">
+              <i class="fas fa-chart-bar"></i>
+            </div>
+            <h3>IFPB Data Platform</h3>
+          </div>
+          <p>Plataforma de visualização e análise de dados públicos do Instituto Federal da Paraíba.</p>
+          <div class="social-links">
+            <a href="https://github.com/hugodeev/ifpb-data-plataform" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="mailto:ifpbdata@gmail.com" aria-label="E-mail"><i class="fas fa-envelope"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h3>Navegação</h3>
+          <ul class="footer-links">
+            <li><a href="../../index.html"><i class="fas fa-chevron-right"></i> Início</a></li>
+            <li><a href="institucional.html"><i class="fas fa-chevron-right"></i> A Instituição</a></li>
+            <li><a href="academico.html"><i class="fas fa-chevron-right"></i> Vida Acadêmica</a></li>
+            <li><a href="orcamento.html"><i class="fas fa-chevron-right"></i> Gestão e Orçamento</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Recursos</h3>
+          <ul class="footer-links">
+            <li><a href="Dadosabertosifpb.html"><i class="fas fa-chevron-right"></i> Dados Abertos IFPB</a></li>
+            <li><a href="../Pages Enade/DadosENADE.html"><i class="fas fa-chevron-right"></i> Dados ENADE</a></li>
+            <li><a href="../Pagesdadosformularios/Dadosforms.html"><i class="fas fa-chevron-right"></i> Dados de Pesquisa</a></li>
+            <li><a href="../PagesGeral/sobre.html"><i class="fas fa-chevron-right"></i> Sobre o Projeto</a></li>
+            <li><a href="../PagesGeral/contato.html"><i class="fas fa-chevron-right"></i> Contato</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>Projeto de Pesquisa</h3>
+          <p>Iniciação Científica — IFPB<br>
+          Desenvolvimento de plataforma digital interativa para dados públicos.</p>
+          <a href="../PagesGeral/sobre.html" class="footer-btn">Saiba Mais <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+ <script>
+    // ============================================================
+    // 1. CARREGAR DADOS DOS JSONs (com orçamento)
+    // ============================================================
+    async function carregarDados() {
+      try {
         const basePath = '../../assets/data/';
 
-        // Carrega campi, matrículas e orçamento em paralelo
         const [resCampi, resMatriculas, resOrc] = await Promise.all([
-            fetch(basePath + 'Campi/campi.json'),
-            fetch(basePath + 'EstruturaAdministrativa/DadosMatriculasDiscentes.json'),
-            fetch(basePath + 'DadosOrçamentario/dadosOrcamentario.json')   // <-- NOVO
+          fetch(basePath + 'Campi/campi.json'),
+          fetch(basePath + 'EstruturaAdministrativa/DadosMatriculasDiscentes.json'),
+          fetch(basePath + 'DadosOrçamentario/dadosOrcamentario.json')
         ]);
 
         if (!resCampi.ok) throw new Error(`HTTP ${resCampi.status} - Campi`);
@@ -494,217 +809,230 @@ async function carregarDados() {
 
         const campi = await resCampi.json();
         const matriculas = await resMatriculas.json();
-        const orcamento = await resOrc.json();   // <-- NOVO
+        const orcamento = await resOrc.json();
 
-        processarDados(campi, matriculas, orcamento);   // <-- NOVO
-    } catch (erro) {
+        processarDados(campi, matriculas, orcamento);
+      } catch (erro) {
         console.error('Erro ao carregar dados:', erro);
-        // Fallback mantém valores estáticos
         document.getElementById('statCampi').textContent = '26';
+        document.getElementById('statEstudantes').textContent = '0';
         document.getElementById('statCursos').textContent = 'R$ 0,00';
         const fonteEl = document.querySelector('.highlights > div:last-child');
         if (fonteEl) {
-            fonteEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Não foi possível carregar os dados. Exibindo versão estática.';
+          fonteEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Não foi possível carregar os dados. Exibindo versão estática.';
         }
+      }
     }
-}
 
-// ============================================================
-// 2. PROCESSAR DADOS (incluindo orçamento)
-// ============================================================
-function processarDados(campi, matriculas, orcamento) {
-    // ---- CAMPOS ----
-    const campiFiltrados = campi.filter(item => 
+    // ============================================================
+    // 2. PROCESSAR DADOS
+    // ============================================================
+    function processarDados(campi, matriculas, orcamento) {
+      // ---- CAMPOS ----
+      const campiFiltrados = campi.filter(item =>
         item.Nome && item.Nome.includes('CAMPUS')
-    );
-    const totalCampi = campiFiltrados.length;
+      );
+      const totalCampi = campiFiltrados.length;
 
-    // ---- MATRÍCULAS ----
-    const validos = matriculas.filter(item => {
+      // ---- MATRÍCULAS ----
+      const validos = matriculas.filter(item => {
         const mat = parseInt(item.Matrículas);
         return !isNaN(mat) && mat > 0;
-    });
+      });
 
-    const porAno = {};
-    validos.forEach(item => {
+      const porAno = {};
+      validos.forEach(item => {
         const ano = item.Ano;
         const mat = parseInt(item.Matrículas);
         if (!porAno[ano]) porAno[ano] = 0;
         porAno[ano] += mat;
-    });
+      });
 
-    const anos = Object.keys(porAno).map(Number).sort((a, b) => a - b);
-    const ultimoAno = anos[anos.length - 1] || 2025;
-    const totalMatriculasUltimoAno = porAno[ultimoAno] || 0;
+      // ===== TOTAL GERAL DE MATRÍCULAS (soma de todos os anos) =====
+      const totalMatriculasGeral = Object.values(porAno).reduce((soma, val) => soma + val, 0);
 
-    // Matrículas por campus no último ano (para gráfico)
-    const porCampusUltimoAno = {};
-    validos.filter(item => item.Ano === ultimoAno).forEach(item => {
+      // Último ano (para gráfico de barras e mensagem de fonte)
+      const anos = Object.keys(porAno).map(Number).sort((a, b) => a - b);
+      const ultimoAno = anos[anos.length - 1] || 2025;
+
+      // ---- MATRÍCULAS POR CAMPUS NO ÚLTIMO ANO (para gráfico de barras) ----
+      const porCampusUltimoAno = {};
+      validos.filter(item => item.Ano === ultimoAno).forEach(item => {
         const campus = item['Estrutura com Matrícula'];
         const mat = parseInt(item.Matrículas);
         porCampusUltimoAno[campus] = (porCampusUltimoAno[campus] || 0) + mat;
-    });
-    const campiOrdenados = Object.keys(porCampusUltimoAno).sort((a, b) => porCampusUltimoAno[b] - porCampusUltimoAno[a]);
+      });
+      const campiOrdenados = Object.keys(porCampusUltimoAno).sort((a, b) => porCampusUltimoAno[b] - porCampusUltimoAno[a]);
 
-    // ---- ORÇAMENTO ----
-    let totalEmpenhado = 0;
-    let totalLiquidado = 0;
-    let totalPago = 0;
-    let anoMaisRecente = 0;
-
-    orcamento.forEach(item => {
-        // Soma valores (convertendo para número)
+      // ---- ORÇAMENTO ----
+      let totalEmpenhado = 0;
+      orcamento.forEach(item => {
         const empenhado = parseFloat(item.valor_empenhado) || 0;
-        const liquidado = parseFloat(item.valor_liquidado) || 0;
-        const pago = parseFloat(item.valor_pago) || 0;
         totalEmpenhado += empenhado;
-        totalLiquidado += liquidado;
-        totalPago += pago;
+      });
 
-        // Extrai o ano do campo mes_ano (ex: "01/2014")
-        const partes = item.mes_ano.split('/');
-        if (partes.length === 2) {
-            const ano = parseInt(partes[1]);
-            if (!isNaN(ano) && ano > anoMaisRecente) {
-                anoMaisRecente = ano;
+      let valorFormatado;
+      if (totalEmpenhado >= 1e9) {
+        valorFormatado = 'R$ ' + (totalEmpenhado / 1e9).toFixed(1) + ' bi';
+      } else if (totalEmpenhado >= 1e6) {
+        valorFormatado = 'R$ ' + (totalEmpenhado / 1e6).toFixed(2) + ' mi';
+      } else {
+        valorFormatado = 'R$ ' + totalEmpenhado.toLocaleString('pt-BR');
+      }
+
+      // ===== ATUALIZAR ELEMENTOS HERO =====
+      document.getElementById('statCampi').textContent = totalCampi;
+      document.getElementById('statEstudantes').textContent = totalMatriculasGeral.toLocaleString('pt-BR');
+      document.getElementById('statCursos').textContent = valorFormatado;
+
+      // ---- ATUALIZAR RODAPÉ DO HERO (se existir) ----
+      const infoData = document.querySelector('.hero-stats div:last-child');
+      if (infoData) {
+        infoData.innerHTML = ` Campi `;
+      }
+
+      // ============================================================
+      // 3. ATUALIZAR GRÁFICOS
+      // ============================================================
+
+      // 3.1 GRÁFICO 1 – Evolução anual (linha)
+      const chartBoxEvolucao = document.querySelector('.charts-row .chart-box:first-child');
+      if (chartBoxEvolucao) {
+        const oldCanvas = chartBoxEvolucao.querySelector('canvas');
+        if (oldCanvas) oldCanvas.remove();
+        const canvas = document.createElement('canvas');
+        canvas.style.maxHeight = '240px';
+        canvas.style.width = '100%';
+        chartBoxEvolucao.appendChild(canvas);
+
+        const h4 = chartBoxEvolucao.querySelector('h4');
+        if (h4) h4.innerHTML = '<i class="fas fa-chart-line"></i> Evolução das Matrículas (total por ano)';
+
+        new Chart(canvas, {
+          type: 'line',
+          data: {
+            labels: anos,
+            datasets: [{
+              label: 'Total de matrículas',
+              data: anos.map(ano => porAno[ano] || 0),
+              borderColor: '#387f1c',
+              backgroundColor: 'rgba(56,127,28,0.1)',
+              fill: true,
+              tension: 0.3,
+              pointRadius: 4,
+              pointBackgroundColor: '#387f1c'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => `Matrículas: ${ctx.raw.toLocaleString('pt-BR')}`
+                }
+              }
+            },
+            scales: {
+              y: { beginAtZero: true, title: { display: true, text: 'Matrículas' } },
+              x: { ticks: { autoSkip: true, maxTicksLimit: 10 } }
             }
-        }
-    });
+          }
+        });
+      }
 
-// Formata o total para exibição (ex: 382.7 mi)
-let valorFormatado;
-if (totalEmpenhado >= 1e9) {
-    valorFormatado = 'R$ ' + (totalEmpenhado / 1e9).toFixed(1) + ' bi';
-} else if (totalEmpenhado >= 1e6) {
-    valorFormatado = 'R$ ' + (totalEmpenhado / 1e6).toFixed(2) + ' mi';
-} else {
-    valorFormatado = 'R$ ' + totalEmpenhado.toLocaleString('pt-BR');
-}
+      // 3.2 GRÁFICO 2 – Matrículas por campus no último ano (barras – top 10)
+      const chartBoxCampus = document.querySelector('.charts-row .chart-box:last-child');
+      if (chartBoxCampus) {
+        const oldCanvas = chartBoxCampus.querySelector('canvas');
+        if (oldCanvas) oldCanvas.remove();
+        const canvas = document.createElement('canvas');
+        canvas.style.maxHeight = '240px';
+        canvas.style.width = '100%';
+        chartBoxCampus.appendChild(canvas);
 
-        // ============================================================
-        // 3. ATUALIZAR ELEMENTOS HTML (HERO)
-        // ============================================================
-        document.getElementById('statCampi').textContent = totalCampi;
-        document.getElementById('statEstudantes').textContent = totalMatriculasUltimoAno.toLocaleString('pt-BR');
-        document.getElementById('statCursos').textContent = valorFormatado;
+        const h4 = chartBoxCampus.querySelector('h4');
+        if (h4) h4.innerHTML = `<i class="fas fa-chart-bar"></i> Matrículas por Campus (${ultimoAno})`;
 
-        // Atualizar rodapé do hero
-        const infoData = document.querySelector('.hero-stats div:last-child');
-        if (infoData) {
-            infoData.innerHTML = `</i> Campi Ativos`;
-        }
+        const topCampi = campiOrdenados.slice(0, 10);
+        const topValores = topCampi.map(c => porCampusUltimoAno[c]);
 
-        // ============================================================
-        // 4. ATUALIZAR GRÁFICOS
-        // ============================================================
-
-        // 4.1 Evolução anual (linha)
-        const chartBoxEvolucao = document.querySelector('.charts-row .chart-box:first-child');
-        if (chartBoxEvolucao) {
-            const oldCanvas = chartBoxEvolucao.querySelector('canvas');
-            if (oldCanvas) oldCanvas.remove();
-            const canvas = document.createElement('canvas');
-            canvas.style.maxHeight = '240px';
-            canvas.style.width = '100%';
-            chartBoxEvolucao.appendChild(canvas);
-
-            const h4 = chartBoxEvolucao.querySelector('h4');
-            if (h4) h4.innerHTML = '<i class="fas fa-chart-line"></i> Evolução das Matrículas (total)';
-
-            new Chart(canvas, {
-                type: 'line',
-                data: {
-                    labels: anos,
-                    datasets: [{
-                        label: 'Total de matrículas',
-                        data: anos.map(ano => porAno[ano] || 0),
-                        borderColor: '#387f1c',
-                        backgroundColor: 'rgba(56,127,28,0.1)',
-                        fill: true,
-                        tension: 0.3,
-                        pointRadius: 4,
-                        pointBackgroundColor: '#387f1c'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: (ctx) => `Matrículas: ${ctx.raw.toLocaleString('pt-BR')}`
-                            }
-                        }
-                    },
-                    scales: {
-                        y: { beginAtZero: true, title: { display: true, text: 'Matrículas' } },
-                        x: { ticks: { autoSkip: true, maxTicksLimit: 10 } }
-                    }
+        new Chart(canvas, {
+          type: 'bar',
+          data: {
+            labels: topCampi.map(c => c.replace('Campus ', '')),
+            datasets: [{
+              label: 'Matrículas',
+              data: topValores,
+              backgroundColor: '#387f1c',
+              borderRadius: 6,
+              barPercentage: 0.6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => `Matrículas: ${ctx.raw.toLocaleString('pt-BR')}`
                 }
-            });
-        }
+              }
+            },
+            scales: {
+              y: { beginAtZero: true, title: { display: true, text: 'Matrículas' } },
+              x: { ticks: { autoSkip: true, maxRotation: 45, minRotation: 30 } }
+            }
+          }
+        });
+      }
 
-        // 4.2 Matrículas por campus (barras – top 10)
-        const chartBoxCampus = document.querySelector('.charts-row .chart-box:last-child');
-        if (chartBoxCampus) {
-            const oldCanvas = chartBoxCampus.querySelector('canvas');
-            if (oldCanvas) oldCanvas.remove();
-            const canvas = document.createElement('canvas');
-            canvas.style.maxHeight = '240px';
-            canvas.style.width = '100%';
-            chartBoxCampus.appendChild(canvas);
+      // ============================================================
+      // 4. ATUALIZAR FONTE NO RODAPÉ DA SEÇÃO DE DESTAQUES
+      // ============================================================
+      const fonteEl = document.querySelector('.highlights > div:last-child');
+      if (fonteEl) {
+        fonteEl.innerHTML = `<i class="fas fa-database"></i> Fonte: Dados Abertos, Transparência e Relatórios IFPB | Atualização mensal | Último ano: ${ultimoAno} | ${totalCampi} campi`;
+      }
 
-            const h4 = chartBoxCampus.querySelector('h4');
-            if (h4) h4.innerHTML = `<i class="fas fa-chart-bar"></i> Matrículas por Campus (${ultimoAno})`;
-
-            const topCampi = campiOrdenados.slice(0, 10);
-            const topValores = topCampi.map(c => porCampusUltimoAno[c]);
-
-            new Chart(canvas, {
-                type: 'bar',
-                data: {
-                    labels: topCampi.map(c => c.replace('Campus ', '')),
-                    datasets: [{
-                        label: 'Matrículas',
-                        data: topValores,
-                        backgroundColor: '#387f1c',
-                        borderRadius: 6,
-                        barPercentage: 0.6
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: (ctx) => `Matrículas: ${ctx.raw.toLocaleString('pt-BR')}`
-                            }
-                        }
-                    },
-                    scales: {
-                        y: { beginAtZero: true, title: { display: true, text: 'Matrículas' } },
-                        x: { ticks: { autoSkip: true, maxRotation: 45, minRotation: 30 } }
-                    }
-                }
-            });
-        }
-
-        // ============================================================
-        // 5. ATUALIZAR FONTE NO RODAPÉ DA SEÇÃO
-        // ============================================================
-        const fonteEl = document.querySelector('.highlights > div:last-child');
-        if (fonteEl) {
-            fonteEl.innerHTML = `<i class="fas fa-database"></i> Fonte: Dados institucionais IFPB (SIGAA) | Último ano: ${ultimoAno} | ${totalCampi} campi ativos`;
-        }
-
-        console.log('✅ Dados atualizados com sucesso!');
+      console.log('✅ Dados atualizados com sucesso! Total geral de matrículas:', totalMatriculasGeral.toLocaleString('pt-BR'));
     }
 
     // ============================================================
-    // 6. INICIALIZAR
+    // FAQ – ACORDEÃO
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', function() {
+      const faqItems = document.querySelectorAll('.faq-item');
+
+      faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+
+        question.addEventListener('click', function() {
+          faqItems.forEach(other => {
+            if (other !== item && other.classList.contains('active')) {
+              other.classList.remove('active');
+              other.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+            }
+          });
+
+          const isActive = item.classList.contains('active');
+          item.classList.toggle('active');
+          question.setAttribute('aria-expanded', !isActive);
+        });
+
+        question.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.click();
+          }
+        });
+      });
+    });
+
+    // ============================================================
+    // INICIALIZAR
     // ============================================================
     document.addEventListener('DOMContentLoaded', carregarDados);
 </script>

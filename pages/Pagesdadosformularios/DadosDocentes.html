@@ -4,21 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Pesquisa Docente - IFPB Data Platform</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="shortcut icon" href="../../assets/img/logosite.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/Dadosabertosifpb.css">
     <link rel="stylesheet" href="../../style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.1/dist/chartjs-chart-treemap.min.js"></script>
-
+    <script src="../../assets/js/conversor.js"></script>
     <style>
-        /* Estilos iguais ao template de discentes – mantido */
         :root {
-            --primary-color: #387f1c;
-            --primary-light: #4ca32a;
-            --primary-dark: #1e4a0e;
-            --secondary-color: #59e462;
+            --primary-color: #ff9a3c;
+            --primary-dark: #e68a2e;
+            --primary-light: #ffb86b;
+            --secondary-color: #da9b1c;
             --accent-color: #ff9a3c;
-            --accent-dark: #e07c1a;
+            --accent-dark: #e68a2e;
             --success-color: #1cc88a;
             --warning-color: #f6c23e;
             --danger-color: #e74a3b;
@@ -27,262 +29,37 @@
             --medium-color: #5a5c69;
             --light-color: #f8f9fc;
             --white: #ffffff;
-            --text-color: #2c3e50;
-            --text-light: #4a5568;
-            --text-muted: #718096;
-            --bg-light: #eef2ff;
-            --border-color: #dde3ea;
-            --header-height: 72px;
             --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
             --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
             --radius: 10px;
-            --radius-sm: 6px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --t-base: 0.3s ease;
-            --t-fast: 0.2s ease;
-            --font-heading: 'Poppins', sans-serif;
-            --font-body: 'Roboto', sans-serif;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: var(--font-body); background: var(--light-color); color: var(--text-color); line-height: 1.5; overflow-x: hidden; }
-        a { text-decoration: none; color: inherit; }
-        img { display: block; max-width: 100%; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2rem); width: 100%; }
-
-        /* Header e navegação – igual ao template */
-        .main-header {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            height: var(--header-height);
-            display: flex;
-            align-items: center;
-            transition: box-shadow var(--t-base);
-        }
-        .main-header.scrolled { box-shadow: 0 4px 24px rgba(26,95,122,0.12); }
-        .main-header .container { display: flex; justify-content: space-between; align-items: center; }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: clamp(8px, 2vw, 12px);
-        }
-        .logo-icon-wrap {
-            width: clamp(36px, 6vw, 42px);
-            height: clamp(36px, 6vw, 42px);
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: clamp(1rem, 4vw, 1.2rem);
-            flex-shrink: 0;
-            transition: transform var(--t-base);
-        }
-        .logo:hover .logo-icon-wrap { transform: rotate(-5deg) scale(1.05); }
-        .logo-text h1 {
-            font-family: var(--font-heading);
-            font-size: clamp(1rem, 4vw, 1.3rem);
-            font-weight: 700;
-            color: var(--primary-color);
-            line-height: 1.2;
-        }
-        .logo-text p {
-            font-size: clamp(0.6rem, 2.5vw, 0.72rem);
-            color: var(--text-muted);
-            letter-spacing: 0.3px;
         }
 
-        .main-nav { display: flex; align-items: center; }
-        .nav-list {
-            display: flex;
-            list-style: none;
-            gap: 2px;
-            align-items: center;
-        }
-        .nav-list a {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            padding: 8px 13px;
-            border-radius: var(--radius-sm);
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: var(--text-light);
-            transition: color var(--t-fast), background var(--t-fast);
-        }
-        .nav-list a:hover { color: var(--primary-color); background: rgba(56,127,28,0.06); }
-        .nav-list a.active {
-            color: var(--primary-color);
-            background: rgba(56,127,28,0.08);
-            font-weight: 600;
-        }
-        .dashboard-btn {
-            background: var(--accent-color) !important;
-            color: white !important;
-            border-radius: var(--radius-sm) !important;
-            padding: 9px 18px !important;
-            font-weight: 600 !important;
-            margin-left: 8px;
-            transition: background var(--t-fast), transform var(--t-base), box-shadow var(--t-base) !important;
-        }
-        .dashboard-btn:hover {
-            background: var(--accent-dark) !important;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(255,154,60,0.35) !important;
-        }
+        * { box-sizing: border-box; }
 
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 6px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-            z-index: 1002;
-        }
-        .hamburger span {
-            width: 26px;
-            height: 2px;
-            background: var(--text-color);
-            transition: all 0.3s ease;
-            border-radius: 100px;
-        }
-        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(6px,6px); }
-        .hamburger.active span:nth-child(2) { opacity: 0; transform: translateX(-10px); }
-        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(6px,-6px); }
-
-        .menu-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(4px);
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        .menu-overlay.active { opacity: 1; visibility: visible; }
-
-        .nav-menu-mobile {
-            position: fixed;
-            top: 0; left: -100%;
-            width: 280px;
-            height: 100dvh;
-            background: #ffffff;
-            padding: 50px 24px 20px;
-            transition: left 0.3s ease;
-            z-index: 1001;
-            overflow-y: auto;
-            box-shadow: 5px 0 30px rgba(0,0,0,0.3);
-            display: none;
-        }
-        .nav-menu-mobile.active { left: 0; }
-        .nav-menu-mobile ul {
-            list-style: none;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 30px;
-            margin: 35px 0 0 0;
-            padding: 0;
-            width: 100%;
-            display: flex;
-        }
-        .nav-menu-mobile li { width: 100%; }
-        .nav-menu-mobile a {
-            color: #1d1c1c;
-            font-size: 1.125rem;
-            padding: 8px 0;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-        }
-        .nav-menu-mobile a i { width: 24px; font-size: 1.1rem; }
-        .nav-menu-mobile a:hover { color: var(--primary-color); }
-
-        .menu-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-bottom: 30px;
-            margin-bottom: 30px;
-            border-bottom: 3px solid rgba(0,0,0,0.15);
-        }
-        .menu-logo { display: flex; align-items: center; gap: 12px; }
-        .menu-logo i { font-size: 2rem; color: var(--primary-color); }
-        .menu-logo-text { display: flex; flex-direction: column; }
-        .menu-logo-main { font-size: 1rem; font-weight: 800; color: var(--primary-color); }
-        .menu-logo-sub { font-size: 0.65rem; color: rgba(6,6,6,0.7); font-weight: 500; }
-        .menu-close-btn {
-            background: rgba(202,201,201,0.163);
-            border: none;
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: #333;
-            font-size: 1.125rem;
-        }
-        .menu-close-btn:hover { background: var(--primary-color); color: white; transform: rotate(90deg); }
-
-        @media (min-width: 901px) {
-            .nav-list { display: flex !important; }
-            .hamburger { display: none !important; }
-            .nav-menu-mobile { display: none !important; }
-            .menu-overlay { display: none !important; }
-        }
-        @media (max-width: 900px) {
-            .nav-list { display: none; }
-            .hamburger { display: flex; }
-            .nav-menu-mobile { display: block !important; }
-        }
-
-        /* Page Header */
-        .page-header, .dashboard-header {
+        .page-header {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
-            padding: clamp(1rem, 5vw, 2rem);
+            padding: 3rem 2rem;
             border-radius: var(--radius);
-            margin: clamp(1rem, 3vw, 1.5rem) 0;
+            margin: 0 0 2rem 0;
             position: relative;
             overflow: hidden;
         }
-        .page-header::before, .dashboard-header::before {
+
+        .page-header::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
             pointer-events: none;
         }
-        .dashboard-title, .page-title {
-            font-family: var(--font-heading);
-            font-size: clamp(1.3rem, 5vw, 2rem);
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            position: relative;
-            z-index: 1;
-        }
-        .last-update {
-            font-size: clamp(0.7rem, 3vw, 0.9rem);
-            opacity: 0.9;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            position: relative;
-            z-index: 1;
-        }
+
         .breadcrumb {
             display: flex;
             align-items: center;
@@ -291,353 +68,59 @@
             font-size: 0.9rem;
             opacity: 0.9;
             flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
         }
-        .breadcrumb a { color: white; text-decoration: none; transition: var(--transition); }
-        .breadcrumb a:hover { opacity: 0.8; }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .breadcrumb a:hover {
+            opacity: 0.8;
+        }
+
+        .breadcrumb i {
+            font-size: 0.7rem;
+        }
+
+        .breadcrumb span {
+            opacity: 0.8;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+            position: relative;
+            z-index: 1;
+        }
+
         .page-subtitle {
             font-size: 1.1rem;
             opacity: 0.9;
             max-width: 800px;
             line-height: 1.6;
-        }
-
-        /* Filter bar */
-        .filter-bar {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: clamp(0.8rem, 3vw, 1rem) clamp(1rem, 4vw, 1.5rem);
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow-md);
-            border: 1px solid #e3e6f0;
             position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-        .filter-bar::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-        }
-        .filter-bar label {
-            font-weight: 600;
-            color: var(--primary-color);
-            font-size: clamp(0.8rem, 3vw, 0.9rem);
-            font-family: var(--font-heading);
-        }
-        .campus-select {
-            padding: clamp(6px, 2vw, 10px) clamp(10px, 3vw, 16px);
-            border-radius: var(--radius-sm);
-            border: 1px solid #d1d3e2;
-            background: var(--white);
-            font-size: clamp(0.8rem, 3vw, 0.9rem);
-            min-width: 160px;
-            cursor: pointer;
-        }
-        .campus-select:hover {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(56,127,28,0.1);
-        }
-        .filter-bar span {
-            font-size: clamp(0.7rem, 2.5vw, 0.85rem);
-            color: var(--medium-color);
+            z-index: 1;
         }
 
-        /* Cards */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
-            gap: clamp(0.75rem, 3vw, 1.5rem);
-            margin-bottom: 2rem;
-        }
-        .indicator-card, .stat-card {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: clamp(1rem, 3vw, 1.5rem);
-            box-shadow: var(--shadow-md);
-            transition: var(--transition);
-            border: 1px solid transparent;
-            position: relative;
-            overflow: hidden;
-        }
-        .indicator-card:hover, .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--secondary-color);
-        }
-        .indicator-card::before, .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-        }
-        .card-value, .indicator-value, .stat-number {
-            font-size: clamp(1.3rem, 5vw, 2rem);
-            font-weight: 700;
-            color: var(--dark-color);
-            margin-top: 0.5rem;
-            font-family: var(--font-heading);
-        }
-        .card-label, .indicator-label, .stat-label {
-            font-size: clamp(0.7rem, 2.5vw, 0.85rem);
-            color: var(--medium-color);
-            text-transform: uppercase;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-wrap: wrap;
-            letter-spacing: 0.5px;
-        }
-
-        /* Tabs */
-        .tabs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid #e3e6f0;
-            padding-bottom: 0.5rem;
-        }
-        .tab-btn {
-            background: none;
-            border: none;
-            padding: clamp(6px, 2vw, 10px) clamp(12px, 4vw, 20px);
-            font-size: clamp(0.75rem, 3vw, 0.9rem);
-            font-weight: 600;
-            color: var(--medium-color);
-            cursor: pointer;
-            border-radius: var(--radius-sm);
-            transition: var(--transition);
-            white-space: nowrap;
-            font-family: var(--font-heading);
-        }
-        .tab-btn:hover { background: rgba(56,127,28,0.05); color: var(--primary-color); }
-        .tab-btn.active {
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            color: white;
-            box-shadow: 0 2px 8px rgba(56,127,28,0.3);
-        }
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Charts */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr));
-            gap: clamp(1rem, 3vw, 1.8rem);
-            margin: 1.5rem 0;
-        }
-        .chart-card {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: clamp(1rem, 3vw, 1.5rem);
-            box-shadow: var(--shadow-md);
-            transition: var(--transition);
-            border: 1px solid #e3e6f0;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: visible;
-        }
-        .chart-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--secondary-color);
-        }
-        .chart-title {
-            font-family: var(--font-heading);
-            font-size: clamp(0.85rem, 3vw, 1.1rem);
-            font-weight: 600;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            border-left: 4px solid var(--primary-color);
-            padding-left: 0.8rem;
-            color: var(--dark-color);
-            flex-wrap: wrap;
-            position: relative;
-        }
-        .chart-wrapper {
-            position: relative;
-            width: 100%;
-            min-height: clamp(240px, 40vh, 300px);
-            overflow: hidden;
-        }
-        .chart-wrapper canvas {
-            width: 100% !important;
-            height: auto !important;
-            max-height: 300px;
-        }
-        .chart-actions {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            z-index: 10;
-            display: flex;
-            gap: 0.4rem;
-        }
-        .chart-btn {
-            width: clamp(28px, 8vw, 36px);
-            height: clamp(28px, 8vw, 36px);
-            border-radius: 6px;
-            border: 1px solid #e3e6f0;
-            background: var(--white);
-            color: var(--medium-color);
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: clamp(0.7rem, 3vw, 0.9rem);
-        }
-        .chart-btn:hover {
-            background: var(--light-color);
-            color: var(--primary-color);
-            border-color: var(--primary-color);
-            transform: scale(1.05);
-        }
-        .info-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--dark-color);
-            color: white;
-            font-size: 0.7rem;
-            font-weight: bold;
-            cursor: help;
-            transition: var(--transition);
-            flex-shrink: 0;
-            margin-left: 0.5rem;
-        }
-        .info-icon:hover {
-            background: var(--primary-color);
-            transform: scale(1.05);
-        }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(4px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.3s;
-        }
-        .modal-overlay.show { opacity: 1; visibility: visible; }
-        .modal-content {
-            background: var(--white);
-            border-radius: var(--radius);
-            width: 95%;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: clamp(1rem, 4vw, 1.5rem);
-            box-shadow: var(--shadow-lg);
-            animation: modalSlideUp 0.3s ease;
-        }
-        @keyframes modalSlideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border-radius: var(--radius) var(--radius) 0 0;
-            margin: -1rem -1rem 1rem -1rem;
-            padding: 1.5rem 2rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        .modal-header h3 {
-            font-family: var(--font-heading);
-            font-size: clamp(1rem, 4vw, 1.3rem);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: clamp(1.2rem, 5vw, 1.5rem);
-            cursor: pointer;
-            transition: var(--transition);
-            padding: 0.5rem;
-            border-radius: 50%;
-            color: white;
-        }
-        .modal-close:hover {
-            background: rgba(255,255,255,0.1);
-            transform: rotate(90deg);
-        }
-        .modal-body { padding: 0 1rem 1rem 1rem; }
-        .modal-actions {
-            display: flex;
-            justify-content: center;
-            gap: 0.8rem;
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: 1px solid #e3e6f0;
-            flex-wrap: wrap;
-        }
-        .modal-action-btn {
-            padding: clamp(6px, 2vw, 10px) clamp(12px, 4vw, 20px);
-            border-radius: 6px;
-            font-size: clamp(0.75rem, 3vw, 0.9rem);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            border: 1px solid #e3e6f0;
-            background: var(--white);
-            color: var(--dark-color);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-family: var(--font-heading);
-        }
-        .modal-action-btn:hover {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-
-        /* Status indicators */
         .status-indicators {
             display: flex;
             gap: 1rem;
             margin-top: 1.5rem;
             flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
         }
+
         .status-indicator {
-            background: rgba(255,255,255,0.15);
+            background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 0.5rem 1rem;
             border-radius: 20px;
             display: flex;
@@ -645,6 +128,7 @@
             gap: 0.5rem;
             font-size: 0.85rem;
         }
+
         .status-dot {
             width: 8px;
             height: 8px;
@@ -652,875 +136,1549 @@
             background: var(--success-color);
             animation: pulse 2s infinite;
         }
+
         @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
+            0% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.5; transform: scale(0.85); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
-        /* Footer */
-        .main-footer {
-            background: var(--primary-dark);
-            color: white;
-            padding: 56px 0 24px;
-            margin-top: 0;
-        }
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
-            gap: 40px;
-            margin-bottom: 40px;
-            padding-bottom: 40px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-        .footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-        .footer-logo-icon {
-            width: 36px; height: 36px;
-            background: rgba(255,255,255,0.12);
-            border-radius: var(--radius-sm);
+        /* ===== FILTER BAR ESTILO ENADE/DISCENTES ===== */
+        .filters {
             display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
             align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            color: white;
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
         }
-        .footer-col h3 {
-            font-family: var(--font-heading);
-            font-size: 0.82rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: white;
-            margin-bottom: 18px;
-        }
-        .footer-col > p {
-            font-size: 0.875rem;
-            color: rgba(255,255,255,0.6);
-            line-height: 1.7;
-            margin-bottom: 20px;
-        }
-        .footer-links {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .footer-links a {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.875rem;
-            color: rgba(255,255,255,0.6);
-            transition: color var(--t-fast), padding-left var(--t-fast);
-        }
-        .footer-links a i { font-size: 0.65rem; }
-        .footer-links a:hover { color: white; padding-left: 4px; }
-        .social-links { display: flex; gap: 8px; margin-top: 4px; }
-        .social-links a {
-            width: 36px; height: 36px;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255,255,255,0.7);
+
+        .filters label {
+            font-weight: 600;
+            color: var(--dark-color);
             font-size: 0.9rem;
-            transition: background var(--t-base), color var(--t-fast), transform var(--t-base);
         }
-        .social-links a:hover {
-            background: var(--accent-color);
-            border-color: var(--accent-color);
+
+        .filters select {
+            padding: 0.6rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: var(--white);
+            min-width: 305px;
+            max-width: 670px;
+            transition: var(--transition);
+        }
+
+        .filters select:hover {
+            border-color: var(--primary-color);
+        }
+
+        .filters button {
+            background: var(--primary-color);
             color: white;
-            transform: translateY(-2px);
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
         }
-        .footer-btn {
+
+        .filters button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 154, 60, 0.3);
+        }
+
+        .filters .btn-reset {
+            background: #6c757d;
+        }
+
+        .filters .btn-reset:hover {
+            background: #5a6268;
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+        }
+
+        /* ===== STATS GRID ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-card .label {
+            color: var(--medium-color);
+            font-size: 0.9rem;
+        }
+
+        /* ===== TABS ===== */
+        .tabs-container {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 0.5rem 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.25rem;
+            padding: 0.75rem 0;
+            flex-wrap: nowrap;
+            min-width: max-content;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--medium-color);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: var(--transition);
+            white-space: nowrap;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 154, 60, 0.08);
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 2px 8px rgba(255, 154, 60, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== CHARTS ===== */
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .chart-container.single {
+            grid-template-columns: 1fr;
+        }
+
+        .chart-box {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            min-width: 0;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .chart-box:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .chart-box h3 {
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-left: 3px solid var(--primary-color);
+            padding-left: 0.8rem;
+        }
+
+        .chart-box h3 .info-icon {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            padding: 9px 18px;
-            background: var(--accent-color);
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--medium-color);
             color: white;
-            font-size: 0.84rem;
-            font-weight: 600;
-            border-radius: var(--radius-sm);
-            margin-top: 4px;
-            transition: background var(--t-fast), transform var(--t-base), box-shadow var(--t-base);
+            font-size: 0.65rem;
+            font-weight: 700;
+            cursor: help;
+            transition: var(--transition);
+            margin-left: auto;
+            flex-shrink: 0;
         }
-        .footer-btn:hover {
-            background: var(--accent-dark);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(255,154,60,0.3);
+
+        .chart-box h3 .info-icon:hover {
+            background: var(--primary-color);
+            transform: scale(1.1);
         }
-        .footer-bottom {
+
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            min-height: 260px;
+        }
+
+        .chart-inner {
+            position: relative;
+            min-width: 320px;
+            width: 100%;
+            height: 100%;
+            min-height: 260px;
+        }
+
+        .chart-inner canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 260px;
+        }
+
+        .chart-inner.wide {
+            min-width: 520px;
+        }
+
+        /* ===== CHART ACTIONS ===== */
+        .chart-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 20;
+            display: flex;
+            gap: 5px;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        .chart-box:hover .chart-actions {
+            opacity: 1;
+        }
+
+        .chart-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 7px;
+            border: 1px solid #d1d3e2;
+            background: rgba(255, 255, 255, 0.98);
+            color: #5a5c69;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+
+        .chart-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: scale(1.05);
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(46, 58, 89, 0.75);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--white);
+            border-radius: var(--radius);
+            max-width: 820px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlideUp 0.3s ease;
+        }
+
+        @keyframes modalSlideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 16px;
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.4);
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: var(--radius) var(--radius) 0 0;
+            color: white;
         }
-        body.menu-open { overflow: hidden; position: fixed; width: 100%; }
+
+        .modal-header h3 {
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: white;
+            transition: var(--transition);
+            padding: 0.3rem 0.5rem;
+            border-radius: 50%;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            min-height: 40vh;
+            position: relative;
+        }
+
+        .modal-body canvas {
+            width: 100% !important;
+            max-height: 60vh;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.7rem;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #eee;
+            flex-wrap: wrap;
+        }
+
+        .modal-action-btn {
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid #e3e6f0;
+            background: var(--white);
+            color: var(--dark-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .modal-action-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 992px) {
+            .chart-container {
+                grid-template-columns: 1fr;
+            }
+        }
 
         @media (max-width: 768px) {
-            .filter-bar { flex-direction: column; align-items: stretch; }
-            .campus-select { width: 100%; }
-            .charts-grid { grid-template-columns: 1fr; }
-            .footer-grid { grid-template-columns: 1fr; gap: 28px; }
-            .footer-bottom { flex-direction: column; text-align: center; }
-            .tabs { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; padding-bottom: 8px; }
-            .tab-btn { white-space: nowrap; }
+            .page-header {
+                padding: 2rem 1.5rem;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .page-subtitle {
+                font-size: 1rem;
+            }
+
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filters select {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .filters button {
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .chart-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .tab-btn {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            .tabs-container {
+                padding: 0.25rem 0.75rem;
+            }
+
+            .status-indicators {
+                gap: 0.5rem;
+            }
+
+            .status-indicator {
+                font-size: 0.75rem;
+                padding: 0.3rem 0.8rem;
+            }
         }
-        @media (max-width: 480px) {
-            .container { padding: 0 12px; }
-            .cards-grid { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
-            .chart-card { padding: 0.8rem; }
-            .chart-title { font-size: 0.9rem; padding-right: 35px; }
-            .chart-btn { width: 28px; height: 28px; }
-            .page-title { font-size: 1.6rem; }
-            .page-subtitle { font-size: 0.9rem; }
-            .modal-content { width: 96%; margin: 0.5rem; }
+
+        @media (max-width: 500px) {
+            .page-title {
+                font-size: 1.4rem;
+            }
+
+            .page-subtitle {
+                font-size: 0.85rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.75rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .stat-card .number {
+                font-size: 1.5rem;
+            }
+
+            .stat-card .label {
+                font-size: 0.75rem;
+            }
+
+            .chart-box {
+                padding: 1rem;
+            }
+
+            .chart-box h3 {
+                font-size: 0.9rem;
+            }
+
+            .chart-inner {
+                min-width: 280px;
+                min-height: 220px;
+            }
+
+            .chart-inner canvas {
+                min-height: 220px;
+            }
+
+            .tabs {
+                gap: 0.15rem;
+            }
+
+            .tab-btn {
+                font-size: 0.65rem;
+                padding: 0.3rem 0.6rem;
+            }
+
+            .breadcrumb {
+                font-size: 0.7rem;
+            }
+
+            .modal-box {
+                margin: 0.5rem;
+            }
+
+            .modal-header h3 {
+                font-size: 1rem;
+            }
+
+            .modal-action-btn {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.8rem;
+            }
         }
-        @media (max-width: 380px) {
-            .cards-grid { grid-template-columns: 1fr; }
+
+        /* ===== SCROLLBAR ===== */
+        .chart-wrapper::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
         }
-        @media (prefers-reduced-motion: reduce) {
-            * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+
+        .chart-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .chart-wrapper::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .chart-wrapper::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        .tabs-container::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .tabs-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .tabs-container::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        /* ===== LOADING ===== */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--medium-color);
+        }
+
+        .loading i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-
-<!-- ===== HEADER ===== -->
-<header class="main-header">
-    <div class="container">
-        <a href="../../index.html" class="logo">
-            <div class="logo-icon-wrap"><i class="fas fa-chart-bar"></i></div>
-            <div class="logo-text"><h1>IFPB Data Platform</h1><p>Transparência • Análise • Inovação</p></div>
-        </a>
-        <nav class="main-nav">
-            <ul class="nav-list">
-                <li><a href="Dadosforms.html"><i class="fas fa-home"></i> Início</a></li>
-                <li><a href="DadosDiscentes.html"><i class="fas fa-university"></i> Dados Discentes</a></li>
-                <li><a href="DadosDocentes.html" class="active"><i class="fas fa-graduation-cap"></i> Dados Docentes</a></li>
-                <li><a href="../dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
-            </ul>
-            <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
-        </nav>
-    </div>
-</header>
-<div class="menu-overlay" id="menuOverlay"></div>
-<nav class="nav-menu-mobile" id="navMenuMobile">
-    <div class="menu-header">
-        <div class="menu-logo"><i class="fas fa-chart-bar"></i><div class="menu-logo-text"><span class="menu-logo-main">IFPB Data Platform</span><span class="menu-logo-sub">Dados Abertos</span></div></div>
-        <button class="menu-close-btn" id="menuCloseBtn"><i class="fas fa-times"></i></button>
-    </div>
-    <ul>
-        <li><a href="Dadosforms.html"><i class="fas fa-home"></i> Início</a></li>
-        <li><a href="DadosDiscentes.html"><i class="fas fa-university"></i> Dados Discentes</a></li>
-        <li><a href="DadosDocentes.html"><i class="fas fa-graduation-cap"></i> Dados Docentes</a></li>
-        <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
-    </ul>
-</nav>
-
-<!-- ===== MAIN ===== -->
-<div class="container">
-
-    <div class="dashboard-header">
-        <div class="breadcrumb">
-            <a href="Dadosforms.html">Início</a> <i class="fas fa-chevron-right"></i> <span>Formulário Docente</span>
-        </div>
-        <h1 class="page-title">Pesquisa com Docentes do IFPB</h1>
-        <p class="page-subtitle">
-            Perfil, atuação, pesquisa, gestão e satisfação dos docentes do IFPB.<br>
-            Dados coletados por meio de questionário aplicado aos professores.
-        </p>
-        <div class="status-indicators">
-            <div class="status-indicator"><span class="status-dot"></span><span>Dados Anonimizados</span></div>
-            <div class="status-indicator"><i class="fas fa-chart-bar"></i><span>Visualizações Interativas</span></div>
-            <div class="status-indicator"><i class="fas fa-download"></i><span>Exportação CSV</span></div>
-        </div>
-    </div>
-
-    <!-- Filtro -->
-    <div class="filter-bar">
-        <label><i class="fas fa-filter"></i> Filtrar por campus:</label>
-        <select id="campusFilter" class="campus-select">
-            <option value="all">📌 Todos os campi</option>
-        </select>
-        <span><i class="fas fa-chart-line"></i> Os gráficos serão atualizados automaticamente</span>
-    </div>
-
-    <!-- Indicadores -->
-    <div class="cards-grid" id="cardsGrid"></div>
-
-    <!-- Abas -->
-    <div class="tabs">
-        <button class="tab-btn active" data-tab="perfil">👤 Perfil</button>
-        <button class="tab-btn" data-tab="deslocamento">🚌 Deslocamento</button>
-        <button class="tab-btn" data-tab="pesquisa">🔬 Pesquisa</button>
-        <button class="tab-btn" data-tab="gestao">📋 Gestão</button>
-        <button class="tab-btn" data-tab="satisfacao">⭐ Satisfação</button>
-    </div>
-
-    <div id="tab-perfil" class="tab-content active"><div class="charts-grid" id="perfilGrid"></div></div>
-    <div id="tab-deslocamento" class="tab-content"><div class="charts-grid" id="deslocamentoGrid"></div></div>
-    <div id="tab-pesquisa" class="tab-content"><div class="charts-grid" id="pesquisaGrid"></div></div>
-    <div id="tab-gestao" class="tab-content"><div class="charts-grid" id="gestaoGrid"></div></div>
-    <div id="tab-satisfacao" class="tab-content"><div class="charts-grid" id="satisfacaoGrid"></div></div>
-
-</div>
-
-<!-- ===== MODAL ===== -->
-<div id="modal" class="modal-overlay">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 id="modalTitle">Gráfico Expandido</h3>
-            <button class="modal-close" id="closeModalBtn"><i class="fas fa-times"></i></button>
-        </div>
-        <div style="position: relative; min-height: 50vh;">
-            <canvas id="modalCanvas" width="800" height="500" style="width:100%; height:auto; max-height:70vh;"></canvas>
-        </div>
-        <div class="modal-actions">
-            <button class="modal-action-btn" id="downloadPngBtn"><i class="fas fa-image"></i> Baixar PNG</button>
-            <button class="modal-action-btn" id="downloadJsonBtn"><i class="fas fa-code"></i> Baixar JSON</button>
-            <button class="modal-action-btn" id="downloadCsvBtn"><i class="fas fa-table"></i> Baixar CSV</button>
-        </div>
-    </div>
-</div>
-
-<!-- ===== FOOTER ===== -->
-<footer class="main-footer">
-    <div class="container">
-        <div class="footer-grid">
-            <div class="footer-col">
-                <div class="footer-brand">
-                    <div class="footer-logo-icon"><i class="fas fa-chart-bar"></i></div>
-                    <h3>IFPB Data Platform</h3>
+    <header class="main-header" id="main-header">
+        <div class="container">
+            <a href="../../index.html" class="logo">
+                <div class="logo-icon-wrap"><i class="fas fa-chart-bar"></i></div>
+                <div class="logo-text">
+                    <h1>IFPB Data Platform</h1>
+                    <p>Transparência • Análise • Inovação</p>
                 </div>
-                <p>Plataforma de visualização e análise de dados públicos do Instituto Federal da Paraíba.</p>
-                <div class="social-links">
-                    <a href="https://github.com/hugodeev/ifpb-data-plataform" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                    <a href="mailto:ifpbdata@gmail.com" aria-label="E-mail"><i class="fas fa-envelope"></i></a>
-                    <a href="#" aria-label="ResearchGate"><i class="fab fa-researchgate"></i></a>
+            </a>
+            <nav class="main-nav" role="navigation">
+                <ul class="nav-list">
+                    <li><a href="Dadosforms.html"><i class="fas fa-home"></i>Início</a></li>
+                    <li><a href="DadosDiscentes.html"><i class="fas fa-user-graduate"></i>Dados Discentes</a></li>
+                    <li><a href="DadosDocentes.html"><i class="fas fa-chalkboard-teacher"></i>Dados Docentes</a></li>
+                    <li><a href="../PagesGeral/dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i>Explorar Dados</a></li>
+                </ul>
+                <button class="hamburger" id="hamburger" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <nav class="nav-menu-mobile" id="navMenuMobile">
+        <div class="menu-header">
+            <div class="menu-logo">
+                <i class="fas fa-chart-bar"></i>
+                <div class="menu-logo-text">
+                    <span class="menu-logo-main">IFPB Data Platform</span>
+                    <span class="menu-logo-sub">Dados Abertos</span>
                 </div>
             </div>
-            <div class="footer-col">
-                <h3>Navegação</h3>
-                <ul class="footer-links">
-                    <li><a href="../../index.html"><i class="fas fa-chevron-right"></i> Início</a></li>
-                    <li><a href="../pages dados abertos/institucional.html"><i class="fas fa-chevron-right"></i> A Instituição</a></li>
-                    <li><a href="../pages dados abertos/academico.html"><i class="fas fa-chevron-right"></i> Vida Acadêmica</a></li>
-                    <li><a href="../pages dados abertos/orcamento.html"><i class="fas fa-chevron-right"></i> Gestão e Orçamento</a></li>
-                </ul>
+            <button class="menu-close-btn" id="menuCloseBtn"><i class="fas fa-times"></i></button>
+        </div>
+        <ul>
+            <li><a href="../../index.html"><i class="fas fa-home"></i> Início</a></li>
+            <li><a href="Dadosforms.html"><i class="fas fa-graduation-cap"></i> Dados de Pesquisa</a></li>
+            <li><a href="DadosDiscentes.html"><i class="fas fa-user-graduate"></i> Dados Discentes</a></li>
+            <li><a href="DadosDocentes.html"><i class="fas fa-chalkboard-teacher"></i> Dados Docentes</a></li>
+            <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+
+        <!-- ===== PAGE HEADER ===== -->
+        <section class="page-header fade-in" style="margin-top: 2rem;">
+            <div class="breadcrumb">
+                <a href="../../index.html">Início</a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="Dadosforms.html">Pesquisa IFPB</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>Dados Docentes</span>
             </div>
-            <div class="footer-col">
-                <h3>Recursos</h3>
-                <ul class="footer-links">
-                    <li><a href="Dadosabertosifpb.html"><i class="fas fa-chevron-right"></i> Dados Abertos IFPB</a></li>
-                    <li><a href="../Pages Enade/DadosENADE.html"><i class="fas fa-chevron-right"></i> Dados ENADE</a></li>
-                    <li><a href="../Pagesdadosformularios/Dadosforms.html"><i class="fas fa-chevron-right"></i> Dados de Pesquisa</a></li>
-                    <li><a href="../sobre.html"><i class="fas fa-chevron-right"></i> Sobre o Projeto</a></li>
-                    <li><a href="../contato.html"><i class="fas fa-chevron-right"></i> Contato</a></li>
-                </ul>
+            <h1 class="page-title">Pesquisa com Docentes do IFPB</h1>
+            <p class="page-subtitle">Perfil, atuação, pesquisa, gestão e satisfação dos docentes do IFPB. Dados coletados por meio de questionário aplicado aos professores.</p>
+            <div class="status-indicators">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>Dados Atualizados <span id="status-ano">2026</span></span>
+                </div>
+                <div class="status-indicator">
+                    <i class="fas fa-users"></i>
+                    <span id="status-participantes">Carregando...</span>
+                </div>
+                <div class="status-indicator">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span id="status-doutores">Carregando...</span>
+                </div>
             </div>
-            <div class="footer-col">
-                <h3>Projeto de Pesquisa</h3>
-                <p>Iniciação Científica — IFPB<br>Desenvolvimento de plataforma digital interativa para dados públicos.</p>
-                <a href="../sobre.html" class="footer-btn">Saiba Mais <i class="fas fa-arrow-right"></i></a>
+        </section>
+
+        <!-- ===== FILTERS ESTILO DISCENTES ===== -->
+        <div class="filters">
+            <div>
+                <label for="campusFilter"><i class="fas fa-university"></i> Campus:</label>
+                <select id="campusFilter">
+                    <option value="all">Todos os Campi</option>
+                </select>
+            </div>
+            <div>
+                <label for="areaFilter"><i class="fas fa-microscope"></i> Área:</label>
+                <select id="areaFilter">
+                    <option value="all">Todas as Áreas</option>
+                </select>
+            </div>
+            <button onclick="aplicarFiltros()"><i class="fas fa-filter"></i> Aplicar Filtros</button>
+            <button onclick="resetarFiltros()" class="btn-reset"><i class="fas fa-undo"></i> Resetar</button>
+        </div>
+
+        <!-- ===== STATS ===== -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="number" id="totalRegistros">-</div>
+                <div class="label">Total de Respostas</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="totalDoutores">-</div>
+                <div class="label">Doutores</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="pesquisaAtiva">-</div>
+                <div class="label">Atuam em Pesquisa</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="satisfacaoDocente">-</div>
+                <div class="label">Satisfeitos com o Trabalho</div>
             </div>
         </div>
-        <div class="footer-bottom">
-            <span>&copy; 2026 IFPB Data Platform — Todos os direitos reservados.</span>
-            <span>Dados para transparência e análise.</span>
+
+        <!-- ===== TABS ===== -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="perfil"><i class="fas fa-user"></i> Perfil</button>
+                <button class="tab-btn" data-tab="deslocamento"><i class="fas fa-bus"></i> Deslocamento</button>
+                <button class="tab-btn" data-tab="pesquisa"><i class="fas fa-flask"></i> Pesquisa</button>
+                <button class="tab-btn" data-tab="gestao"><i class="fas fa-tasks"></i> Gestão</button>
+                <button class="tab-btn" data-tab="satisfacao"><i class="fas fa-star"></i> Satisfação</button>
+            </div>
+        </div>
+
+        <!-- ===== TAB CONTENTS ===== -->
+        <div id="tab-perfil" class="tab-content active">
+            <div class="chart-container" id="perfilGrid"></div>
+        </div>
+        <div id="tab-deslocamento" class="tab-content">
+            <div class="chart-container" id="deslocamentoGrid"></div>
+        </div>
+        <div id="tab-pesquisa" class="tab-content">
+            <div class="chart-container" id="pesquisaGrid"></div>
+        </div>
+        <div id="tab-gestao" class="tab-content">
+            <div class="chart-container" id="gestaoGrid"></div>
+        </div>
+        <div id="tab-satisfacao" class="tab-content">
+            <div class="chart-container" id="satisfacaoGrid"></div>
+        </div>
+
+    </main>
+
+    <!-- ===== MODAL ===== -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modalTitle"><i class="fas fa-chart-bar"></i> Gráfico Expandido</h3>
+                <button class="modal-close" id="closeModalBtn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <canvas id="modalCanvas" width="800" height="500"></canvas>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-action-btn" id="downloadPngBtn"><i class="fas fa-image"></i> Baixar PNG</button>
+                <button class="modal-action-btn" id="downloadJsonBtn"><i class="fas fa-code"></i> Baixar JSON</button>
+                <button class="modal-action-btn" id="downloadCsvBtn"><i class="fas fa-table"></i> Baixar CSV</button>
+            </div>
         </div>
     </div>
-</footer>
 
-<!-- ===== SCRIPTS ===== -->
-<script>
-    // ----------------------------------------------------------------
-    // DADOS E VARIÁVEIS GLOBAIS
-    // ----------------------------------------------------------------
-    let dadosCompletos = [];
-    let dadosFiltrados = [];
-    let charts = {};
-    let modalChart = null;
-    let currentModalRawData = null;
-    let currentModalTitle = '';
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">
+                        <div class="footer-logo-icon"><i class="fas fa-chart-bar"></i></div>
+                        <h3>IFPB Data Platform</h3>
+                    </div>
+                    <p>Plataforma de visualização e análise de dados públicos do Instituto Federal da Paraíba.</p>
+                    <div class="social-links">
+                        <a href="https://github.com/hugodeev/ifpb-data-plataform" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="mailto:ifpbdata@gmail.com" aria-label="E-mail"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>Navegação</h3>
+                    <ul class="footer-links">
+                        <li><a href="../../index.html"><i class="fas fa-chevron-right"></i> Início</a></li>
+                        <li><a href="Dadosforms.html"><i class="fas fa-chevron-right"></i> Dados de Pesquisa</a></li>
+                        <li><a href="DadosDiscentes.html"><i class="fas fa-chevron-right"></i> Dados Discentes</a></li>
+                        <li><a href="DadosDocentes.html"><i class="fas fa-chevron-right"></i> Dados Docentes</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Links Úteis</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.gov.br/inep" target="_blank"><i class="fas fa-chevron-right"></i> INEP</a></li>
+                        <li><a href="https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enade" target="_blank"><i class="fas fa-chevron-right"></i> Portal ENADE</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-    // ----------------------------------------------------------------
-    // FUNÇÕES AUXILIARES
-    // ----------------------------------------------------------------
-    function showNotification(msg, type = "success") {
-        const notif = document.createElement("div");
-        notif.className = "notification " + type;
-        notif.innerHTML = `<i class="fas fa-${type === "success" ? "check-circle" : "info-circle"}"></i><span>${msg}</span>`;
-        document.body.appendChild(notif);
-        setTimeout(() => notif.classList.add("show"), 10);
-        setTimeout(() => { notif.classList.remove("show"); setTimeout(() => notif.remove(), 300); }, 3000);
-    }
+    <script>
+        // ============================================================
+        // DADOS E CONFIGURAÇÕES
+        // ============================================================
+        let dadosCompletos = [];
+        let dadosFiltrados = [];
+        let charts = {};
+        let modalChart = null;
+        let currentModalRawData = null;
+        let currentModalTitle = '';
 
-    function downloadCanvasAsPNG(canvas, filename) {
-        const link = document.createElement("a");
-        link.download = filename;
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-    }
+        const perguntasMap = {
+            "Distribuição por Campus": "📌 Em qual campus do IFPB você está lotado atualmente?",
+            "Área de formação/atuação": "🔬 Qual a sua área de formação/atuação principal?",
+            "Tempo de docência no IFPB": "⏱️ Há quanto tempo você é docente no IFPB?",
+            "Regime de trabalho": "💼 Qual o seu regime de trabalho?",
+            "Titulação máxima": "🎓 Qual a sua titulação máxima?",
+            "Nível de ensino principal": "🏫 Qual é o principal nível de ensino em que você atua atualmente?",
+            "Número de turmas": "📚 Quantas turmas você leciona atualmente?",
+            "Horas semanais dedicadas ao ensino": "⏰ Em média, quantas horas semanais você dedica às atividades de ensino?",
+            "Situação de residência": "🏠 Em relação à sua residência e local de trabalho:",
+            "Distância (km)": "📏 Qual a distância aproximada (em km) da sua cidade até o campus onde trabalha?",
+            "Tempo de deslocamento": "⏱️ Quanto tempo, em média, você gasta no deslocamento (ida e volta) por dia?",
+            "Atuação em pesquisa": "🔬 Você atua/atuou como pesquisador em projetos no IFPB?",
+            "Quantos projetos já envolveu": "📊 Quantos projetos de pesquisa você está envolvido ou já se envolveu no IFPB?",
+            "Fonte de fomento": "💰 Quais as principais fontes de fomento dos seus projetos?",
+            "Motivo para não atuar em pesquisa": "❌ Qual o principal motivo para não atuar em pesquisa?",
+            "Cargo administrativo": "📋 Você exerce ou já exerceu algum cargo/função administrativa no IFPB?",
+            "Função exercida": "👔 Qual(is) função(ões)?",
+            "Horas de gestão por semana": "⏰ Quantas horas semanais você dedica às atividades de gestão?",
+            "Infraestrutura para ensino": "🏫 Como você avalia a infraestrutura do seu campus para o desenvolvimento das atividades de ensino?",
+            "Infraestrutura para pesquisa": "🔬 Como você avalia a infraestrutura para pesquisa no seu campus?",
+            "Acesso a recursos": "🔑 Você possui acesso aos recursos necessários para sua atuação?",
+            "Satisfação com o trabalho": "⭐ Qual seu nível de satisfação com o trabalho no IFPB?",
+            "Reconhecimento pela gestão": "👏 Como você avalia o reconhecimento do seu trabalho pela gestão do campus?",
+            "Relacionamento com alunos": "🤝 Como você avalia o relacionamento com os alunos de maneira geral?",
+            "Pretende mudar de instituição": "🏢 Você considera mudar de instituição de ensino nos próximos 5 anos?",
+            "Pretende deixar a carreira docente": "🚪 Você considera deixar a carreira docente nos próximos 5 anos?"
+        };
 
-    function downloadJSON(data, filename) {
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-        const link = document.createElement("a");
-        link.download = filename;
-        link.href = URL.createObjectURL(blob);
-        link.click();
-        URL.revokeObjectURL(link.href);
-    }
-
-    function downloadCSV(data, filename) {
-        if (!data || data.length === 0) return;
-        const headers = Object.keys(data[0]);
-        const rows = [headers.join(",")];
-        for (const row of data) {
-            const values = headers.map(h => `"${String(row[h] || '').replace(/"/g, '""')}"`);
-            rows.push(values.join(","));
-        }
-        const blob = new Blob(["\uFEFF" + rows.join("\n")], { type: "text/csv;charset=utf-8" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = filename;
-        link.click();
-        URL.revokeObjectURL(link.href);
-    }
-
-    function contarFrequencia(data, campo) {
-        const freq = {};
-        data.forEach(item => {
-            let val = item[campo];
-            if (val !== undefined && val !== null && val !== "") {
-                if (typeof val === 'string' && (val.includes(',') || val.includes(';'))) {
-                    const itens = val.split(/[,;]/).map(v => v.trim());
-                    itens.forEach(v => { if (v) freq[v] = (freq[v] || 0) + 1; });
-                } else {
-                    freq[val] = (freq[val] || 0) + 1;
-                }
-            }
-        });
-        const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1]);
-        return { labels: sorted.map(s => s[0]), values: sorted.map(s => s[1]) };
-    }
-
-    // ----------------------------------------------------------------
-    // GRÁFICOS (adaptados do template de discentes)
-    // ----------------------------------------------------------------
-    function criarPie(canvasId, labels, values, cores = null) {
-        const ctx = document.getElementById(canvasId)?.getContext('2d');
-        if (!ctx) return;
-        if (charts[canvasId]) charts[canvasId].destroy();
-        const defaultCores = ['#387f1c', '#59e462', '#f6c23e', '#36b9cc', '#4e73df', '#e74a3b'];
-        const bgCores = cores || labels.map((_, i) => defaultCores[i % defaultCores.length]);
-        charts[canvasId] = new Chart(ctx, {
-            type: 'pie',
-            data: { labels, datasets: [{ data: values, backgroundColor: bgCores, borderWidth: 0 }] },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: { position: 'bottom' },
-                    tooltip: { callbacks: { label: (ctx) => `${ctx.label}: ${ctx.raw} (${((ctx.raw / values.reduce((a,b)=>a+b,0))*100).toFixed(1)}%)` } }
-                }
-            }
-        });
-        return charts[canvasId];
-    }
-
-    function criarBarraVertical(canvasId, labels, values, tituloY = 'Quantidade') {
-        const ctx = document.getElementById(canvasId)?.getContext('2d');
-        if (!ctx) return;
-        if (charts[canvasId]) charts[canvasId].destroy();
-        charts[canvasId] = new Chart(ctx, {
-            type: 'bar',
-            data: { labels, datasets: [{ label: tituloY, data: values, backgroundColor: '#4e73df', borderRadius: 6 }] },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                scales: {
-                    y: { beginAtZero: true, title: { display: true, text: tituloY } },
-                    x: { ticks: { autoSkip: true, maxRotation: 45, minRotation: 45 } }
-                },
-                plugins: {
-                    tooltip: { callbacks: { label: (ctx) => `${ctx.raw} respostas` } }
-                }
-            }
-        });
-        return charts[canvasId];
-    }
-
-    function criarBarraHorizontal(canvasId, labels, values) {
-        const ctx = document.getElementById(canvasId)?.getContext('2d');
-        if (!ctx) return;
-        if (charts[canvasId]) charts[canvasId].destroy();
-        charts[canvasId] = new Chart(ctx, {
-            type: 'bar',
-            data: { labels, datasets: [{ label: 'Respostas', data: values, backgroundColor: '#36b9cc', borderRadius: 6 }] },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: { callbacks: { label: (ctx) => `${ctx.raw} respostas` } }
-                },
-                scales: {
-                    x: { beginAtZero: true, title: { display: true, text: 'Contagem' } }
-                }
-            }
-        });
-        return charts[canvasId];
-    }
-
-    function criarLinha(canvasId, labels, values, titulo = 'Frequência') {
-        const ctx = document.getElementById(canvasId)?.getContext('2d');
-        if (!ctx) return;
-        if (charts[canvasId]) charts[canvasId].destroy();
-        charts[canvasId] = new Chart(ctx, {
-            type: 'line',
-            data: { labels, datasets: [{ label: titulo, data: values, borderColor: '#387f1c', backgroundColor: 'rgba(56,127,28,0.1)', borderWidth: 3, fill: true, tension: 0.3, pointBackgroundColor: '#387f1c', pointRadius: 5 }] },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                scales: {
-                    y: { beginAtZero: true, title: { display: true, text: titulo } }
-                }
-            }
-        });
-        return charts[canvasId];
-    }
-
-    function criarBarraEmpilhada(canvasId, labels, datasets) {
-        const ctx = document.getElementById(canvasId)?.getContext('2d');
-        if (!ctx) return;
-        if (charts[canvasId]) charts[canvasId].destroy();
-        charts[canvasId] = new Chart(ctx, {
-            type: 'bar',
-            data: { labels, datasets },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                scales: {
-                    x: { stacked: true },
-                    y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Número de docentes' } }
-                },
-                plugins: {
-                    tooltip: { mode: 'index' }
-                }
-            }
-        });
-        return charts[canvasId];
-    }
-
-    // Radar (adaptado para docentes)
-    function criarRadar(canvasId, labels, datasets) {
-        const ctx = document.getElementById(canvasId)?.getContext('2d');
-        if (!ctx) return;
-        if (charts[canvasId]) charts[canvasId].destroy();
-        try {
-            charts[canvasId] = new Chart(ctx, {
-                type: 'radar',
-                data: { labels, datasets },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    scales: {
-                        r: {
-                            beginAtZero: true,
-                            ticks: { stepSize: 1 }
-                        }
-                    },
-                    plugins: {
-                        legend: { position: 'bottom' }
+        // ============================================================
+        // FUNÇÕES AUXILIARES
+        // ============================================================
+        function contarFrequencia(data, campo) {
+            const freq = {};
+            data.forEach(item => {
+                let val = item[campo];
+                if (val !== undefined && val !== null && val !== '') {
+                    if (typeof val === 'string' && (val.includes(',') || val.includes(';'))) {
+                        val.split(/[,;]/).map(v => v.trim()).forEach(v => {
+                            if (v) freq[v] = (freq[v] || 0) + 1;
+                        });
+                    } else {
+                        freq[val] = (freq[val] || 0) + 1;
                     }
                 }
             });
-        } catch(e) { console.warn('Radar error:', e); }
-        return charts[canvasId];
-    }
-
-    // ----------------------------------------------------------------
-    // BOTÕES DE EXPANDIR E INFO
-    // ----------------------------------------------------------------
-    function adicionarInfoIcon(cardId, chartTitle) {
-        const card = document.getElementById(cardId);
-        if (!card) return;
-        const titleDiv = card.querySelector('.chart-title');
-        if (titleDiv) {
-            const info = document.createElement('span');
-            info.className = 'info-icon';
-            info.textContent = 'ⓘ';
-            info.title = chartTitle;
-            titleDiv.appendChild(info);
+            const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1]);
+            return { labels: sorted.map(s => s[0]), values: sorted.map(s => s[1]) };
         }
-    }
 
-    function adicionarBotaoExpandir(cardId, canvasId, chartTitle, rawData) {
-        const card = document.getElementById(cardId);
-        if (!card) return;
-        const actions = document.createElement('div');
-        actions.className = 'chart-actions';
-        actions.innerHTML = `<button class="chart-btn" data-expand="${canvasId}" title="Expandir"><i class="fas fa-expand"></i></button>`;
-        const titleDiv = card.querySelector('.chart-title');
-        if (titleDiv) {
-            titleDiv.parentNode.insertBefore(actions, titleDiv.nextSibling);
-        } else {
-            card.appendChild(actions);
+        function normalizarDadosDocentes(raw) {
+            return raw.map(item => ({
+                campus: item["Em qual campus do IFPB você está lotado atualmente?"] || "",
+                area: item["Qual a sua área de formação/atuação principal?"] || "",
+                tempoDocencia: item["Há quanto tempo você é docente no IFPB?"] || "",
+                regime: item["Qual o seu regime de trabalho? "] || "",
+                titulacao: item["Qual a sua titulação máxima?"] || "",
+                nivelEnsino: item["Qual é o principal nível de ensino em que você atua atualmente? (Selecione apenas uma opção)"] || "",
+                turmas: item["Quantas turmas você leciona atualmente?"] || "",
+                horasEnsino: item["Em média, quantas horas semanais você dedica às atividades de ensino (preparação de aulas, correção, atendimento a alunos)?"] || "",
+                pesquisa: item["Você atua/atuou como pesquisador em projetos no IFPB?"] || "",
+                qtdProjetos: item["[Se atua em pesquisa] Quantos projetos de pesquisa você está envolvido ou já se envolveu no IFPB?"] || "",
+                fonteFomento: item["Quais as principais fontes de fomento dos seus projetos?   (Selecione apenas uma opção)"] || "",
+                motivoNaoPesquisa: item["[Se NÃO atua em pesquisa] Qual o principal motivo para não atuar em pesquisa?"] || "",
+                cargoAdm: item["Você exerce ou já exerceu algum cargo/função administrativa no IFPB?"] || "",
+                funcaoAdm: item["[Se sim] Qual(is) função(ões)? (Selecione apenas uma opção)"] || "",
+                horasGestao: item["Quantas horas semanais você dedica às atividades de gestão (se aplicável)?"] || "",
+                infraEnsino: item["Como você avalia a infraestrutura do seu campus para o desenvolvimento das atividades de ensino?"] || "",
+                infraPesquisa: item["Como você avalia a infraestrutura para pesquisa no seu campus?"] || "",
+                acessoRecursos: item["Você possui acesso aos recursos necessários para sua atuação (laboratórios, equipamentos, biblioteca, etc.)?"] || "",
+                residencia: item["Em relação à sua residência e local de trabalho:"] || "",
+                distancia: item[" [Se deslocamento] Qual a distância aproximada (em km) da sua cidade até o campus onde trabalha?"] || "",
+                tempoDeslocamento: item["[Se deslocamento] Quanto tempo, em média, você gasta no deslocamento (ida e volta) por dia?"] || "",
+                satisfacao: item["Qual seu nível de satisfação com o trabalho no IFPB?"] || "",
+                mudarInstituicao: item["Você considera mudar de instituição de ensino nos próximos 5 anos?"] || "",
+                reconhecimento: item["Como você avalia o reconhecimento do seu trabalho pela gestão do campus?"] || "",
+                relacionamentoAlunos: item["Como você avalia o relacionamento com os alunos de maneira geral?"] || "",
+                cidadeResidencia: item["Em qual cidade você reside atualmente?"] || "",
+                vinculo: item["Qual o seu vínculo com o IFPB?"] || "",
+                deixarCarreira: item["Você considera deixar a carreira docente nos próximos 5 anos?"] || ""
+            }));
         }
-        const canvas = document.getElementById(canvasId);
-        if (canvas) {
-            canvas._rawData = rawData;
-            canvas._chartTitle = chartTitle;
+
+        function getPaletaCores(index) {
+            const paleta = [
+                '#e74a3b', '#3498db', '#2ecc71', '#f39c12', '#9b59b6',
+                '#1abc9c', '#e67e22', '#e84393', '#00b894', '#6c5ce7',
+                '#fdcb6e', '#e17055', '#0984e3', '#00cec9', '#fd79a8',
+                '#a29bfe', '#55efc4', '#fab1a0', '#81ecec', '#ff7675',
+                '#74b9ff', '#55a3e0', '#f8a5c2', '#7bed9f', '#70a1ff',
+                '#ff6b81', '#2ed573', '#ffa502', '#1e90ff', '#ff4757'
+            ];
+            return paleta[index % paleta.length];
         }
-    }
 
-    function expandirGrafico(canvasId) {
-        const canvas = document.getElementById(canvasId);
-        if (!canvas) return;
-        const chartObj = charts[canvasId];
-        if (!chartObj) return;
-        const modalCanvas = document.getElementById("modalCanvas");
-        if (modalChart) modalChart.destroy();
-        modalChart = new Chart(modalCanvas.getContext("2d"), {
-            type: chartObj.config.type,
-            data: JSON.parse(JSON.stringify(chartObj.config.data)),
-            options: { ...chartObj.config.options, responsive: true, maintainAspectRatio: true }
-        });
-        document.getElementById("modalTitle").innerText = canvas._chartTitle || "Gráfico Expandido";
-        currentModalRawData = canvas._rawData;
-        currentModalTitle = canvas._chartTitle || "grafico";
-        document.getElementById("modal").classList.add("show");
-    }
+        function marcarWide(canvasId, numLabels) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const inner = canvas.closest('.chart-inner');
+            if (inner && numLabels > 6) inner.classList.add('wide');
+        }
 
-    // ----------------------------------------------------------------
-    // NORMALIZAÇÃO DOS DADOS DOCENTES
-    // ----------------------------------------------------------------
-    function normalizarDadosDocentes(raw) {
-        return raw.map(item => ({
-            campus: item["Em qual campus do IFPB você está lotado atualmente?"] || "",
-            area: item["Qual a sua área de formação/atuação principal?"] || "",
-            tempoDocencia: item["Há quanto tempo você é docente no IFPB?"] || "",
-            regime: item["Qual o seu regime de trabalho? "] || "",
-            titulacao: item["Qual a sua titulação máxima?"] || "",
-            nivelEnsino: item["Qual é o principal nível de ensino em que você atua atualmente? (Selecione apenas uma opção)"] || "",
-            turmas: item["Quantas turmas você leciona atualmente?"] || "",
-            horasEnsino: item["Em média, quantas horas semanais você dedica às atividades de ensino (preparação de aulas, correção, atendimento a alunos)?"] || "",
-            pesquisa: item["Você atua/atuou como pesquisador em projetos no IFPB?"] || "",
-            qtdProjetos: item["[Se atua em pesquisa] Quantos projetos de pesquisa você está envolvido ou já se envolveu no IFPB?"] || "",
-            fonteFomento: item["Quais as principais fontes de fomento dos seus projetos?   (Selecione apenas uma opção)"] || "",
-            motivoNaoPesquisa: item["[Se NÃO atua em pesquisa] Qual o principal motivo para não atuar em pesquisa?"] || "",
-            cargoAdm: item["Você exerce ou já exerceu algum cargo/função administrativa no IFPB?"] || "",
-            funcaoAdm: item["[Se sim] Qual(is) função(ões)? (Selecione apenas uma opção)"] || "",
-            horasGestao: item["Quantas horas semanais você dedica às atividades de gestão (se aplicável)?"] || "",
-            infraEnsino: item["Como você avalia a infraestrutura do seu campus para o desenvolvimento das atividades de ensino?"] || "",
-            infraPesquisa: item["Como você avalia a infraestrutura para pesquisa no seu campus?"] || "",
-            acessoRecursos: item["Você possui acesso aos recursos necessários para sua atuação (laboratórios, equipamentos, biblioteca, etc.)?"] || "",
-            residencia: item["Em relação à sua residência e local de trabalho:"] || "",
-            distancia: item[" [Se deslocamento] Qual a distância aproximada (em km) da sua cidade até o campus onde trabalha?"] || "",
-            tempoDeslocamento: item["[Se deslocamento] Quanto tempo, em média, você gasta no deslocamento (ida e volta) por dia?"] || "",
-            satisfacao: item["Qual seu nível de satisfação com o trabalho no IFPB?"] || "",
-            mudarInstituicao: item["Você considera mudar de instituição de ensino nos próximos 5 anos?"] || "",
-            reconhecimento: item["Como você avalia o reconhecimento do seu trabalho pela gestão do campus?"] || "",
-            relacionamentoAlunos: item["Como você avalia o relacionamento com os alunos de maneira geral?"] || "",
-            cidadeResidencia: item["Em qual cidade você reside atualmente?"] || "",
-            vinculo: item["Qual o seu vínculo com o IFPB?"] || "",
-            deixarCarreira: item["Você considera deixar a carreira docente nos próximos 5 anos?"] || ""
-        }));
-    }
-
-    // ----------------------------------------------------------------
-    // RENDERIZAÇÃO DO DASHBOARD
-    // ----------------------------------------------------------------
-    function renderizarDashboard() {
-        if (!dadosFiltrados.length) {
-            const grids = ['perfilGrid','deslocamentoGrid','pesquisaGrid','gestaoGrid','satisfacaoGrid'];
-            grids.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.innerHTML = '<div class="chart-card" style="text-align:center;padding:2rem;"><i class="fas fa-chart-simple"></i> Nenhum dado disponível para este filtro</div>';
+        // ============================================================
+        // CRIAÇÃO DE GRÁFICOS
+        // ============================================================
+        function criarPie(canvasId, labels, values, cores = null) {
+            const ctx = document.getElementById(canvasId)?.getContext('2d');
+            if (!ctx) return;
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+            const defaultCores = ['#ff9a3c', '#da9b1c', '#f6c23e', '#36b9cc', '#4e73df', '#e74a3b'];
+            const bgCores = cores || labels.map((_, i) => defaultCores[i % defaultCores.length]);
+            const total = values.reduce((a, b) => a + b, 0);
+            charts[canvasId] = new Chart(ctx, {
+                type: 'pie',
+                data: { labels, datasets: [{ data: values, backgroundColor: bgCores, borderWidth: 0 }] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 14, padding: 12 } },
+                        tooltip: {
+                            callbacks: {
+                                label: (c) => `${c.label}: ${c.raw} (${((c.raw / total) * 100).toFixed(1)}%)`
+                            }
+                        }
+                    }
+                }
             });
-            document.getElementById('cardsGrid').innerHTML = '<div class="indicator-card">Sem dados</div>';
-            return;
+            return charts[canvasId];
         }
 
-        const total = dadosFiltrados.length;
-
-        // Indicadores
-        const pesquisaAtiva = dadosFiltrados.filter(d => d.pesquisa.includes('coordeno') || d.pesquisa.includes('colaborador')).length;
-        const satisfeitos = dadosFiltrados.filter(d => d.satisfacao.includes('Satisfeito') || d.satisfacao.includes('Muito satisfeito')).length;
-        const comCargo = dadosFiltrados.filter(d => d.cargoAdm.includes('Sim')).length;
-        const deslocamento = dadosFiltrados.filter(d => d.residencia.includes('diferente')).length;
-
-        document.getElementById('cardsGrid').innerHTML = `
-            <div class="indicator-card"><div class="card-label"><i class="fas fa-users"></i> Total de docentes</div><div class="card-value">${total}</div></div>
-            <div class="indicator-card"><div class="card-label"><i class="fas fa-flask"></i> Atuam em pesquisa</div><div class="card-value">${Math.round(pesquisaAtiva/total*100)}%</div></div>
-            <div class="indicator-card"><div class="card-label"><i class="fas fa-smile"></i> Satisfeitos com trabalho</div><div class="card-value">${Math.round(satisfeitos/total*100)}%</div></div>
-            <div class="indicator-card"><div class="card-label"><i class="fas fa-briefcase"></i> Com cargo administrativo</div><div class="card-value">${Math.round(comCargo/total*100)}%</div></div>
-        `;
-
-        // --- ABA PERFIL ---
-        const campusFreq = contarFrequencia(dadosFiltrados, 'campus');
-        const areaFreq = contarFrequencia(dadosFiltrados, 'area');
-        const tempoFreq = contarFrequencia(dadosFiltrados, 'tempoDocencia');
-        const regimeFreq = contarFrequencia(dadosFiltrados, 'regime');
-        const titulacaoFreq = contarFrequencia(dadosFiltrados, 'titulacao');
-        const nivelFreq = contarFrequencia(dadosFiltrados, 'nivelEnsino');
-        const turmasFreq = contarFrequencia(dadosFiltrados, 'turmas');
-        const horasEnsinoFreq = contarFrequencia(dadosFiltrados, 'horasEnsino');
-
-        document.getElementById('perfilGrid').innerHTML = `
-            <div class="chart-card" id="card_perfilCampus"><div class="chart-title"><i class="fas fa-university"></i> Distribuição por Campus</div><div class="chart-wrapper"><canvas id="perfilCampus"></canvas></div></div>
-            <div class="chart-card" id="card_perfilArea"><div class="chart-title"><i class="fas fa-microscope"></i> Área de formação/atuação</div><div class="chart-wrapper"><canvas id="perfilArea"></canvas></div></div>
-            <div class="chart-card" id="card_perfilTempo"><div class="chart-title"><i class="fas fa-clock"></i> Tempo de docência no IFPB</div><div class="chart-wrapper"><canvas id="perfilTempo"></canvas></div></div>
-            <div class="chart-card" id="card_perfilRegime"><div class="chart-title"><i class="fas fa-briefcase"></i> Regime de trabalho</div><div class="chart-wrapper"><canvas id="perfilRegime"></canvas></div></div>
-            <div class="chart-card" id="card_perfilTitulacao"><div class="chart-title"><i class="fas fa-graduation-cap"></i> Titulação máxima</div><div class="chart-wrapper"><canvas id="perfilTitulacao"></canvas></div></div>
-            <div class="chart-card" id="card_perfilNivel"><div class="chart-title"><i class="fas fa-school"></i> Nível de ensino principal</div><div class="chart-wrapper"><canvas id="perfilNivel"></canvas></div></div>
-            <div class="chart-card" id="card_perfilTurmas"><div class="chart-title"><i class="fas fa-chalkboard"></i> Número de turmas</div><div class="chart-wrapper"><canvas id="perfilTurmas"></canvas></div></div>
-            <div class="chart-card" id="card_perfilHorasEnsino"><div class="chart-title"><i class="fas fa-hourglass"></i> Horas semanais dedicadas ao ensino</div><div class="chart-wrapper"><canvas id="perfilHorasEnsino"></canvas></div></div>
-        `;
-        criarPie('perfilCampus', campusFreq.labels, campusFreq.values);
-        criarPie('perfilArea', areaFreq.labels, areaFreq.values);
-        criarBarraVertical('perfilTempo', tempoFreq.labels, tempoFreq.values);
-        criarPie('perfilRegime', regimeFreq.labels, regimeFreq.values);
-        criarPie('perfilTitulacao', titulacaoFreq.labels, titulacaoFreq.values);
-        criarBarraVertical('perfilNivel', nivelFreq.labels, nivelFreq.values);
-        criarBarraVertical('perfilTurmas', turmasFreq.labels, turmasFreq.values);
-        criarBarraVertical('perfilHorasEnsino', horasEnsinoFreq.labels, horasEnsinoFreq.values);
-
-        ['perfilCampus','perfilArea','perfilTempo','perfilRegime','perfilTitulacao','perfilNivel','perfilTurmas','perfilHorasEnsino'].forEach((id, i) => {
-            const titles = ['Distribuição por Campus','Área de formação','Tempo de docência','Regime de trabalho','Titulação','Nível de ensino','Número de turmas','Horas de ensino'];
-            const cards = ['card_perfilCampus','card_perfilArea','card_perfilTempo','card_perfilRegime','card_perfilTitulacao','card_perfilNivel','card_perfilTurmas','card_perfilHorasEnsino'];
-            adicionarInfoIcon(cards[i], titles[i]);
-            adicionarBotaoExpandir(cards[i], id, titles[i], dadosFiltrados);
-        });
-
-        // --- ABA DESLOCAMENTO ---
-        const residenciaFreq = contarFrequencia(dadosFiltrados, 'residencia');
-        const distanciaFreq = contarFrequencia(dadosFiltrados, 'distancia');
-        const tempoDeslocFreq = contarFrequencia(dadosFiltrados, 'tempoDeslocamento');
-
-        document.getElementById('deslocamentoGrid').innerHTML = `
-            <div class="chart-card" id="card_deslResidencia"><div class="chart-title"><i class="fas fa-home"></i> Situação de residência</div><div class="chart-wrapper"><canvas id="deslResidencia"></canvas></div></div>
-            <div class="chart-card" id="card_deslDistancia"><div class="chart-title"><i class="fas fa-route"></i> Distância (km)</div><div class="chart-wrapper"><canvas id="deslDistancia"></canvas></div></div>
-            <div class="chart-card" id="card_deslTempo"><div class="chart-title"><i class="fas fa-hourglass-half"></i> Tempo de deslocamento (ida+volta)</div><div class="chart-wrapper"><canvas id="deslTempo"></canvas></div></div>
-        `;
-        criarPie('deslResidencia', residenciaFreq.labels, residenciaFreq.values);
-        criarBarraVertical('deslDistancia', distanciaFreq.labels, distanciaFreq.values);
-        criarBarraVertical('deslTempo', tempoDeslocFreq.labels, tempoDeslocFreq.values);
-
-        ['deslResidencia','deslDistancia','deslTempo'].forEach((id, i) => {
-            const titles = ['Situação de residência','Distância','Tempo de deslocamento'];
-            const cards = ['card_deslResidencia','card_deslDistancia','card_deslTempo'];
-            adicionarInfoIcon(cards[i], titles[i]);
-            adicionarBotaoExpandir(cards[i], id, titles[i], dadosFiltrados);
-        });
-
-        // --- ABA PESQUISA ---
-        const pesquisaFreq = contarFrequencia(dadosFiltrados, 'pesquisa');
-        const qtdProjetosFreq = contarFrequencia(dadosFiltrados, 'qtdProjetos');
-        const fonteFreq = contarFrequencia(dadosFiltrados, 'fonteFomento');
-        const motivoNaoPesqFreq = contarFrequencia(dadosFiltrados, 'motivoNaoPesquisa');
-
-        document.getElementById('pesquisaGrid').innerHTML = `
-            <div class="chart-card" id="card_pesqAtua"><div class="chart-title"><i class="fas fa-flask"></i> Atuação em pesquisa</div><div class="chart-wrapper"><canvas id="pesqAtua"></canvas></div></div>
-            <div class="chart-card" id="card_pesqQtd"><div class="chart-title"><i class="fas fa-file-alt"></i> Quantos projetos já envolveu</div><div class="chart-wrapper"><canvas id="pesqQtd"></canvas></div></div>
-            <div class="chart-card" id="card_pesqFonte"><div class="chart-title"><i class="fas fa-hand-holding-usd"></i> Fonte de fomento</div><div class="chart-wrapper"><canvas id="pesqFonte"></canvas></div></div>
-            <div class="chart-card" id="card_pesqMotivoNao"><div class="chart-title"><i class="fas fa-question-circle"></i> Motivo para não atuar em pesquisa</div><div class="chart-wrapper"><canvas id="pesqMotivoNao"></canvas></div></div>
-        `;
-        criarPie('pesqAtua', pesquisaFreq.labels, pesquisaFreq.values);
-        criarBarraVertical('pesqQtd', qtdProjetosFreq.labels, qtdProjetosFreq.values);
-        criarPie('pesqFonte', fonteFreq.labels, fonteFreq.values);
-        criarBarraHorizontal('pesqMotivoNao', motivoNaoPesqFreq.labels, motivoNaoPesqFreq.values);
-
-        ['pesqAtua','pesqQtd','pesqFonte','pesqMotivoNao'].forEach((id, i) => {
-            const titles = ['Atuação em pesquisa','Quantos projetos','Fonte de fomento','Motivo para não pesquisar'];
-            const cards = ['card_pesqAtua','card_pesqQtd','card_pesqFonte','card_pesqMotivoNao'];
-            adicionarInfoIcon(cards[i], titles[i]);
-            adicionarBotaoExpandir(cards[i], id, titles[i], dadosFiltrados);
-        });
-
-        // --- ABA GESTÃO ---
-        const cargoFreq = contarFrequencia(dadosFiltrados, 'cargoAdm');
-        const funcaoFreq = contarFrequencia(dadosFiltrados, 'funcaoAdm');
-        const horasGestaoFreq = contarFrequencia(dadosFiltrados, 'horasGestao');
-        const infraEnsinoFreq = contarFrequencia(dadosFiltrados, 'infraEnsino');
-        const infraPesqFreq = contarFrequencia(dadosFiltrados, 'infraPesquisa');
-        const acessoFreq = contarFrequencia(dadosFiltrados, 'acessoRecursos');
-
-        document.getElementById('gestaoGrid').innerHTML = `
-            <div class="chart-card" id="card_gestCargo"><div class="chart-title"><i class="fas fa-user-tie"></i> Exerce/exerceu cargo administrativo?</div><div class="chart-wrapper"><canvas id="gestCargo"></canvas></div></div>
-            <div class="chart-card" id="card_gestFuncao"><div class="chart-title"><i class="fas fa-tasks"></i> Função exercida</div><div class="chart-wrapper"><canvas id="gestFuncao"></canvas></div></div>
-            <div class="chart-card" id="card_gestHoras"><div class="chart-title"><i class="fas fa-clock"></i> Horas de gestão por semana</div><div class="chart-wrapper"><canvas id="gestHoras"></canvas></div></div>
-            <div class="chart-card" id="card_gestInfraEnsino"><div class="chart-title"><i class="fas fa-chalkboard"></i> Infraestrutura para ensino</div><div class="chart-wrapper"><canvas id="gestInfraEnsino"></canvas></div></div>
-            <div class="chart-card" id="card_gestInfraPesq"><div class="chart-title"><i class="fas fa-microscope"></i> Infraestrutura para pesquisa</div><div class="chart-wrapper"><canvas id="gestInfraPesq"></canvas></div></div>
-            <div class="chart-card" id="card_gestAcesso"><div class="chart-title"><i class="fas fa-door-open"></i> Acesso a recursos</div><div class="chart-wrapper"><canvas id="gestAcesso"></canvas></div></div>
-        `;
-        criarPie('gestCargo', cargoFreq.labels, cargoFreq.values);
-        criarBarraVertical('gestFuncao', funcaoFreq.labels, funcaoFreq.values);
-        criarBarraVertical('gestHoras', horasGestaoFreq.labels, horasGestaoFreq.values);
-        criarBarraVertical('gestInfraEnsino', infraEnsinoFreq.labels, infraEnsinoFreq.values);
-        criarBarraVertical('gestInfraPesq', infraPesqFreq.labels, infraPesqFreq.values);
-        criarBarraVertical('gestAcesso', acessoFreq.labels, acessoFreq.values);
-
-        ['gestCargo','gestFuncao','gestHoras','gestInfraEnsino','gestInfraPesq','gestAcesso'].forEach((id, i) => {
-            const titles = ['Cargo administrativo','Função','Horas de gestão','Infraestrutura ensino','Infraestrutura pesquisa','Acesso a recursos'];
-            const cards = ['card_gestCargo','card_gestFuncao','card_gestHoras','card_gestInfraEnsino','card_gestInfraPesq','card_gestAcesso'];
-            adicionarInfoIcon(cards[i], titles[i]);
-            adicionarBotaoExpandir(cards[i], id, titles[i], dadosFiltrados);
-        });
-
-        // --- ABA SATISFAÇÃO ---
-        const satisfacaoFreq = contarFrequencia(dadosFiltrados, 'satisfacao');
-        const reconhecimentoFreq = contarFrequencia(dadosFiltrados, 'reconhecimento');
-        const relacionamentoFreq = contarFrequencia(dadosFiltrados, 'relacionamentoAlunos');
-        const mudarInstFreq = contarFrequencia(dadosFiltrados, 'mudarInstituicao');
-        const deixarCarreiraFreq = contarFrequencia(dadosFiltrados, 'deixarCarreira');
-
-        document.getElementById('satisfacaoGrid').innerHTML = `
-            <div class="chart-card" id="card_satSatisfacao"><div class="chart-title"><i class="fas fa-smile"></i> Satisfação com o trabalho</div><div class="chart-wrapper"><canvas id="satSatisfacao"></canvas></div></div>
-            <div class="chart-card" id="card_satReconhecimento"><div class="chart-title"><i class="fas fa-star"></i> Reconhecimento pela gestão</div><div class="chart-wrapper"><canvas id="satReconhecimento"></canvas></div></div>
-            <div class="chart-card" id="card_satRelacionamento"><div class="chart-title"><i class="fas fa-handshake"></i> Relacionamento com alunos</div><div class="chart-wrapper"><canvas id="satRelacionamento"></canvas></div></div>
-            <div class="chart-card" id="card_satMudarInst"><div class="chart-title"><i class="fas fa-building"></i> Pretende mudar de instituição?</div><div class="chart-wrapper"><canvas id="satMudarInst"></canvas></div></div>
-            <div class="chart-card" id="card_satDeixarCarreira"><div class="chart-title"><i class="fas fa-sign-out-alt"></i> Pretende deixar a carreira docente?</div><div class="chart-wrapper"><canvas id="satDeixarCarreira"></canvas></div></div>
-        `;
-        criarBarraVertical('satSatisfacao', satisfacaoFreq.labels, satisfacaoFreq.values);
-        criarBarraVertical('satReconhecimento', reconhecimentoFreq.labels, reconhecimentoFreq.values);
-        criarBarraVertical('satRelacionamento', relacionamentoFreq.labels, relacionamentoFreq.values);
-        criarBarraVertical('satMudarInst', mudarInstFreq.labels, mudarInstFreq.values);
-        criarBarraVertical('satDeixarCarreira', deixarCarreiraFreq.labels, deixarCarreiraFreq.values);
-
-        ['satSatisfacao','satReconhecimento','satRelacionamento','satMudarInst','satDeixarCarreira'].forEach((id, i) => {
-            const titles = ['Satisfação com trabalho','Reconhecimento','Relacionamento com alunos','Mudar de instituição','Deixar carreira'];
-            const cards = ['card_satSatisfacao','card_satReconhecimento','card_satRelacionamento','card_satMudarInst','card_satDeixarCarreira'];
-            adicionarInfoIcon(cards[i], titles[i]);
-            adicionarBotaoExpandir(cards[i], id, titles[i], dadosFiltrados);
-        });
-    }
-
-    // ----------------------------------------------------------------
-    // FILTRO
-    // ----------------------------------------------------------------
-    function aplicarFiltro() {
-        const campus = document.getElementById('campusFilter').value;
-        dadosFiltrados = campus === 'all' ? [...dadosCompletos] : dadosCompletos.filter(d => d.campus === campus);
-        renderizarDashboard();
-    }
-
-    // ----------------------------------------------------------------
-    // CARREGAR DADOS
-    // ----------------------------------------------------------------
-    async function carregarDados() {
-        try {
-            const response = await fetch('../../assets/data/DadosFormularios/DadosDocentes.json');
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const raw = await response.json();
-            dadosCompletos = normalizarDadosDocentes(raw);
-
-            const campi = [...new Set(dadosCompletos.map(d => d.campus).filter(c => c && c !== ""))].sort();
-            const select = document.getElementById('campusFilter');
-            campi.forEach(c => {
-                const opt = document.createElement('option');
-                opt.value = c;
-                opt.textContent = c;
-                select.appendChild(opt);
+        function criarBarraVertical(canvasId, labels, values, tituloY = 'Quantidade') {
+            const ctx = document.getElementById(canvasId)?.getContext('2d');
+            if (!ctx) return;
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+            marcarWide(canvasId, labels.length);
+            charts[canvasId] = new Chart(ctx, {
+                type: 'bar',
+                data: { labels, datasets: [{ label: tituloY, data: values, backgroundColor: '#ff9a3c', borderRadius: 5 }] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: tituloY }, ticks: { font: { size: 11 } } },
+                        x: { ticks: { autoSkip: true, maxRotation: 45, minRotation: 30, font: { size: 10 } } }
+                    },
+                    plugins: { tooltip: { callbacks: { label: (c) => `${c.raw} respostas` } } }
+                }
             });
-
-            dadosFiltrados = [...dadosCompletos];
-            renderizarDashboard();
-        } catch (error) {
-            console.error('Erro ao carregar dados docentes:', error);
-            document.querySelector('.filter-bar').insertAdjacentHTML('afterend',
-                `<div style="background:#fee;border-left:4px solid #e74a3b;padding:1rem;margin:1rem 0;border-radius:8px;">
-                    <i class="fas fa-exclamation-triangle"></i> Erro ao carregar dados: ${error.message}<br>
-                    Verifique o arquivo <strong>DadosDocentes.json</strong>
-                </div>`
-            );
+            return charts[canvasId];
         }
-    }
 
-    // ----------------------------------------------------------------
-    // EVENTOS E INICIALIZAÇÃO
-    // ----------------------------------------------------------------
-    function setupEventListeners() {
-        document.getElementById("closeModalBtn").addEventListener("click", () => {
-            document.getElementById("modal").classList.remove("show");
-            if (modalChart) { modalChart.destroy(); modalChart = null; }
-        });
-        document.getElementById("modal").addEventListener("click", (e) => {
-            if (e.target === document.getElementById("modal")) {
-                document.getElementById("modal").classList.remove("show");
-                if (modalChart) { modalChart.destroy(); modalChart = null; }
+        function criarBarraHorizontal(canvasId, labels, values) {
+            const ctx = document.getElementById(canvasId)?.getContext('2d');
+            if (!ctx) return;
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+            const canvas = document.getElementById(canvasId);
+            const inner = canvas?.closest('.chart-inner');
+            if (inner && labels.length > 5) {
+                const altura = Math.max(260, labels.length * 36);
+                inner.style.minHeight = altura + 'px';
+                canvas.style.minHeight = altura + 'px';
             }
-        });
-        document.getElementById("downloadPngBtn").addEventListener("click", () => {
-            if (modalChart) downloadCanvasAsPNG(document.getElementById("modalCanvas"), `${currentModalTitle || "grafico"}.png`);
-        });
-        document.getElementById("downloadJsonBtn").addEventListener("click", () => {
-            if (currentModalRawData) downloadJSON(currentModalRawData, `${currentModalTitle || "dados"}.json`);
-        });
-        document.getElementById("downloadCsvBtn").addEventListener("click", () => {
-            if (currentModalRawData && currentModalRawData.length) downloadCSV(currentModalRawData, `${currentModalTitle || "dados"}.csv`);
-        });
-        document.addEventListener("click", (e) => {
-            const btn = e.target.closest(".chart-btn");
-            if (btn && btn.getAttribute("data-expand")) expandirGrafico(btn.getAttribute("data-expand"));
-        });
-    }
-
-    function initTabs() {
-        const tabs = document.querySelectorAll('.tab-btn');
-        const contents = document.querySelectorAll('.tab-content');
-        tabs.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const tabId = btn.dataset.tab;
-                tabs.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                contents.forEach(c => c.classList.remove('active'));
-                document.getElementById(`tab-${tabId}`).classList.add('active');
-                setTimeout(() => Object.values(charts).forEach(ch => ch?.resize?.()), 150);
+            charts[canvasId] = new Chart(ctx, {
+                type: 'bar',
+                data: { labels, datasets: [{ label: 'Respostas', data: values, backgroundColor: '#36b9cc', borderRadius: 5 }] },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.raw} respostas` } } },
+                    scales: {
+                        x: { beginAtZero: true, title: { display: true, text: 'Contagem' }, ticks: { font: { size: 11 } } },
+                        y: { ticks: { font: { size: 10 } } }
+                    }
+                }
             });
-        });
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        initTabs();
-        carregarDados();
-        document.getElementById('campusFilter').addEventListener('change', aplicarFiltro);
-        setupEventListeners();
-
-        // Menu mobile
-        const hamburger = document.getElementById('hamburger');
-        const navMenu = document.getElementById('navMenuMobile');
-        const overlay = document.getElementById('menuOverlay');
-        const closeBtn = document.getElementById('menuCloseBtn');
-
-        function closeMenu() {
-            hamburger?.classList.remove('active');
-            navMenu?.classList.remove('active');
-            overlay?.classList.remove('active');
-            document.body.classList.remove('menu-open');
+            return charts[canvasId];
         }
-        function openMenu() {
-            hamburger?.classList.add('active');
-            navMenu?.classList.add('active');
-            overlay?.classList.add('active');
-            document.body.classList.add('menu-open');
-        }
-        hamburger?.addEventListener('click', () => {
-            navMenu?.classList.contains('active') ? closeMenu() : openMenu();
-        });
-        closeBtn?.addEventListener('click', closeMenu);
-        overlay?.addEventListener('click', closeMenu);
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 900 && navMenu?.classList.contains('active')) closeMenu();
-        });
-    });
-</script>
 
+        function criarLinha(canvasId, labels, values, titulo = 'Frequência') {
+            const ctx = document.getElementById(canvasId)?.getContext('2d');
+            if (!ctx) return;
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+            charts[canvasId] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: titulo,
+                        data: values,
+                        borderColor: '#ff9a3c',
+                        backgroundColor: 'rgba(255,154,60,0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#ff9a3c',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: titulo }, ticks: { font: { size: 11 } } },
+                        x: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+            return charts[canvasId];
+        }
+
+        function criarBarraEmpilhada(canvasId, labels, datasets) {
+            const ctx = document.getElementById(canvasId)?.getContext('2d');
+            if (!ctx) return;
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+            marcarWide(canvasId, labels.length);
+            charts[canvasId] = new Chart(ctx, {
+                type: 'bar',
+                data: { labels, datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, ticks: { autoSkip: true, maxRotation: 40, font: { size: 10 } } },
+                        y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Número de docentes' }, ticks: { font: { size: 11 } } }
+                    },
+                    plugins: { tooltip: { mode: 'index' } }
+                }
+            });
+            return charts[canvasId];
+        }
+
+        function criarRadarDocentes(canvasId, dados) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            if (charts[canvasId]) { try { charts[canvasId].destroy(); } catch (e) {} delete charts[canvasId]; }
+            
+            const areas = [...new Set(dados.map(d => d.area).filter(Boolean))].slice(0, 5);
+            if (areas.length === 0) return;
+            
+            const metricas = ["Doutores", "Atuam em pesquisa", "Com cargo adm", "Satisfeitos", "Mudariam de instituição"];
+            const cores = ['#ff9a3c', '#36b9cc', '#f6c23e', '#e74a3b', '#4e73df'];
+            
+            const datasets = areas.map((area, idx) => {
+                const dc = dados.filter(d => d.area === area);
+                const total = dc.length;
+                if (total === 0) return null;
+                const valores = metricas.map(m => {
+                    if (m === "Doutores") return (dc.filter(d => d.titulacao && d.titulacao.toLowerCase().includes('doutor')).length / total) * 100;
+                    if (m === "Atuam em pesquisa") return (dc.filter(d => d.pesquisa && (d.pesquisa.includes('coordeno') || d.pesquisa.includes('colaborador'))).length / total) * 100;
+                    if (m === "Com cargo adm") return (dc.filter(d => d.cargoAdm && d.cargoAdm.includes('Sim')).length / total) * 100;
+                    if (m === "Satisfeitos") return (dc.filter(d => d.satisfacao && (d.satisfacao.includes('Satisfeito') || d.satisfacao.includes('Muito satisfeito'))).length / total) * 100;
+                    if (m === "Mudariam de instituição") return (dc.filter(d => d.mudarInstituicao && (d.mudarInstituicao.includes('Sim') || d.mudarInstituicao.includes('Talvez'))).length / total) * 100;
+                    return 0;
+                });
+                return {
+                    label: area.length > 25 ? area.substring(0, 22) + '…' : area,
+                    data: valores,
+                    backgroundColor: `${cores[idx % cores.length]}20`,
+                    borderColor: cores[idx % cores.length],
+                    borderWidth: 2,
+                    pointBackgroundColor: cores[idx % cores.length],
+                    pointBorderColor: '#fff',
+                    pointRadius: 4
+                };
+            }).filter(Boolean);
+            
+            if (datasets.length === 0) return;
+            try {
+                charts[canvasId] = new Chart(canvas.getContext('2d'), {
+                    type: 'radar',
+                    data: { labels: metricas, datasets },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 20, callback: v => v + '%', font: { size: 10 } } } },
+                        plugins: {
+                            tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.raw.toFixed(1)}%` } },
+                            legend: { position: 'bottom', labels: { font: { size: 10 } } }
+                        }
+                    }
+                });
+            } catch (e) { console.error('Erro radar docentes:', e); }
+        }
+
+        // ============================================================
+        // FUNÇÕES DE UI
+        // ============================================================
+        function criarChartCardHTML(id, canvasId, iconClass, titulo) {
+            return `
+                <div class="chart-box" id="${id}">
+                    <h3><i class="${iconClass}"></i> ${titulo}</h3>
+                    <div class="chart-wrapper">
+                        <div class="chart-inner">
+                            <canvas id="${canvasId}"></canvas>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        function adicionarInfoIcon(cardId, chartTitle) {
+            const card = document.getElementById(cardId);
+            if (!card) return;
+            const pergunta = perguntasMap[chartTitle] || "Informação não disponível";
+            const titleDiv = card.querySelector('h3');
+            if (titleDiv) {
+                const span = document.createElement('span');
+                span.className = 'info-icon';
+                span.innerHTML = 'ⓘ';
+                span.title = pergunta;
+                titleDiv.appendChild(span);
+            }
+        }
+
+        function adicionarBotaoExpandir(cardId, canvasId, chartTitle, rawData) {
+            const card = document.getElementById(cardId);
+            if (!card) return;
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'chart-actions';
+            actionsDiv.innerHTML = `<button class="chart-btn" data-expand="${canvasId}" title="Expandir gráfico"><i class="fas fa-expand"></i></button>`;
+            card.style.position = 'relative';
+            card.appendChild(actionsDiv);
+            const canvas = document.getElementById(canvasId);
+            if (canvas) { canvas._rawData = rawData;
+                canvas._chartTitle = chartTitle; }
+        }
+
+        function expandirGrafico(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const chartObj = charts[canvasId];
+            if (!chartObj) return;
+            const modalCanvas = document.getElementById("modalCanvas");
+            if (modalChart) { modalChart.destroy();
+                modalChart = null; }
+            const modalData = JSON.parse(JSON.stringify(chartObj.config.data));
+            modalChart = new Chart(modalCanvas.getContext("2d"), {
+                type: chartObj.config.type,
+                data: modalData,
+                options: { ...chartObj.config.options, responsive: true, maintainAspectRatio: true }
+            });
+            document.getElementById("modalTitle").innerHTML = `<i class="fas fa-chart-bar"></i> ${canvas._chartTitle || "Gráfico Expandido"}`;
+            currentModalRawData = canvas._rawData;
+            currentModalTitle = canvas._chartTitle || "grafico";
+            document.getElementById("modal").classList.add("active");
+        }
+
+        function atualizarIndicadoresHeader(dados) {
+            const total = dados.length;
+            const doutores = dados.filter(d => d.titulacao && d.titulacao.toLowerCase().includes('doutor')).length;
+            const pesquisa = dados.filter(d => d.pesquisa && (d.pesquisa.includes('coordeno') || d.pesquisa.includes('colaborador'))).length;
+            const satisfeitos = dados.filter(d => d.satisfacao && (d.satisfacao.includes('Satisfeito') || d.satisfacao.includes('Muito satisfeito'))).length;
+            const pctDoutores = total ? Math.round((doutores / total) * 100) : 0;
+            const pctPesquisa = total ? Math.round((pesquisa / total) * 100) : 0;
+            const pctSatisfeitos = total ? Math.round((satisfeitos / total) * 100) : 0;
+
+            document.getElementById('status-participantes').textContent = total.toLocaleString() + ' Participantes';
+            document.getElementById('status-doutores').textContent = pctDoutores + '% Doutores';
+
+            document.getElementById('totalRegistros').textContent = total.toLocaleString();
+            document.getElementById('totalDoutores').textContent = pctDoutores + '%';
+            document.getElementById('pesquisaAtiva').textContent = pctPesquisa + '%';
+            document.getElementById('satisfacaoDocente').textContent = pctSatisfeitos + '%';
+        }
+
+        // ============================================================
+        // RENDERIZAÇÃO DO DASHBOARD
+        // ============================================================
+        function renderizarDashboard() {
+            if (!dadosFiltrados.length) {
+                const msg = '<div class="chart-box" style="text-align:center;padding:2rem;"><i class="fas fa-chart-simple" style="font-size:2rem;color:var(--medium-color);"></i><p style="margin-top:1rem;color:var(--medium-color);">Nenhum dado disponível para este filtro</p></div>';
+                ['perfilGrid', 'deslocamentoGrid', 'pesquisaGrid', 'gestaoGrid', 'satisfacaoGrid'].forEach(id => {
+                    document.getElementById(id).innerHTML = msg;
+                });
+                return;
+            }
+
+            const dados = dadosFiltrados;
+
+            // ===== PERFIL =====
+            const campusFreq = contarFrequencia(dados, 'campus');
+            const areaFreq = contarFrequencia(dados, 'area');
+            const tempoFreq = contarFrequencia(dados, 'tempoDocencia');
+            const regimeFreq = contarFrequencia(dados, 'regime');
+            const titulacaoFreq = contarFrequencia(dados, 'titulacao');
+            const nivelFreq = contarFrequencia(dados, 'nivelEnsino');
+            const turmasFreq = contarFrequencia(dados, 'turmas');
+            const horasEnsinoFreq = contarFrequencia(dados, 'horasEnsino');
+
+            document.getElementById('perfilGrid').innerHTML =
+                criarChartCardHTML('card_perfilCampus', 'perfilCampus', 'fas fa-university', 'Distribuição por Campus') +
+                criarChartCardHTML('card_perfilArea', 'perfilArea', 'fas fa-microscope', 'Área de formação/atuação') +
+                criarChartCardHTML('card_perfilTempo', 'perfilTempo', 'fas fa-clock', 'Tempo de docência no IFPB') +
+                criarChartCardHTML('card_perfilRegime', 'perfilRegime', 'fas fa-briefcase', 'Regime de trabalho') +
+                criarChartCardHTML('card_perfilTitulacao', 'perfilTitulacao', 'fas fa-graduation-cap', 'Titulação máxima') +
+                criarChartCardHTML('card_perfilNivel', 'perfilNivel', 'fas fa-school', 'Nível de ensino principal') +
+                criarChartCardHTML('card_perfilTurmas', 'perfilTurmas', 'fas fa-chalkboard', 'Número de turmas') +
+                criarChartCardHTML('card_perfilHorasEnsino', 'perfilHorasEnsino', 'fas fa-hourglass', 'Horas semanais dedicadas ao ensino') +
+                criarChartCardHTML('card_radarDocentes', 'radarDocentes', 'fas fa-chart-line', 'Comparativo por Área');
+
+            criarPie('perfilCampus', campusFreq.labels, campusFreq.values);
+            criarPie('perfilArea', areaFreq.labels, areaFreq.values);
+            criarBarraVertical('perfilTempo', tempoFreq.labels, tempoFreq.values);
+            criarPie('perfilRegime', regimeFreq.labels, regimeFreq.values);
+            criarPie('perfilTitulacao', titulacaoFreq.labels, titulacaoFreq.values);
+            criarBarraVertical('perfilNivel', nivelFreq.labels, nivelFreq.values);
+            criarBarraVertical('perfilTurmas', turmasFreq.labels, turmasFreq.values);
+            criarBarraVertical('perfilHorasEnsino', horasEnsinoFreq.labels, horasEnsinoFreq.values);
+            criarRadarDocentes('radarDocentes', dados);
+
+            const perfilCards = ['card_perfilCampus', 'card_perfilArea', 'card_perfilTempo', 'card_perfilRegime', 'card_perfilTitulacao', 'card_perfilNivel', 'card_perfilTurmas', 'card_perfilHorasEnsino', 'card_radarDocentes'];
+            const perfilTitles = ['Distribuição por Campus', 'Área de formação/atuação', 'Tempo de docência no IFPB', 'Regime de trabalho', 'Titulação máxima', 'Nível de ensino principal', 'Número de turmas', 'Horas semanais dedicadas ao ensino', 'Comparativo por Área'];
+            const perfilCanvases = ['perfilCampus', 'perfilArea', 'perfilTempo', 'perfilRegime', 'perfilTitulacao', 'perfilNivel', 'perfilTurmas', 'perfilHorasEnsino', 'radarDocentes'];
+            
+            perfilCards.forEach((id, i) => {
+                adicionarInfoIcon(id, perfilTitles[i]);
+                adicionarBotaoExpandir(id, perfilCanvases[i], perfilTitles[i], dados);
+            });
+
+            // ===== DESLOCAMENTO =====
+            const residenciaFreq = contarFrequencia(dados, 'residencia');
+            const distanciaFreq = contarFrequencia(dados, 'distancia');
+            const tempoDeslocFreq = contarFrequencia(dados, 'tempoDeslocamento');
+
+            document.getElementById('deslocamentoGrid').innerHTML =
+                criarChartCardHTML('card_deslResidencia', 'deslResidencia', 'fas fa-home', 'Situação de residência') +
+                criarChartCardHTML('card_deslDistancia', 'deslDistancia', 'fas fa-route', 'Distância (km)') +
+                criarChartCardHTML('card_deslTempo', 'deslTempo', 'fas fa-hourglass-half', 'Tempo de deslocamento (ida+volta)');
+
+            criarPie('deslResidencia', residenciaFreq.labels, residenciaFreq.values);
+            criarBarraVertical('deslDistancia', distanciaFreq.labels, distanciaFreq.values);
+            criarBarraVertical('deslTempo', tempoDeslocFreq.labels, tempoDeslocFreq.values);
+
+            ['card_deslResidencia', 'card_deslDistancia', 'card_deslTempo'].forEach((id, i) => {
+                const titles = ['Situação de residência', 'Distância (km)', 'Tempo de deslocamento (ida+volta)'];
+                const canvases = ['deslResidencia', 'deslDistancia', 'deslTempo'];
+                adicionarInfoIcon(id, titles[i]);
+                adicionarBotaoExpandir(id, canvases[i], titles[i], dados);
+            });
+
+            // ===== PESQUISA =====
+            const pesquisaFreq = contarFrequencia(dados, 'pesquisa');
+            const qtdProjetosFreq = contarFrequencia(dados, 'qtdProjetos');
+            const fonteFreq = contarFrequencia(dados, 'fonteFomento');
+            const motivoNaoPesqFreq = contarFrequencia(dados, 'motivoNaoPesquisa');
+
+            document.getElementById('pesquisaGrid').innerHTML =
+                criarChartCardHTML('card_pesqAtua', 'pesqAtua', 'fas fa-flask', 'Atuação em pesquisa') +
+                criarChartCardHTML('card_pesqQtd', 'pesqQtd', 'fas fa-file-alt', 'Quantos projetos já envolveu') +
+                criarChartCardHTML('card_pesqFonte', 'pesqFonte', 'fas fa-hand-holding-usd', 'Fonte de fomento') +
+                criarChartCardHTML('card_pesqMotivoNao', 'pesqMotivoNao', 'fas fa-question-circle', 'Motivo para não atuar em pesquisa');
+
+            criarPie('pesqAtua', pesquisaFreq.labels, pesquisaFreq.values);
+            criarBarraVertical('pesqQtd', qtdProjetosFreq.labels, qtdProjetosFreq.values);
+            criarPie('pesqFonte', fonteFreq.labels, fonteFreq.values);
+            criarBarraHorizontal('pesqMotivoNao', motivoNaoPesqFreq.labels, motivoNaoPesqFreq.values);
+
+            ['card_pesqAtua', 'card_pesqQtd', 'card_pesqFonte', 'card_pesqMotivoNao'].forEach((id, i) => {
+                const titles = ['Atuação em pesquisa', 'Quantos projetos já envolveu', 'Fonte de fomento', 'Motivo para não atuar em pesquisa'];
+                const canvases = ['pesqAtua', 'pesqQtd', 'pesqFonte', 'pesqMotivoNao'];
+                adicionarInfoIcon(id, titles[i]);
+                adicionarBotaoExpandir(id, canvases[i], titles[i], dados);
+            });
+
+            // ===== GESTÃO =====
+            const cargoFreq = contarFrequencia(dados, 'cargoAdm');
+            const funcaoFreq = contarFrequencia(dados, 'funcaoAdm');
+            const horasGestaoFreq = contarFrequencia(dados, 'horasGestao');
+            const infraEnsinoFreq = contarFrequencia(dados, 'infraEnsino');
+            const infraPesqFreq = contarFrequencia(dados, 'infraPesquisa');
+            const acessoFreq = contarFrequencia(dados, 'acessoRecursos');
+
+            document.getElementById('gestaoGrid').innerHTML =
+                criarChartCardHTML('card_gestCargo', 'gestCargo', 'fas fa-user-tie', 'Cargo administrativo') +
+                criarChartCardHTML('card_gestFuncao', 'gestFuncao', 'fas fa-tasks', 'Função exercida') +
+                criarChartCardHTML('card_gestHoras', 'gestHoras', 'fas fa-clock', 'Horas de gestão por semana') +
+                criarChartCardHTML('card_gestInfraEnsino', 'gestInfraEnsino', 'fas fa-chalkboard', 'Infraestrutura para ensino') +
+                criarChartCardHTML('card_gestInfraPesq', 'gestInfraPesq', 'fas fa-microscope', 'Infraestrutura para pesquisa') +
+                criarChartCardHTML('card_gestAcesso', 'gestAcesso', 'fas fa-door-open', 'Acesso a recursos');
+
+            criarPie('gestCargo', cargoFreq.labels, cargoFreq.values);
+            criarBarraVertical('gestFuncao', funcaoFreq.labels, funcaoFreq.values);
+            criarBarraVertical('gestHoras', horasGestaoFreq.labels, horasGestaoFreq.values);
+            criarBarraVertical('gestInfraEnsino', infraEnsinoFreq.labels, infraEnsinoFreq.values);
+            criarBarraVertical('gestInfraPesq', infraPesqFreq.labels, infraPesqFreq.values);
+            criarBarraVertical('gestAcesso', acessoFreq.labels, acessoFreq.values);
+
+            ['card_gestCargo', 'card_gestFuncao', 'card_gestHoras', 'card_gestInfraEnsino', 'card_gestInfraPesq', 'card_gestAcesso'].forEach((id, i) => {
+                const titles = ['Cargo administrativo', 'Função exercida', 'Horas de gestão por semana', 'Infraestrutura para ensino', 'Infraestrutura para pesquisa', 'Acesso a recursos'];
+                const canvases = ['gestCargo', 'gestFuncao', 'gestHoras', 'gestInfraEnsino', 'gestInfraPesq', 'gestAcesso'];
+                adicionarInfoIcon(id, titles[i]);
+                adicionarBotaoExpandir(id, canvases[i], titles[i], dados);
+            });
+
+            // ===== SATISFAÇÃO =====
+            const satisfacaoFreq = contarFrequencia(dados, 'satisfacao');
+            const reconhecimentoFreq = contarFrequencia(dados, 'reconhecimento');
+            const relacionamentoFreq = contarFrequencia(dados, 'relacionamentoAlunos');
+            const mudarInstFreq = contarFrequencia(dados, 'mudarInstituicao');
+            const deixarCarreiraFreq = contarFrequencia(dados, 'deixarCarreira');
+
+            document.getElementById('satisfacaoGrid').innerHTML =
+                criarChartCardHTML('card_satSatisfacao', 'satSatisfacao', 'fas fa-smile', 'Satisfação com o trabalho') +
+                criarChartCardHTML('card_satReconhecimento', 'satReconhecimento', 'fas fa-star', 'Reconhecimento pela gestão') +
+                criarChartCardHTML('card_satRelacionamento', 'satRelacionamento', 'fas fa-handshake', 'Relacionamento com alunos') +
+                criarChartCardHTML('card_satMudarInst', 'satMudarInst', 'fas fa-building', 'Pretende mudar de instituição') +
+                criarChartCardHTML('card_satDeixarCarreira', 'satDeixarCarreira', 'fas fa-sign-out-alt', 'Pretende deixar a carreira docente');
+
+            criarBarraVertical('satSatisfacao', satisfacaoFreq.labels, satisfacaoFreq.values);
+            criarBarraVertical('satReconhecimento', reconhecimentoFreq.labels, reconhecimentoFreq.values);
+            criarBarraVertical('satRelacionamento', relacionamentoFreq.labels, relacionamentoFreq.values);
+            criarBarraVertical('satMudarInst', mudarInstFreq.labels, mudarInstFreq.values);
+            criarBarraVertical('satDeixarCarreira', deixarCarreiraFreq.labels, deixarCarreiraFreq.values);
+
+            ['card_satSatisfacao', 'card_satReconhecimento', 'card_satRelacionamento', 'card_satMudarInst', 'card_satDeixarCarreira'].forEach((id, i) => {
+                const titles = ['Satisfação com o trabalho', 'Reconhecimento pela gestão', 'Relacionamento com alunos', 'Pretende mudar de instituição', 'Pretende deixar a carreira docente'];
+                const canvases = ['satSatisfacao', 'satReconhecimento', 'satRelacionamento', 'satMudarInst', 'satDeixarCarreira'];
+                adicionarInfoIcon(id, titles[i]);
+                adicionarBotaoExpandir(id, canvases[i], titles[i], dados);
+            });
+        }
+
+        // ============================================================
+        // FILTROS
+        // ============================================================
+        function aplicarFiltros() {
+            const campus = document.getElementById('campusFilter').value;
+            const area = document.getElementById('areaFilter').value;
+
+            dadosFiltrados = dadosCompletos.filter(d => {
+                let ok = true;
+                if (campus !== 'all' && d.campus !== campus) ok = false;
+                if (area !== 'all' && d.area !== area) ok = false;
+                return ok;
+            });
+
+            atualizarIndicadoresHeader(dadosFiltrados);
+            renderizarDashboard();
+        }
+
+        function resetarFiltros() {
+            document.getElementById('campusFilter').value = 'all';
+            document.getElementById('areaFilter').value = 'all';
+            dadosFiltrados = [...dadosCompletos];
+            atualizarIndicadoresHeader(dadosFiltrados);
+            renderizarDashboard();
+        }
+
+        // ============================================================
+        // CARREGAR DADOS
+        // ============================================================
+        async function carregarDados() {
+            try {
+                let caminhoCorreto;
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    caminhoCorreto = '../../assets/data/DadosFormularios/DadosDocentes.json';
+                } else {
+                    caminhoCorreto = '/ifpb-data-plataform/assets/data/DadosFormularios/DadosDocentes.json';
+                }
+
+                console.log('Carregando dados docentes de:', caminhoCorreto);
+
+                const response = await fetch(caminhoCorreto);
+                if (!response.ok) throw new Error(`HTTP ${response.status} - Arquivo não encontrado`);
+
+                const dadosRaw = await response.json();
+                console.log('Dados carregados:', dadosRaw.length, 'registros');
+
+                dadosCompletos = normalizarDadosDocentes(dadosRaw);
+
+                // Preencher filtros
+                const campiUnicos = [...new Set(dadosCompletos.map(d => d.campus).filter(Boolean))].sort();
+                const areasUnicas = [...new Set(dadosCompletos.map(d => d.area).filter(Boolean))].sort();
+
+                const selCampus = document.getElementById('campusFilter');
+                campiUnicos.forEach(campus => {
+                    const opt = document.createElement('option');
+                    opt.value = campus;
+                    opt.textContent = campus;
+                    selCampus.appendChild(opt);
+                });
+
+                const selArea = document.getElementById('areaFilter');
+                areasUnicas.forEach(area => {
+                    const opt = document.createElement('option');
+                    opt.value = area;
+                    opt.textContent = area;
+                    selArea.appendChild(opt);
+                });
+
+                dadosFiltrados = [...dadosCompletos];
+                atualizarIndicadoresHeader(dadosFiltrados);
+                renderizarDashboard();
+
+            } catch (error) {
+                console.error('Erro ao carregar dados docentes:', error);
+                document.querySelector('.filters').insertAdjacentHTML('afterend',
+                    `<div style="background:#fde8e8;border-left:4px solid #e74a3b;padding:1rem;margin:1rem 0;border-radius:8px;">
+                        <i class="fas fa-exclamation-triangle" style="color:#e74a3b;"></i>
+                        <strong style="color:#e74a3b;">Erro ao carregar os dados:</strong>
+                        <span style="color:#5a5c69;">${error.message}</span><br>
+                        <span style="color:#5a5c69;font-size:0.85rem;">Arquivo esperado: <code>DadosDocentes.json</code></span>
+                    </div>`
+                );
+                document.getElementById('status-participantes').textContent = 'Erro ao carregar';
+                document.getElementById('status-doutores').textContent = 'Erro ao carregar';
+            }
+        }
+
+        // ============================================================
+        // INICIALIZAÇÃO
+        // ============================================================
+        function initTabs() {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const contents = document.querySelectorAll('.tab-content');
+            tabs.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabId = btn.getAttribute('data-tab');
+                    tabs.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    contents.forEach(c => c.classList.remove('active'));
+                    document.getElementById(`tab-${tabId}`).classList.add('active');
+                    setTimeout(() => {
+                        Object.values(charts).forEach(c => { if (c?.resize) c.resize(); });
+                    }, 150);
+                });
+            });
+        }
+
+        function setupEventListeners() {
+            document.getElementById('closeModalBtn').addEventListener('click', () => {
+                document.getElementById('modal').classList.remove('active');
+                if (modalChart) { modalChart.destroy();
+                    modalChart = null; }
+            });
+
+            document.getElementById('modal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('modal')) {
+                    document.getElementById('modal').classList.remove('active');
+                    if (modalChart) { modalChart.destroy();
+                        modalChart = null; }
+                }
+            });
+
+            document.getElementById('downloadPngBtn').addEventListener('click', () => {
+                if (modalChart) {
+                    const canvas = document.getElementById('modalCanvas');
+                    const link = document.createElement('a');
+                    link.download = `${currentModalTitle || 'grafico'}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                }
+            });
+
+            document.getElementById('downloadJsonBtn').addEventListener('click', () => {
+                if (currentModalRawData) {
+                    const blob = new Blob([JSON.stringify(currentModalRawData, null, 2)], { type: 'application/json' });
+                    const link = document.createElement('a');
+                    link.download = `${currentModalTitle || 'dados'}.json`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                }
+            });
+
+            document.getElementById('downloadCsvBtn').addEventListener('click', () => {
+                if (currentModalRawData && currentModalRawData.length) {
+                    const headers = Object.keys(currentModalRawData[0]);
+                    const rows = [headers.join(',')];
+                    for (const row of currentModalRawData) {
+                        rows.push(headers.map(h => `"${String(row[h] || '').replace(/"/g, '""')}"`).join(','));
+                    }
+                    const blob = new Blob(['\uFEFF' + rows.join('\n')], { type: 'text/csv;charset=utf-8' });
+                    const link = document.createElement('a');
+                    link.download = `${currentModalTitle || 'dados'}.csv`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                const btn = e.target.closest('.chart-btn');
+                if (btn && btn.getAttribute('data-expand')) {
+                    expandirGrafico(btn.getAttribute('data-expand'));
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Atualiza ano
+            const anoEl = document.getElementById('status-ano');
+            if (anoEl) anoEl.textContent = new Date().getFullYear();
+
+            initTabs();
+            setupEventListeners();
+            carregarDados();
+
+            document.getElementById('campusFilter').addEventListener('change', aplicarFiltros);
+            document.getElementById('areaFilter').addEventListener('change', aplicarFiltros);
+        });
+
+        // ============================================================
+        // MENU MOBILE
+        // ============================================================
+        (function() {
+            const hamburger = document.getElementById('hamburger');
+            const navMenuMobile = document.getElementById('navMenuMobile');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuCloseBtn = document.getElementById('menuCloseBtn');
+
+            function closeMenu() {
+                hamburger?.classList.remove('active');
+                navMenuMobile?.classList.remove('active');
+                menuOverlay?.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            }
+
+            function openMenu() {
+                hamburger?.classList.add('active');
+                navMenuMobile?.classList.add('active');
+                menuOverlay?.classList.add('active');
+                document.body.classList.add('menu-open');
+            }
+
+            hamburger?.addEventListener('click', () => {
+                navMenuMobile?.classList.contains('active') ? closeMenu() : openMenu();
+            });
+
+            menuCloseBtn?.addEventListener('click', closeMenu);
+            menuOverlay?.addEventListener('click', closeMenu);
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 900 && navMenuMobile?.classList.contains('active')) closeMenu();
+            });
+
+            navMenuMobile?.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
+        })();
+    </script>
 </body>
-</html>1
+</html>

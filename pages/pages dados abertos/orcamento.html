@@ -16,28 +16,23 @@
     <style>
 
 :root {
-    --primary-color: #9f9418;
-    --secondary-color: #d1d474;
-    --success-color: #1cc88a;
-    --warning-color: #f6c23e;
-    --danger-color: #e74a3b;
-    --info-color: #36b9cc;
-    --dark-color: #2e3a59;
-    --medium-color: #5a5c69;
-    --light-color: #f8f9fc;
-    --white: #ffffff;
-    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-    --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
-    --radius: 10px;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* container principal*/
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
+            --primary-color: #1a5f7a;
+            --primary-dark: #0e4a63;
+            --primary-light: #2a7a9a;
+            --secondary-color: #11214a;
+            --success-color: #1cc88a;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --info-color: #36b9cc;
+            --dark-color: #2e3a59;
+            --medium-color: #5a5c69;
+            --light-color: #f8f9fc;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --radius: 10px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* cabeçalho da página com degrade amarelo/verde e detalhe geométrico */
@@ -1157,7 +1152,7 @@
             <nav class="main-nav">
                 <ul class="nav-list">
                     <li><a href="Dadosabertosifpb.html"><i class="fas fa-home"></i> Início</a></li>
-                    <li><a href="institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
+                    <li><a href="institucional.html"><i class="fas fa-university"></i> Instituição</a></li>
                     <li><a href="academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
                     <li><a href="orcamento.html" class="active"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
                     <li><a href="../dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
@@ -1189,7 +1184,7 @@
         </div>
         <ul>
             <li><a href="../../index.html"><i class="fas fa-home"></i> Início</a></li>
-            <li><a href="institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
+            <li><a href="institucional.html"><i class="fas fa-university"></i> Instituição</a></li>
             <li><a href="academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
             <li><a href="orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
             <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
@@ -1199,9 +1194,11 @@
     <main class="container">
         <section class="page-header fade-in">
             <div class="breadcrumb">
-                <a href="Dadosabertosifpb.html">Início</a>
+                <a href="../../index.html">Início</a>
                 <i class="fas fa-chevron-right"></i>
-                <span>Gestão e Orçamento</span>
+                <a href="Dadosabertosifpb.html">Dados Abertos IFPB</a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="orcamento.html">Gestão e Orçamento</a>
             </div>
             <h1 class="page-title">Gestão e Orçamento do IFPB</h1>
             <p class="page-subtitle">
@@ -1224,6 +1221,47 @@
                 </div>
             </div>
         </section>
+
+        <!-- Filtros (estilo desempenho/acadêmica) -->
+<section class="filters-section fade-in">
+    <div class="filters" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; background: var(--white); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
+        <div>
+            <label for="anoFilter" style="font-weight: 600; color: var(--dark-color); font-size: 0.9rem;">Ano:</label>
+            <select id="anoFilter" style="padding: 0.6rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; background: var(--white); min-width: 185px; max-width: 220px;">
+                <option value="todos">Todos os Anos</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
+            </select>
+        </div>
+        <div>
+            <label for="tipoFilter" style="font-weight: 600; color: var(--dark-color); font-size: 0.9rem;">Categoria:</label>
+            <select id="tipoFilter" style="padding: 0.6rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; background: var(--white); min-width: 260px; max-width: 280px;">
+                <option value="todos">Todas</option>
+                <option value="receita">Receitas</option>
+                <option value="despesa">Despesas</option>
+                <option value="investimento">Investimentos</option>
+            </select>
+        </div>
+        <div>
+            <label for="campusFilter" style="font-weight: 600; color: var(--dark-color); font-size: 0.9rem;">Campus:</label>
+            <select id="campusFilter" style="padding: 0.6rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; background: var(--white); min-width: 185px; max-width: 190px;">
+                <option value="todos">Todos</option>
+                <option value="joao-pessoa">João Pessoa</option>
+                <option value="campina-grande">Campina Grande</option>
+                <option value="sousa">Sousa</option>
+                <option value="patos">Patos</option>
+            </select>
+        </div>
+        <button id="apply-filters" style="background: var(--primary-color); color: white; border: none; padding: 0.6rem 1.8rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition);">
+            <i class="fas fa-filter"></i> Aplicar
+        </button>
+        <button id="reset-filters" style="background: #6c757d; color: white; border: none; padding: 0.6rem 1.8rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition);">
+            <i class="fas fa-undo"></i> Resetar
+        </button>
+    </div>
+</section>
 
         <section class="indicators-section">
             <h2 class="section-title">Indicadores Financeiros em Destaque</h2>

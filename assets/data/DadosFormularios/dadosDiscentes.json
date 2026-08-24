@@ -2224,5 +2224,32 @@
     "[Se já pensou em desistir] Qual o principal motivo? ": "Nunca pensei",
     "Qual é o seu curso no IFPB? (Exemplo: Técnico em Informática, Sistemas para Internet, etc.)": "Técnico em Contabilidade",
     "Se for de outro estado, qual cidade?": ""
+  },
+  {
+    "Carimbo de data/hora": "2026-06-22T16:46:00.432Z",
+    "Em qual campus do IFPB você estuda?": "Guarabira",
+    "Em qual cidade você reside atualmente?": "Tacima",
+    "Sobre a cidade onde você estuda:": "Resido em uma cidade diferente do polo/campus e preciso me deslocar para assistir às aulas",
+    "[Se deslocamento] Qual é a distância aproximada (em km) da sua cidade até a cidade onde você estuda?": "De 51 a 100 km",
+    "[Se deslocamento] Quanto tempo, em média, você gasta no deslocamento (ida e volta) para frequentar as aulas presenciais ou atividades no polo?": "Menos de 1 hora por dia",
+    "[Se deslocamento] Qual meio de transporte você utiliza com mais frequência para esse deslocamento?": "Transporte público (ônibus, trem, metrô)",
+    "Durante o Ensino Médio, você trabalha?": "Sim, trabalho como jovem aprendiz",
+    "Em qual turno você realiza a maior parte das disciplinas do curso?": "Somente manhã",
+    "Você concilia o estudo no IFPB com outro curso ?    ": "Não, faço apenas este curso no IFPB",
+    "Quantas horas por dia você dedica aos estudos (fora da sala de aula)?": "Menos de 1 hora por dia",
+    "Como você avalia o impacto de trabalhar e estudar (se for o caso) no seu desempenho acadêmico?": "Impacto neutro: consigo conciliar bem as duas atividades",
+    "Você conhece os programas de assistência estudantil oferecidos pelo IFPB?": "Conheço alguns",
+    "Você já recebeu ou recebe algum dos seguintes auxílios/benefícios do IFPB? ": "Outro",
+    "[Se recebe algum auxílio] Como você avalia a importância do auxílio para sua permanência no curso?": "Pouco importante - faz pouca diferença",
+    "Você participa ou já participou de algum projeto no IFPB? ": "Projeto de Pesquisa (PIBIC/PIBITI)",
+    "[Se participa de projeto] Qual o principal motivo que levou você a participar de projetos?": "Indicação de colegas ou professores",
+    "[Se NÃO participa de projetos] Qual o principal motivo para não participar?": "Outro",
+    "Em qual área você pretende atuar profissionalmente?": "Em área completamente diferente",
+    "Você já pensou em desistir do curso?": "Nunca pensei",
+    "[Se já pensou em desistir] Qual o principal motivo? ": "Nunca pensei",
+    "Qual é o seu curso no IFPB? (Exemplo: Técnico em Informática, Sistemas para Internet, etc.)": "Técnico em Contabilidade",
+    "Se for de outro estado, qual cidade?": ""
   }
+
+
 ]

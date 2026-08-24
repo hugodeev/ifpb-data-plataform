@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -12,27 +13,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* --- Mesmo CSS original (mantido) --- */
-        :root {
-            --primary-blue: #294cbf;
-            --secondary-blue: #4368d7;
-            --light-blue: #e8f1ff;
-            --success-green: #1cc88a;
-            --warning-yellow: #f6c23e;
-            --danger-red: #e74a3b;
-            --dark-gray: #2e3a59;
-            --medium-gray: #5a5c69;
-            --light-gray: #f8f9fc;
-            --white: #ffffff;
-            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.07);
-            --shadow-medium: 0 6px 15px rgba(0, 0, 0, 0.1);
-            --shadow-heavy: 0 10px 25px rgba(0, 0, 0, 0.15);
-            --border-radius: 10px;
-            --transition: all 0.3s ease;
-            --primary-color: #294cbf;
-            --secondary-color: #4368d7;
-            --radius: 10px;
-        }
+        
+        /* --- CSS com cores padronizadas para o tema IFPB (azul escuro) --- */
+:root {
+    --primary-blue: #1a5f7a;
+    --secondary-blue: #11214a;      /* ← agora azul escuro (igual ao institucional) */
+    --light-blue: #e8f1ff;
+    --success-green: #1cc88a;
+    --warning-yellow: #f6c23e;
+    --danger-red: #e74a3b;
+    --dark-gray: #2e3a59;
+    --medium-gray: #5a5c69;
+    --light-gray: #f8f9fc;
+    --white: #ffffff;
+    --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.07);
+    --shadow-medium: 0 6px 15px rgba(0, 0, 0, 0.1);
+    --shadow-heavy: 0 10px 25px rgba(0, 0, 0, 0.15);
+    --border-radius: 10px;
+    --transition: all 0.3s ease;
+    --primary-color: #1a5f7a;
+    --secondary-color: #11214a;     /* ← agora azul escuro, não mais verde */
+    --radius: 10px;
+}
+
         .modal-overlay {
             display: none;
             position: fixed;
@@ -695,7 +698,7 @@
             <nav class="main-nav">
                 <ul class="nav-list">
                     <li><a href="Dadosabertosifpb.html"><i class="fas fa-home"></i> Início</a></li>
-                    <li><a href="institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
+                    <li><a href="institucional.html"><i class="fas fa-university"></i> Instituição</a></li>
                     <li><a href="academico.html" class="active"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
                     <li><a href="orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
                     <li><a href="../dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
@@ -712,7 +715,7 @@
         </div>
         <ul>
             <li><a href="../../index.html"><i class="fas fa-home"></i> Início</a></li>
-            <li><a href="institucional.html"><i class="fas fa-university"></i> A Instituição</a></li>
+            <li><a href="institucional.html"><i class="fas fa-university"></i> Instituição</a></li>
             <li><a href="academico.html"><i class="fas fa-graduation-cap"></i> Vida Acadêmica</a></li>
             <li><a href="orcamento.html"><i class="fas fa-chart-pie"></i> Gestão e Orçamento</a></li>
             <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
@@ -722,55 +725,75 @@
     <!-- Conteúdo Principal -->
     <main class="container">
 
-        <!-- Cabeçalho da Página -->
+        <!-- ===== CABEÇALHO DA PÁGINA (estilo institucional) ===== -->
         <section class="page-header fade-in">
-            <div class="breadcrumb"><a href="Dadosabertosifpb.html">Início</a> <i class="fas fa-chevron-right"></i> <span>Vida Acadêmica</span></div>
+            <div class="breadcrumb">
+                <a href="../../index.html">Início</a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="Dadosabertosifpb.html">Dados Abertos IFPB</a>
+                <i class="fas fa-chevron-right"></i>
+                <span>Vida Acadêmica</span>
+            </div>
             <h1 class="page-title">Vida Acadêmica do IFPB</h1>
-            <p class="page-subtitle">Dados reais de estudantes, docentes e matrículas extraídos do sistema administrativo do IFPB.</p>
+            <p class="page-subtitle">Dados completos sobre estudantes, docentes, TAEs e matrículas do Instituto Federal da Paraíba. Informações extraídas do sistema administrativo para transparência e análise acadêmica.</p>
             <div class="status-indicators">
-                <div class="status-indicator"><span class="status-dot"></span><span>Dados atualizados</span></div>
-                <div class="status-indicator"><i class="fas fa-database"></i><span>Fonte: dadosAdministrativos.json</span></div>
-                <div class="status-indicator"><i class="fas fa-calendar-alt"></i><span id="data-atualizacao-status">Carregando...</span></div>
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>Dados Atualizados <span id="header-ano">2026</span></span>
+                </div>
+                <div class="status-indicator">
+                    <i class="fas fa-user-graduate"></i>
+                    <span id="header-estudantes">Carregando...</span>
+                </div>
+<div class="status-indicator">
+    <i class="fas fa-chalkboard-teacher"></i>   <!-- ícone de docente -->
+    <span id="header-docentes">Carregando...</span>
+</div>
+
             </div>
         </section>
 
         <!-- Filtros Avançados -->
-        <section class="data-filters fade-in">
-            <h2><i class="fas fa-sliders-h"></i> Filtros</h2>
-            <div class="filters-container">
-                <div class="filter-group">
-                    <label for="campus-filter"><i class="fas fa-map-marker-alt"></i> Campus</label>
-                    <select id="campus-filter" class="filter-select">
-                        <option value="all">Todos os Campi</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="curso-filter"><i class="fas fa-book"></i> Nível do Curso</label>
-                    <select id="curso-filter" class="filter-select">
-                        <option value="all">Todos os Níveis</option>
-                        <option value="tecnico">Técnico</option>
-                        <option value="graduacao">Graduação</option>
-                        <option value="pos">Pós-Graduação</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="ano-filter"><i class="fas fa-calendar"></i> Ano Letivo</label>
-                    <select id="ano-filter" class="filter-select">
-                        <option value="all">Todos os Anos</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="modalidade-filter"><i class="fas fa-laptop-house"></i> Modalidade</label>
-                    <select id="modalidade-filter" class="filter-select">
-                        <option value="all">Todas</option>
-                        <option value="presencial">Presencial</option>
-                        <option value="ead">EaD</option>
-                    </select>
-                </div>
-                <button class="btn-filter" id="apply-filters"><i class="fas fa-filter"></i> Aplicar <span class="filter-count" id="active-filters">0</span></button>
-                <button class="btn-filter btn-secondary" id="reset-filters"><i class="fas fa-redo"></i> Limpar</button>
-            </div>
-        </section>
+ <!-- Filtros (estilo desempenho) -->
+<section class="filters-section fade-in">
+    <div class="filters" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; background: var(--white); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
+        <div>
+            <label for="campus-filter" style="font-weight: 600; color: var(--dark-gray); font-size: 0.9rem;">Campus:</label>
+            <select id="campus-filter" style="padding: 0.6rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; background: var(--white); min-width: 160px; max-width: 220px;">
+                <option value="all">Todos os Campi</option>
+            </select>
+        </div>
+        <div>
+            <label for="curso-filter" style="font-weight: 600; color: var(--dark-gray); font-size: 0.9rem;">Nível do Curso:</label>
+            <select id="curso-filter" style="padding: 0.6rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; background: var(--white); min-width: 160px; max-width: 220px;">
+                <option value="all">Todos os Níveis</option>
+                <option value="tecnico">Técnico</option>
+                <option value="graduacao">Graduação</option>
+                <option value="pos">Pós-Graduação</option>
+            </select>
+        </div>
+        <div>
+            <label for="ano-filter" style="font-weight: 600; color: var(--dark-gray); font-size: 0.9rem;">Ano Letivo:</label>
+            <select id="ano-filter" style="padding: 0.6rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; background: var(--white); min-width: 160px; max-width: 220px;">
+                <option value="all">Todos os Anos</option>
+            </select>
+        </div>
+        <div>
+            <label for="modalidade-filter" style="font-weight: 600; color: var(--dark-gray); font-size: 0.9rem;">Modalidade:</label>
+            <select id="modalidade-filter" style="padding: 0.6rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; background: var(--white); min-width: 160px; max-width: 220px;">
+                <option value="all">Todas</option>
+                <option value="presencial">Presencial</option>
+                <option value="ead">EaD</option>
+            </select>
+        </div>
+        <button id="apply-filters" style="background: var(--primary-blue); color: white; border: none; padding: 0.6rem 1.8rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition);">
+            <i class="fas fa-filter"></i> Aplicar 
+        </button>
+        <button id="reset-filters" style="background: #6c757d; color: white; border: none; padding: 0.6rem 1.8rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition);">
+            <i class="fas fa-undo"></i> Resetar
+        </button>
+    </div>
+</section>
 
         <!-- Cards de Resumo -->
         <section class="academic-summary fade-in">
@@ -1054,6 +1077,7 @@
             processarDados();
             atualizarFiltros();
             atualizarCards();
+            atualizarHeader();   // <-- CHAMADA ADICIONADA
             atualizarTabela();
             atualizarGraficos();
             atualizarData();
@@ -1191,6 +1215,36 @@
         document.getElementById('media-estudantes').textContent = campusCount > 0 ? Math.round(totalEstudantes / campusCount).toLocaleString() : '---';
         document.getElementById('maior-campus').textContent = maior.nome + ' (' + maior.valor.toLocaleString() + ')';
         document.getElementById('menor-campus').textContent = menor.nome + ' (' + (menor.valor > 0 ? menor.valor.toLocaleString() : '0') + ')';
+    }
+
+    // ============================================================
+    // ATUALIZAR INDICADORES DO CABEÇALHO
+    // ============================================================
+    function atualizarHeader() {
+        const anoEl = document.getElementById('header-ano');
+        const estudantesEl = document.getElementById('header-estudantes');
+        const docentesEl = document.getElementById('header-docentes');
+
+        if (anoEl) {
+            const anoAtual = new Date().getFullYear();
+            anoEl.textContent = anoAtual;
+        }
+
+        // Calcular totais a partir dos dados agrupados
+        let totalEstudantes = 0;
+        let totalDocentes = 0;
+        let totalTAEs = 0;
+        Object.values(dadosAgrupados).forEach(d => {
+            Object.values(d.matriculas).forEach(v => {
+                if (v !== null && v !== undefined && !isNaN(v)) totalEstudantes += Number(v);
+            });
+            totalDocentes += d.docentes || 0;
+            totalTAEs += d.taes || 0;
+        });
+        const totalServidores = totalDocentes + totalTAEs;
+
+        if (estudantesEl) estudantesEl.textContent = totalEstudantes.toLocaleString() + ' Estudantes';
+        if (docentesEl) docentesEl.textContent = totalDocentes.toLocaleString() + ' Docentes';
     }
 
     // ============================================================
@@ -1409,8 +1463,12 @@
         const now = new Date();
         const opts = { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' };
         const str = now.toLocaleDateString('pt-BR', opts);
-        document.getElementById('last-update-date').textContent = str;
-        document.getElementById('data-atualizacao-status').textContent = str;
+
+        const lastUpdate = document.getElementById('last-update-date');
+        if (lastUpdate) lastUpdate.textContent = str;
+
+        const statusData = document.getElementById('data-atualizacao-status');
+        if (statusData) statusData.textContent = str;
     }
 
     // ============================================================

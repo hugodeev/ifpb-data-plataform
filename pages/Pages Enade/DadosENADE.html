@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>IFPB Data Platform - Dados Abertos | Transparência e Análise</title>
+    <title>IFPB Data Platform - Dados ENADE | Desempenho Acadêmico</title>
     <link rel="shortcut icon" href="../../assets/img/logosite.png" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
@@ -14,8 +13,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary-color: #387f1c;
-            --secondary-color: #59e462;
+    --primary-color: #4aa47d;
+            --primary-dark: #38a169;
+            --primary-light: #6ddbb3;
+            --secondary-color: #57cc99;
+            --accent-color: #ff9a3c;
+            --accent-dark: #e68a2e;
             --success-color: #1cc88a;
             --warning-color: #f6c23e;
             --danger-color: #e74a3b;
@@ -31,7 +34,6 @@
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* hero section  */
         .hero {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -235,20 +237,154 @@
             border-radius: 3px;
         }
 
-        .transparencia-box {
-            background: linear-gradient(135deg, #f8f9fc, #eef2ff);
-            border-radius: var(--radius);
-            padding: 2rem;
-            margin: 2rem 0;
-            text-align: center;
-            border-left: 5px solid var(--secondary-color);
-        }
-
         canvas {
             max-height: 260px;
             width: 100%;
         }
 
+        /* ===== Container padrão para as seções ===== */
+        .modulo-descricao {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 2rem 2.5rem;
+            margin: 2.5rem 0 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--light-color);
+            transition: var(--transition);
+        }
+        .modulo-descricao:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .descricao-texto-only p {
+            color: var(--medium-color);
+            line-height: 1.8;
+            margin-bottom: 1.2rem;
+            font-size: 0.98rem;
+            text-align: justify;
+        }
+        .descricao-texto-only strong {
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+
+        /* ===== FAQ ===== */
+        .faq-list {
+            overflow: hidden;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--light-color);
+            transition: var(--transition);
+        }
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+        .faq-question {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.2rem 0.5rem;
+            cursor: pointer;
+            background: transparent;
+            transition: var(--transition);
+            font-weight: 500;
+            color: var(--dark-color);
+            font-size: 1rem;
+        }
+        .faq-question:hover {
+            background: var(--light-color);
+            border-radius: var(--radius);
+        }
+        .faq-question .faq-icon {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            width: 1.8rem;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .faq-question .faq-toggle {
+            margin-left: auto;
+            color: var(--medium-color);
+            transition: transform 0.3s ease;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+        .faq-question span {
+            flex: 1;
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding: 0 0.5rem;
+            background: transparent;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            padding: 0 0.5rem 1.2rem;
+        }
+        .faq-answer p {
+            color: var(--medium-color);
+            line-height: 1.7;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+        .faq-answer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .faq-answer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== Tutorial ===== */
+        .tutorial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0 0.5rem;
+        }
+        .tutorial-step {
+            background: var(--light-color);
+            padding: 1.5rem 1.2rem;
+            border-radius: var(--radius);
+            text-align: center;
+            transition: var(--transition);
+        }
+        .tutorial-step:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        .tutorial-step .step-number {
+            background: var(--primary-color);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.8rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .tutorial-step strong {
+            display: block;
+            font-size: 1rem;
+            color: var(--dark-color);
+            margin-bottom: 0.3rem;
+        }
+        .tutorial-step p {
+            font-size: 0.85rem;
+            color: var(--medium-color);
+            margin: 0;
+        }
+
+        /* Responsividade */
         @media (max-width: 900px) {
             .hero {
                 grid-template-columns: 1fr;
@@ -266,6 +402,9 @@
             .section-title {
                 font-size: 1.6rem;
             }
+            .modulo-descricao {
+                padding: 1.5rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -274,6 +413,24 @@
             }
             .stat-number {
                 font-size: 1.8rem;
+            }
+            .faq-question {
+                font-size: 0.9rem;
+                padding: 1rem 0.2rem;
+                gap: 0.6rem;
+            }
+            .faq-answer {
+                padding: 0 0.2rem;
+            }
+            .faq-item.active .faq-answer {
+                padding: 0 0.2rem 1rem;
+            }
+            .faq-question .faq-icon {
+                font-size: 1rem;
+                width: 1.4rem;
+            }
+            .tutorial-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -295,9 +452,9 @@
 
             <nav class="main-nav" role="navigation">
                 <ul class="nav-list">
-                    <li><a href="../../index.html" class="active"><i class="fas fa-home"></i>Início</a></li>
-                    <li><a href="desempenho.html"><i class="fas fa-university"></i>Desempenho</a></li>
-                    <li><a href="infraestrutura.html"><i class="fas fa-graduation-cap"></i>Infraestrutura</a></li>
+                    <li><a href="../../index.html"><i class="fas fa-home"></i>Início</a></li>
+                    <li><a href="desempenho.html"><i class="fas fa-graduation-cap"></i>Desempenho</a></li>
+                    <li><a href="infraestrutura.html"><i class="fas fa-database"></i>Infraestrutura</a></li>
                     <li><a href="perfil-estudante.html"><i class="fas fa-chart-pie"></i>Perfil Estudante</a></li>
                     <li><a href="../../pages/PagesGeral/dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i>Explorar Dados</a></li>
                 </ul>
@@ -313,14 +470,14 @@
 
     <div class="menu-overlay" id="menuOverlay"></div>
 
-    <!-- Menu Mobilelateral -->
+    <!-- Menu Mobile -->
     <nav class="nav-menu-mobile" id="navMenuMobile">
         <div class="menu-header">
             <div class="menu-logo">
                 <i class="fas fa-chart-bar"></i>
                 <div class="menu-logo-text">
                     <span class="menu-logo-main">IFPB Data Platform</span>
-                    <span class="menu-logo-sub">Dados Abertos</span>
+                    <span class="menu-logo-sub">Dados ENADE</span>
                 </div>
             </div>
             <button class="menu-close-btn" id="menuCloseBtn">
@@ -328,11 +485,11 @@
             </button>
         </div>
         <ul>
-            <li><a href="../../index.html" class="active"><i class="fas fa-home"></i>Início</a></li>
-            <li><a href="desempenho.html"><i class="fas fa-university"></i>Desempenho</a></li>
-            <li><a href="infraestrutura.html"><i class="fas fa-graduation-cap"></i>Infraestrutura</a></li>
-            <li><a href="perfil-estudante.html"><i class="fas fa-chart-pie"></i>Perfil Estudante</a></li>
-            <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+    <li><a href="dadosenade.html"><i class="fas fa-home"></i>Início</a></li>
+    <li><a href="desempenho.html"><i class="fas fa-graduation-cap"></i>Desempenho</a></li>
+    <li><a href="infraestrutura.html"><i class="fas fa-database"></i>Infraestrutura</a></li>
+    <li><a href="perfil-estudante.html"><i class="fas fa-chart-pie"></i>Perfil Estudante</a></li>
+            <li><a href="../../pages/PagesGeral/dashboard.html"><i class="fas fa-chart-simple"></i> Explorar Dados</a></li>
         </ul>
     </nav>
 
@@ -341,31 +498,31 @@
         <!-- Seção Hero -->
         <section class="hero">
             <div>
-                <div class="hero-badge"><i class="fas fa-database"></i> Dados ENADE</div>
-                <h1>Dados <span>ENADE</span> Para Análise do Conhecimento</h1>
-                <p>Plataforma oficial de visualização, análise e transparência dos dados institucionais, acadêmicos e orçamentários do Instituto Federal da Paraíba. Acompanhe indicadores em tempo real.</p>
+                <div class="hero-badge"><i class="fas fa-graduation-cap"></i> Última atualização: Agosto/2026</div>
+                <h1><span>Dados ENADE do IFPB</span></h1>
+                <p>Plataforma oficial de visualização, análise e transparência dos dados desempenho, infraestrutura e perfil estudante do Instituto Federal da Paraíba. Acompanhe indicadores em tempo real.</p>
                 <div class="hero-buttons">
-                    <a href="../PagesGeral/dashboard.html" class="btn-primary" id="exploreMainBtn"><i class="fas fa-chart-simple"></i> Explorar Agora</a>
-                    <a href="#dados-destaque" class="btn-outline"><i class="fas fa-arrow-trend-down"></i> Ver Indicadores</a>
+                    <a href="../PagesGeral/dashboard.html" class="btn-primary"><i class="fas fa-chart-simple"></i> Explorar Agora</a>
+                    <a href="#indicadores-destaque" class="btn-outline"><i class="fas fa-arrow-trend-down"></i> Ver Indicadores</a>
                 </div>
             </div>
             <div class="hero-stats">
                 <div style="display: flex; justify-content: space-around;">
                     <div class="stat-item">
-                        <div class="stat-number" id="statCampi">23</div>
-                        <div>Campi Ativos</div>
+                        <div class="stat-number" id="statCursos">Carregando...</div>
+                        <div>Cursos Avaliados</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number" id="statEstudantes">+18k</div>
-                        <div>Estudantes</div>
+                        <div class="stat-number" id="statRenda">Carregando...</div>
+                        <div>Renda até 3 SM</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number" id="statCursos">+120</div>
-                        <div>Cursos</div>
+                        <div class="stat-number" id="statEstudantes">Carregando...</div>
+                        <div>Estudantes Participantes</div>
                     </div>
                 </div>
                 <div style="margin-top: 1.5rem; background: var(--light-color); padding: 0.8rem; border-radius: 20px; text-align: center; font-size: 0.8rem;">
-                    <i class="fas fa-calendar-alt"></i> Dados consolidados – atualização contínua
+                    <i class="fas fa-calendar-alt"></i> Dados de 2010 a 2023 (exceto 2020) – Fonte: INEP
                 </div>
             </div>
         </section>
@@ -373,53 +530,179 @@
         <!-- Cards de navegação principal -->
         <div class="cards-grid" id="dados-destaque">
             <div class="card-modern">
-                <div class="card-icon"><i class="fas fa-building-columns"></i></div>
-                <h3>Desempenho</h3>
-                <p>Estrutura organizacional, campi, servidores, CNPJ, indicadores de gestão e muito mais.</p>
+                <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>Desempenho por Curso</h3>
+                <p>Notas gerais, de formação geral e componente específico de cada curso do IFPB nas últimas edições do ENADE.</p>
                 <a href="desempenho.html" class="card-link">Ver dados <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="card-modern">
-                <div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
+                <div class="card-icon"><i class="fas fa-building"></i></div>
                 <h3>Infraestrutura</h3>
-                <p>Matrículas, evasão, corpo docente, cursos técnicos, graduação e pós-graduação.</p>
+                <p>Conheça a estrutura física dos campi, laboratórios, bibliotecas e recursos disponíveis para a comunidade acadêmica.</p>
                 <a href="infraestrutura.html" class="card-link">Explorar <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="card-modern">
-                <div class="card-icon"><i class="fas fa-chart-pie"></i></div>
+                <div class="card-icon"><i class="fas fa-user-graduate"></i></div>
                 <h3>Perfil Estudante</h3>
-                <p>Receitas, despesas, investimentos, execução orçamentária e transparência financeira.</p>
-                <a href="perfil-estudante.html" class="card-link">Acessar dados <i class="fas fa-arrow-right"></i></a>
+                <p>Análise demográfica, socioeconômica, motivação e participação acadêmica dos estudantes do IFPB no ENADE.</p>
+                <a href="perfil-estudante.html" class="card-link">Acessar <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
 
-        <!-- Seção de destaques interativos com gráficos -->
+        <!-- DESCRIÇÃO – Sobre o Módulo Dados ENADE -->
+        <div class="modulo-descricao">
+            <div class="section-header">
+                <h2 class="section-title">Sobre o Módulo Dados ENADE</h2>
+            </div>
+            <div class="descricao-texto-only">
+                <p>
+                    O módulo <strong>Dados ENADE</strong> da <strong>IFPB Data Platform</strong> reúne, organiza e disponibiliza os microdados do Exame Nacional de Desempenho dos Estudantes referentes ao Instituto Federal da Paraíba. Os dados são extraídos diretamente do portal do <strong>INEP</strong> (gov.br/inep) e abrangem todas as edições do exame entre 2010 e 2023, com exceção do ano de 2020, quando o exame não foi aplicado devido à pandemia de COVID-19. A consolidação dessas informações em um único ambiente permite uma visão abrangente e longitudinal do desempenho acadêmico da instituição ao longo de mais de uma década.
+                </p>
+                <p>
+                    Esse módulo está organizado em três áreas temáticas para facilitar a navegação e a compreensão dos dados. Na área <strong>Desempenho</strong>, você pode consultar as notas de <strong>Formação Geral (NT_FG)</strong>, <strong>Componente Específico (NT_CE)</strong> e <strong>Nota Geral (NT_GER)</strong> de cada curso do IFPB, além de visualizar a evolução histórica do desempenho e comparar os resultados com a média das instituições federais do Nordeste e com a média nacional. Na área <strong>Infraestrutura</strong>, são apresentados dados sobre a estrutura física dos campi, laboratórios, bibliotecas e recursos disponíveis para a comunidade acadêmica, permitindo avaliar as condições de ensino e pesquisa. Na área <strong>Perfil Estudante</strong>, você encontra análises demográficas, socioeconômicas, de motivação e participação acadêmica, que ajudam a compreender o perfil dos estudantes que realizam o ENADE e os fatores que influenciam seu desempenho.
+                </p>
+                <p>
+                    Todas as informações são apresentadas em gráficos interativos e tabelas, desenvolvidos para serem intuitivos e acessíveis a qualquer usuário, mesmo sem formação técnica em análise de dados. Gráficos de barras comparam o desempenho entre cursos, gráficos de linha revelam a evolução ao longo dos anos, e gráficos de pizza mostram a distribuição de indicadores como renda familiar e perfil socioeconômico. Você também pode filtrar os dados por curso, área de conhecimento e ano de aplicação, ampliar qualquer gráfico para visualizar os detalhes e exportar as informações nos formatos <strong>PNG</strong>, <strong>JSON</strong> ou <strong>CSV</strong>, facilitando o uso em pesquisas, relatórios e estudos aprofundados.
+                </p>
+                <p>
+                    Os dados apresentados vêm diretamente de fontes oficiais do <strong>INEP</strong>, que disponibiliza publicamente os microdados do ENADE em seu portal. Todo o conteúdo está em conformidade com a <strong>Lei de Acesso à Informação (LAI)</strong> e com os princípios da transparência pública, assegurando que você tenha acesso a informações confiáveis, auditáveis e atualizadas sobre o desempenho dos cursos do IFPB. A plataforma também respeita a <strong>Lei Geral de Proteção de Dados (LGPD)</strong>, garantindo a privacidade e o tratamento ético das informações pessoais quando aplicável.
+                </p>
+                <p>
+                    O módulo já está concluído e totalmente integrado com dados reais, oferecendo uma visão clara e transparente do desempenho acadêmico do IFPB no ENADE. Todas as informações disponíveis refletem os dados oficiais mais recentes disponibilizados pelo INEP, com atualização contínua conforme novas edições do exame são realizadas e os microdados são publicados. A interface foi projetada para oferecer uma experiência fluida, tanto em computadores quanto em dispositivos móveis, garantindo que o acesso à informação pública seja verdadeiramente universal.
+                </p>
+                <p>
+                    O módulo Dados ENADE foi feito para facilitar o acesso de <strong>estudantes, professores, servidores, pesquisadores e qualquer cidadão</strong> que queira conhecer melhor o desempenho acadêmico do IFPB. Ele cumpre o papel de transformar números e planilhas em conhecimento prático, contribuindo para uma gestão mais transparente e para o controle social das atividades da instituição. Ao disponibilizar dados públicos de forma acessível e interativa, a plataforma fortalece o diálogo entre a instituição e a sociedade, promovendo a participação cidadã e a melhoria contínua da educação pública.
+                </p>
+            </div>
+        </div>
+
+        <section id="indicadores-destaque">
+        <!-- INDICADORES EM DESTAQUE -->
         <div class="highlights">
             <div class="section-header">
                 <h2 class="section-title">Indicadores em Destaque</h2>
                 <span style="color: var(--medium-color); font-size: 0.85rem;"><i class="fas fa-chart-line"></i> Visão interativa</span>
             </div>
             <div class="charts-row">
+                <!-- GRÁFICO 1: Distribuição por Idade (pirâmide etária) -->
                 <div class="chart-box">
-                    <h4 style="margin-bottom: 1rem;"><i class="fas fa-chart-bar"></i> Distribuição de Servidores por Categoria</h4>
-                    <canvas id="servidoresChartHome" width="400" height="240" style="max-height:240px"></canvas>
+                    <h4 style="margin-bottom: 1rem;"><i class="fas fa-calendar-alt"></i> Distribuição por Idade</h4>
+                    <canvas id="idadeChart" width="400" height="240" style="max-height:240px"></canvas>
                 </div>
+                <!-- GRÁFICO 2: Escolaridade dos Pais (substitui a Evolução da Média Geral) -->
                 <div class="chart-box">
-                    <h4 style="margin-bottom: 1rem;"><i class="fas fa-chart-pie"></i> Receitas vs Despesas (2024)</h4>
-                    <canvas id="orcamentoChartHome" width="400" height="240" style="max-height:240px"></canvas>
+                    <h4 style="margin-bottom: 1rem;"><i class="fas fa-graduation-cap"></i> Escolaridade dos Pais</h4>
+                    <canvas id="escolaridadeChart" width="400" height="240" style="max-height:240px"></canvas>
                 </div>
             </div>
             <div style="margin-top: 1rem; text-align: center; font-size: 0.8rem; color: var(--medium-color);">
-                <i class="fas fa-database"></i> Fonte: SIGAA / Portal da Transparência IFPB | Dados sujeitos a atualização mensal
+                <i class="fas fa-database"></i> Fonte: Microdados do ENADE – INEP | Dados de 2010 a 2023
+            </div>
+        </div>
+        </section>
+
+        <!-- ===== PERGUNTAS FREQUENTES – ENADE ===== -->
+        <div class="modulo-descricao">
+            <div class="section-header">
+                <h2 class="section-title">Perguntas Frequentes</h2>
+                <span style="color: var(--medium-color); font-size: 0.85rem;"><i class="fas fa-question-circle"></i> Dúvidas comuns</span>
+            </div>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                        <i class="fas fa-calculator faq-icon"></i>
+                        <span>O que significam as notas NT_FG, NT_CE e NT_GER?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p><strong>NT_FG</strong> – Nota de Formação Geral, avalia conhecimentos gerais. <strong>NT_CE</strong> – Nota do Componente Específico, avalia conhecimentos específicos da área. <strong>NT_GER</strong> – Nota Geral, calculada a partir da média ponderada das duas anteriores.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                        <i class="fas fa-calendar-alt faq-icon"></i>
+                        <span>Com que frequência os dados são atualizados?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Os dados são atualizados sempre que o INEP disponibiliza novas edições do ENADE. A plataforma já contempla todas as edições de 2010 a 2023 (exceto 2020).</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                        <i class="fas fa-download faq-icon"></i>
+                        <span>É possível baixar os dados para fazer minhas próprias análises?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sim. Todos os gráficos permitem exportação nos formatos PNG (imagem), JSON (dados brutos) e CSV (planilha), facilitando análises complementares.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                        <i class="fas fa-flag faq-icon"></i>
+                        <span>O desempenho do IFPB é comparado com outras instituições?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sim. Na página de <strong>Comparativo Regional</strong> você pode visualizar as notas do IFPB lado a lado com a média das instituições federais do Nordeste e com a média nacional.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                        <i class="fas fa-info-circle faq-icon"></i>
+                        <span>Onde encontro o dicionário de dados do ENADE?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>O dicionário completo está disponível no site do INEP, na página de microdados do ENADE. Na plataforma, utilizamos os códigos e variáveis padronizados pelo INEP.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                        <i class="fas fa-quote-right faq-icon"></i>
+                        <span>Como citar os dados do ENADE da plataforma em um trabalho acadêmico?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sugerimos: <em>"Dados do ENADE extraídos da IFPB Data Platform (hugodeev.github.io/ifpb-data-plataform), com base em microdados do INEP, acessado em [data]."</em></p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Chamada para transparência -->
-        <div class="transparencia-box">
-            <i class="fas fa-hand-holding-heart" style="font-size: 2rem; color: var(--secondary-color);"></i>
-            <h3 style="margin: 0.5rem 0; color: var(--dark-color);">Compromisso com a Transparência</h3>
-            <p>Todos os dados disponíveis seguem a Lei de Acesso à Informação (LAI) e são extraídos de fontes oficiais do IFPB, MEC e SIAFI. Consulte também os portais de dados abertos da instituição.</p>
-            <a href="../sobre.html" style="margin-top: 1rem; display: inline-block; color: var(--primary-color); font-weight: 600;">Saiba mais sobre o projeto <i class="fas fa-chevron-right"></i></a>
+        <!-- ===== COMO EXPLORAR OS DADOS DO ENADE ===== -->
+        <div class="modulo-descricao" id="como-explorar">
+            <div class="section-header">
+                <h2 class="section-title">Como Explorar os Dados do ENADE</h2>
+                <span style="color: var(--medium-color); font-size: 0.85rem;"><i class="fas fa-lightbulb"></i> Passo a passo</span>
+            </div>
+
+            <div class="tutorial-grid">
+                <div class="tutorial-step">
+                    <div class="step-number">1</div>
+                    <strong>Escolha um tema</strong>
+                    <p>Desempenho, Evolução ou Comparativo</p>
+                </div>
+                <div class="tutorial-step">
+                    <div class="step-number">2</div>
+                    <strong>Filtre por curso ou área</strong>
+                    <p>Use os filtros para refinar sua consulta</p>
+                </div>
+                <div class="tutorial-step">
+                    <div class="step-number">3</div>
+                    <strong>Exporte os resultados</strong>
+                    <p>Baixe em PNG, JSON ou CSV para suas pesquisas</p>
+                </div>
+            </div>
         </div>
+
     </main>
 
     <!-- rodapé final -->
@@ -445,9 +728,9 @@
                     <h3>Navegação</h3>
                     <ul class="footer-links">
                         <li><a href="../../index.html"><i class="fas fa-chevron-right"></i> Início</a></li>
-                        <li><a href="institucional.html"><i class="fas fa-chevron-right"></i> A Instituição</a></li>
-                        <li><a href="academico.html"><i class="fas fa-chevron-right"></i> Vida Acadêmica</a></li>
-                        <li><a href="orcamento.html"><i class="fas fa-chevron-right"></i> Gestão e Orçamento</a></li>
+                        <li><a href="desempenho-enade.html"><i class="fas fa-chevron-right"></i> Desempenho</a></li>
+                        <li><a href="evolucao-enade.html"><i class="fas fa-chevron-right"></i> Evolução</a></li>
+                        <li><a href="comparativo-enade.html"><i class="fas fa-chevron-right"></i> Comparativo</a></li>
                     </ul>
                 </div>
 
@@ -455,7 +738,7 @@
                     <h3>Recursos</h3>
                     <ul class="footer-links">
                         <li><a href="Dadosabertosifpb.html"><i class="fas fa-chevron-right"></i> Dados Abertos IFPB</a></li>
-                        <li><a href="../Pages Enade/DadosENADE.html"><i class="fas fa-chevron-right"></i> Dados ENADE</a></li>
+                        <li><a href="DadosENADE.html"><i class="fas fa-chevron-right"></i> Dados ENADE</a></li>
                         <li><a href="../Pagesdadosformularios/Dadosforms.html"><i class="fas fa-chevron-right"></i> Dados de Pesquisa</a></li>
                         <li><a href="../sobre.html"><i class="fas fa-chevron-right"></i> Sobre o Projeto</a></li>
                         <li><a href="../contato.html"><i class="fas fa-chevron-right"></i> Contato</a></li>
@@ -473,7 +756,9 @@
     </footer>
 
     <script>
-        // Menu mobile 
+        // ============================================================
+        // MENU MOBILE
+        // ============================================================
         const hamburger = document.getElementById('hamburger');
         const navMenuMobile = document.getElementById('navMenuMobile');
         const menuOverlay = document.getElementById('menuOverlay');
@@ -529,57 +814,314 @@
             });
         });
 
-        // Gráficos com Chart.js 
-        const ctxServ = document.getElementById('servidoresChartHome')?.getContext('2d');
-        if(ctxServ) {
-            new Chart(ctxServ, {
-                type: 'bar',
-                data: {
-                    labels: ['Docentes', 'Técnico-Admin.'],
-                    datasets: [{
-                        label: 'Quantidade de servidores',
-                        data: [1248, 902],
-                        backgroundColor: ['#387f1c', '#c9a03d'],
-                        borderRadius: 10,
-                        barPercentage: 0.65
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top' } } }
-            });
+        // ============================================================
+        // VARIÁVEIS GLOBAIS
+        // ============================================================
+        let charts = {};
+
+        // ============================================================
+        // FUNÇÃO PARA ESCREVER MENSAGEM NO CANVAS
+        // ============================================================
+        function escreverMensagemNoCanvas(canvasId, mensagem = 'Dados insuficientes para o gráfico') {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#5a5c69';
+            ctx.font = '16px Roboto, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(mensagem, canvas.width / 2, canvas.height / 2);
         }
 
-        const ctxOrc = document.getElementById('orcamentoChartHome')?.getContext('2d');
-        if(ctxOrc) {
-            new Chart(ctxOrc, {
-                type: 'doughnut',
+        // ============================================================
+        // GRÁFICO 1 – Distribuição por Idade (Pirâmide Etária)
+        // ============================================================
+        function renderGraficoIdade(dados) {
+            const canvas = document.getElementById('idadeChart');
+            if (!canvas) return;
+
+            if (charts['idadeChart']) {
+                charts['idadeChart'].destroy();
+                delete charts['idadeChart'];
+            }
+
+            if (!dados || dados.length === 0) {
+                escreverMensagemNoCanvas('idadeChart', 'Nenhum dado disponível');
+                return;
+            }
+
+            const dadosIdade = dados.filter(d => d.IDADE && d.SEXO && (d.SEXO === 'M' || d.SEXO === 'F'));
+            if (dadosIdade.length === 0) {
+                escreverMensagemNoCanvas('idadeChart', 'Sem dados de idade');
+                return;
+            }
+
+            const faixas = [
+                { min: 18, max: 20, label: '18-20' },
+                { min: 21, max: 23, label: '21-23' },
+                { min: 24, max: 26, label: '24-26' },
+                { min: 27, max: 29, label: '27-29' },
+                { min: 30, max: 32, label: '30-32' },
+                { min: 33, max: Infinity, label: '33+' }
+            ];
+
+            const labels = faixas.map(f => f.label);
+            const homens = faixas.map(() => 0);
+            const mulheres = faixas.map(() => 0);
+
+            dadosIdade.forEach(item => {
+                const idade = Number(item.IDADE);
+                if (isNaN(idade)) return;
+                const sexo = item.SEXO;
+                let idx = faixas.findIndex(f => idade >= f.min && idade <= f.max);
+                if (idx === -1 && idade >= 33) idx = faixas.length - 1;
+                if (idx !== -1) {
+                    if (sexo === 'M') homens[idx]++;
+                    else if (sexo === 'F') mulheres[idx]++;
+                }
+            });
+
+            charts['idadeChart'] = new Chart(canvas.getContext('2d'), {
+                type: 'bar',
                 data: {
-                    labels: ['Receitas Arrecadadas', 'Despesas Empenhadas'],
-                    datasets: [{
-                        data: [312.4, 287.0],
-                        backgroundColor: ['#387f1c', '#dc843a'],
-                        borderWidth: 0,
-                        hoverOffset: 8
-                    }]
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Homens',
+                            data: homens.map(v => -v),
+                            backgroundColor: '#36b9cc',
+                            borderColor: '#2c9faf',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Mulheres',
+                            data: mulheres,
+                            backgroundColor: '#e83e8c',
+                            borderColor: '#c72a6f',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }
+                    ]
                 },
                 options: {
+                    indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: true,
                     plugins: {
-                        legend: { position: 'bottom' },
-                        tooltip: { callbacks: { label: (ctx) => `R$ ${ctx.raw} milhões` } }
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `${ctx.dataset.label}: ${Math.abs(ctx.parsed.x)}`
+                            }
+                        }
                     },
-                    cutout: '55%'
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(0,0,0,0.04)' },
+                            title: { display: true, text: 'Quantidade' },
+                            ticks: {
+                                callback: (v) => Math.abs(v)
+                            }
+                        },
+                        y: {
+                            grid: { display: false },
+                            title: { display: true, text: 'Faixa Etária' }
+                        }
+                    }
                 }
             });
         }
 
-        // Rolagem suave para âncoras internas
+// ============================================================
+// GRÁFICO 2 – Escolaridade dos Pais (com tooltips descritivos)
+// ============================================================
+function renderGraficoEscolaridade(dados) {
+    const canvas = document.getElementById('escolaridadeChart');
+    if (!canvas) return;
+
+    if (charts['escolaridadeChart']) {
+        charts['escolaridadeChart'].destroy();
+        delete charts['escolaridadeChart'];
+    }
+
+    if (!dados || dados.length === 0) {
+        escreverMensagemNoCanvas('escolaridadeChart', 'Nenhum dado disponível');
+        return;
+    }
+
+    // ===== MAPEAMENTO DOS NÍVEIS DE ESCOLARIDADE (com as novas descrições) =====
+    const niveisMap = {
+        'A': 'Nenhuma escolaridade',
+        'B': 'Ensino fundamental: 1º ao 5º ano (antiga 1ª à 4ª série)',
+        'C': 'Ensino fundamental: 6º ao 9º ano (antiga 5ª à 8ª série)',
+        'D': 'Ensino médio',
+        'E': 'Ensino superior',
+        'F': 'Pós-graduação'
+    };
+
+    const niveis = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+    // Contar frequências para pai e mãe
+    const pai = dados.filter(d => d.ESCOLARIDADE_PAI && d.ESCOLARIDADE_PAI !== '');
+    const mae = dados.filter(d => d.ESCOLARIDADE_MAE && d.ESCOLARIDADE_MAE !== '');
+
+    const dataPai = niveis.map(n => pai.filter(d => d.ESCOLARIDADE_PAI === n).length);
+    const dataMae = niveis.map(n => mae.filter(d => d.ESCOLARIDADE_MAE === n).length);
+
+    if (dataPai.every(v => v === 0) && dataMae.every(v => v === 0)) {
+        escreverMensagemNoCanvas('escolaridadeChart', 'Sem dados de escolaridade');
+        return;
+    }
+
+    // ===== CRIAR GRÁFICO =====
+    charts['escolaridadeChart'] = new Chart(canvas.getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: niveis, // Eixo X exibe apenas as letras
+            datasets: [
+                {
+                    label: 'Pai',
+                    data: dataPai,
+                    backgroundColor: '#e74a3b',
+                    borderRadius: 4
+                },
+                {
+                    label: 'Mãe',
+                    data: dataMae,
+                    backgroundColor: '#f6c23e',
+                    borderRadius: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: { font: { size: 12 } }
+                },
+                tooltip: {
+                    callbacks: {
+                        // Exibe a descrição completa no tooltip
+                        label: function(ctx) {
+                            let label = ctx.dataset.label || '';
+                            let value = ctx.raw || 0;
+                            let codigo = ctx.label; // A, B, C, D, E, F
+                            let desc = niveisMap[codigo] || codigo;
+                            return `${label}: ${value} (${desc})`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                    ticks: {
+                        font: { size: 12, weight: 'bold' },
+                        maxRotation: 0,
+                        minRotation: 0
+                    }
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    title: { display: true, text: 'Quantidade' },
+                    ticks: { stepSize: 5 }
+                }
+            }
+        }
+    });
+}
+        // ============================================================
+        // CARREGAR DADOS DO ENADE E RENDERIZAR TUDO
+        // ============================================================
+        async function carregarDadosENADE() {
+            try {
+                const response = await fetch('../../assets/data/DadosENADE/DADOSENADEGERAL.json');
+                if (!response.ok) throw new Error(`HTTP ${response.status} - ${response.statusText}`);
+                const dados = await response.json();
+
+                console.log('✅ Dados carregados:', dados.length, 'registros');
+
+                // 1. Total de participantes
+                const totalParticipantes = dados.length;
+                document.getElementById('statEstudantes').textContent = totalParticipantes.toLocaleString('pt-BR');
+
+                // 2. Total de cursos distintos (CODIGO_CURSO)
+                const cursosUnicos = new Set(dados.map(d => d.CODIGO_CURSO).filter(c => c && c !== ''));
+                const totalCursos = cursosUnicos.size;
+                document.getElementById('statCursos').textContent = totalCursos;
+
+                // 3. Percentual de renda até 3 SM (RENDA_FAMILIAR = A ou B)
+                const rendas = dados.filter(d => d.RENDA_FAMILIAR && d.RENDA_FAMILIAR !== '');
+                const ab = rendas.filter(d => ['A', 'B'].includes(d.RENDA_FAMILIAR)).length;
+                const percentual = rendas.length ? (ab / rendas.length * 100).toFixed(1) : 0;
+                document.getElementById('statRenda').textContent = percentual + '%';
+
+                console.log('📊 Indicadores atualizados:', {
+                    cursos: totalCursos,
+                    participantes: totalParticipantes,
+                    renda: percentual + '%'
+                });
+
+                // Renderizar gráficos
+                renderGraficoIdade(dados);
+                renderGraficoEscolaridade(dados);
+
+            } catch (erro) {
+                console.error('❌ Erro ao carregar dados:', erro);
+                // Fallback
+                document.getElementById('statCursos').textContent = '27';
+                document.getElementById('statEstudantes').textContent = '3.2k';
+                document.getElementById('statRenda').textContent = '29.4%';
+                escreverMensagemNoCanvas('idadeChart', 'Erro ao carregar dados');
+                escreverMensagemNoCanvas('escolaridadeChart', 'Erro ao carregar dados');
+            }
+        }
+
+        // ============================================================
+        // FAQ – ACORDEÃO
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carrega os indicadores e gráficos
+            carregarDadosENADE();
+
+            // Configura o acordeão
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', function() {
+                    faqItems.forEach(other => {
+                        if (other !== item && other.classList.contains('active')) {
+                            other.classList.remove('active');
+                            other.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                        }
+                    });
+                    const isActive = item.classList.contains('active');
+                    item.classList.toggle('active');
+                    question.setAttribute('aria-expanded', !isActive);
+                });
+                question.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+        });
+
+        // ============================================================
+        // ROLAGEM SUAVE PARA ÂNCORAS
+        // ============================================================
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 const targetId = this.getAttribute('href');
-                if(targetId !== "#" && targetId !== "" && targetId !== "#dados-destaque" && targetId !== "#institucional" && targetId !== "#academico" && targetId !== "#orcamento") {
+                if (targetId && targetId !== "#" && targetId !== "" && targetId !== "#dados-destaque" && targetId !== "#como-explorar") {
                     const targetElement = document.querySelector(targetId);
-                    if(targetElement) {
+                    if (targetElement) {
                         e.preventDefault();
                         targetElement.scrollIntoView({ behavior: 'smooth' });
                     }

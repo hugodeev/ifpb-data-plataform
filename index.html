@@ -39,7 +39,7 @@
                     <li><a href="pages/pages dados abertos/Dadosabertosifpb.html"><i class="fas fa-university"></i> Dados Abertos IFPB</a></li>
                     <li><a href="pages/Pages Enade/DadosENADE.html"><i class="fas fa-graduation-cap"></i> Dados ENADE</a></li>
                     <li><a href="pages/Pagesdadosformularios/Dadosforms.html"><i class="fas fa-chart-pie"></i> Dados de Pesquisa</a></li>
-                    <li><a href="pages/dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+                    <li><a href="pages/PagesGeral/dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
                 </ul>
 
                 <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menu" aria-expanded="false">
@@ -55,7 +55,7 @@
                 <li><a href="pages/pages dados abertos/Dadosabertosifpb.html"><i class="fas fa-university"></i> Dados Abertos IFPB</a></li>
                 <li><a href="pages/Pages Enade/DadosENADE.html"><i class="fas fa-graduation-cap"></i> Dados ENADE</a></li>
                 <li><a href="pages/Pagesdadosformularios/Dadosforms.html"><i class="fas fa-chart-pie"></i> Dados de Pesquisa</a></li>
-                <li><a href="pages/dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+                <li><a href="pages/PagesGeral/dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
             </ul>
         </div>
     </header>
@@ -63,7 +63,7 @@
     <!-- conteúdo do main -->
     <main class="container">
 
-        <!-- hero section -->
+        <!-- hero section (apenas texto, sem o gráfico) -->
         <section class="hero">
             <div class="hero-content reveal-up" style="--delay: 0s">
                 <div class="hero-badge">
@@ -71,7 +71,7 @@
                     Projeto de Iniciação Científica — IFPB 2026
                 </div>
                 <h2>Plataforma de Dados do<br><span class="hero-title-highlight">Instituto Federal da Paraíba</span></h2>
-                <p>Visualização interativa de dados institucionais, acadêmicos e orçamentários para transparência e análise estratégica.</p>
+                <p>Visualização interativa de dados Abertos do IFPB, ENADE e Pesquisas para transparência e análise estratégica.</p>
                 <div class="hero-buttons">
                     <a href="pages/PagesGeral/dashboard.html" class="btn-primary">
                         <i class="fas fa-chart-line"></i> Acessar Dashboard
@@ -86,48 +86,22 @@
                 <div class="hero-card">
                     <div class="hero-card-header">
                         <span class="hero-card-title"><i class="fas fa-chart-bar"></i> Estudantes por Campus</span>
-                        <span class="hero-card-year">2024</span>
+                        <span class="hero-card-year" id="hero-year">2024</span>
                     </div>
                     <div class="chart-animation-wrap">
-                        <div class="chart-animation">
-                            <div class="bar-group">
-                                <div class="bar" style="--h: 87%; --delay: 0.3s;">
-                                    <span class="bar-value">5.2k</span>
-                                </div>
-                                <span class="bar-label">JP</span>
-                            </div>
-                            <div class="bar-group">
-                                <div class="bar" style="--h: 100%; --delay: 0.4s;">
-                                    <span class="bar-value">4.8k</span>
-                                </div>
-                                <span class="bar-label">CG</span>
-                            </div>
-                            <div class="bar-group">
-                                <div class="bar" style="--h: 55%; --delay: 0.5s;">
-                                    <span class="bar-value">2.1k</span>
-                                </div>
-                                <span class="bar-label">PT</span>
-                            </div>
-                            <div class="bar-group">
-                                <div class="bar" style="--h: 47%; --delay: 0.6s;">
-                                    <span class="bar-value">1.8k</span>
-                                </div>
-                                <span class="bar-label">CJ</span>
-                            </div>
-                            <div class="bar-group">
-                                <div class="bar" style="--h: 42%; --delay: 0.7s;">
-                                    <span class="bar-value">1.6k</span>
-                                </div>
-                                <span class="bar-label">SZ</span>
+                        <div class="chart-animation" id="hero-chart-bars">
+                            <div class="placeholder" style="width:100%; text-align:center; color:#999; padding:20px 0;">
+                                <i class="fas fa-spinner fa-spin"></i> Carregando...
                             </div>
                         </div>
                         <div class="chart-baseline"></div>
                     </div>
                     <div class="hero-card-footer">
-                        <span class="trend-badge trend-up"><i class="fas fa-arrow-up"></i> +12.4% vs 2023</span>
+                        <span class="trend-badge trend-up" id="hero-trend"><i class="fas fa-arrow-up"></i> +12.4% vs 2023</span>
                     </div>
                 </div>
             </div>
+
         </section>
 
         <!-- seção de cards das páginas -->
@@ -151,19 +125,19 @@
                     <div class="data-card-body">
                         <div class="data-stat">
                             <span class="data-stat-label"><i class="fas fa-map-marker-alt"></i> Campi</span>
-                            <span class="data-stat-value">23 unidades</span>
+                            <span class="data-stat-value">25 unidades</span>
                         </div>
                         <div class="data-stat">
                             <span class="data-stat-label"><i class="fas fa-users"></i> Estudantes</span>
-                            <span class="data-stat-value">28.456 mil</span>
+                            <span class="data-stat-value">395.450 mil</span>
                         </div>
                         <div class="data-stat">
                             <span class="data-stat-label"><i class="fas fa-chalkboard-teacher"></i> Servidores</span>
-                            <span class="data-stat-value">1.847</span>
+                            <span class="data-stat-value">2.614</span>
                         </div>
                         <div class="data-stat">
                             <span class="data-stat-label"><i class="fas fa-money-bill-wave"></i> Orçamento</span>
-                            <span class="data-stat-value">R$ 428M</span>
+                            <span class="data-stat-value">R$ 757.77M</span>
                         </div>
                     </div>
                     <div class="data-card-footer">
@@ -192,7 +166,7 @@
                             <span class="data-stat-value">23</span>
                         </div>
                         <div class="data-stat">
-                            <span class="data-stat-label"><i class="fas fa-chart-line"></i> Nota média</span>
+                            <span class="data-stat-label"><i class="fas fa-chart-line"></i> Nota Média Geral</span>
                             <span class="data-stat-value">62.5</span>
                         </div>
                         <div class="data-stat">
@@ -222,7 +196,7 @@
                             <span class="data-stat-value">1.247</span>
                         </div>
                         <div class="data-stat">
-                            <span class="data-stat-label"><i class="fas fa-chalkboard-teacher"></i> Professores</span>
+                            <span class="data-stat-label"><i class="fas fa-chalkboard-teacher"></i> Professores respondentes</span>
                             <span class="data-stat-value">342</span>
                         </div>
                         <div class="data-stat">
@@ -256,9 +230,9 @@
                         <i class="fas fa-map-marker-alt"></i>
                     </div>
                     <h3>Campi</h3>
-                    <div class="card-value" id="campi-count">23</div>
+                    <div class="card-value" id="campi-count">25</div>
                     <p class="card-desc">Unidades em todo o estado da Paraíba</p>
-                    <a href="pages/institucional.html" class="card-link">Ver detalhes <i class="fas fa-arrow-right"></i></a>
+                    <a href="pages/pages dados abertos/institucional.html" class="card-link">Ver detalhes <i class="fas fa-arrow-right"></i></a>
                 </div>
 
                 <div class="card reveal-up" style="--delay: 0.1s">
@@ -266,9 +240,9 @@
                         <i class="fas fa-users"></i>
                     </div>
                     <h3>Estudantes</h3>
-                    <div class="card-value" id="students-count">28.000</div>
-                    <p class="card-desc">Matriculados em 2023</p>
-                    <a href="pages/academico.html" class="card-link">Ver detalhes <i class="fas fa-arrow-right"></i></a>
+                    <div class="card-value" id="students-count">305.450 mil</div>
+                    <p class="card-desc">Matriculados</p>
+                    <a href="pages/pages dados abertos/academico.html" class="card-link">Ver detalhes <i class="fas fa-arrow-right"></i></a>
                 </div>
 
                 <div class="card reveal-up" style="--delay: 0.15s">
@@ -276,19 +250,19 @@
                         <i class="fas fa-chalkboard-teacher"></i>
                     </div>
                     <h3>Docentes</h3>
-                    <div class="card-value" id="teachers-count">1.452</div>
+                    <div class="card-value" id="teachers-count">2.614</div>
                     <p class="card-desc">Professores ativos</p>
-                    <a href="pages/academico.html" class="card-link">Ver detalhes <i class="fas fa-arrow-right"></i></a>
+                    <a href="pages/pages dados abertos/institucional.html" class="card-link">Ver detalhes <i class="fas fa-arrow-right"></i></a>
                 </div>
 
                 <div class="card reveal-up" style="--delay: 0.2s">
                     <div class="card-icon">
                         <i class="fas fa-money-bill-wave"></i>
                     </div>
-                    <h3>Orçamento 2022</h3>
-                    <div class="card-value">R$ <span id="budget-value">382.7</span></div>
+                    <h3>Orçamento</h3>
+                    <div class="card-value">R$ <span id="budget-value">757.77 mi</span></div>
                     <p class="card-desc">Recursos investidos na educação</p>
-                    <a href="pages/orcamento.html" class="card-link">Ver detalhes <i class="fas fa-arrow-right"></i></a>
+                    <a href="pages/pages dados abertos/orcamento.html" class="card-link">Ver detalhes <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </section>
@@ -306,25 +280,25 @@
         <div class="viz-preview reveal-up" style="--delay: 0.05s">
           <div id="map-preview-container" style="height:250px;width:100%;border-radius:8px;overflow:hidden;"></div>
             <p>Localização geográfica de todas as unidades do IFPB</p>
-          <span class="btn-small" onclick="window.location.href='institucional.html#chart-mapa'">Explorar Mapa <i class="fas fa-arrow-right"></i></span>
+          <span class="btn-small" onclick="window.location.href='../pages/pages dados abertos/institucional.html#chart-mapa'">Explorar Mapa <i class="fas fa-arrow-right"></i></span>
         </div>
 
-        <!-- Evolução Temporal -->
+        <!-- Média Geral Anual - ENADE -->
         <div class="viz-preview reveal-up" style="--delay: 0.1s">
             <div class="chart-container" style="height:200px;position:relative;">
-                <canvas id="timelineChart"></canvas>
+                <canvas id="mediaGeralAnualChart"></canvas>
             </div>
-            <p>Análise histórica de matrículas, orçamento e investimentos</p>
-            <span class="btn-small" onclick="window.location.href='pages/dashboard.html?view=timeline'">Ver Gráficos <i class="fas fa-arrow-right"></i></span>
+            <p>Evolução da média geral anual do ENADE para os cursos do IFPB</p>
+            <span class="btn-small" onclick="window.location.href='pages/Pages%20Enade/desempenho.html'">Ver no ENADE <i class="fas fa-arrow-right"></i></span>
         </div>
 
-        <!-- Comparativos -->
+        <!-- Comparativo: Perfil dos Cursos -->
         <div class="viz-preview reveal-up" style="--delay: 0.15s">
             <div class="chart-container" style="height:200px;position:relative;">
-                <canvas id="comparisonChart"></canvas>
+                <canvas id="radarPerfilCursos"></canvas>
             </div>
-            <p>Compare indicadores entre campi, cursos e períodos</p>
-            <span class="btn-small" onclick="window.location.href='pages/dashboard.html?view=comparison'">Comparar Dados <i class="fas fa-arrow-right"></i></span>
+            <p>Comparação do perfil dos cursos do IFPB com base em indicadores acadêmicos e socioeconômicos</p>
+            <span class="btn-small" onclick="window.location.href='pages/Pagesdadosformularios/DadosDiscentes.html'">Ver na Pesquisa <i class="fas fa-arrow-right"></i></span>
         </div>
     </div>
 </section>
@@ -406,5 +380,163 @@
     </footer>
 
     <script src="script.js"></script>
+
+        <!-- Script para carregar dados do gráfico do hero -->
+    <script>
+        (function() {
+            // Função auxiliar para abreviar nomes (já existe no script.js, mas mantemos aqui para independência)
+            function abreviarCampus(nome) {
+                var siglas = {
+                    'CAMPUS JOÃO PESSOA': 'JOÃO PESSOA',
+                    'CAMPUS CAMPINA GRANDE': 'CAMPINA GRANDE',
+                    'CAMPUS CABEDELO': 'CABEDELO',
+                    'CAMPUS SOUSA': 'SOUSA',
+                    'CAMPUS CAJAZEIRAS': 'CAJAZEIRAS',
+                    'CAMPUS PATOS': 'PT',
+                    'CAMPUS MONTEIRO': 'MT',
+                    'CAMPUS PICUÍ': 'PC',
+                    'CAMPUS GUARABIRA': 'GB',
+                    'CAMPUS SANTA RITA': 'SR',
+                    'CAMPUS ESPERANÇA': 'ES',
+                    'CAMPUS ITABAIANA': 'IB',
+                    'CAMPUS CATOLÉ DO ROCHA': 'CR',
+                    'CAMPUS ITAPORANGA': 'IP',
+                    'CAMPUS SANTA LUZIA': 'SL',
+                    'CAMPUS PEDRAS DE FOGO': 'PF',
+                    'CAMPUS SOLEDADE': 'SD',
+                    'CAMPUS AREIA': 'AR',
+                    'CAMPUS MANGABEIRA': 'MG',
+                    'CAMPUS SAPÉ': 'SP',
+                    'CAMPUS QUEIMADAS': 'QM',
+                    'CAMPUS CABEDELO CENTRO': 'CC',
+                    'CAMPUS ALAGOA GRANDE': 'AG',
+                    'CAMPUS MAMANGUAPE': 'MM'
+                };
+                var upper = nome.toUpperCase().trim();
+                return siglas[upper] || nome.substring(0, 3).toUpperCase();
+            }
+
+            function processarDados(dados) {
+                var anoAlvo = 2025;
+                var registros2025 = dados.filter(function(item) { return parseInt(item.Ano) === anoAlvo; });
+                if (registros2025.length === 0) return null;
+
+                var porCampus = {};
+                var totaisPorAno = {};
+
+                dados.forEach(function(item) {
+                    var ano = parseInt(item.Ano);
+                    var matStr = item.Matrículas;
+                    var mat = parseFloat(matStr);
+                    if (isNaN(mat) || matStr === '(Em branco)') mat = 0;
+                    if (ano > 0 && mat > 0) {
+                        totaisPorAno[ano] = (totaisPorAno[ano] || 0) + mat;
+                    }
+                });
+
+                registros2025.forEach(function(item) {
+                    var campus = item['Estrutura com Matrícula'] || 'Desconhecido';
+                    var matStr = item.Matrículas;
+                    var mat = parseFloat(matStr);
+                    if (isNaN(mat) || matStr === '(Em branco)') mat = 0;
+                    if (mat > 0) {
+                        porCampus[campus] = (porCampus[campus] || 0) + mat;
+                    }
+                });
+
+                if (Object.keys(porCampus).length === 0) return null;
+
+                var ordenados = Object.entries(porCampus)
+                    .map(function(entry) { return { nome: entry[0], total: entry[1] }; })
+                    .sort(function(a, b) { return b.total - a.total; })
+                    .slice(0, 5);
+
+                return {
+                    top5: ordenados,
+                    ano: anoAlvo,
+                    totaisPorAno: totaisPorAno
+                };
+            }
+
+            function renderizar(resultado) {
+                var container = document.getElementById('hero-chart-bars');
+                var yearEl = document.getElementById('hero-year');
+                var trendEl = document.getElementById('hero-trend');
+                if (!container) return;
+
+                if (!resultado || !resultado.top5 || resultado.top5.length === 0) {
+                    container.innerHTML = '<div class="placeholder" style="width:100%; text-align:center; color:#999; padding:20px 0;">Dados indisponíveis</div>';
+                    yearEl.textContent = '----';
+                    trendEl.className = 'trend-badge trend-neutral';
+                    trendEl.textContent = 'Sem dados';
+                    return;
+                }
+
+                var top5 = resultado.top5;
+                var ano = resultado.ano;
+                var totaisPorAno = resultado.totaisPorAno;
+                var maior = top5[0].total || 1;
+
+                var html = '';
+                for (var i = 0; i < top5.length; i++) {
+                    var c = top5[i];
+                    var altura = Math.max(5, (c.total / maior) * 100);
+                    var valor = c.total >= 1000 ? (c.total / 1000).toFixed(3) + 'k' : c.total.toString();
+
+                    var nome = c.nome
+                        .replace(/^Campus\s+/i, '')
+                        .replace(/^Avançado\s+/i, '')
+                        .replace(/^Centro\s+de\s+Referência\s+/i, '');
+                    if (nome.length > 12) {
+                        var partes = nome.split(' ');
+                        nome = partes.map(function(p) { return p[0]; }).join('').toUpperCase();
+                    } else {
+                        nome = nome.substring(0, 12);
+                    }
+
+                    html += '<div class="bar-group">' +
+                        '<div class="bar" style="--h: ' + altura + '; --delay: ' + (0.3 + i * 0.1) + 's;">' +
+                        '<span class="bar-value">' + valor + '</span>' +
+                        '</div>' +
+                        '<span class="bar-label">' + abreviarCampus(c.nome) + '</span>' +
+                        '</div>';
+                }
+                container.innerHTML = html;
+                yearEl.textContent = ano;
+
+                var anos = Object.keys(totaisPorAno).map(Number).sort(function(a, b) { return a - b; });
+                var atual = anos[anos.length - 1];
+                var anterior = anos[anos.length - 2];
+                if (atual && anterior && totaisPorAno[atual] > 0 && totaisPorAno[anterior] > 0) {
+                    var variacao = ((totaisPorAno[atual] - totaisPorAno[anterior]) / totaisPorAno[anterior]) * 100;
+                    var sinal = variacao >= 0 ? '+' : '';
+                    var classe = variacao >= 0 ? 'trend-up' : 'trend-down';
+                    var seta = variacao >= 0 ? 'arrow-up' : 'arrow-down';
+                    trendEl.className = 'trend-badge ' + classe;
+                    trendEl.innerHTML = '<i class="fas fa-' + seta + '"></i> ' + sinal + variacao.toFixed(2) + '% vs ' + anterior;
+                } else {
+                    trendEl.className = 'trend-badge trend-neutral';
+                    trendEl.innerHTML = 'Dados de ' + ano;
+                }
+            }
+
+            async function carregar() {
+                var caminho = 'assets/data/EstruturaAdministrativa/DadosMatriculasDiscentes.json';
+                try {
+                    var resp = await fetch(caminho);
+                    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                    var dados = await resp.json();
+                    if (!Array.isArray(dados) || dados.length === 0) throw new Error('JSON vazio');
+                    var resultado = processarDados(dados);
+                    renderizar(resultado);
+                } catch (err) {
+                    console.error('Erro ao carregar dados:', err);
+                    renderizar(null);
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', carregar);
+        })();
+    </script>
 </body>
 </html>

@@ -13,32 +13,143 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../../assets/js/conversor.js"></script>
     <style>
-        :root {
-            --primary-color: #387f1c;
-            --secondary-color: #59e462;
-            --dark-color: #2e3a59;
-            --medium-color: #5a5c69;
-            --light-color: #f8f9fc;
-            --white: #ffffff;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
-            --radius: 10px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+:root {
+    /* Cores principais (herdadas da página Dados ENADE) */
+    --primary-color: #4aa47d;
+    --primary-dark: #38a169;
+    --primary-light: #6ddbb3;
+    --secondary-color: #57cc99;
+    --accent-color: #ff9a3c;
+    --accent-dark: #e68a2e;
+    --success-color: #1cc88a;
+    --warning-color: #f6c23e;
+    --danger-color: #e74a3b;
+    --info-color: #36b9cc;
 
+    /* Tons neutros */
+    --dark-color: #2e3a59;
+    --medium-color: #5a5c69;
+    --light-color: #f8f9fc;
+    --white: #ffffff;
+
+    /* Sombras */
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+
+    /* Arredondamento e transição */
+    --radius: 10px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
         * { box-sizing: border-box; }
 
+        /* ===== NOVO CABEÇALHO ESTILIZADO (adaptado do institucional) ===== */
         .page-header {
-            background: linear-gradient(135deg, var(--primary-color), #2a5f14);
+            background: linear-gradient(135deg, var(--primary-color) 0%, #55af9a 100%);
             color: white;
-            padding: 2.5rem 0;
+            padding: 3rem 2rem;
             border-radius: var(--radius);
-            margin-bottom: 2rem;
-            text-align: center;
+            margin: 0 0 2rem 0;
+            position: relative;
+            overflow: hidden;
         }
-        .page-header h1 { font-size: 2.4rem; font-weight: 700; }
-        .page-header p { opacity: 0.9; font-size: 1.1rem; max-width: 700px; margin: 0.5rem auto; }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+            pointer-events: none;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .breadcrumb a:hover {
+            opacity: 0.8;
+        }
+
+        .breadcrumb i {
+            font-size: 0.7rem;
+        }
+
+        .breadcrumb span {
+            opacity: 0.8;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .status-indicators {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .status-indicator {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-color);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+
 
         .breadcrumb {
             display: flex;
@@ -49,9 +160,16 @@
             margin-bottom: 1.5rem;
             flex-wrap: wrap;
         }
-        .breadcrumb a { color: var(--primary-color); text-decoration: none; }
+        .breadcrumb a { 
+             color: rgb(247, 244, 244);
+             text-decoration: none;
+         }
 
-        .filters {
+        .breadcrumb i {
+            color: white; 
+        }
+
+                .filters {
             display: flex;
             flex-wrap: wrap;
             gap: 1rem;
@@ -70,7 +188,7 @@
             font-size: 0.95rem;
             background: var(--white);
             min-width: 160px;
-            max-width: 100%;
+            max-width: 270px;
         }
         .filters button {
             background: var(--primary-color);
@@ -82,7 +200,7 @@
             cursor: pointer;
             transition: var(--transition);
         }
-        .filters button:hover { background: #2a5f14; transform: translateY(-2px); }
+        .filters button:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
         .stats-grid {
             display: grid;
@@ -353,15 +471,16 @@
             <nav class="main-nav" role="navigation">
                 <ul class="nav-list">
                     <li><a href="dadosenade.html"><i class="fas fa-home"></i>Início</a></li>
-                    <li><a href="desempenho.html"><i class="fas fa-graduation-cap"></i>Desempenho</a></li>
-                    <li><a href="infraestrutura.html"><i class="fas fa-database"></i>Infraestrutura</a></li>
-                    <li><a href="perfil-estudante.html"><i class="fas fa-chart-pie"></i>Perfil Estudante</a></li>
-                    <li><a href="../PagesGeral/dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i>Explorar</a></li>
+    <li><a href="desempenho.html"><i class="fas fa-graduation-cap"></i>Desempenho</a></li>
+    <li><a href="infraestrutura.html"><i class="fas fa-database"></i>Infraestrutura</a></li>
+    <li><a href="perfil-estudante.html"><i class="fas fa-chart-pie"></i>Perfil Estudante</a></li>
+                    <li><a href="../PagesGeral/dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i>Explorar Dados</a></li>
                 </ul>
                 <button class="hamburger" id="hamburger" aria-label="Menu">
                     <span></span><span></span><span></span>
                 </button>
             </nav>
+            
         </div>
     </header>
 
@@ -383,22 +502,42 @@
             <li><a href="desempenho.html"><i class="fas fa-chart-bar"></i> Desempenho</a></li>
             <li><a href="perfil-estudante.html"><i class="fas fa-user-graduate"></i> Perfil</a></li>
             <li><a href="infraestrutura.html"><i class="fas fa-building"></i> Infraestrutura</a></li>
-            <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i> Explorar</a></li>
+            <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
         </ul>
     </nav>
 
     <main class="container">
-        <div class="breadcrumb">
-            <a href="../../index.html">Início</a> <i class="fas fa-chevron-right"></i>
-            <a href="dadosenade.html">ENADE</a> <i class="fas fa-chevron-right"></i>
-            <span>Desempenho e Conceitos</span>
-        </div>
 
-        <div class="page-header">
-            <h1>Desempenho e Conceitos ENADE</h1>
-            <p>Análise da evolução das notas, conceitos e distribuição de desempenho dos cursos do IFPB</p>
-        </div>
+        <!-- ===== NOVO CABEÇALHO DA PÁGINA (adaptado do institucional) ===== -->
+        <section class="page-header fade-in" style="margin-top: 2rem;">
+            <div class="breadcrumb" style="margin-bottom: 1.5rem; ">
+                <a href="../../index.html">Início</a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="dadosenade.html">ENADE</a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="desempenho.html">Desempenho e Conceitos</a>
 
+            </div>
+            <h1 class="page-title">Desempenho e Conceitos ENADE</h1>
+            <p class="page-subtitle">Análise da evolução das notas, conceitos e distribuição de desempenho dos cursos do IFPB</p>
+            <div class="status-indicators">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>Dados Atualizados <span id="status-ano">2026</span></span>
+                </div>
+
+                <div class="status-indicator">
+                    <i class="fas fa-users"></i>
+                    <span id="status-participantes">Carregando...</span>
+                </div>
+                <div class="status-indicator">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span id="status-cursos">Carregando...</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filtros -->
         <div class="filters">
             <div>
                 <label for="anoFilter">Ano:</label>
@@ -419,7 +558,7 @@
         <div class="stats-grid" id="statsGrid">
             <div class="stat-card"><div class="number" id="totalRegistros">-</div><div class="label">Total de Registros</div></div>
             <div class="stat-card"><div class="number" id="mediaGeral">-</div><div class="label">Média Geral</div></div>
-            <div class="stat-card"><div class="number" id="melhorNota">-</div><div class="label">Melhor Nota</div></div>
+            <div class="stat-card"><div class="number" id="mediaFG">-</div><div class="label">Média Formação Geral</div></div>
             <div class="stat-card"><div class="number" id="totalCursos">-</div><div class="label">Cursos Distintos</div></div>
         </div>
 
@@ -785,7 +924,6 @@
             atualizarTudo();
         }
 
-        // Resetar filtros
         function resetarFiltros() {
             document.getElementById('anoFilter').value = 'todos';
             document.getElementById('cursoFilter').value = 'todos';
@@ -797,8 +935,29 @@
         // Atualizar tudo
         function atualizarTudo() {
             atualizarStats();
+            atualizarStatusIndicators();
             renderRanking();
             renderGraficos();
+        }
+
+        // ===== ATUALIZAR INDICADORES DO CABEÇALHO (status) =====
+        function atualizarStatusIndicators() {
+            const totalRegistros = dadosFiltrados.length;
+            const cursos = new Set(dadosFiltrados.map(d => String(d.CODIGO_CURSO)).filter(c => c));
+            const totalCursos = cursos.size;
+
+            const elCursos = document.getElementById('status-cursos');
+            const elParticipantes = document.getElementById('status-participantes');
+            const elAno = document.getElementById('status-ano');
+
+            if (elAno) {
+                const anoAtual = new Date().getFullYear();
+                elAno.textContent = anoAtual;
+            }
+            if (elCursos) elCursos.textContent = totalCursos + ' Cursos';
+            if (elParticipantes) elParticipantes.textContent = totalRegistros.toLocaleString() + ' Participantes';
+
+            // Atualiza também o ano do breadcrumb se quiser, mas já está no status
         }
 
         // Estatísticas
@@ -807,17 +966,26 @@
             document.getElementById('totalRegistros').textContent = total;
 
             const notas = dadosFiltrados.map(d => parseNota(d.NOTA_GERAL)).filter(n => n !== null && !isNaN(n));
+            const notasFG = dadosFiltrados.map(d => parseNota(d.NOTA_FORMACAO_GERAL)).filter(n => n !== null && !isNaN(n));
             const cursos = new Set(dadosFiltrados.map(d => String(d.CODIGO_CURSO)).filter(c => c));
             document.getElementById('totalCursos').textContent = cursos.size;
 
             if (notas.length) {
                 const media = notas.reduce((a,b) => a+b, 0) / notas.length;
                 document.getElementById('mediaGeral').textContent = media.toFixed(1);
-                document.getElementById('melhorNota').textContent = Math.max(...notas).toFixed(1);
             } else {
                 document.getElementById('mediaGeral').textContent = '-';
-                document.getElementById('melhorNota').textContent = '-';
             }
+
+            if (notasFG.length) {
+                const mediaFG = notasFG.reduce((a,b) => a+b, 0) / notasFG.length;
+                document.getElementById('mediaFG').textContent = mediaFG.toFixed(1);
+            } else {
+                document.getElementById('mediaFG').textContent = '-';
+            }
+
+            // Atualiza os status indicators também (já que são baseados nos mesmos dados)
+            atualizarStatusIndicators();
         }
 
         // ranking

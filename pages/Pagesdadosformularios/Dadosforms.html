@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>IFPB Data Platform - Dados Abertos | Transparência e Análise</title>
+    <title>IFPB Data Platform - Dados de Pesquisa | Perfil da Comunidade</title>
     <link rel="shortcut icon" href="../../assets/img/logosite.png" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
@@ -13,270 +12,427 @@
     <link rel="stylesheet" href="../../style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+    :root {
+        --primary-color: #ff9a3c;
+        --primary-dark: #e68a2e;
+        --primary-light: #ffb86b;
+        --secondary-color: #da9b1c;
+        --accent-color: #ff9a3c;
+        --accent-dark: #e68a2e;
+        --success-color: #1cc88a;
+        --warning-color: #f6c23e;
+        --danger-color: #e74a3b;
+        --info-color: #36b9cc;
+        --dark-color: #2e3a59;
+        --medium-color: #5a5c69;
+        --light-color: #f8f9fc;
+        --white: #ffffff;
+        --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+        --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+        --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+        --radius: 10px;
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
 
-        :root {
-            --primary-color: #1c7f5e;
-            --secondary-color: #59e49a;
-            --success-color: #1cc88a;
-            --warning-color: #f6c23e;
-            --danger-color: #e74a3b;
-            --info-color: #36b9cc;
-            --dark-color: #2e3a59;
-            --medium-color: #5a5c69;
-            --light-color: #f8f9fc;
-            --white: #ffffff;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
-            --radius: 10px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+    .hero {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        align-items: center;
+        padding: 3rem 0 2rem;
+    }
 
-        /* hero section*/
+    .hero-badge {
+        background: var(--light-color);
+        color: var(--primary-color);
+        padding: 0.3rem 1rem;
+        border-radius: 40px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        letter-spacing: -1px;
+        line-height: 1.2;
+        color: var(--dark-color);
+    }
+
+    .hero h1 span {
+        color: var(--primary-color);
+    }
+
+    .hero p {
+        font-size: 1.1rem;
+        color: var(--medium-color);
+        margin: 1.5rem 0;
+        max-width: 90%;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 0.8rem 1.8rem;
+        border-radius: 40px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-outline {
+        border: 1.5px solid var(--light-color);
+        background: white;
+        color: var(--dark-color);
+        padding: 0.8rem 1.8rem;
+        border-radius: 40px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .hero-stats {
+        background: var(--white);
+        border-radius: var(--radius);
+        padding: 2rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--light-color);
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.8rem;
+        margin: 2rem 0;
+    }
+
+    .card-modern {
+        background: var(--white);
+        border-radius: 1.25rem;
+        padding: 1.5rem;
+        transition: var(--transition);
+        border: 1px solid var(--light-color);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .card-modern:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--secondary-color);
+    }
+
+    .card-icon {
+        width: 54px;
+        height: 54px;
+        background: var(--light-color);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-color);
+        font-size: 1.7rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .card-modern h3 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: var(--dark-color);
+    }
+
+    .card-modern p {
+        color: var(--medium-color);
+        margin-bottom: 1.2rem;
+        font-size: 0.95rem;
+    }
+
+    .card-link {
+        font-weight: 600;
+        color: var(--primary-color);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .highlights {
+        background: var(--white);
+        border-radius: var(--radius);
+        padding: 2rem;
+        margin: 3rem 0;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--light-color);
+    }
+
+    .charts-row {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-top: 1.5rem;
+    }
+
+    .chart-box {
+        background: var(--light-color);
+        border-radius: 1rem;
+        padding: 1rem;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        margin: 2rem 0 1rem;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--dark-color);
+        position: relative;
+        display: inline-block;
+        margin: 0;
+    }
+
+    .section-title:after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: var(--secondary-color);
+        border-radius: 3px;
+    }
+
+    canvas {
+        max-height: 260px;
+        width: 100%;
+    }
+
+    /* ===== Estilos padrão para caixas de conteúdo ===== */
+    .modulo-descricao {
+        background: var(--white);
+        border-radius: var(--radius);
+        padding: 2rem 2.5rem;
+        margin: 2.5rem 0 1.5rem;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--light-color);
+        transition: var(--transition);
+    }
+    .modulo-descricao:hover {
+        box-shadow: var(--shadow-md);
+    }
+
+    .descricao-texto-only p {
+        color: var(--medium-color);
+        line-height: 1.8;
+        margin-bottom: 1.2rem;
+        font-size: 0.98rem;
+        text-align: justify;
+    }
+    .descricao-texto-only strong {
+        color: var(--dark-color);
+        font-weight: 600;
+    }
+
+    /* ===== FAQ ===== */
+    .faq-list {
+        overflow: hidden;
+    }
+    .faq-item {
+        border-bottom: 1px solid var(--light-color);
+        transition: var(--transition);
+    }
+    .faq-item:last-child {
+        border-bottom: none;
+    }
+    .faq-question {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.2rem 0.5rem;
+        cursor: pointer;
+        background: transparent;
+        transition: var(--transition);
+        font-weight: 500;
+        color: var(--dark-color);
+        font-size: 1rem;
+    }
+    .faq-question:hover {
+        background: var(--light-color);
+        border-radius: var(--radius);
+    }
+    .faq-question .faq-icon {
+        color: var(--primary-color);
+        font-size: 1.2rem;
+        width: 1.8rem;
+        text-align: center;
+        flex-shrink: 0;
+    }
+    .faq-question .faq-toggle {
+        margin-left: auto;
+        color: var(--medium-color);
+        transition: transform 0.3s ease;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+    .faq-item.active .faq-toggle {
+        transform: rotate(180deg);
+    }
+    .faq-question span {
+        flex: 1;
+    }
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease, padding 0.3s ease;
+        padding: 0 0.5rem;
+        background: transparent;
+    }
+    .faq-item.active .faq-answer {
+        max-height: 300px;
+        padding: 0 0.5rem 1.2rem;
+    }
+    .faq-answer p {
+        color: var(--medium-color);
+        line-height: 1.7;
+        margin: 0;
+        font-size: 0.95rem;
+    }
+    .faq-answer a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .faq-answer a:hover {
+        text-decoration: underline;
+    }
+
+    /* ===== Tutorial ===== */
+    .tutorial-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin: 1.5rem 0 0.5rem;
+    }
+    .tutorial-step {
+        background: var(--light-color);
+        padding: 1.5rem 1.2rem;
+        border-radius: var(--radius);
+        text-align: center;
+        transition: var(--transition);
+    }
+    .tutorial-step:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+    }
+    .tutorial-step .step-number {
+        background: var(--primary-color);
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 0.8rem;
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+    .tutorial-step strong {
+        display: block;
+        font-size: 1rem;
+        color: var(--dark-color);
+        margin-bottom: 0.3rem;
+    }
+    .tutorial-step p {
+        font-size: 0.85rem;
+        color: var(--medium-color);
+        margin: 0;
+    }
+
+    /* Responsividade */
+    @media (max-width: 900px) {
         .hero {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-            padding: 3rem 0 2rem;
+            grid-template-columns: 1fr;
+            text-align: center;
         }
-
-        .hero-badge {
-            background: var(--light-color);
-            color: var(--primary-color);
-            padding: 0.3rem 1rem;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 1rem;
-        }
-
-        .hero h1 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-            line-height: 1.2;
-            color: var(--dark-color);
-        }
-
-        .hero h1 span {
-            color: var(--primary-color);
-        }
-
         .hero p {
-            font-size: 1.1rem;
-            color: var(--medium-color);
-            margin: 1.5rem 0;
-            max-width: 90%;
+            max-width: 100%;
         }
-
         .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 0.8rem 1.8rem;
-            border-radius: 40px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-outline {
-            border: 1.5px solid var(--light-color);
-            background: white;
-            color: var(--dark-color);
-            padding: 0.8rem 1.8rem;
-            border-radius: 40px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .hero-stats {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 2rem;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--light-color);
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.8rem;
-            margin: 2rem 0;
-        }
-
-        .card-modern {
-            background: var(--white);
-            border-radius: 1.25rem;
-            padding: 1.5rem;
-            transition: var(--transition);
-            border: 1px solid var(--light-color);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .card-modern:hover {
-            transform: translateY(-6px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--secondary-color);
-        }
-
-        .card-icon {
-            width: 54px;
-            height: 54px;
-            background: var(--light-color);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            color: var(--primary-color);
-            font-size: 1.7rem;
-            margin-bottom: 1.2rem;
         }
-
-        .card-modern h3 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--dark-color);
-        }
-
-        .card-modern p {
-            color: var(--medium-color);
-            margin-bottom: 1.2rem;
-            font-size: 0.95rem;
-        }
-
-        .card-link {
-            font-weight: 600;
-            color: var(--primary-color);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .highlights {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 2rem;
-            margin: 3rem 0;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--light-color);
-        }
-
         .charts-row {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
-            margin-top: 1.5rem;
+            grid-template-columns: 1fr;
         }
-
-        .chart-box {
-            background: var(--light-color);
-            border-radius: 1rem;
-            padding: 1rem;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            margin: 2rem 0 1rem;
-        }
-
         .section-title {
+            font-size: 1.6rem;
+        }
+        .modulo-descricao {
+            padding: 1.5rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hero h1 {
+            font-size: 2rem;
+        }
+        .stat-number {
             font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--dark-color);
-            position: relative;
-            display: inline-block;
-            margin: 0;
         }
-
-        .section-title:after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: var(--secondary-color);
-            border-radius: 3px;
+        .faq-question {
+            font-size: 0.9rem;
+            padding: 1rem 0.2rem;
+            gap: 0.6rem;
         }
-
-        .transparencia-box {
-            background: linear-gradient(135deg, #f8f9fc, #eef2ff);
-            border-radius: var(--radius);
-            padding: 2rem;
-            margin: 2rem 0;
-            text-align: center;
-            border-left: 5px solid var(--secondary-color);
+        .faq-answer {
+            padding: 0 0.2rem;
         }
-
-        canvas {
-            max-height: 260px;
-            width: 100%;
+        .faq-item.active .faq-answer {
+            padding: 0 0.2rem 1rem;
         }
-
-        @media (max-width: 900px) {
-            .hero {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            .hero p {
-                max-width: 100%;
-            }
-            .hero-buttons {
-                justify-content: center;
-            }
-            .charts-row {
-                grid-template-columns: 1fr;
-            }
-            .section-title {
-                font-size: 1.6rem;
-            }
+        .faq-question .faq-icon {
+            font-size: 1rem;
+            width: 1.4rem;
         }
-
-        @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 2rem;
-            }
-            .stat-number {
-                font-size: 1.8rem;
-            }
+        .tutorial-grid {
+            grid-template-columns: 1fr;
         }
+    }
     </style>
 </head>
 <body>
@@ -296,10 +452,10 @@
 
             <nav class="main-nav" role="navigation">
                 <ul class="nav-list">
-                <li><a href="Dadosforms.html"><i class="fas fa-home"></i> Início</a></li>
-                <li><a href="DadosDiscentes.html"><i class="fas fa-university"></i>Dados Discentes</a></li>
-                <li><a href="DadosDocentes.html"><i class="fas fa-graduation-cap"></i>Dados Docentes</a></li>
-                <li><a href="../dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+                    <li><a href="../../index.html"><i class="fas fa-home"></i> Início</a></li>
+                    <li><a href="DadosDiscentes.html"><i class="fas fa-user-graduate"></i> Dados Discentes</a></li>
+                    <li><a href="DadosDocentes.html"><i class="fas fa-chalkboard-teacher"></i> Dados Docentes</a></li>
+          <li><a href="../dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
                 </ul>
 
                 <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -313,14 +469,14 @@
 
     <div class="menu-overlay" id="menuOverlay"></div>
 
-    <!-- Menu Mobile lateral -->
+    <!-- Menu Mobile -->
     <nav class="nav-menu-mobile" id="navMenuMobile">
         <div class="menu-header">
             <div class="menu-logo">
                 <i class="fas fa-chart-bar"></i>
                 <div class="menu-logo-text">
                     <span class="menu-logo-main">IFPB Data Platform</span>
-                    <span class="menu-logo-sub">Dados Abertos</span>
+                    <span class="menu-logo-sub">Dados de Pesquisa</span>
                 </div>
             </div>
             <button class="menu-close-btn" id="menuCloseBtn">
@@ -328,10 +484,10 @@
             </button>
         </div>
         <ul>
-            <li><a href="Dadosforms.html"><i class="fas fa-home"></i> Início</a></li>
-            <li><a href="DadosDiscentes.html"><i class="fas fa-university"></i>Dados Discentes</a></li>
-            <li><a href="DadosDocentes.html"><i class="fas fa-graduation-cap"></i>Dados Docentes</a></li>
-            <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+            <li><a href="../../index.html"><i class="fas fa-home"></i> Início</a></li>
+            <li><a href="DadosDiscentes.html"><i class="fas fa-user-graduate"></i>Dados Discentes</a></li>
+            <li><a href="DadosDocentes.html"><i class="fas fa-chalkboard-teacher"></i>Dados Docentes</a></li>
+            <li><a href="../../pages/PagesGeral/dashboard.html"><i class="fas fa-chart-simple"></i> Explorar Dados</a></li>
         </ul>
     </nav>
 
@@ -340,31 +496,31 @@
         <!-- Seção Hero -->
         <section class="hero">
             <div>
-                <div class="hero-badge"><i class="fas fa-database"></i> Dados Abertos IFPB</div>
-                <h1>Pesquisas com a Comunidade <span>Acadêmica</span></h1>
-                <p>Acompanhe os resultados das consultas realizadas com discentes e docentes do IFPB. Dados sobre perfil socioeconômico, deslocamento, assistência estudantil, projetos e permanência nos cursos.</p>
+                <div class="hero-badge"><i class="fas fa-clipboard-list"></i> Última atualização: Agosto/2026</div>
+                <h1><span>Dados de Pesquisa IFPB</h1>
+                <p>Conheça o perfil, as condições de estudo e as percepções da comunidade acadêmica do IFPB. Dados coletados por meio de formulários aplicados a discentes e docentes dos Campi.</p>
                 <div class="hero-buttons">
-                    <a href="../dashboard.html" class="btn-primary" id="exploreMainBtn"><i class="fas fa-chart-simple"></i> Explorar Agora</a>
-                    <a href="#dados-destaque" class="btn-outline"><i class="fas fa-arrow-trend-down"></i> Ver Indicadores</a>
+                    <a href="../PagesGeral/dashboard.html" class="btn-primary"><i class="fas fa-chart-simple"></i> Explorar Agora</a>
+                    <a href="#indicadores-destaque" class="btn-outline"><i class="fas fa-arrow-trend-down"></i> Ver Indicadores</a>
                 </div>
             </div>
             <div class="hero-stats">
                 <div style="display: flex; justify-content: space-around;">
                     <div class="stat-item">
-                        <div class="stat-number" id="statCampi">23</div>
-                        <div>Campi Ativos</div>
+                        <div class="stat-number" id="statDiscentes">Carregando...</div>
+                        <div>Discentes Respondentes</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number" id="statEstudantes">+18k</div>
-                        <div>Estudantes</div>
+                        <div class="stat-number" id="statDocentes">Carregando...</div>
+                        <div>Docentes Respondentes</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number" id="statCursos">+120</div>
-                        <div>Cursos</div>
+                        <div class="stat-number" id="statTotal">Carregando...</div>
+                        <div>Total de Respostas</div>
                     </div>
                 </div>
                 <div style="margin-top: 1.5rem; background: var(--light-color); padding: 0.8rem; border-radius: 20px; text-align: center; font-size: 0.8rem;">
-                    <i class="fas fa-calendar-alt"></i> Dados consolidados – atualização contínua
+                    <i class="fas fa-map-marker-alt"></i> Dados dos Campi – Coleta Julho/2026
                 </div>
             </div>
         </section>
@@ -372,48 +528,171 @@
         <!-- Cards de navegação principal -->
         <div class="cards-grid" id="dados-destaque">
             <div class="card-modern">
-                <div class="card-icon"><i class="fas fa-building-columns"></i></div>
-                <h3>Formulário Discentes</h3>
-                <p>Perfil dos estudantes, trabalho, deslocamento, assistência estudantil, projetos e desistência.</p>
+                <div class="card-icon"><i class="fas fa-user-graduate"></i></div>
+                <h3>Discentes</h3>
+                <p>Perfil socioeconômico, deslocamento, trabalho e estudo, assistência estudantil, participação em projetos e percepções sobre evasão.</p>
                 <a href="DadosDiscentes.html" class="card-link">Ver dados <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="card-modern">
-                <div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
-                <h3>Formulário Docentes</h3>
-                <p>Perfil profissional, formação, condições de trabalho, uso de tecnologias e percepções sobre a carreira.</p>
+                <div class="card-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                <h3>Docentes</h3>
+                <p>Formação, regime de trabalho, atuação em pesquisa, infraestrutura, deslocamento e satisfação com a instituição.</p>
                 <a href="DadosDocentes.html" class="card-link">Explorar <i class="fas fa-arrow-right"></i></a>
             </div>
-
         </div>
 
-        <!-- Seção de destaques -->
-        <div class="highlights">
+        <!-- DESCRIÇÃO – Sobre o Módulo Dados de Pesquisa (6 parágrafos) -->
+        <div class="modulo-descricao">
             <div class="section-header">
-                <h2 class="section-title">Indicadores em Destaque</h2>
-                <span style="color: var(--medium-color); font-size: 0.85rem;"><i class="fas fa-chart-line"></i> Visão interativa</span>
+                <h2 class="section-title">Sobre o Módulo Dados de Pesquisa</h2>
             </div>
-            <div class="charts-row">
-                <div class="chart-box">
-                    <h4 style="margin-bottom: 1rem;"><i class="fas fa-chart-bar"></i> Distribuição de Servidores por Categoria</h4>
-                    <canvas id="servidoresChartHome" width="400" height="240" style="max-height:240px"></canvas>
-                </div>
-                <div class="chart-box">
-                    <h4 style="margin-bottom: 1rem;"><i class="fas fa-chart-pie"></i> Receitas vs Despesas (2024)</h4>
-                    <canvas id="orcamentoChartHome" width="400" height="240" style="max-height:240px"></canvas>
-                </div>
-            </div>
-            <div style="margin-top: 1rem; text-align: center; font-size: 0.8rem; color: var(--medium-color);">
-                <i class="fas fa-database"></i> Fonte: SIGAA / Portal da Transparência IFPB | Dados sujeitos a atualização mensal
+            <div class="descricao-texto-only">
+                <p>
+                    O módulo <strong>Dados de Pesquisa</strong> da <strong>IFPB Data Platform</strong> apresenta os resultados da coleta de dados secundários realizada por meio de formulários aplicados à comunidade acadêmica do Instituto Federal da Paraíba. Os instrumentos foram desenvolvidos no âmbito do projeto <em>Observatório de dados abertos para o Instituto Federal da Paraíba</em>, vinculado ao Programa Institucional de Bolsas de Iniciação Científica para o Ensino Médio (PIBIC-EM), e enviados a <strong>todos os campi do IFPB na Paraíba</strong>, abrangendo tanto discentes quanto docentes. A pesquisa foi conduzida respeitando os princípios éticos da investigação com seres humanos, com participação voluntária, consentimento informado e garantia de anonimato das respostas.
+                </p>
+                <p>
+                    Os formulários foram estruturados para capturar informações abrangentes sobre a realidade da comunidade acadêmica. Para os discentes, as questões abordam perfil socioeconômico, deslocamento entre residência e campus, conciliação entre trabalho e estudo, conhecimento e uso dos programas de assistência estudantil, participação em projetos de pesquisa e extensão, percepções sobre evasão e motivações para permanência no curso. Para os docentes, o instrumento contempla áreas como formação e atuação, regime de trabalho, titulação, atuação em pesquisa e extensão, avaliação da infraestrutura do campus, deslocamento, satisfação com o trabalho e perspectivas de carreira.
+                </p>
+                <p>
+                    Apesar de os formulários terem sido enviados para todos os campi do IFPB, até o momento o retorno obtido concentrou-se exclusivamente no <strong>Campus Guarabira</strong>, onde o bolsista do projeto está inserido e tem maior proximidade com a comunidade acadêmica. Essa proximidade viabilizou uma estratégia de divulgação ampla e diversificada, que incluiu o compartilhamento dos links em redes sociais, grupos de WhatsApp, anúncios nas televisões do campus, convites presenciais em salas de aula e corredores, além do apoio de professores que incentivaram seus alunos a participar. Os dados foram coletados no mês de julho de 2026, totalizando <strong>110 respostas</strong> (100 de discentes e 10 de docentes).
+                </p>
+                <p>
+                    Todos os resultados são apresentados em gráficos interativos e tabelas, desenvolvidos para serem intuitivos e acessíveis a qualquer usuário, mesmo sem formação técnica em análise de dados. A plataforma utiliza diferentes tipos de visualizações conforme a natureza das informações: gráficos de pizza para distribuições proporcionais, gráficos de barras para comparações, gráficos de linha para sequências ordenadas, radar para comparações multidimensionais, treemap para distribuição geográfica e barras empilhadas para análises cruzadas. Além disso, você pode filtrar as informações por campus, navegar por abas temáticas, ampliar qualquer gráfico para ver os detalhes e exportar os dados nos formatos <strong>PNG</strong>, <strong>JSON</strong> ou <strong>CSV</strong>, facilitando o uso em pesquisas, relatórios e análises aprofundadas.
+                </p>
+                <p>
+                    O módulo já está concluído e totalmente integrado com dados reais, oferecendo uma visão detalhada e transparente da realidade da comunidade acadêmica do IFPB Campus Guarabira. Todas as informações disponíveis refletem os dados coletados diretamente com discentes e docentes, com atualização contínua à medida que novas respostas forem sendo registradas. A arquitetura da plataforma foi projetada para receber dados futuros de outros campi, mantendo a mesma estrutura e lógica de renderização já implementada, o que viabiliza a expansão da coleta sem necessidade de alterações estruturais no sistema.
+                </p>
+                <p>
+                    O módulo Dados de Pesquisa foi feito para facilitar o acesso de <strong>estudantes, professores, servidores, pesquisadores e qualquer cidadão</strong> que queira conhecer melhor o perfil e as percepções da comunidade acadêmica do IFPB. Ele cumpre o papel de transformar respostas individuais em conhecimento coletivo, contribuindo para uma gestão mais transparente e para o controle social das atividades da instituição. Ao disponibilizar dados produzidos pela própria comunidade acadêmica de forma acessível e interativa, a plataforma fortalece o diálogo entre a instituição e a sociedade, promovendo a participação cidadã e a melhoria contínua das políticas educacionais e de assistência estudantil.
+                </p>
             </div>
         </div>
 
-        <!-- Chamada para transparência -->
-        <div class="transparencia-box">
-            <i class="fas fa-hand-holding-heart" style="font-size: 2rem; color: var(--secondary-color);"></i>
-            <h3 style="margin: 0.5rem 0; color: var(--dark-color);">Compromisso com a Transparência</h3>
-            <p>Todos os dados disponíveis seguem a Lei de Acesso à Informação (LAI) e são extraídos de fontes oficiais do IFPB, MEC e SIAFI. Consulte também os portais de dados abertos da instituição.</p>
-            <a href="../sobre.html" style="margin-top: 1rem; display: inline-block; color: var(--primary-color); font-weight: 600;">Saiba mais sobre o projeto <i class="fas fa-chevron-right"></i></a>
+        <!-- INDICADORES EM DESTAQUE -->
+        <section id="indicadores-destaque">
+            <div class="highlights">
+                <div class="section-header">
+                    <h2 class="section-title">Indicadores em Destaque</h2>
+                    <span style="color: var(--medium-color); font-size: 0.85rem;"><i class="fas fa-chart-line"></i> Visão interativa</span>
+                </div>
+                <div class="charts-row">
+                    <div class="chart-box">
+                        <h4 style="margin-bottom: 1rem;"><i class="fas fa-chart-radar"></i> Comparativo: Perfil dos Cursos</h4>
+                        <canvas id="radarPerfilCursos" width="400" height="240" style="max-height:240px"></canvas>
+                    </div>
+                    <div class="chart-box">
+                        <h4 style="margin-bottom: 1rem;"><i class="fas fa-microscope"></i> Área de formação/atuação dos Docentes</h4>
+                        <canvas id="areaDocentesChart" width="400" height="240" style="max-height:240px"></canvas>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; text-align: center; font-size: 0.8rem; color: var(--medium-color);">
+                    <i class="fas fa-database"></i> Fonte: Formulários aplicados no IFPB Campus Guarabira – 2025/2026
+                </div>
+            </div>
+        </section>
+
+        <!-- PERGUNTAS FREQUENTES -->
+        <div class="modulo-descricao">
+            <div class="section-header">
+                <h2 class="section-title">Perguntas Frequentes</h2>
+                <span style="color: var(--medium-color); font-size: 0.85rem;"><i class="fas fa-question-circle"></i> Dúvidas comuns</span>
+            </div>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                        <i class="fas fa-users faq-icon"></i>
+                        <span>Quem participou da pesquisa?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Participaram discentes e docentes do <strong>IFPB Campus Guarabira</strong>. Foram registradas <span id="faq-discentes">0</span> respostas de estudantes e <span id="faq-docentes">0</span> de professores, totalizando <span id="faq-total">0</span> participantes.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                        <i class="fas fa-calendar-alt faq-icon"></i>
+                        <span>Quando os dados foram coletados?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>A coleta ocorreu no mês de <strong>julho de 2026</strong>, com divulgação por meio de redes sociais, grupos de WhatsApp, televisões do campus e convites presenciais.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                        <i class="fas fa-shield-alt faq-icon"></i>
+                        <p>Os dados são anônimos?</p>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sim. Todos os participantes foram informados sobre os objetivos da pesquisa e o anonimato das respostas foi garantido, respeitando os princípios éticos da pesquisa com seres humanos.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                        <i class="fas fa-download faq-icon"></i>
+                        <span>Como baixar os dados para análises próprias?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Todos os gráficos disponibilizam botões de exportação nos formatos <strong>PNG</strong> (imagem), <strong>JSON</strong> (dados brutos) e <strong>CSV</strong> (planilha), acessíveis diretamente em cada visualização.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                        <i class="fas fa-flag faq-icon"></i>
+                        <span>Os dados serão expandidos para outros campi?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Atualmente, apenas o Campus Guarabira respondeu aos formulários. A plataforma já está apta a receber dados de outros campi, aguardando novas respostas.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+                        <i class="fas fa-quote-right faq-icon"></i>
+                        <span>Como citar os dados em um trabalho acadêmico?</span>
+                        <i class="fas fa-chevron-down faq-toggle"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Sugerimos: <em>"Dados extraídos da IFPB Data Platform – Módulo Dados de Pesquisa (hugodeev.github.io/ifpb-data-plataform), com base em formulários aplicados no IFPB Campus Guarabira, acessado em [data]."</em></p>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <!-- COMO EXPLORAR OS DADOS -->
+        <div class="modulo-descricao" id="como-explorar">
+            <div class="section-header">
+                <h2 class="section-title">Como Explorar os Dados de Pesquisa</h2>
+                <span style="color: var(--medium-color); font-size: 0.85rem;"><i class="fas fa-lightbulb"></i> Passo a passo</span>
+            </div>
+
+            <div class="tutorial-grid">
+                <div class="tutorial-step">
+                    <div class="step-number">1</div>
+                    <strong>Escolha o público</strong>
+                    <p>Selecione Discentes ou Docentes para visualizar os dados específicos</p>
+                </div>
+                <div class="tutorial-step">
+                    <div class="step-number">2</div>
+                    <strong>Explore os temas</strong>
+                    <p>Navegue pelas abas: Perfil, Deslocamento, Trabalho, Assistência, Projetos e Evasão</p>
+                </div>
+                <div class="tutorial-step">
+                    <div class="step-number">3</div>
+                    <strong>Analise e exporte</strong>
+                    <p>Filtre por campus, amplie gráficos e baixe os dados nos formatos desejados</p>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <!-- rodapé final -->
@@ -439,9 +718,9 @@
                     <h3>Navegação</h3>
                     <ul class="footer-links">
                         <li><a href="../../index.html"><i class="fas fa-chevron-right"></i> Início</a></li>
-                        <li><a href="institucional.html"><i class="fas fa-chevron-right"></i> A Instituição</a></li>
-                        <li><a href="academico.html"><i class="fas fa-chevron-right"></i> Vida Acadêmica</a></li>
-                        <li><a href="orcamento.html"><i class="fas fa-chevron-right"></i> Gestão e Orçamento</a></li>
+                        <li><a href="pesquisa-discentes.html"><i class="fas fa-chevron-right"></i> Discentes</a></li>
+                        <li><a href="pesquisa-docentes.html"><i class="fas fa-chevron-right"></i> Docentes</a></li>
+                        <li><a href="pesquisa-resultados.html"><i class="fas fa-chevron-right"></i> Resultados</a></li>
                     </ul>
                 </div>
 
@@ -449,8 +728,8 @@
                     <h3>Recursos</h3>
                     <ul class="footer-links">
                         <li><a href="Dadosabertosifpb.html"><i class="fas fa-chevron-right"></i> Dados Abertos IFPB</a></li>
-                        <li><a href="../Pages Enade/DadosENADE.html"><i class="fas fa-chevron-right"></i> Dados ENADE</a></li>
-                        <li><a href="../Pagesdadosformularios/Dadosforms.html"><i class="fas fa-chevron-right"></i> Dados de Pesquisa</a></li>
+                        <li><a href="DadosENADE.html"><i class="fas fa-chevron-right"></i> Dados ENADE</a></li>
+                        <li><a href="Dadosforms.html"><i class="fas fa-chevron-right"></i> Dados de Pesquisa</a></li>
                         <li><a href="../sobre.html"><i class="fas fa-chevron-right"></i> Sobre o Projeto</a></li>
                         <li><a href="../contato.html"><i class="fas fa-chevron-right"></i> Contato</a></li>
                     </ul>
@@ -467,7 +746,7 @@
     </footer>
 
     <script>
-        // Menu mobile
+        // Menu mobile (mesmo código)
         const hamburger = document.getElementById('hamburger');
         const navMenuMobile = document.getElementById('navMenuMobile');
         const menuOverlay = document.getElementById('menuOverlay');
@@ -523,34 +802,251 @@
             });
         });
 
-        // Gráficos com Chart.js
-        const ctxServ = document.getElementById('servidoresChartHome')?.getContext('2d');
-        if(ctxServ) {
-            new Chart(ctxServ, {
-                type: 'bar',
-                data: {
-                    labels: ['Docentes', 'Técnico-Admin.'],
-                    datasets: [{
-                        label: 'Quantidade de servidores',
-                        data: [1248, 902],
-                        backgroundColor: ['#387f1c', '#c9a03d'],
-                        borderRadius: 10,
-                        barPercentage: 0.65
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'top' } } }
+        // ============================================================
+        // 1. NORMALIZAR DADOS (discentes e docentes)
+        // ============================================================
+        function normalizarDadosDiscentes(dadosRaw) {
+            return dadosRaw.map(item => {
+                let curso = item["Qual é o seu curso no IFPB?"] ||
+                    item["Qual é o seu curso no IFPB? (Exemplo: Técnico em Informática, Sistemas para Internet, etc.)"] || "";
+                if (curso && curso.length > 100) curso = curso.substring(0, 100);
+                return {
+                    campus: item["Em qual campus do IFPB você estuda?"] || "",
+                    cidade: item["Em qual cidade você reside atualmente?"] || "",
+                    curso,
+                    estudaPropriaCidade: item["Sobre a cidade onde você estuda:"] || "",
+                    distancia: item["[Se deslocamento] Qual é a distância aproximada (em km) da sua cidade até a cidade onde você estuda?"] || "",
+                    tempoDeslocamento: item["[Se deslocamento] Quanto tempo, em média, você gasta no deslocamento (ida e volta) para frequentar as aulas presenciais ou atividades no polo?"] || "",
+                    transporte: item["[Se deslocamento] Qual meio de transporte você utiliza com mais frequência para esse deslocamento?"] || "",
+                    trabalha: item["Durante o Ensino Médio, você trabalha?"] || "",
+                    turno: item["Em qual turno você realiza a maior parte das disciplinas do curso?"] || "",
+                    horasEstudo: item["Quantas horas por dia você dedica aos estudos (fora da sala de aula)?"] || "",
+                    impacto: item["Como você avalia o impacto de trabalhar e estudar (se for o caso) no seu desempenho acadêmico?"] || "",
+                    conheceAssistencia: item["Você conhece os programas de assistência estudantil oferecidos pelo IFPB?"] || "",
+                    auxiliosRecebidos: item["Você já recebeu ou recebe algum dos seguintes auxílios/benefícios do IFPB? "] || "",
+                    importanciaAuxilio: item["[Se recebe algum auxílio] Como você avalia a importância do auxílio para sua permanência no curso?"] || "",
+                    participaProjetos: item["Você participa ou já participou de algum projeto no IFPB? "] || "",
+                    motivoParticipacao: item["[Se participa de projeto] Qual o principal motivo que levou você a participar de projetos?"] || "",
+                    motivoNaoParticipar: item["[Se NÃO participa de projetos] Qual o principal motivo para não participar?"] || "",
+                    pensouDesistir: item["Você já pensou em desistir do curso?"] || "",
+                    motivosDesistencia: item["[Se já pensou em desistir] Qual o principal motivo? "] || ""
+                };
             });
         }
 
-        const ctxOrc = document.getElementById('orcamentoChartHome')?.getContext('2d');
-        if(ctxOrc) {
-            new Chart(ctxOrc, {
+        function normalizarDadosDocentes(raw) {
+            return raw.map(item => ({
+                campus: item["Em qual campus do IFPB você está lotado atualmente?"] || "",
+                area: item["Qual a sua área de formação/atuação principal?"] || "",
+                tempoDocencia: item["Há quanto tempo você é docente no IFPB?"] || "",
+                regime: item["Qual o seu regime de trabalho? "] || "",
+                titulacao: item["Qual a sua titulação máxima?"] || "",
+                nivelEnsino: item["Qual é o principal nível de ensino em que você atua atualmente? (Selecione apenas uma opção)"] || "",
+                turmas: item["Quantas turmas você leciona atualmente?"] || "",
+                horasEnsino: item["Em média, quantas horas semanais você dedica às atividades de ensino (preparação de aulas, correção, atendimento a alunos)?"] || "",
+                pesquisa: item["Você atua/atuou como pesquisador em projetos no IFPB?"] || "",
+                qtdProjetos: item["[Se atua em pesquisa] Quantos projetos de pesquisa você está envolvido ou já se envolveu no IFPB?"] || "",
+                fonteFomento: item["Quais as principais fontes de fomento dos seus projetos?   (Selecione apenas uma opção)"] || "",
+                motivoNaoPesquisa: item["[Se NÃO atua em pesquisa] Qual o principal motivo para não atuar em pesquisa?"] || "",
+                cargoAdm: item["Você exerce ou já exerceu algum cargo/função administrativa no IFPB?"] || "",
+                funcaoAdm: item["[Se sim] Qual(is) função(ões)? (Selecione apenas uma opção)"] || "",
+                horasGestao: item["Quantas horas semanais você dedica às atividades de gestão (se aplicável)?"] || "",
+                infraEnsino: item["Como você avalia a infraestrutura do seu campus para o desenvolvimento das atividades de ensino?"] || "",
+                infraPesquisa: item["Como você avalia a infraestrutura para pesquisa no seu campus?"] || "",
+                acessoRecursos: item["Você possui acesso aos recursos necessários para sua atuação (laboratórios, equipamentos, biblioteca, etc.)?"] || "",
+                residencia: item["Em relação à sua residência e local de trabalho:"] || "",
+                distancia: item[" [Se deslocamento] Qual a distância aproximada (em km) da sua cidade até o campus onde trabalha?"] || "",
+                tempoDeslocamento: item["[Se deslocamento] Quanto tempo, em média, você gasta no deslocamento (ida e volta) por dia?"] || "",
+                satisfacao: item["Qual seu nível de satisfação com o trabalho no IFPB?"] || "",
+                mudarInstituicao: item["Você considera mudar de instituição de ensino nos próximos 5 anos?"] || "",
+                reconhecimento: item["Como você avalia o reconhecimento do seu trabalho pela gestão do campus?"] || "",
+                relacionamentoAlunos: item["Como você avalia o relacionamento com os alunos de maneira geral?"] || "",
+                cidadeResidencia: item["Em qual cidade você reside atualmente?"] || "",
+                vinculo: item["Qual o seu vínculo com o IFPB?"] || "",
+                deixarCarreira: item["Você considera deixar a carreira docente nos próximos 5 anos?"] || ""
+            }));
+        }
+
+        // ============================================================
+        // 2. FUNÇÃO DE CONTAGEM (auxiliar)
+        // ============================================================
+        function contarFrequencia(data, campo) {
+            const freq = {};
+            data.forEach(item => {
+                let val = item[campo];
+                if (val !== undefined && val !== null && val !== "") {
+                    if (typeof val === 'string' && (val.includes(',') || val.includes(';'))) {
+                        val.split(/[,;]/).map(v => v.trim()).forEach(v => { if (v) freq[v] = (freq[v] || 0) + 1; });
+                    } else {
+                        freq[val] = (freq[val] || 0) + 1;
+                    }
+                }
+            });
+            const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1]);
+            return { labels: sorted.map(s => s[0]), values: sorted.map(s => s[1]) };
+        }
+
+        // ============================================================
+        // 3. FUNÇÃO PARA ESCREVER MENSAGEM NO CANVAS
+        // ============================================================
+        function escreverMensagemNoCanvas(canvasId, mensagem = 'Dados insuficientes para o gráfico') {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#5a5c69';
+            ctx.font = '16px Roboto, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(mensagem, canvas.width / 2, canvas.height / 2);
+        }
+
+        // ============================================================
+        // 4. GRÁFICO RADAR COM DADOS REAIS (discentes)
+        // ============================================================
+        function criarRadarPerfilCursos(canvasId, dados) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+
+            // Verifica se há dados
+            if (!dados || dados.length === 0) {
+                escreverMensagemNoCanvas(canvasId);
+                return;
+            }
+
+            const cursosContagem = contarFrequencia(dados, 'curso');
+            // Pega apenas cursos com pelo menos 3 alunos
+            const cursosTop = cursosContagem.labels.filter((c, i) => cursosContagem.values[i] >= 3);
+
+            if (cursosTop.length < 2) {
+                escreverMensagemNoCanvas(canvasId);
+                return;
+            }
+
+            const metricas = ["Trabalha/estagia","Transporte público","Conhece assistência","Já pensou em desistir","Participa de projetos"];
+            const cores = ['#ff9a3c','#36b9cc','#f6c23e','#e74a3b','#4e73df'];
+
+            // Limita a 5 cursos para não poluir o gráfico
+            const cursosSelecionados = cursosTop.slice(0, 5);
+
+            const datasets = cursosSelecionados.map((curso, idx) => {
+                const dc = dados.filter(d => d.curso === curso);
+                const total = dc.length || 1;
+                const valores = metricas.map(m => {
+                    if (m === "Trabalha/estagia") {
+                        return (dc.filter(d => d.trabalha !== "Não, apenas estudo" && d.trabalha !== "").length / total) * 100;
+                    }
+                    if (m === "Transporte público") {
+                        return (dc.filter(d => d.transporte === "Transporte público (ônibus, trem, metrô)").length / total) * 100;
+                    }
+                    if (m === "Conhece assistência") {
+                        return (dc.filter(d => d.conheceAssistencia === "Sim, conheço todos" || d.conheceAssistencia === "Conheço alguns").length / total) * 100;
+                    }
+                    if (m === "Já pensou em desistir") {
+                        return (dc.filter(d => d.pensouDesistir !== "Nunca pensei" && d.pensouDesistir !== "").length / total) * 100;
+                    }
+                    if (m === "Participa de projetos") {
+                        return (dc.filter(d => d.participaProjetos !== "Nunca participei" && d.participaProjetos !== "").length / total) * 100;
+                    }
+                    return 0;
+                });
+                return {
+                    label: curso.length > 30 ? curso.substring(0, 27) + '…' : curso,
+                    data: valores,
+                    backgroundColor: `${cores[idx % cores.length]}20`,
+                    borderColor: cores[idx % cores.length],
+                    borderWidth: 2,
+                    pointBackgroundColor: cores[idx % cores.length],
+                    pointBorderColor: '#fff',
+                    pointRadius: 4
+                };
+            }).filter(Boolean);
+
+            if (datasets.length === 0) {
+                escreverMensagemNoCanvas(canvasId);
+                return;
+            }
+
+            // Destroi gráfico anterior se existir
+            const chartKey = 'radarChart';
+            if (window[chartKey]) { window[chartKey].destroy(); }
+
+            window[chartKey] = new Chart(canvas.getContext('2d'), {
+                type: 'radar',
+                data: {
+                    labels: metricas,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                stepSize: 20,
+                                callback: v => v + '%',
+                                font: { size: 10 }
+                            },
+                            pointLabels: {
+                                font: { size: 11, weight: '500' }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => `${ctx.dataset.label}: ${ctx.raw.toFixed(1)}%`
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 10 },
+                                boxWidth: 12,
+                                padding: 12
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ============================================================
+        // 5. GRÁFICO DE PIZZA: Área de formação/atuação dos docentes
+        // ============================================================
+        function criarGraficoAreaDocentes(canvasId, dadosDocentes) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+
+            if (!dadosDocentes || dadosDocentes.length === 0) {
+                escreverMensagemNoCanvas(canvasId);
+                return;
+            }
+
+            const freq = contarFrequencia(dadosDocentes, 'area');
+            const labels = freq.labels;
+            const values = freq.values;
+
+            if (labels.length === 0) {
+                escreverMensagemNoCanvas(canvasId);
+                return;
+            }
+
+            const cores = ['#ff9a3c','#36b9cc','#e74a3b','#4e73df','#1cc88a','#f6c23e','#9b59b6','#e84393','#00b894','#0984e3'];
+
+            // Destroi gráfico anterior se existir
+            const chartKey = 'areaChart';
+            if (window[chartKey]) { window[chartKey].destroy(); }
+
+            window[chartKey] = new Chart(canvas.getContext('2d'), {
                 type: 'doughnut',
                 data: {
-                    labels: ['Receitas Arrecadadas', 'Despesas Empenhadas'],
+                    labels: labels,
                     datasets: [{
-                        data: [312.4, 287.0],
-                        backgroundColor: ['#387f1c', '#dc843a'],
+                        data: values,
+                        backgroundColor: labels.map((_, i) => cores[i % cores.length]),
                         borderWidth: 0,
                         hoverOffset: 8
                     }]
@@ -559,19 +1055,125 @@
                     responsive: true,
                     maintainAspectRatio: true,
                     plugins: {
-                        legend: { position: 'bottom' },
-                        tooltip: { callbacks: { label: (ctx) => `R$ ${ctx.raw} milhões` } }
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 10 },
+                                boxWidth: 12,
+                                padding: 10
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => {
+                                    const total = values.reduce((a,b)=>a+b,0);
+                                    return `${ctx.label}: ${ctx.raw} docentes (${total > 0 ? ((ctx.raw/total)*100).toFixed(1) : 0}%)`;
+                                }
+                            }
+                        }
                     },
-                    cutout: '55%'
+                    cutout: '50%'
                 }
             });
         }
 
-        // Rolagem suave para âncoras internas
+        // ============================================================
+        // 6. FUNÇÃO PRINCIPAL: CARREGAR DADOS E RENDERIZAR
+        // ============================================================
+        async function carregarDados() {
+            try {
+                let caminhoDiscentes, caminhoDocentes;
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    caminhoDiscentes = '../../assets/data/DadosFormularios/dadosDiscentes.json';
+                    caminhoDocentes = '../../assets/data/DadosFormularios/DadosDocentes.json';
+                } else {
+                    caminhoDiscentes = '/ifpb-data-plataform/assets/data/DadosFormularios/dadosDiscentes.json';
+                    caminhoDocentes = '/ifpb-data-plataform/assets/data/DadosFormularios/DadosDocentes.json';
+                }
+
+                console.log('Carregando dados de discentes:', caminhoDiscentes);
+                const respDiscentes = await fetch(caminhoDiscentes);
+                if (!respDiscentes.ok) throw new Error(`HTTP ${respDiscentes.status} - Discentes`);
+
+                console.log('Carregando dados de docentes:', caminhoDocentes);
+                const respDocentes = await fetch(caminhoDocentes);
+                if (!respDocentes.ok) throw new Error(`HTTP ${respDocentes.status} - Docentes`);
+
+                const rawDiscentes = await respDiscentes.json();
+                const rawDocentes = await respDocentes.json();
+
+                console.log('✅ Discentes:', rawDiscentes.length, 'registros');
+                console.log('✅ Docentes:', rawDocentes.length, 'registros');
+
+                const discentes = normalizarDadosDiscentes(rawDiscentes);
+                const docentes = normalizarDadosDocentes(rawDocentes);
+
+                // Atualiza os cards do hero
+                const totalDiscentes = discentes.length;
+                const totalDocentes = docentes.length;
+                document.getElementById('statDiscentes').textContent = totalDiscentes;
+                document.getElementById('statDocentes').textContent = totalDocentes;
+                document.getElementById('statTotal').textContent = totalDiscentes + totalDocentes;
+
+                // Atualiza a FAQ
+                document.getElementById('faq-discentes').textContent = totalDiscentes;
+                document.getElementById('faq-docentes').textContent = totalDocentes;
+                document.getElementById('faq-total').textContent = totalDiscentes + totalDocentes;
+
+                // Renderiza os gráficos (eles próprios exibirão mensagem se insuficientes)
+                criarRadarPerfilCursos('radarPerfilCursos', discentes);
+                criarGraficoAreaDocentes('areaDocentesChart', docentes);
+
+            } catch (erro) {
+                console.error('❌ Erro ao carregar dados:', erro);
+                // Em caso de erro, exibe 0 nos indicadores
+                document.getElementById('statDiscentes').textContent = '0';
+                document.getElementById('statDocentes').textContent = '0';
+                document.getElementById('statTotal').textContent = '0';
+                document.getElementById('faq-discentes').textContent = '0';
+                document.getElementById('faq-docentes').textContent = '0';
+                document.getElementById('faq-total').textContent = '0';
+
+                // Exibe mensagem de dados insuficientes nos gráficos
+                escreverMensagemNoCanvas('radarPerfilCursos', 'Erro ao carregar dados');
+                escreverMensagemNoCanvas('areaDocentesChart', 'Erro ao carregar dados');
+            }
+        }
+
+        // ============================================================
+        // FAQ – Acordeão
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', function() {
+                    faqItems.forEach(other => {
+                        if (other !== item && other.classList.contains('active')) {
+                            other.classList.remove('active');
+                            other.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                        }
+                    });
+                    const isActive = item.classList.contains('active');
+                    item.classList.toggle('active');
+                    question.setAttribute('aria-expanded', !isActive);
+                });
+                question.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+
+            carregarDados();
+        });
+
+        // Rolagem suave
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 const targetId = this.getAttribute('href');
-                if(targetId !== "#" && targetId !== "" && targetId !== "#dados-destaque" && targetId !== "#institucional" && targetId !== "#academico" && targetId !== "#orcamento") {
+                if(targetId && targetId !== "#" && targetId !== "" && targetId !== "#dados-destaque" && targetId !== "#como-explorar") {
                     const targetElement = document.querySelector(targetId);
                     if(targetElement) {
                         e.preventDefault();

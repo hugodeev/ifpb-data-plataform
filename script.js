@@ -47,7 +47,23 @@ function abreviarCampus(nome) {
 }
 
 // ============================================================
-// COORDENADAS (mesmas da institucional)
+// FUNÇÃO PARA PARSE DE NOTAS (CORRIGIDA)
+// ============================================================
+function parseNota(valor) {
+    if (!valor || valor === '') return null;
+    let str = String(valor).trim();
+    str = str.replace(/[^0-9.,]/g, '');
+    str = str.replace(',', '.');
+    const parts = str.split('.');
+    if (parts.length > 2) str = parts.slice(0, -1).join('') + '.' + parts[parts.length - 1];
+    const parsed = parseFloat(str);
+    if (isNaN(parsed)) return null;
+    if (parsed < 0 || parsed > 100) return null;
+    return parsed;
+}
+
+// ============================================================
+// COORDENADAS
 // ============================================================
 const coordenadas = {
     'JOÃO PESSOA': [-7.1355914, -34.8737658],
@@ -112,7 +128,7 @@ let dadosReais = {
 };
 
 // ============================================================
-// RENDERIZAR MAPA COMPLETO (IGUAL À INSTITUCIONAL)
+// RENDERIZAR MAPA
 // ============================================================
 function renderizarMapaPreview() {
     const container = document.getElementById('map-preview-container');
@@ -221,11 +237,10 @@ function renderizarMapaPreview() {
         legendContainer.innerHTML = legendHtml;
     }
 
-    // ===== REDIRECIONAMENTO PARA A PÁGINA INSTITUCIONAL =====
     container.style.cursor = 'pointer';
     container.addEventListener('click', function(e) {
         if (!e.target.closest('.leaflet-marker-icon')) {
-window.location.href = 'institucional.html#chart-mapa';
+            window.location.href = 'institucional.html#chart-mapa';
         }
     });
 
@@ -233,7 +248,7 @@ window.location.href = 'institucional.html#chart-mapa';
 }
 
 // ============================================================
-// CARREGAR DADOS (incluindo institucional e servidores)
+// CARREGAR DADOS
 // ============================================================
 async function carregarDadosReais() {
     try {
@@ -245,7 +260,6 @@ async function carregarDadosReais() {
         const caminhoDiscentes = basePath + 'DadosFormularios/dadosDiscentes.json';
         const caminhoDocentes = basePath + 'DadosFormularios/dadosDocentes.json';
         const caminhoEnade = basePath + 'DadosENADE/DADOSENADEGERAL.json';
-        // JSON institucional (AnoCriaçãoAreaFísica.json) – opcional
         const caminhoInst = basePath + 'Dadosinstitucionais/AnoCriaçãoAreaFísica.json';
 
         console.log('📥 Carregando dados...');
@@ -331,7 +345,7 @@ async function carregarDadosReais() {
         });
         const satisfacaoMedia = countSatisfacao > 0 ? (somaSatisfacao / countSatisfacao) : 0;
 
-        // ----- DADOS ENADE (TODOS OS ANOS) -----
+               // ----- DADOS ENADE (TODOS OS ANOS) -----
         let dadosEnade = [];
         let faixaAnos = 'Todos os anos';
         let cursosAvaliados = 0;
@@ -340,6 +354,7 @@ async function carregarDadosReais() {
 
         if (resEnade.ok) {
             dadosEnade = await resEnade.json();
+            window.dadosEnadeBrutos = dadosEnade;
             console.log(`✅ ENADE: ${dadosEnade.length} registros carregados`);
 
             let minAno = Infinity;
@@ -363,12 +378,12 @@ async function carregarDadosReais() {
             });
             cursosAvaliados = cursosSet.size;
 
+            // ----- CÁLCULO DA MÉDIA GERAL (apenas NOTA_GERAL, sem fallback) -----
             let somaNotas = 0;
             let countNotas = 0;
             dadosEnade.forEach(item => {
-                let nota = parseFloat(item.NOTA_GERAL);
-                if (isNaN(nota)) nota = parseFloat(item.NOTA_DISC_FG);
-                if (!isNaN(nota)) {
+                let nota = parseNota(item.NOTA_GERAL);
+                if (nota !== null) {
                     somaNotas += nota;
                     countNotas++;
                 }
@@ -377,9 +392,9 @@ async function carregarDadosReais() {
 
             const notasPorCurso = {};
             dadosEnade.forEach(item => {
-                let nota = parseFloat(item.NOTA_GERAL);
-                if (isNaN(nota)) nota = parseFloat(item.NOTA_DISC_FG);
-                if (!isNaN(nota)) {
+                let nota = parseNota(item.NOTA_GERAL);
+                if (nota === null) nota = parseNota(item.NOTA_DISC_FG);
+                if (nota !== null) {
                     const curso = item.CODIGO_CURSO;
                     if (!notasPorCurso[curso]) notasPorCurso[curso] = [];
                     notasPorCurso[curso].push(nota);
@@ -398,7 +413,6 @@ async function carregarDadosReais() {
         }
 
         // ----- PROCESSAMENTO DOS DADOS INSTITUCIONAIS (para o mapa) -----
-        // Mapa de servidores (consolidado)
         const mapaServ = {};
         dadosServ.forEach(item => {
             const nome = item.Estrutura.trim().toUpperCase();
@@ -414,7 +428,6 @@ async function carregarDadosReais() {
         // ===== CONSTRUIR OS DADOS DO MAPA =====
         let dadosCampiParaMapa = [];
 
-        // Tenta usar dadosInst (AnoCriaçãoAreaFísica.json) se existir
         if (dadosInst && dadosInst.length > 0) {
             dadosCampiParaMapa = dadosInst
                 .filter(c => c.Nome && c.Nome.trim() !== '')
@@ -422,7 +435,6 @@ async function carregarDadosReais() {
                     const nome = c.Nome || c.Campi || '';
                     const nomeLimpo = nome.trim().toUpperCase();
                     const serv = mapaServ[nomeLimpo] || {};
-                    // Tenta extrair município do nome
                     let municipio = '';
                     const cidades = Object.keys(coordenadas);
                     for (let cidade of cidades) {
@@ -450,7 +462,6 @@ async function carregarDadosReais() {
                 });
         }
 
-        // Se ainda não houver dados, usa campi.json como fallback
         if (dadosCampiParaMapa.length === 0) {
             console.warn('⚠️ Usando campi.json como fallback para o mapa.');
             dadosCampiParaMapa = campi
@@ -476,7 +487,6 @@ async function carregarDadosReais() {
                         ITCD: serv.ITCD || null
                     };
                 });
-            // Adiciona a Reitoria manualmente se não existir
             if (!dadosCampiParaMapa.some(d => d.Nome.toUpperCase().includes('REITORIA'))) {
                 dadosCampiParaMapa.push({
                     Nome: 'REITORIA',
@@ -493,7 +503,6 @@ async function carregarDadosReais() {
             }
         }
 
-        // Guarda para uso no mapa
         dadosReais.dadosCampiMapa = dadosCampiParaMapa;
         console.log(`🗺️ ${dadosCampiParaMapa.length} campi preparados para o mapa.`);
 
@@ -514,11 +523,8 @@ async function carregarDadosReais() {
 
         let totalEstudantes = 0;
         dadosMat.forEach(item => {
-            const mat = item.Matrículas;
-            const num = parseFloat(mat);
-            if (!isNaN(num)) {
-                totalEstudantes += num;
-            }
+            const mat = parseFloat(item.Matrículas);
+            if (!isNaN(mat)) totalEstudantes += mat;
         });
 
         let totalOrcamento = 0;
@@ -532,7 +538,6 @@ async function carregarDadosReais() {
             if (item.Ano && parseInt(item.Ano) > ultimoAno) ultimoAno = parseInt(item.Ano);
         });
 
-        // Top campi para comparativos
         const topCampi = campiFiltrados
             .map(c => {
                 const nome = c.Nome.trim().toUpperCase();
@@ -614,7 +619,7 @@ async function carregarDadosReais() {
             const card = budgetEl.closest('.card');
             if (card) {
                 const h3 = card.querySelector('h3');
-                if (h3) h3.textContent = `Orçamento ${ultimoAno}`;
+                if (h3) h3.textContent = `Orçamento`;
             }
         }
 
@@ -640,12 +645,15 @@ async function carregarDadosReais() {
         console.log(`Pesquisa: ${discentes.length} alunos, ${docentes.length} docentes, satisfação: ${satisfacaoMedia.toFixed(1)}/5, coleta: ${dataColeta}`);
         console.log(`ENADE: ${faixaAnos} | ${cursosAvaliados} cursos | nota média: ${notaMedia.toFixed(1)} | ${cursosConceitoMaximo} cursos com nota >= 80`);
 
-        // ----- RENDERIZAR MAPA COMPLETO -----
+        // ----- RENDERIZAR MAPA -----
         renderizarMapaPreview();
 
-        // Outros gráficos (se quiser manter)
+        // Gráficos – usa dadosMat para evolução
         renderizarEvolucao(dadosMat);
         renderizarComparativos();
+
+        // ----- RENDERIZAR RADAR DE PERFIL DOS CURSOS -----
+        renderizarRadarPerfilCursos(discentes);
 
         return true;
     } catch (erro) {
@@ -717,10 +725,10 @@ function atualizarElementosComDadosReais() {
 }
 
 // ============================================================
-// DEMAIS FUNÇÕES (menu, scroll, etc.) – mantidas
+// GRÁFICOS
 // ============================================================
 
-function renderizarEvolucao(dadosMat) {
+function renderizarEvolucao(dados) {
     const ctx = document.getElementById('timelineChart')?.getContext('2d');
     if (!ctx) return;
 
@@ -729,22 +737,21 @@ function renderizarEvolucao(dadosMat) {
         return;
     }
 
-    const getMatriculasPorAno = (dados) => {
-        const mapa = {};
-        dados.forEach(item => {
-            const ano = item.Ano;
-            const mat = parseFloat(item.Matrículas);
-            if (!isNaN(mat) && ano) {
-                mapa[ano] = (mapa[ano] || 0) + mat;
-            }
-        });
-        const anos = Object.keys(mapa).sort((a, b) => a - b);
-        return anos.map(a => ({ ano: parseInt(a), total: mapa[a] }));
-    };
+    const mapa = {};
+    dados.forEach(item => {
+        const ano = item.Ano;
+        const mat = parseFloat(item.Matrículas);
+        if (!isNaN(mat) && ano) {
+            mapa[ano] = (mapa[ano] || 0) + mat;
+        }
+    });
+    const anos = Object.keys(mapa).map(Number).sort((a, b) => a - b);
+    const valores = anos.map(a => mapa[a]);
 
-    const dados = getMatriculasPorAno(dadosMat);
-    const anos = dados.map(d => d.ano);
-    const valores = dados.map(d => d.total);
+    if (anos.length === 0) {
+        console.warn('Nenhum dado para o gráfico de evolução.');
+        return;
+    }
 
     new Chart(ctx, {
         type: 'line',
@@ -822,6 +829,256 @@ function renderizarComparativos() {
         }
     });
 }
+
+// ============================================================
+// MÉDIA GERAL ANUAL - ENADE
+// ============================================================
+function renderizarMediaGeralAnual() {
+    const canvas = document.getElementById('mediaGeralAnualChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    if (typeof Chart === 'undefined') {
+        console.warn('Chart.js não carregado.');
+        return;
+    }
+
+    const dados = window.dadosEnadeBrutos;
+    if (!dados || dados.length === 0) {
+        console.warn('Dados do ENADE não disponíveis para o gráfico de média geral.');
+        return;
+    }
+
+    // Agrupa por ano
+    const anos = [...new Set(dados.map(d => d.ANO_EXAME).filter(a => a && a !== ''))].sort();
+    const medias = anos.map(ano => {
+        const registros = dados.filter(d => d.ANO_EXAME === ano);
+        const notas = registros
+            .map(d => parseNota(d.NOTA_GERAL) ?? parseNota(d.NOTA_FORMACAO_GERAL))
+            .filter(n => n !== null);
+        return notas.length ? notas.reduce((a,b) => a+b, 0) / notas.length : null;
+    });
+
+    const labels = anos.map(a => String(a).replace(/\.0$/, ''));
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Média Geral',
+                data: medias,
+                borderColor: '#2c3e50',
+                backgroundColor: 'rgba(44,62,80,0.1)',
+                fill: true,
+                tension: 0.3,
+                pointRadius: 3,
+                pointBackgroundColor: '#2c3e50',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => `Média: ${ctx.parsed.y?.toFixed(1) || 'N/D'}`
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(0,0,0,0.05)' }
+                },
+                x: {
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+}
+
+// ============================================================
+// COMPARATIVO: PERFIL DOS CURSOS (RADAR)
+// ============================================================
+function renderizarRadarPerfilCursos(dadosDiscentes) {
+    const canvas = document.getElementById('radarPerfilCursos');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    if (typeof Chart === 'undefined') {
+        console.warn('Chart.js não carregado.');
+        return;
+    }
+
+    // Se não houver dados, não renderiza
+    if (!dadosDiscentes || dadosDiscentes.length === 0) {
+        console.warn('Nenhum dado de discentes disponível para o radar.');
+        return;
+    }
+
+    // 1. Agrupar por curso e pegar os 5 mais frequentes
+    const contagemCursos = {};
+    dadosDiscentes.forEach(d => {
+        // Extrai o curso (pode estar em campos diferentes)
+        const curso = d["Qual é o seu curso no IFPB?"] ||
+                      d["Qual é o seu curso no IFPB? (Exemplo: Técnico em Informática, Sistemas para Internet, etc.)"] ||
+                      'Desconhecido';
+        if (curso && curso !== 'Desconhecido') {
+            contagemCursos[curso] = (contagemCursos[curso] || 0) + 1;
+        }
+    });
+
+    const cursos = Object.entries(contagemCursos)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(e => e[0]);
+
+    if (cursos.length === 0) {
+        console.warn('Nenhum curso com dados suficientes para o radar.');
+        return;
+    }
+
+    // 2. Métricas a serem comparadas
+    const metricas = [
+        "Trabalha/estagia",
+        "Transporte público",
+        "Conhece assistência",
+        "Já pensou em desistir",
+        "Participa de projetos"
+    ];
+
+    // 3. Cores
+    const cores = ['#387f1c', '#36b9cc', '#f6c23e', '#e74a3b', '#4e73df'];
+
+    // 4. Calcular porcentagens para cada curso
+    const datasets = cursos.map((curso, idx) => {
+        const alunosCurso = dadosDiscentes.filter(d => {
+            const c = d["Qual é o seu curso no IFPB?"] ||
+                      d["Qual é o seu curso no IFPB? (Exemplo: Técnico em Informática, Sistemas para Internet, etc.)"] ||
+                      '';
+            return c === curso;
+        });
+        const total = alunosCurso.length;
+        if (total === 0) return null;
+
+        const valores = metricas.map(metrica => {
+            if (metrica === "Trabalha/estagia") {
+                const count = alunosCurso.filter(d => {
+                    const val = d["Durante o Ensino Médio, você trabalha?"] || '';
+                    return val && val !== "Não, apenas estudo" && val !== "";
+                }).length;
+                return (count / total) * 100;
+            }
+            if (metrica === "Transporte público") {
+                const count = alunosCurso.filter(d => {
+                    const val = d["[Se deslocamento] Qual meio de transporte você utiliza com mais frequência para esse deslocamento?"] || '';
+                    return val === "Transporte público (ônibus, trem, metrô)";
+                }).length;
+                return (count / total) * 100;
+            }
+            if (metrica === "Conhece assistência") {
+                const count = alunosCurso.filter(d => {
+                    const val = d["Você conhece os programas de assistência estudantil oferecidos pelo IFPB?"] || '';
+                    return val === "Sim, conheço todos" || val === "Conheço alguns";
+                }).length;
+                return (count / total) * 100;
+            }
+            if (metrica === "Já pensou em desistir") {
+                const count = alunosCurso.filter(d => {
+                    const val = d["Você já pensou em desistir do curso?"] || '';
+                    return val && val !== "Nunca pensei" && val !== "";
+                }).length;
+                return (count / total) * 100;
+            }
+            if (metrica === "Participa de projetos") {
+                const count = alunosCurso.filter(d => {
+                    const val = d["Você participa ou já participou de algum projeto no IFPB? "] || '';
+                    return val && val !== "Nunca participei" && val !== "";
+                }).length;
+                return (count / total) * 100;
+            }
+            return 0;
+        });
+
+        let label = curso;
+        if (curso.length > 20) label = curso.substring(0, 17) + '…';
+
+        return {
+            label: label,
+            data: valores,
+            backgroundColor: cores[idx % cores.length] + '20',
+            borderColor: cores[idx % cores.length],
+            borderWidth: 2,
+            pointBackgroundColor: cores[idx % cores.length],
+            pointBorderColor: '#fff',
+            pointRadius: 4
+        };
+    }).filter(Boolean);
+
+    if (datasets.length === 0) return;
+
+    // 5. Destruir gráfico anterior se existir
+    if (window._radarChart) {
+        window._radarChart.destroy();
+    }
+
+    // 6. Criar o gráfico
+    try {
+        window._radarChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: metricas,
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            stepSize: 20,
+                            callback: function(v) { return v + '%'; },
+                            font: { size: 9 }
+                        },
+                        pointLabels: {
+                            font: { size: 9, weight: 'bold' }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.raw.toFixed(1) + '%';
+                            }
+                        }
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: { size: 9 },
+                            usePointStyle: true,
+                            boxWidth: 6,
+                            padding: 8
+                        }
+                    }
+                }
+            }
+        });
+    } catch (e) {
+        console.error('Erro ao criar gráfico radar:', e);
+    }
+}
+
+// ============================================================
+// FUNÇÕES DE INICIALIZAÇÃO (menu, scroll, etc.)
+// ============================================================
 
 function atualizarGraficoAnimado() {
     const container = document.querySelector('.chart-animation');
@@ -910,6 +1167,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         await carregarDadosReais();
         atualizarElementosComDadosReais();
         atualizarDataAtualizacao();
+        renderizarMediaGeralAnual();
+        // A chamada para renderizarRadarPerfilCursos(discentes) agora está dentro de carregarDadosReais
     } catch (e) {
         console.warn('Erro no carregamento de dados, mas página continua funcionando.', e);
         atualizarElementosComDadosReais();
