@@ -576,37 +576,39 @@
             }
         }
 
-        @media (max-width: 480px) {
-            .chart-card {
-                padding: 0.75rem;
-            }
-            .chart-card .card-header {
-                flex-wrap: wrap;
-            }
-            .chart-card .card-header h3 {
-                font-size: 0.8rem;
-                padding-left: 0.5rem;
-                gap: 0.4rem;
-                min-width: 120px;
-            }
-            .chart-card .card-header h3 .info-icon {
-                width: 18px;
-                height: 18px;
-                font-size: 0.55rem;
-            }
-            .chart-card .chart-actions {
-                gap: 0.2rem;
-                opacity: 1;
-            }
-            .chart-card .chart-btn {
-                width: 24px;
-                height: 24px;
-                font-size: 9px;
-            }
-            .chart-card .chart-btn i {
-                font-size: 9px;
-            }
-                .chart-card .chart-scroll-wrapper {
+@media (max-width: 480px) {
+    .chart-card {
+        padding: 0.75rem;
+    }
+    .chart-card .card-header {
+        flex-wrap: wrap;
+    }
+    .chart-card .card-header h3 {
+        font-size: 0.8rem;
+        padding-left: 0.5rem;
+        gap: 0.4rem;
+        min-width: 120px;
+    }
+    .chart-card .card-header h3 .info-icon {
+        width: 18px;
+        height: 18px;
+        font-size: 0.55rem;
+    }
+    .chart-card .chart-actions {
+        gap: 0.2rem;
+        opacity: 1;
+    }
+    .chart-card .chart-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 9px;
+    }
+    .chart-card .chart-btn i {
+        font-size: 9px;
+    }
+    
+    /* ===== SCROLL - CORRIGIDO ===== */
+    .chart-card .chart-scroll-wrapper {
         min-height: 220px;
         max-height: 260px;
         overflow: auto;
@@ -617,25 +619,47 @@
     }
 
     .chart-card .chart-scroll-inner {
-        min-width: 100%;
-        width: 100%;
-        height: 100%;
+        min-width: 480px;
+        width: 480px;
+        height: 220px;
+        min-height: 220px;
+        max-height: 260px;
         position: relative;
     }
-            .chart-card .descricao-card {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0.5rem;
-            }
-            .chart-card .descricao-card .btn-ver-mais {
-                align-self: flex-start;
-                font-size: 0.7rem;
-                padding: 0.25rem 0.7rem;
-            }
-            .chart-card .descricao-card .texto {
-                font-size: 0.75rem;
-            }
-        }
+
+    .chart-card .chart-scroll-inner canvas {
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    /* Scrollbar mais fina para mobile */
+    .chart-card .chart-scroll-wrapper::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
+    .chart-card .chart-scroll-wrapper::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+    .chart-card .chart-scroll-wrapper::-webkit-scrollbar-thumb {
+        background: var(--primary-color);
+        border-radius: 3px;
+    }
+
+    .chart-card .descricao-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+    .chart-card .descricao-card .btn-ver-mais {
+        align-self: flex-start;
+        font-size: 0.7rem;
+        padding: 0.25rem 0.7rem;
+    }
+    .chart-card .descricao-card .texto {
+        font-size: 0.75rem;
+    }
+}
 
         @media (max-width: 400px) {
             .chart-card {
@@ -1020,7 +1044,6 @@
             }
             .modal-scroll-inner {
                 min-width: 480px;
-
             }
             .modal-actions {
                 padding: 0.4rem 0.6rem;
@@ -1462,34 +1485,76 @@
             return charts[canvasId];
         }
 
-        function criarBarraVerticalScroll(canvasId, labels, values, tituloY = 'Quantidade') {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return;
-            const parent = canvas.parentElement;
-            if (parent) {
-                parent.style.width = '100%';
-                parent.style.minWidth = '100%';
-            }
-            const ctx = canvas.getContext('2d');
-            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
-            if (!labels || labels.length === 0) return;
-            charts[canvasId] = new Chart(ctx, {
-                type: 'bar',
-                data: { labels, datasets: [{ label: tituloY, data: values, backgroundColor: '#ff9a3c', borderRadius: 5 }] },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: true, title: { display: true, text: tituloY }, ticks: { font: { size: 11 } } },
-                        x: { ticks: { autoSkip: true, maxRotation: 45, minRotation: 30, font: { size: 10 } } }
-                    },
-                    plugins: { tooltip: { callbacks: { label: (c) => `${c.raw} respostas` } } }
-                }
-            });
-            return charts[canvasId];
-        }
+function criarBarraVerticalScroll(canvasId, labels, values, tituloY = 'Quantidade') {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const parent = canvas.parentElement;
+    if (parent) {
+        parent.style.width = '100%';
+        parent.style.minWidth = '100%';
+    }
+    const ctx = canvas.getContext('2d');
+    if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+    if (!labels || labels.length === 0) return;
+    
+    // Função para encurtar texto (em vez de quebrar com \n)
+    function shortenText(text, maxChars = 18) {
+        if (!text) return '';
+        if (text.length <= maxChars) return text;
+        return text.substring(0, maxChars - 3) + '...';
+    }
 
-        function criarBarraHorizontalScroll(canvasId, labels, values) {
+    // Encurta os labels para caberem no eixo X
+    const shortLabels = labels.map(label => shortenText(label, 14));
+
+    charts[canvasId] = new Chart(ctx, {
+        type: 'bar',
+        data: { 
+            labels: shortLabels, 
+            datasets: [{ 
+                label: tituloY, 
+                data: values, 
+                backgroundColor: '#ff9a3c', 
+                borderRadius: 5 
+            }] 
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { 
+                    beginAtZero: true, 
+                    title: { display: true, text: tituloY }, 
+                    ticks: { font: { size: 11 } } 
+                },
+                x: { 
+                    ticks: { 
+                        autoSkip: false,
+                        maxRotation: 35,
+                        minRotation: 25,
+                        font: { size: 8 }
+                    } 
+                }
+            },
+            plugins: { 
+                tooltip: { 
+                    callbacks: { 
+                        label: (c) => `${c.raw} respostas`,
+                        // Mostra o nome completo no tooltip
+                        afterBody: function(tooltipItems) {
+                            const index = tooltipItems[0].dataIndex;
+                            return labels[index] ? `\n${labels[index]}` : '';
+                        }
+                    } 
+                }
+            }
+        }
+    });
+    return charts[canvasId];
+}
+  
+
+function criarBarraHorizontalScroll(canvasId, labels, values) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
             const parent = canvas.parentElement;
@@ -2088,16 +2153,15 @@
                 }
             });
 
-            function normalizarImportancia(texto) {
-                if (!texto || texto === "") return "Não informado";
-                if (texto.toLowerCase().includes("essencial")) return "Essencial - sem ele, não conseguiria continuar estudando";
-                if (texto.toLowerCase().includes("muito importante")) return "Muito importante - ajuda significativamente";
-                if (texto.toLowerCase().includes("importante") && texto.toLowerCase().includes("contribui")) return "Importante - contribui, mas conseguiria continuar sem ele";
-                if (texto.toLowerCase().includes("pouco importante")) return "Pouco importante - faz pouca diferença";
-                if (texto.toLowerCase().includes("não se aplica") || texto.toLowerCase().includes("não recebo")) return "Não se aplica/não recebo auxílio";
-                return "Outros";
-            }
-
+function normalizarImportancia(texto) {
+    if (!texto || texto === "") return "Não informado";
+    if (texto.toLowerCase().includes("essencial")) return "Essencial - sem ele, não conseguiria continuar estudando";
+    if (texto.toLowerCase().includes("muito importante")) return "Muito importante - ajuda significativamente";
+    if (texto.toLowerCase().includes("importante") && texto.toLowerCase().includes("contribui")) return "Importante - contribui, mas conseguiria continuar sem ele";
+    if (texto.toLowerCase().includes("pouco importante")) return "Pouco importante - faz pouca diferença";
+    if (texto.toLowerCase().includes("não se aplica") || texto.toLowerCase().includes("não recebo")) return "Não se aplica/não recebo auxílio";
+    return "Outros";
+}
             const categoriasImportancia = ["Essencial - sem ele, não conseguiria continuar estudando", "Muito importante - ajuda significativamente", "Importante - contribui, mas conseguiria continuar sem ele", "Pouco importante - faz pouca diferença", "Não se aplica/não recebo auxílio"];
             const importanciaContagem = {};
             dados.forEach(d => {
