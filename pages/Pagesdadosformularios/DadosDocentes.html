@@ -1196,6 +1196,48 @@
         .main-footer .footer-brand h3 {
             color: #ffffff;
         }
+
+        /* ===== DESCRIÇÃO DO MODAL - LISTA SEMÂNTICA ===== */
+.modal-descricao .descricao-texto ul {
+    margin: 0.5rem 0 0.5rem 1.5rem;
+    padding: 0;
+    list-style: none;
+}
+
+.modal-descricao .descricao-texto li {
+    position: relative;
+    padding: 0.25rem 0 0.25rem 1.5rem;
+    line-height: 1.6;
+    color: var(--medium-color);
+}
+
+.modal-descricao .descricao-texto li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.modal-descricao .descricao-texto ul ul {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.modal-descricao .descricao-texto li strong {
+    color: var(--dark-color);
+}
+
+@media (max-width: 480px) {
+    .modal-descricao .descricao-texto ul {
+        margin-left: 0.75rem;
+    }
+    .modal-descricao .descricao-texto li {
+        padding-left: 1.2rem;
+        font-size: 0.75rem;
+    }
+}
     </style>
 </head>
 <body>
@@ -1358,18 +1400,17 @@
                 </div>
                 <div class="modal-descricao">
                     <div class="descricao-texto" id="modalDescricao">
-                        <i class="fas fa-info-circle"></i>
-                        Este gráfico apresenta dados da pesquisa com docentes do IFPB.
-                        <br><br>
-                        <strong>📊 Como interpretar:</strong>
+                        <i class="fas fa-info-circle" aria-hidden="true"></i>
+                        <p>Este gráfico apresenta dados da pesquisa com docentes do IFPB.</p>
                         <br>
-                        • Barras mostram a distribuição das respostas por categoria.
+                        <strong>Como interpretar:</strong>
+                        <ul>
+                            <li>Barras representam a distribuição das respostas por categoria.</li>
+                            <li>Gráficos de pizza indicam a proporção de cada resposta.</li>
+                            <li>Gráficos de linha ilustram a evolução ou distribuição dos dados.</li>
+                        </ul>
                         <br>
-                        • Gráficos de pizza mostram a proporção de cada resposta.
-                        <br>
-                        • Gráficos de linha mostram a evolução ou distribuição dos dados.
-                        <br><br>
-                        <strong>💡 Dica:</strong> Utilize a barra de rolagem horizontal para visualizar todos os dados.
+                        <strong>Dica:</strong> Utilize a barra de rolagem horizontal para visualizar todos os dados.
                     </div>
                 </div>
             </div>
@@ -1426,34 +1467,44 @@
         let modalRawData = null;
         let modalChartTitle = '';
 
-        const perguntasMap = {
-            "Distribuição por Campus": "📌 Em qual campus do IFPB você está lotado atualmente?",
-            "Área de formação/atuação": "🔬 Qual a sua área de formação/atuação principal?",
-            "Tempo de docência no IFPB": "⏱️ Há quanto tempo você é docente no IFPB?",
-            "Regime de trabalho": "💼 Qual o seu regime de trabalho?",
-            "Titulação máxima": "🎓 Qual a sua titulação máxima?",
-            "Nível de ensino principal": "🏫 Qual é o principal nível de ensino em que você atua atualmente?",
-            "Número de turmas": "📚 Quantas turmas você leciona atualmente?",
-            "Horas semanais dedicadas ao ensino": "⏰ Em média, quantas horas semanais você dedica às atividades de ensino?",
-            "Situação de residência": "🏠 Em relação à sua residência e local de trabalho:",
-            "Distância (km)": "📏 Qual a distância aproximada (em km) da sua cidade até o campus onde trabalha?",
-            "Tempo de deslocamento": "⏱️ Quanto tempo, em média, você gasta no deslocamento (ida e volta) por dia?",
-            "Atuação em pesquisa": "🔬 Você atua/atuou como pesquisador em projetos no IFPB?",
-            "Quantos projetos já envolveu": "📊 Quantos projetos de pesquisa você está envolvido ou já se envolveu no IFPB?",
-            "Fonte de fomento": "💰 Quais as principais fontes de fomento dos seus projetos?",
-            "Motivo para não atuar em pesquisa": "❌ Qual o principal motivo para não atuar em pesquisa?",
-            "Cargo administrativo": "📋 Você exerce ou já exerceu algum cargo/função administrativa no IFPB?",
-            "Função exercida": "👔 Qual(is) função(ões)?",
-            "Horas de gestão por semana": "⏰ Quantas horas semanais você dedica às atividades de gestão?",
-            "Infraestrutura para ensino": "🏫 Como você avalia a infraestrutura do seu campus para o desenvolvimento das atividades de ensino?",
-            "Infraestrutura para pesquisa": "🔬 Como você avalia a infraestrutura para pesquisa no seu campus?",
-            "Acesso a recursos": "🔑 Você possui acesso aos recursos necessários para sua atuação?",
-            "Satisfação com o trabalho": "⭐ Qual seu nível de satisfação com o trabalho no IFPB?",
-            "Reconhecimento pela gestão": "👏 Como você avalia o reconhecimento do seu trabalho pela gestão do campus?",
-            "Relacionamento com alunos": "🤝 Como você avalia o relacionamento com os alunos de maneira geral?",
-            "Pretende mudar de instituição": "🏢 Você considera mudar de instituição de ensino nos próximos 5 anos?",
-            "Pretende deixar a carreira docente": "🚪 Você considera deixar a carreira docente nos próximos 5 anos?"
-        };
+const perguntasMap = {
+    // ===== PERFIL =====
+    "Distribuição por Campus": "Em qual campus do IFPB você está lotado atualmente?",
+    "Área de formação/atuação": "Qual a sua área de formação/atuação principal?",
+    "Tempo de docência no IFPB": "Há quanto tempo você é docente no IFPB?",
+    "Regime de trabalho": "Qual o seu regime de trabalho?",
+    "Titulação máxima": "Qual a sua titulação máxima?",
+    "Nível de ensino principal": "Qual é o principal nível de ensino em que você atua atualmente?",
+    "Número de turmas": "Quantas turmas você leciona atualmente?",
+    "Horas semanais dedicadas ao ensino": "Em média, quantas horas semanais você dedica às atividades de ensino?",
+    "Comparativo por Área": "",
+
+    // ===== DESLOCAMENTO =====
+    "Situação de residência": "Em relação à sua residência e local de trabalho:",
+    "Distância (km)": "Qual a distância aproximada (em km) da sua cidade até o campus onde trabalha?",
+    "Tempo de deslocamento (ida+volta)": "Quanto tempo, em média, você gasta no deslocamento (ida e volta) por dia?",
+
+    // ===== PESQUISA =====
+    "Atuação em pesquisa": "Você atua/atuou como pesquisador em projetos no IFPB?",
+    "Quantos projetos já envolveu": "Quantos projetos de pesquisa você está envolvido ou já se envolveu no IFPB?",
+    "Fonte de fomento": "Quais as principais fontes de fomento dos seus projetos?",
+    "Motivo para não atuar em pesquisa": "Qual o principal motivo para não atuar em pesquisa?",
+
+    // ===== GESTÃO =====
+    "Cargo administrativo": "Você exerce ou já exerceu algum cargo/função administrativa no IFPB?",
+    "Função exercida": "Qual(is) função(ões) você exerce ou já exerceu?",
+    "Horas de gestão por semana": "Quantas horas semanais você dedica às atividades de gestão?",
+    "Infraestrutura para ensino": "Como você avalia a infraestrutura do seu campus para o desenvolvimento das atividades de ensino?",
+    "Infraestrutura para pesquisa": "Como você avalia a infraestrutura para pesquisa no seu campus?",
+    "Acesso a recursos": "Você possui acesso aos recursos necessários para sua atuação?",
+
+    // ===== SATISFAÇÃO =====
+    "Satisfação com o trabalho": "Qual seu nível de satisfação com o trabalho no IFPB?",
+    "Reconhecimento pela gestão": "Como você avalia o reconhecimento do seu trabalho pela gestão do campus?",
+    "Relacionamento com alunos": "Como você avalia o relacionamento com os alunos de maneira geral?",
+    "Pretende mudar de instituição": "Você considera mudar de instituição de ensino nos próximos 5 anos?",
+    "Pretende deixar a carreira docente": "Você considera deixar a carreira docente nos próximos 5 anos?"
+};
 
         // ================================================================
         // FUNÇÕES AUXILIARES
@@ -1768,160 +1819,218 @@
         // FUNÇÕES PADRONIZADAS PARA CRIAÇÃO DE CARDS
         // ================================================================
 
-        function criarChartCard(cardId, canvasId, iconClass, titulo, descricao, pergunta = '') {
-            return `
-                <div class="chart-card" id="${cardId}">
-                    <div class="card-header">
-                        <h3>
-                            <i class="${iconClass}"></i>
-                            ${titulo}
-                        </h3>
-                        <div class="chart-actions">
-                            <button class="chart-btn" data-expand="${canvasId}" title="Expandir gráfico">
-                                <i class="fas fa-expand"></i>
-                            </button>
-                            <button class="chart-btn" data-download="${canvasId}" title="Baixar PNG">
-                                <i class="fas fa-image"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="chart-scroll-wrapper">
-                        <div class="chart-scroll-inner">
-                            <canvas id="${canvasId}"></canvas>
-                        </div>
-                    </div>
-                    <div class="descricao-card">
-                        <span class="texto">
-                            <i class="fas fa-info-circle"></i>
-                            ${descricao}
-                        </span>
-                        <button class="btn-ver-mais" data-expand-full="${canvasId}">
-                            Ver mais
-                            <i class="fas fa-arrow-right"></i>
-                        </button>
-                    </div>
+// ================================================================
+// FUNÇÕES PADRONIZADAS PARA CRIAÇÃO DE CARDS
+// ================================================================
+
+function criarChartCard(cardId, canvasId, iconClass, titulo, descricao, pergunta = '') {
+    return `
+        <div class="chart-card" id="${cardId}">
+            <div class="card-header">
+                <h3>
+                    <i class="${iconClass}"></i>
+                    ${titulo}
+                </h3>
+                <div class="chart-actions">
+                    <button class="chart-btn" data-expand="${canvasId}" title="Expandir gráfico">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                    <button class="chart-btn" data-download="${canvasId}" title="Baixar PNG">
+                        <i class="fas fa-image"></i>
+                    </button>
                 </div>
-            `;
-        }
-
-        function configurarEventosCard(cardId, canvasId, titulo, rawData) {
-            const card = document.getElementById(cardId);
-            if (!card) return;
-
-            const expandBtn = card.querySelector(`[data-expand="${canvasId}"]`);
-            if (expandBtn) {
-                expandBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    abrirModalGrafico(canvasId, titulo, rawData);
-                });
-            }
-
-            const verMaisBtn = card.querySelector(`[data-expand-full="${canvasId}"]`);
-            if (verMaisBtn) {
-                verMaisBtn.addEventListener('click', () => {
-                    abrirModalGrafico(canvasId, titulo, rawData);
-                });
-            }
-
-            const downloadBtn = card.querySelector(`[data-download="${canvasId}"]`);
-            if (downloadBtn) {
-                downloadBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const canvas = document.getElementById(canvasId);
-                    if (canvas) {
-                        const link = document.createElement('a');
-                        link.download = `${titulo.replace(/\s+/g, '_')}.png`;
-                        link.href = canvas.toDataURL('image/png');
-                        link.click();
-                    }
-                });
-            }
-        }
-
-        // ================================================================
-        // FUNÇÃO PARA ABRIR O MODAL
-        // ================================================================
-        function abrirModalGrafico(canvasId, titulo, rawData) {
-            const canvasOrigem = document.getElementById(canvasId);
-            if (!canvasOrigem) return;
-
-            const chartObj = charts[canvasId];
-            if (!chartObj) return;
-
-            const modalCanvas = document.getElementById('modalCanvas');
-            if (modalChartInstance) {
-                modalChartInstance.destroy();
-                modalChartInstance = null;
-            }
-
-            const chartType = chartObj.config.type;
-            let modalData;
-            
-            if (chartType === 'treemap') {
-                modalData = {
-                    datasets: [{
-                        tree: JSON.parse(JSON.stringify(chartObj.config.data.datasets[0].tree || [])),
-                        key: 'value',
-                        groups: ['name'],
-                        backgroundColor: (ctx) => {
-                            const cores = ['#ff9a3c', '#da9b1c', '#f6c23e', '#36b9cc', '#4e73df', '#e74a3b', '#1cc88a', '#ffb86b'];
-                            return cores[ctx.dataIndex % cores.length];
-                        },
-                        borderWidth: 2,
-                        borderColor: '#fff',
-                        spacing: 1
-                    }]
-                };
-            } else {
-                modalData = JSON.parse(JSON.stringify(chartObj.config.data));
-            }
-
-            modalChartInstance = new Chart(modalCanvas.getContext('2d'), {
-                type: chartType,
-                data: modalData,
-                options: {
-                    ...chartObj.config.options,
-                    responsive: true,
-                    maintainAspectRatio: true
-                }
-            });
-
-            document.getElementById('modalTitle').innerHTML = `<i class="fas fa-chart-bar"></i> ${titulo}`;
-            modalRawData = rawData;
-            modalChartTitle = titulo;
-
-            const pergunta = perguntasMap[titulo] || '';
-            const descricao = document.getElementById('modalDescricao');
-            if (descricao) {
-                descricao.innerHTML = `
+            </div>
+            <div class="chart-scroll-wrapper">
+                <div class="chart-scroll-inner">
+                    <canvas id="${canvasId}"></canvas>
+                </div>
+            </div>
+            <div class="descricao-card">
+                <span class="texto">
                     <i class="fas fa-info-circle"></i>
-                    ${pergunta ? `<strong>Pergunta:</strong> ${pergunta}<br><br>` : ''}
-                    Este gráfico apresenta a distribuição das respostas da pesquisa com docentes do IFPB.
-                    <br><br>
-                    <strong>📊 Como interpretar:</strong>
-                    <br>
-                    • Barras mostram a distribuição das respostas por categoria.
-                    <br>
-                    • Gráficos de pizza mostram a proporção de cada resposta.
-                    <br>
-                    • Gráficos de linha mostram a evolução ou distribuição dos dados.
-                    <br><br>
-                    <strong>💡 Dica:</strong> Utilize a barra de rolagem horizontal para visualizar todos os dados.
-                `;
+                    ${descricao}
+                </span>
+                <button class="btn-ver-mais" data-expand-full="${canvasId}" data-descricao="${descricao.replace(/"/g, '&quot;')}">
+                    Ver mais
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+function configurarEventosCard(cardId, canvasId, titulo, rawData) {
+    const card = document.getElementById(cardId);
+    if (!card) return;
+
+    // Busca a descrição do card
+    const descricaoCard = card.querySelector('.descricao-card .texto')?.textContent?.trim() || '';
+    const descricaoFull = descricaoCard.replace(/^[^:]+:\s*/, '');
+
+    const expandBtn = card.querySelector(`[data-expand="${canvasId}"]`);
+    if (expandBtn) {
+        expandBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            abrirModalGrafico(canvasId, titulo, rawData, descricaoFull);
+        });
+    }
+
+    const verMaisBtn = card.querySelector(`[data-expand-full="${canvasId}"]`);
+    if (verMaisBtn) {
+        const descAttr = verMaisBtn.getAttribute('data-descricao');
+        const descFinal = descAttr || descricaoFull;
+        
+        verMaisBtn.addEventListener('click', () => {
+            abrirModalGrafico(canvasId, titulo, rawData, descFinal);
+        });
+    }
+
+    const downloadBtn = card.querySelector(`[data-download="${canvasId}"]`);
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const canvas = document.getElementById(canvasId);
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = `${titulo.replace(/\s+/g, '_')}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
             }
+        });
+    }
+}
 
-            document.getElementById('modal').classList.add('active');
+// ================================================================
+// FUNÇÃO PARA ABRIR O MODAL
+// ================================================================
+function abrirModalGrafico(canvasId, titulo, rawData, descricaoEspecifica = '') {
+    const canvasOrigem = document.getElementById(canvasId);
+    if (!canvasOrigem) return;
 
-            setTimeout(() => {
-                if (modalChartInstance && modalChartInstance.resize) {
-                    modalChartInstance.resize();
-                }
-                const modalBody = document.querySelector('.modal-body');
-                if (modalBody) {
-                    modalBody.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            }, 200);
+    const chartObj = charts[canvasId];
+    if (!chartObj) return;
+
+    const modalCanvas = document.getElementById('modalCanvas');
+    if (modalChartInstance) {
+        modalChartInstance.destroy();
+        modalChartInstance = null;
+    }
+
+    const chartType = chartObj.config.type;
+    let modalData;
+    
+    if (chartType === 'treemap') {
+        modalData = {
+            datasets: [{
+                tree: JSON.parse(JSON.stringify(chartObj.config.data.datasets[0].tree || [])),
+                key: 'value',
+                groups: ['name'],
+                backgroundColor: (ctx) => {
+                    const cores = ['#ff9a3c', '#da9b1c', '#f6c23e', '#36b9cc', '#4e73df', '#e74a3b', '#1cc88a', '#ffb86b'];
+                    return cores[ctx.dataIndex % cores.length];
+                },
+                borderWidth: 2,
+                borderColor: '#fff',
+                spacing: 1
+            }]
+        };
+    } else {
+        modalData = JSON.parse(JSON.stringify(chartObj.config.data));
+    }
+
+    modalChartInstance = new Chart(modalCanvas.getContext('2d'), {
+        type: chartType,
+        data: modalData,
+        options: {
+            ...chartObj.config.options,
+            responsive: true,
+            maintainAspectRatio: true
         }
+    });
+
+    document.getElementById('modalTitle').innerHTML = `<i class="fas fa-chart-bar"></i> ${titulo}`;
+    modalRawData = rawData;
+    modalChartTitle = titulo;
+
+    const pergunta = perguntasMap[titulo] || '';
+    const totalRespostas = rawData ? rawData.length : 0;
+    
+    // Verifica se o gráfico tem scroll horizontal (barra ou linha)
+    const possuiScroll = chartType === 'bar' || chartType === 'line';
+    
+    // Gera a descrição da pergunta
+    let textoPergunta = '';
+    if (pergunta) {
+        textoPergunta = `<strong>Pergunta da pesquisa:</strong><br>${pergunta}<br><br>`;
+    } else {
+        textoPergunta = `<strong>Sobre este gráfico:</strong><br>Este gráfico cruza múltiplas variáveis da pesquisa com docentes.<br><br>`;
+    }
+
+    // Gera a descrição específica do gráfico
+    let textoDescricao = '';
+    if (descricaoEspecifica) {
+        textoDescricao = `<strong>Sobre este gráfico:</strong><br>${descricaoEspecifica}<br><br>`;
+    }
+
+    // Gera o texto do N amostral
+    const textoN = totalRespostas > 0 ? `<strong>Baseado em ${totalRespostas} respostas.</strong><br><br>` : '';
+
+    // Gera o texto "Como interpretar" com lista semântica
+    let textoInterpretar = `
+        <strong>Como interpretar:</strong>
+        <ul>
+            <li>Barras representam a distribuição das respostas por categoria.</li>
+            <li>Gráficos de pizza indicam a proporção de cada resposta.</li>
+            <li>Gráficos de linha ilustram a evolução ou distribuição dos dados.</li>
+    `;
+    
+    if (chartType === 'radar') {
+        textoInterpretar += `
+            <li>Gráficos radar comparam múltiplas variáveis simultaneamente.</li>
+        `;
+    }
+    if (chartType === 'treemap') {
+        textoInterpretar += `
+            <li>Treemaps mostram a hierarquia e proporção dos dados por área.</li>
+        `;
+    }
+    if (chartType === 'pie' || chartType === 'doughnut') {
+        textoInterpretar += `
+            <li>Gráficos circulares exibem a participação percentual de cada categoria.</li>
+        `;
+    }
+    
+    textoInterpretar += `</ul>`;
+
+    // Dica de scroll condicional
+    const dicaScroll = possuiScroll 
+        ? `<br><strong>Dica:</strong> Utilize a barra de rolagem horizontal para visualizar todos os dados.`
+        : '';
+
+    const descricao = document.getElementById('modalDescricao');
+    if (descricao) {
+        descricao.innerHTML = `
+            <i class="fas fa-info-circle" aria-hidden="true"></i>
+            ${textoPergunta}
+            ${textoDescricao}
+            ${textoN}
+            ${textoInterpretar}
+            ${dicaScroll}
+        `;
+    }
+
+    document.getElementById('modal').classList.add('active');
+
+    setTimeout(() => {
+        if (modalChartInstance && modalChartInstance.resize) {
+            modalChartInstance.resize();
+        }
+        const modalBody = document.querySelector('.modal-body');
+        if (modalBody) {
+            modalBody.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, 200);
+}
 
         // ================================================================
         // CONFIGURAÇÃO DOS BOTÕES DO MODAL
