@@ -10,429 +10,1483 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../assets/css/Dadosabertosifpb.css">
     <link rel="stylesheet" href="../../style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.1/dist/chartjs-chart-treemap.min.js"></script>
     <style>
-    :root {
-        --primary-color: #ff9a3c;
-        --primary-dark: #e68a2e;
-        --primary-light: #ffb86b;
-        --secondary-color: #da9b1c;
-        --accent-color: #ff9a3c;
-        --accent-dark: #e68a2e;
-        --success-color: #1cc88a;
-        --warning-color: #f6c23e;
-        --danger-color: #e74a3b;
-        --info-color: #36b9cc;
-        --dark-color: #2e3a59;
-        --medium-color: #5a5c69;
-        --light-color: #f8f9fc;
-        --white: #ffffff;
-        --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-        --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-        --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
-        --radius: 10px;
-        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+        :root {
+            --primary-color: #ff9a3c;
+            --primary-dark: #e68a2e;
+            --primary-light: #ffb86b;
+            --secondary-color: #da9b1c;
+            --accent-color: #ff9a3c;
+            --accent-dark: #e68a2e;
+            --success-color: #1cc88a;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --info-color: #36b9cc;
+            --dark-color: #2e3a59;
+            --medium-color: #5a5c69;
+            --light-color: #f8f9fc;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --radius: 10px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-    .hero {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 3rem;
-        align-items: center;
-        padding: 3rem 0 2rem;
-    }
+        * { box-sizing: border-box; }
 
-    .hero-badge {
-        background: var(--light-color);
-        color: var(--primary-color);
-        padding: 0.3rem 1rem;
-        border-radius: 40px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        display: inline-block;
-        margin-bottom: 1rem;
-    }
-
-    .hero h1 {
-        font-size: 2.8rem;
-        font-weight: 700;
-        letter-spacing: -1px;
-        line-height: 1.2;
-        color: var(--dark-color);
-    }
-
-    .hero h1 span {
-        color: var(--primary-color);
-    }
-
-    .hero p {
-        font-size: 1.1rem;
-        color: var(--medium-color);
-        margin: 1.5rem 0;
-        max-width: 90%;
-    }
-
-    .hero-buttons {
-        display: flex;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
-
-    .btn-primary {
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: white;
-        padding: 0.8rem 1.8rem;
-        border-radius: 40px;
-        font-weight: 600;
-        text-decoration: none;
-        transition: var(--transition);
-        display: inline-flex;
-        align-items: center;
-        gap: 0.6rem;
-        border: none;
-        cursor: pointer;
-    }
-
-    .btn-outline {
-        border: 1.5px solid var(--light-color);
-        background: white;
-        color: var(--dark-color);
-        padding: 0.8rem 1.8rem;
-        border-radius: 40px;
-        font-weight: 600;
-        text-decoration: none;
-        transition: var(--transition);
-        display: inline-flex;
-        align-items: center;
-        gap: 0.6rem;
-    }
-
-    .btn-primary:hover {
-        transform: translateY(-3px);
-        box-shadow: var(--shadow-md);
-    }
-
-    .hero-stats {
-        background: var(--white);
-        border-radius: var(--radius);
-        padding: 2rem;
-        box-shadow: var(--shadow-md);
-        border: 1px solid var(--light-color);
-    }
-
-    .stat-item {
-        text-align: center;
-    }
-
-    .stat-number {
-        font-size: 2.2rem;
-        font-weight: 700;
-        color: var(--primary-color);
-    }
-
-    .cards-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1.8rem;
-        margin: 2rem 0;
-    }
-
-    .card-modern {
-        background: var(--white);
-        border-radius: 1.25rem;
-        padding: 1.5rem;
-        transition: var(--transition);
-        border: 1px solid var(--light-color);
-        box-shadow: var(--shadow-sm);
-    }
-
-    .card-modern:hover {
-        transform: translateY(-6px);
-        box-shadow: var(--shadow-lg);
-        border-color: var(--secondary-color);
-    }
-
-    .card-icon {
-        width: 54px;
-        height: 54px;
-        background: var(--light-color);
-        border-radius: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--primary-color);
-        font-size: 1.7rem;
-        margin-bottom: 1.2rem;
-    }
-
-    .card-modern h3 {
-        font-size: 1.4rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        color: var(--dark-color);
-    }
-
-    .card-modern p {
-        color: var(--medium-color);
-        margin-bottom: 1.2rem;
-        font-size: 0.95rem;
-    }
-
-    .card-link {
-        font-weight: 600;
-        color: var(--primary-color);
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-    }
-
-    .highlights {
-        background: var(--white);
-        border-radius: var(--radius);
-        padding: 2rem;
-        margin: 3rem 0;
-        box-shadow: var(--shadow-sm);
-        border: 1px solid var(--light-color);
-    }
-
-    .charts-row {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
-        margin-top: 1.5rem;
-    }
-
-    .chart-box {
-        background: var(--light-color);
-        border-radius: 1rem;
-        padding: 1rem;
-    }
-
-    .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        margin: 2rem 0 1rem;
-    }
-
-    .section-title {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: var(--dark-color);
-        position: relative;
-        display: inline-block;
-        margin: 0;
-    }
-
-    .section-title:after {
-        content: '';
-        position: absolute;
-        bottom: -8px;
-        left: 0;
-        width: 60px;
-        height: 3px;
-        background: var(--secondary-color);
-        border-radius: 3px;
-    }
-
-    canvas {
-        max-height: 260px;
-        width: 100%;
-    }
-
-    /* ===== Estilos padrão para caixas de conteúdo ===== */
-    .modulo-descricao {
-        background: var(--white);
-        border-radius: var(--radius);
-        padding: 2rem 2.5rem;
-        margin: 2.5rem 0 1.5rem;
-        box-shadow: var(--shadow-sm);
-        border: 1px solid var(--light-color);
-        transition: var(--transition);
-    }
-    .modulo-descricao:hover {
-        box-shadow: var(--shadow-md);
-    }
-
-    .descricao-texto-only p {
-        color: var(--medium-color);
-        line-height: 1.8;
-        margin-bottom: 1.2rem;
-        font-size: 0.98rem;
-        text-align: justify;
-    }
-    .descricao-texto-only strong {
-        color: var(--dark-color);
-        font-weight: 600;
-    }
-
-    /* ===== FAQ ===== */
-    .faq-list {
-        overflow: hidden;
-    }
-    .faq-item {
-        border-bottom: 1px solid var(--light-color);
-        transition: var(--transition);
-    }
-    .faq-item:last-child {
-        border-bottom: none;
-    }
-    .faq-question {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1.2rem 0.5rem;
-        cursor: pointer;
-        background: transparent;
-        transition: var(--transition);
-        font-weight: 500;
-        color: var(--dark-color);
-        font-size: 1rem;
-    }
-    .faq-question:hover {
-        background: var(--light-color);
-        border-radius: var(--radius);
-    }
-    .faq-question .faq-icon {
-        color: var(--primary-color);
-        font-size: 1.2rem;
-        width: 1.8rem;
-        text-align: center;
-        flex-shrink: 0;
-    }
-    .faq-question .faq-toggle {
-        margin-left: auto;
-        color: var(--medium-color);
-        transition: transform 0.3s ease;
-        font-size: 1rem;
-        flex-shrink: 0;
-    }
-    .faq-item.active .faq-toggle {
-        transform: rotate(180deg);
-    }
-    .faq-question span {
-        flex: 1;
-    }
-    .faq-answer {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.4s ease, padding 0.3s ease;
-        padding: 0 0.5rem;
-        background: transparent;
-    }
-    .faq-item.active .faq-answer {
-        max-height: 300px;
-        padding: 0 0.5rem 1.2rem;
-    }
-    .faq-answer p {
-        color: var(--medium-color);
-        line-height: 1.7;
-        margin: 0;
-        font-size: 0.95rem;
-    }
-    .faq-answer a {
-        color: var(--primary-color);
-        text-decoration: none;
-        font-weight: 500;
-    }
-    .faq-answer a:hover {
-        text-decoration: underline;
-    }
-
-    /* ===== Tutorial ===== */
-    .tutorial-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-        margin: 1.5rem 0 0.5rem;
-    }
-    .tutorial-step {
-        background: var(--light-color);
-        padding: 1.5rem 1.2rem;
-        border-radius: var(--radius);
-        text-align: center;
-        transition: var(--transition);
-    }
-    .tutorial-step:hover {
-        transform: translateY(-3px);
-        box-shadow: var(--shadow-md);
-    }
-    .tutorial-step .step-number {
-        background: var(--primary-color);
-        color: white;
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 0.8rem;
-        font-weight: 700;
-        font-size: 1.1rem;
-    }
-    .tutorial-step strong {
-        display: block;
-        font-size: 1rem;
-        color: var(--dark-color);
-        margin-bottom: 0.3rem;
-    }
-    .tutorial-step p {
-        font-size: 0.85rem;
-        color: var(--medium-color);
-        margin: 0;
-    }
-
-    /* Responsividade */
-    @media (max-width: 900px) {
         .hero {
-            grid-template-columns: 1fr;
-            text-align: center;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            padding: 3rem 0 2rem;
         }
-        .hero p {
-            max-width: 100%;
-        }
-        .hero-buttons {
-            justify-content: center;
-        }
-        .charts-row {
-            grid-template-columns: 1fr;
-        }
-        .section-title {
-            font-size: 1.6rem;
-        }
-        .modulo-descricao {
-            padding: 1.5rem;
-        }
-    }
 
-    @media (max-width: 480px) {
+        .hero-badge {
+            background: var(--light-color);
+            color: var(--primary-color);
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
         .hero h1 {
-            font-size: 2rem;
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            line-height: 1.2;
+            color: var(--dark-color);
         }
-        .stat-number {
-            font-size: 1.8rem;
+
+        .hero h1 span {
+            color: var(--primary-color);
         }
-        .faq-question {
-            font-size: 0.9rem;
-            padding: 1rem 0.2rem;
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--medium-color);
+            margin: 1.5rem 0;
+            max-width: 90%;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-outline {
+            border: 1.5px solid var(--light-color);
+            background: white;
+            color: var(--dark-color);
+            padding: 0.8rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
             gap: 0.6rem;
         }
-        .faq-answer {
-            padding: 0 0.2rem;
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
         }
-        .faq-item.active .faq-answer {
-            padding: 0 0.2rem 1rem;
+
+        .hero-stats {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--light-color);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.8rem;
+            margin: 2rem 0;
+        }
+
+        .card-modern {
+            background: var(--white);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            transition: var(--transition);
+            border: 1px solid var(--light-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card-modern:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--secondary-color);
+        }
+
+        .card-icon {
+            width: 54px;
+            height: 54px;
+            background: var(--light-color);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.7rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .card-modern h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+        }
+
+        .card-modern p {
+            color: var(--medium-color);
+            margin-bottom: 1.2rem;
+            font-size: 0.95rem;
+        }
+
+        .card-link {
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .highlights {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin: 3rem 0;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--light-color);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 2rem 0 1rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            position: relative;
+            display: inline-block;
+            margin: 0;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--secondary-color);
+            border-radius: 3px;
+        }
+
+        /* ============================================================ */
+        /* ===== CHART CARD PADRÃO - COM SCROLL HORIZONTAL ===== */
+        /* ============================================================ */
+        .chart-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            min-width: 0;
+            position: relative;
+            transition: var(--transition);
+            border: 1px solid #e9ecef;
+            margin-bottom: 1.5rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chart-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .chart-card .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+
+        .chart-card .card-header h3 {
+            color: var(--dark-color);
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin: 0;
+            flex: 1;
+            min-width: 150px;
+            border-left: 3px solid var(--primary-color);
+            padding-left: 0.8rem;
+        }
+
+        .chart-card .card-header h3 i {
+            color: var(--primary-color);
+        }
+
+        /* ===== AÇÕES DO GRÁFICO ===== */
+        .chart-card .chart-actions {
+            display: flex;
+            gap: 0.3rem;
+            flex-shrink: 0;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+            padding-top: 0.2rem;
+        }
+
+        .chart-card:hover .chart-actions {
+            opacity: 1;
+        }
+
+        .chart-card .chart-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid #d1d3e2;
+            background: rgba(255, 255, 255, 0.95);
+            color: #5a5c69;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            flex-shrink: 0;
+        }
+
+        .chart-card .chart-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: scale(1.08);
+        }
+
+        .chart-card .chart-btn i {
+            font-size: 13px;
+        }
+
+        /* ===== SCROLL WRAPPER ===== */
+        .chart-card .chart-scroll-wrapper {
+            flex: 1;
+            min-height: 280px;
+            max-height: 380px;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 8px;
+            background: #fafafa;
+            border: 1px solid #e9ecef;
+            position: relative;
+        }
+
+        .chart-card .chart-scroll-inner {
+            min-width: 700px;
+            width: 700px;
+            height: 100%;
+            min-height: 280px;
+            max-height: 380px;
+            position: relative;
+        }
+
+        .chart-card .chart-scroll-inner canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .chart-card .chart-scroll-wrapper::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .chart-card .chart-scroll-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .chart-card .chart-scroll-wrapper::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+        .chart-card .chart-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* ===== DESCRIÇÃO NO CARD ===== */
+        .chart-card .descricao-card {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+
+        .chart-card .descricao-card .texto {
+            font-size: 0.85rem;
+            color: var(--medium-color);
+            line-height: 1.6;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .chart-card .descricao-card .texto i {
+            color: var(--primary-color);
+            margin-right: 0.3rem;
+        }
+
+        .chart-card .descricao-card .btn-ver-mais {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 0.4rem 1rem;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid var(--primary-color);
+            border-radius: 6px;
+            background: rgba(255, 154, 60, 0.05);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .chart-card .descricao-card .btn-ver-mais:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .chart-card .descricao-card .btn-ver-mais i {
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+        }
+
+        .chart-card .descricao-card .btn-ver-mais:hover i {
+            transform: translateX(4px);
+        }
+
+        /* ============================================================ */
+        /* ===== MODAL ===== */
+        /* ============================================================ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(46, 58, 89, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--white);
+            border-radius: var(--radius);
+            max-width: 95vw;
+            width: 90%;
+            max-height: 95vh;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlideUp 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes modalSlideUp {
+            from { transform: translateY(30px) scale(0.95); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            border-bottom: 1px solid #eee;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: var(--radius) var(--radius) 0 0;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .modal-header h3 {
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0;
+            padding-right: 0;
+        }
+
+        .modal-header h3 i {
+            color: white;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: white;
+            transition: var(--transition);
+            padding: 0.3rem 0.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 0.8rem 1.5rem 1rem 1.5rem;
+            flex: 1;
+            overflow: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-body .grafico-wrapper {
+            flex: 1;
+            min-height: 60vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .modal-scroll-wrapper {
+            width: 100%;
+            height: 100%;
+            min-height: 60vh;
+            max-height: 60vh;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-scroll-inner {
+            width: 600px;
+            height: 100%;
+            min-height: 45vh;
+            position: relative;           
+            margin-top: 210px;
+        }
+
+        .modal-scroll-inner canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .modal-scroll-wrapper::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        .modal-scroll-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 5px;
+        }
+        .modal-scroll-wrapper::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 5px;
+        }
+        .modal-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        .modal-descricao {
+            margin-top: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid #e9ecef;
+            flex-shrink: 0;
+        }
+
+        .modal-descricao .descricao-texto {
+            font-size: 0.85rem;
+            color: var(--medium-color);
+            line-height: 1.7;
+        }
+
+        .modal-descricao .descricao-texto i {
+            color: var(--primary-color);
+            margin-right: 0.3rem;
+        }
+
+        .modal-descricao .descricao-texto strong {
+            color: var(--dark-color);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.6rem;
+            padding: 0.8rem 1.5rem;
+            border-top: 1px solid #eee;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+            background: var(--white);
+        }
+
+        .modal-action-btn {
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid #e3e6f0;
+            background: var(--white);
+            color: var(--dark-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .modal-action-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 154, 60, 0.25);
+        }
+
+        .modal-action-btn i {
+            font-size: 0.85rem;
+        }
+
+        /* ============================================================ */
+        /* ===== RESPONSIVIDADE DOS CARDS ===== */
+        /* ============================================================ */
+        @media (max-width: 1024px) {
+            .chart-card .chart-scroll-inner {
+                min-width: 600px;
+                width: 600px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .chart-card .chart-scroll-inner {
+                min-width: 500px;
+                width: 500px;
+                min-height: 250px;
+                max-height: 320px;
+            }
+            .chart-card .chart-scroll-wrapper {
+                min-height: 250px;
+                max-height: 320px;
+            }
+            
+        }
+
+        @media (max-width: 480px) {
+            .chart-card {
+                padding: 0.75rem;
+            }
+            .chart-card .card-header h3 {
+                font-size: 0.8rem;
+                padding-left: 0.5rem;
+            }
+            .chart-card .chart-actions {
+                opacity: 1;
+                gap: 0.15rem;
+            }
+            .chart-card .chart-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 9px;
+            }
+            .chart-card .chart-btn i {
+                font-size: 9px;
+            }
+            .chart-card .chart-scroll-wrapper {
+                min-height: 200px;
+                max-height: 240px;
+            }
+            .chart-card .chart-scroll-inner {
+                min-width: 420px;
+                width: 420px;
+                min-height: 200px;
+                max-height: 240px;
+            }
+            .chart-card .descricao-card {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+            .chart-card .descricao-card .btn-ver-mais {
+                align-self: flex-start;
+                font-size: 0.7rem;
+                padding: 0.2rem 0.7rem;
+            }
+            .chart-card .descricao-card .texto {
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .chart-card .chart-scroll-inner {
+                min-width: 340px;
+                width: 340px;
+            }
+        }
+
+        /* ============================================================ */
+        /* ===== RESPONSIVIDADE DO MODAL ===== */
+        /* ============================================================ */
+        @media (max-width: 768px) {
+            .modal-box {
+                width: 95%;
+                max-height: 90vh;
+            }
+            .modal-body .grafico-wrapper {
+                min-height: 58vh;
+            }
+            .modal-scroll-wrapper {
+                min-height: 58vh;
+                max-height: 58vh;
+            }
+            .modal-scroll-inner {
+                min-width: 500px;
+                padding-left: 0rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .modal-header {
+                padding: 0.6rem 1rem;
+            }
+            .modal-header h3 {
+                font-size: 0.9rem;
+            }
+            .modal-body {
+                padding: 0.6rem 1rem 0.8rem 1rem;
+            }
+            .modal-descricao .descricao-texto {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-box {
+                max-width: 100%;
+                margin: 0.5rem;
+                border-radius: 8px;
+                min-width: 0;
+                width: calc(100vw - 1rem);
+                max-height: 88vh;
+            }
+            .modal-header {
+                padding: 0.5rem 0.8rem;
+            }
+            .modal-header h3 {
+                font-size: 0.8rem;
+            }
+            .modal-body {
+                padding: 0.5rem 0.8rem 0.7rem 0.8rem;
+            }
+             .modal-body .grafico-wrapper {
+                min-height: 58vh;
+                min-width: 58px;
+            }
+            .modal-scroll-wrapper {
+                min-height: 58vh;
+                max-height: 58vh;
+            }
+            .modal-scroll-inner {
+                min-width: 500px;
+                padding-left: 3rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .modal-actions {
+                padding: 0.4rem 0.6rem;
+                gap: 0.3rem;
+            }
+            .modal-action-btn {
+                font-size: 0.6rem;
+                padding: 0.25rem 0.6rem;
+            }
+            .modal-descricao .descricao-texto {
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .modal-body .grafico-wrapper {
+                min-height: 60vh;
+            }
+            .modal-scroll-wrapper {
+                min-height: 60vh;
+                max-height: 60vh;
+            }
+            .modal-scroll-inner {
+                min-height: 60vh;
+                min-width: 800px;
+                padding-left: 17rem;
+                padding-top: 6rem;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        /* ============================================================ */
+        /* ===== DESCRIÇÃO DO MODAL - LISTA SEMÂNTICA ===== */
+        /* ============================================================ */
+        .modal-descricao .descricao-texto ul {
+            margin: 0.5rem 0 0.5rem 1.5rem;
+            padding: 0;
+            list-style: none;
+        }
+
+        .modal-descricao .descricao-texto li {
+            position: relative;
+            padding: 0.25rem 0 0.25rem 1.5rem;
+            line-height: 1.6;
+            color: var(--medium-color);
+        }
+
+        .modal-descricao .descricao-texto li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .modal-descricao .descricao-texto ul ul {
+            margin-top: 0.25rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .modal-descricao .descricao-texto li strong {
+            color: var(--dark-color);
+        }
+
+        /* ============================================================ */
+        /* ===== FOOTER ===== */
+        /* ============================================================ */
+        .main-footer {
+            color: #ffffff;
+        }
+
+        .main-footer h3 {
+            color: #ffffff;
+        }
+
+        .main-footer p {
+            color: #ffffff;
+        }
+
+        .main-footer .footer-links a {
+            color: #ffffff;
+            transition: var(--transition);
+        }
+
+        .main-footer .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .main-footer .social-links a {
+            color: #ffffff;
+            transition: var(--transition);
+        }
+
+        .main-footer .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .main-footer .footer-brand h3 {
+            color: #ffffff;
+        }
+
+        /* ============================================================ */
+        /* ===== OUTROS ===== */
+        /* ============================================================ */
+        .modulo-descricao {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 2rem 2.5rem;
+            margin: 2.5rem 0 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--light-color);
+            transition: var(--transition);
+        }
+        .modulo-descricao:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .descricao-texto-only p {
+            color: var(--medium-color);
+            line-height: 1.8;
+            margin-bottom: 1.2rem;
+            font-size: 0.98rem;
+            text-align: justify;
+        }
+        .descricao-texto-only strong {
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+
+        .faq-list {
+            overflow: hidden;
+        }
+        .faq-item {
+            border-bottom: 1px solid var(--light-color);
+            transition: var(--transition);
+        }
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+        .faq-question {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.2rem 0.5rem;
+            cursor: pointer;
+            background: transparent;
+            transition: var(--transition);
+            font-weight: 500;
+            color: var(--dark-color);
+            font-size: 1rem;
+        }
+        .faq-question:hover {
+            background: var(--light-color);
+            border-radius: var(--radius);
         }
         .faq-question .faq-icon {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            width: 1.8rem;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .faq-question .faq-toggle {
+            margin-left: auto;
+            color: var(--medium-color);
+            transition: transform 0.3s ease;
             font-size: 1rem;
-            width: 1.4rem;
+            flex-shrink: 0;
         }
-        .tutorial-grid {
-            grid-template-columns: 1fr;
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
         }
+        .faq-question span {
+            flex: 1;
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding: 0 0.5rem;
+            background: transparent;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+            padding: 0 0.5rem 1.2rem;
+        }
+        .faq-answer p {
+            color: var(--medium-color);
+            line-height: 1.7;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== HERO SECTION - RESPONSIVA ===== */
+.hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    padding: 3rem 0 2rem;
+}
+
+.hero-badge {
+    background: var(--light-color);
+    color: var(--primary-color);
+    padding: 0.3rem 1rem;
+    border-radius: 40px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.hero h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1.2;
+    color: var(--dark-color);
+}
+
+.hero h1 span {
+    color: var(--primary-color);
+}
+
+.hero p {
+    font-size: 1.1rem;
+    color: var(--medium-color);
+    margin: 1.5rem 0;
+    max-width: 90%;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.hero-stats {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--light-color);
+    width: 100%;
+}
+
+.hero-stats .stat-item {
+    text-align: center;
+    flex: 1;
+    min-width: 80px;
+}
+
+.hero-stats .stat-number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.hero-stats .stat-item div:last-child {
+    font-size: 0.85rem;
+    color: var(--medium-color);
+    line-height: 1.3;
+}
+
+.hero-stats .stat-row {
+    display: flex;
+    justify-content: space-around;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.hero-stats .info-footer {
+    margin-top: 1.5rem;
+    background: var(--light-color);
+    padding: 0.8rem 1rem;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--medium-color);
+}
+
+/* ===== RESPONSIVIDADE ===== */
+
+/* Tablets e telas médias */
+@media (max-width: 1024px) {
+    .hero {
+        gap: 2rem;
+        padding: 2rem 0;
     }
+    
+    .hero h1 {
+        font-size: 2.4rem;
+    }
+    
+    .hero p {
+        font-size: 1rem;
+        max-width: 100%;
+    }
+    
+    .hero-stats .stat-number {
+        font-size: 2rem;
+    }
+}
+
+/* Telas menores que 900px - empilha */
+@media (max-width: 900px) {
+    .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 2rem;
+        padding: 1.5rem 0;
+    }
+    
+    .hero p {
+        max-width: 100%;
+        margin: 1rem auto;
+    }
+    
+    .hero-buttons {
+        justify-content: center;
+    }
+    
+    .hero-stats {
+        padding: 1.5rem;
+    }
+    
+    .hero-stats .stat-number {
+        font-size: 1.8rem;
+    }
+}
+
+/* Tablets pequenos e celulares grandes */
+@media (max-width: 768px) {
+    .hero {
+        padding: 1rem 0;
+        gap: 1.5rem;
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .hero h1 span {
+        display: inline-block;
+    }
+    
+    .hero p {
+        font-size: 0.95rem;
+    }
+    
+    .hero-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.8rem;
+    }
+    
+    .hero-buttons .btn-primary,
+    .hero-buttons .btn-outline {
+        padding: 0.6rem 1.4rem;
+        font-size: 0.9rem;
+    }
+    
+    .hero-stats {
+        padding: 1.2rem;
+    }
+    
+    .hero-stats .stat-row {
+        gap: 0.5rem;
+    }
+    
+    .hero-stats .stat-item {
+        min-width: 60px;
+    }
+    
+    .hero-stats .stat-number {
+        font-size: 1.6rem;
+    }
+    
+    .hero-stats .stat-item div:last-child {
+        font-size: 0.75rem;
+    }
+    
+    .hero-stats .info-footer {
+        font-size: 0.7rem;
+        padding: 0.5rem 0.8rem;
+        margin-top: 1rem;
+    }
+}
+
+/* Celulares */
+@media (max-width: 480px) {
+    .hero {
+        padding: 0.5rem 0;
+        gap: 1rem;
+    }
+    
+    .hero h1 {
+        font-size: 1.6rem;
+    }
+    
+    .hero p {
+        font-size: 0.85rem;
+        margin: 0.8rem 0;
+    }
+    
+    .hero-badge {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.6rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.6rem;
+    }
+    
+    .hero-buttons .btn-primary,
+    .hero-buttons .btn-outline {
+        width: 100%;
+        justify-content: center;
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+    
+    .hero-stats {
+        padding: 1rem;
+        border-radius: 8px;
+    }
+    
+    .hero-stats .stat-row {
+        gap: 0.3rem;
+    }
+    
+    .hero-stats .stat-item {
+        min-width: 50px;
+    }
+    
+    .hero-stats .stat-number {
+        font-size: 1.4rem;
+    }
+    
+    .hero-stats .stat-item div:last-child {
+        font-size: 0.65rem;
+    }
+    
+    .hero-stats .info-footer {
+        font-size: 0.6rem;
+        padding: 0.4rem 0.6rem;
+        margin-top: 0.8rem;
+        border-radius: 12px;
+    }
+}
+
+/* Celulares muito pequenos */
+@media (max-width: 360px) {
+    .hero h1 {
+        font-size: 1.3rem;
+    }
+    
+    .hero p {
+        font-size: 0.75rem;
+    }
+    
+    .hero-stats .stat-number {
+        font-size: 1.1rem;
+    }
+    
+    .hero-stats .stat-item div:last-child {
+        font-size: 0.55rem;
+    }
+    
+    .hero-buttons .btn-primary,
+    .hero-buttons .btn-outline {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+/* Telas em modo paisagem (celular deitado) */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero {
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        padding: 0.5rem 0;
+        align-items: center;
+    }
+    
+    .hero h1 {
+        font-size: 1.6rem;
+    }
+    
+    .hero p {
+        font-size: 0.8rem;
+        margin: 0.5rem 0;
+    }
+    
+    .hero-buttons .btn-primary,
+    .hero-buttons .btn-outline {
+        padding: 0.3rem 1rem;
+        font-size: 0.75rem;
+    }
+    
+    .hero-stats {
+        padding: 0.8rem;
+    }
+    
+    .hero-stats .stat-number {
+        font-size: 1.2rem;
+    }
+    
+    .hero-stats .stat-item div:last-child {
+        font-size: 0.6rem;
+    }
+    
+    .hero-stats .info-footer {
+        font-size: 0.55rem;
+        padding: 0.3rem 0.6rem;
+        margin-top: 0.5rem;
+    }
+
+    /* ============================================================ */
+/* ===== FONTES RESPONSIVAS PARA TODAS AS TELAS ===== */
+/* ============================================================ */
+
+/* ===== BASE ===== */
+body {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* ===== HERO ===== */
+.hero h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+}
+
+.hero p {
+    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+}
+
+.hero-badge {
+    font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+}
+
+.hero-stats .stat-number {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+}
+
+.hero-stats .stat-item div:last-child {
+    font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+}
+
+.hero-stats .info-footer {
+    font-size: clamp(0.65rem, 0.8vw, 0.8rem);
+}
+
+/* ===== BOTÕES ===== */
+.btn-primary,
+.btn-outline {
+    font-size: clamp(0.8rem, 1vw, 1rem);
+    padding: clamp(0.5rem, 0.8vw, 0.8rem) clamp(1rem, 1.5vw, 1.8rem);
+}
+
+/* ===== CARDS ===== */
+.card-modern h3 {
+    font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+}
+
+.card-modern p {
+    font-size: clamp(0.8rem, 1vw, 0.95rem);
+}
+
+.card-link {
+    font-size: clamp(0.8rem, 0.9vw, 0.95rem);
+}
+
+/* ===== SECTION TITLES ===== */
+.section-title {
+    font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+}
+
+.section-header span {
+    font-size: clamp(0.7rem, 0.8vw, 0.85rem);
+}
+
+/* ===== CHART CARDS ===== */
+.chart-card .card-header h3 {
+    font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+}
+
+.chart-card .descricao-card .texto {
+    font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+}
+
+.chart-card .descricao-card .btn-ver-mais {
+    font-size: clamp(0.7rem, 0.85vw, 0.8rem);
+}
+
+/* ===== MODAL ===== */
+.modal-header h3 {
+    font-size: clamp(0.9rem, 1.2vw, 1rem);
+}
+
+.modal-descricao .descricao-texto {
+    font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+}
+
+.modal-action-btn {
+    font-size: clamp(0.65rem, 0.8vw, 0.78rem);
+}
+
+/* ===== FAQ ===== */
+.faq-question {
+    font-size: clamp(0.85rem, 1vw, 1rem);
+}
+
+.faq-answer p {
+    font-size: clamp(0.8rem, 0.9vw, 0.95rem);
+}
+
+/* ===== TUTORIAL ===== */
+.tutorial-step strong {
+    font-size: clamp(0.85rem, 1vw, 1rem);
+}
+
+.tutorial-step p {
+    font-size: clamp(0.75rem, 0.85vw, 0.85rem);
+}
+
+/* ===== DESCRIÇÃO ===== */
+.descricao-texto-only p {
+    font-size: clamp(0.85rem, 1vw, 0.98rem);
+}
+
+/* ===== FOOTER ===== */
+.main-footer p {
+    font-size: clamp(0.8rem, 0.9vw, 0.95rem);
+}
+
+.main-footer h3 {
+    font-size: clamp(0.95rem, 1.1vw, 1.2rem);
+}
+
+.main-footer .footer-links li a {
+    font-size: clamp(0.75rem, 0.85vw, 0.9rem);
+}
+
+.footer-btn {
+    font-size: clamp(0.75rem, 0.85vw, 0.9rem);
+}
+
+/* ============================================================ */
+/* ===== RESPONSIVIDADE ADICIONAL ===== */
+/* ============================================================ */
+
+/* Telas muito pequenas (360px) */
+@media (max-width: 360px) {
+    body {
+        font-size: 14px;
+    }
+    
+    .hero h1 {
+        font-size: 1.4rem;
+    }
+    
+    .hero p {
+        font-size: 0.8rem;
+    }
+    
+    .section-title {
+        font-size: 1.2rem;
+    }
+    
+    .chart-card .card-header h3 {
+        font-size: 0.75rem;
+    }
+    
+    .modal-header h3 {
+        font-size: 0.75rem;
+    }
+}
+
+/* Telas muito grandes (acima de 1400px) */
+@media (min-width: 1400px) {
+    body {
+        font-size: 18px;
+    }
+    
+    .hero h1 {
+        font-size: 3.2rem;
+    }
+    
+    .hero p {
+        font-size: 1.2rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .chart-card .card-header h3 {
+        font-size: 1.2rem;
+    }
+}
+}
     </style>
 </head>
 <body>
@@ -455,7 +1509,7 @@
                     <li><a href="../../index.html"><i class="fas fa-home"></i> Início</a></li>
                     <li><a href="DadosDiscentes.html"><i class="fas fa-user-graduate"></i> Dados Discentes</a></li>
                     <li><a href="DadosDocentes.html"><i class="fas fa-chalkboard-teacher"></i> Dados Docentes</a></li>
-          <li><a href="../dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
+                    <li><a href="../dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i> Explorar Dados</a></li>
                 </ul>
 
                 <button class="hamburger" id="hamburger" aria-label="Menu">
@@ -497,7 +1551,7 @@
         <section class="hero">
             <div>
                 <div class="hero-badge"><i class="fas fa-clipboard-list"></i> Última atualização: Agosto/2026</div>
-                <h1><span>Dados de Pesquisa IFPB</h1>
+                <h1><span>Dados de Pesquisa IFPB</span></h1>
                 <p>Conheça o perfil, as condições de estudo e as percepções da comunidade acadêmica do IFPB. Dados coletados por meio de formulários aplicados a discentes e docentes dos Campi.</p>
                 <div class="hero-buttons">
                     <a href="../PagesGeral/dashboard.html" class="btn-primary"><i class="fas fa-chart-simple"></i> Explorar Agora</a>
@@ -508,11 +1562,11 @@
                 <div style="display: flex; justify-content: space-around;">
                     <div class="stat-item">
                         <div class="stat-number" id="statDiscentes">Carregando...</div>
-                        <div>Discentes Respondentes</div>
+                        <div>Discentes <br> Respondentes</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number" id="statDocentes">Carregando...</div>
-                        <div>Docentes Respondentes</div>
+                        <div>Docentes <br> Respondentes</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number" id="statTotal">Carregando...</div>
@@ -541,7 +1595,7 @@
             </div>
         </div>
 
-        <!-- DESCRIÇÃO – Sobre o Módulo Dados de Pesquisa (6 parágrafos) -->
+        <!-- DESCRIÇÃO – Sobre o Módulo Dados de Pesquisa -->
         <div class="modulo-descricao">
             <div class="section-header">
                 <h2 class="section-title">Sobre o Módulo Dados de Pesquisa</h2>
@@ -556,15 +1610,6 @@
                 <p>
                     Apesar de os formulários terem sido enviados para todos os campi do IFPB, até o momento o retorno obtido concentrou-se exclusivamente no <strong>Campus Guarabira</strong>, onde o bolsista do projeto está inserido e tem maior proximidade com a comunidade acadêmica. Essa proximidade viabilizou uma estratégia de divulgação ampla e diversificada, que incluiu o compartilhamento dos links em redes sociais, grupos de WhatsApp, anúncios nas televisões do campus, convites presenciais em salas de aula e corredores, além do apoio de professores que incentivaram seus alunos a participar. Os dados foram coletados no mês de julho de 2026, totalizando <strong>110 respostas</strong> (100 de discentes e 10 de docentes).
                 </p>
-                <p>
-                    Todos os resultados são apresentados em gráficos interativos e tabelas, desenvolvidos para serem intuitivos e acessíveis a qualquer usuário, mesmo sem formação técnica em análise de dados. A plataforma utiliza diferentes tipos de visualizações conforme a natureza das informações: gráficos de pizza para distribuições proporcionais, gráficos de barras para comparações, gráficos de linha para sequências ordenadas, radar para comparações multidimensionais, treemap para distribuição geográfica e barras empilhadas para análises cruzadas. Além disso, você pode filtrar as informações por campus, navegar por abas temáticas, ampliar qualquer gráfico para ver os detalhes e exportar os dados nos formatos <strong>PNG</strong>, <strong>JSON</strong> ou <strong>CSV</strong>, facilitando o uso em pesquisas, relatórios e análises aprofundadas.
-                </p>
-                <p>
-                    O módulo já está concluído e totalmente integrado com dados reais, oferecendo uma visão detalhada e transparente da realidade da comunidade acadêmica do IFPB Campus Guarabira. Todas as informações disponíveis refletem os dados coletados diretamente com discentes e docentes, com atualização contínua à medida que novas respostas forem sendo registradas. A arquitetura da plataforma foi projetada para receber dados futuros de outros campi, mantendo a mesma estrutura e lógica de renderização já implementada, o que viabiliza a expansão da coleta sem necessidade de alterações estruturais no sistema.
-                </p>
-                <p>
-                    O módulo Dados de Pesquisa foi feito para facilitar o acesso de <strong>estudantes, professores, servidores, pesquisadores e qualquer cidadão</strong> que queira conhecer melhor o perfil e as percepções da comunidade acadêmica do IFPB. Ele cumpre o papel de transformar respostas individuais em conhecimento coletivo, contribuindo para uma gestão mais transparente e para o controle social das atividades da instituição. Ao disponibilizar dados produzidos pela própria comunidade acadêmica de forma acessível e interativa, a plataforma fortalece o diálogo entre a instituição e a sociedade, promovendo a participação cidadã e a melhoria contínua das políticas educacionais e de assistência estudantil.
-                </p>
             </div>
         </div>
 
@@ -575,16 +1620,7 @@
                     <h2 class="section-title">Indicadores em Destaque</h2>
                     <span style="color: var(--medium-color); font-size: 0.85rem;"><i class="fas fa-chart-line"></i> Visão interativa</span>
                 </div>
-                <div class="charts-row">
-                    <div class="chart-box">
-                        <h4 style="margin-bottom: 1rem;"><i class="fas fa-chart-radar"></i> Comparativo: Perfil dos Cursos</h4>
-                        <canvas id="radarPerfilCursos" width="400" height="240" style="max-height:240px"></canvas>
-                    </div>
-                    <div class="chart-box">
-                        <h4 style="margin-bottom: 1rem;"><i class="fas fa-microscope"></i> Área de formação/atuação dos Docentes</h4>
-                        <canvas id="areaDocentesChart" width="400" height="240" style="max-height:240px"></canvas>
-                    </div>
-                </div>
+                <div class="charts-grid" id="destaqueGrid"></div>
                 <div style="margin-top: 1rem; text-align: center; font-size: 0.8rem; color: var(--medium-color);">
                     <i class="fas fa-database"></i> Fonte: Formulários aplicados no IFPB Campus Guarabira – 2025/2026
                 </div>
@@ -624,7 +1660,7 @@
                 <div class="faq-item">
                     <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
                         <i class="fas fa-shield-alt faq-icon"></i>
-                        <p>Os dados são anônimos?</p>
+                        <span>Os dados são anônimos?</span>
                         <i class="fas fa-chevron-down faq-toggle"></i>
                     </div>
                     <div class="faq-answer">
@@ -653,17 +1689,6 @@
                         <p>Atualmente, apenas o Campus Guarabira respondeu aos formulários. A plataforma já está apta a receber dados de outros campi, aguardando novas respostas.</p>
                     </div>
                 </div>
-
-                <div class="faq-item">
-                    <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
-                        <i class="fas fa-quote-right faq-icon"></i>
-                        <span>Como citar os dados em um trabalho acadêmico?</span>
-                        <i class="fas fa-chevron-down faq-toggle"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Sugerimos: <em>"Dados extraídos da IFPB Data Platform – Módulo Dados de Pesquisa (hugodeev.github.io/ifpb-data-plataform), com base em formulários aplicados no IFPB Campus Guarabira, acessado em [data]."</em></p>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -674,26 +1699,66 @@
                 <span style="color: var(--medium-color); font-size: 0.85rem;"><i class="fas fa-lightbulb"></i> Passo a passo</span>
             </div>
 
-            <div class="tutorial-grid">
-                <div class="tutorial-step">
-                    <div class="step-number">1</div>
-                    <strong>Escolha o público</strong>
-                    <p>Selecione Discentes ou Docentes para visualizar os dados específicos</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin:1.5rem 0 0.5rem;">
+                <div style="background:var(--light-color);padding:1.5rem 1.2rem;border-radius:var(--radius);text-align:center;transition:var(--transition);">
+                    <div style="background:var(--primary-color);color:white;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 0.8rem;font-weight:700;font-size:1.1rem;">1</div>
+                    <strong style="display:block;font-size:1rem;color:var(--dark-color);margin-bottom:0.3rem;">Escolha o público</strong>
+                    <p style="font-size:0.85rem;color:var(--medium-color);margin:0;">Discentes ou Docentes</p>
                 </div>
-                <div class="tutorial-step">
-                    <div class="step-number">2</div>
-                    <strong>Explore os temas</strong>
-                    <p>Navegue pelas abas: Perfil, Deslocamento, Trabalho, Assistência, Projetos e Evasão</p>
+                <div style="background:var(--light-color);padding:1.5rem 1.2rem;border-radius:var(--radius);text-align:center;transition:var(--transition);">
+                    <div style="background:var(--primary-color);color:white;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 0.8rem;font-weight:700;font-size:1.1rem;">2</div>
+                    <strong style="display:block;font-size:1rem;color:var(--dark-color);margin-bottom:0.3rem;">Explore os temas</strong>
+                    <p style="font-size:0.85rem;color:var(--medium-color);margin:0;">Perfil, Deslocamento, Trabalho, etc.</p>
                 </div>
-                <div class="tutorial-step">
-                    <div class="step-number">3</div>
-                    <strong>Analise e exporte</strong>
-                    <p>Filtre por campus, amplie gráficos e baixe os dados nos formatos desejados</p>
+                <div style="background:var(--light-color);padding:1.5rem 1.2rem;border-radius:var(--radius);text-align:center;transition:var(--transition);">
+                    <div style="background:var(--primary-color);color:white;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 0.8rem;font-weight:700;font-size:1.1rem;">3</div>
+                    <strong style="display:block;font-size:1rem;color:var(--dark-color);margin-bottom:0.3rem;">Analise e exporte</strong>
+                    <p style="font-size:0.85rem;color:var(--medium-color);margin:0;">Filtre, amplie e baixe os dados</p>
                 </div>
             </div>
         </div>
 
     </main>
+
+    <!-- ===== MODAL ===== -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modalTitle"><i class="fas fa-chart-bar"></i> Gráfico Expandido</h3>
+                <button class="modal-close" id="closeModalBtn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="grafico-wrapper">
+                    <div class="modal-scroll-wrapper">
+                        <div class="modal-scroll-inner">
+                            <canvas id="modalCanvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-descricao">
+                    <div class="descricao-texto" id="modalDescricao">
+                        <i class="fas fa-info-circle" aria-hidden="true"></i>
+                        Este gráfico apresenta dados da pesquisa com discentes e docentes do IFPB.
+                        <br><br>
+                        <strong>Como interpretar:</strong>
+                        <ul>
+                            <li>Barras representam a distribuição das respostas por categoria.</li>
+                            <li>Gráficos de pizza indicam a proporção de cada resposta.</li>
+                            <li>Gráficos de linha ilustram a evolução ou distribuição dos dados.</li>
+                            <li>Recomendamos a visualização em telas maiores para uma melhor experiência.</li>
+                        </ul>
+                        <br>
+                        <strong>💡 Dica:</strong> Utilize a barra de rolagem horizontal para visualizar todos os dados.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-action-btn" id="modalPngBtn"><i class="fas fa-image"></i> PNG</button>
+                <button class="modal-action-btn" id="modalJsonBtn"><i class="fas fa-code"></i> JSON</button>
+                <button class="modal-action-btn" id="modalCsvBtn"><i class="fas fa-table"></i> CSV</button>
+            </div>
+        </div>
+    </div>
 
     <!-- rodapé final -->
     <footer class="main-footer">
@@ -718,9 +1783,8 @@
                     <h3>Navegação</h3>
                     <ul class="footer-links">
                         <li><a href="../../index.html"><i class="fas fa-chevron-right"></i> Início</a></li>
-                        <li><a href="pesquisa-discentes.html"><i class="fas fa-chevron-right"></i> Discentes</a></li>
-                        <li><a href="pesquisa-docentes.html"><i class="fas fa-chevron-right"></i> Docentes</a></li>
-                        <li><a href="pesquisa-resultados.html"><i class="fas fa-chevron-right"></i> Resultados</a></li>
+                        <li><a href="DadosDiscentes.html"><i class="fas fa-chevron-right"></i> Discentes</a></li>
+                        <li><a href="DadosDocentes.html"><i class="fas fa-chevron-right"></i> Docentes</a></li>
                     </ul>
                 </div>
 
@@ -746,7 +1810,9 @@
     </footer>
 
     <script>
-        // Menu mobile (mesmo código)
+        // ================================================================
+        // MENU MOBILE
+        // ================================================================
         const hamburger = document.getElementById('hamburger');
         const navMenuMobile = document.getElementById('navMenuMobile');
         const menuOverlay = document.getElementById('menuOverlay');
@@ -766,45 +1832,60 @@
             document.body.classList.add('menu-open');
         }
 
-        function toggleMenu() {
-            if (navMenuMobile?.classList.contains('active')) {
-                closeMenu();
-            } else {
-                openMenu();
-            }
-        }
-
-        if (hamburger) hamburger.addEventListener('click', toggleMenu);
+        if (hamburger) hamburger.addEventListener('click', function() {
+            navMenuMobile?.classList.contains('active') ? closeMenu() : openMenu();
+        });
         if (menuCloseBtn) menuCloseBtn.addEventListener('click', closeMenu);
         if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
 
         window.addEventListener('resize', function() {
-            if (window.innerWidth > 900 && navMenuMobile?.classList.contains('active')) {
-                closeMenu();
-            }
+            if (window.innerWidth > 900 && navMenuMobile?.classList.contains('active')) closeMenu();
         });
 
         document.querySelectorAll('.nav-menu-mobile a').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
-                if (href && href.startsWith('#')) {
-                    e.preventDefault();
-                    closeMenu();
-                    const target = document.querySelector(href);
-                    if (target) {
-                        setTimeout(() => {
-                            window.scrollTo({ top: target.offsetTop - 80, behavior: 'smooth' });
-                        }, 150);
+            anchor.addEventListener('click', closeMenu);
+        });
+
+        // ================================================================
+        // FAQ – Acordeão
+        // ================================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqItems = document.querySelectorAll('.faq-item');
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', function() {
+                    faqItems.forEach(other => {
+                        if (other !== item && other.classList.contains('active')) {
+                            other.classList.remove('active');
+                            other.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                        }
+                    });
+                    const isActive = item.classList.contains('active');
+                    item.classList.toggle('active');
+                    question.setAttribute('aria-expanded', !isActive);
+                });
+                question.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
                     }
-                } else {
-                    closeMenu();
-                }
+                });
             });
         });
 
-        // ============================================================
-        // 1. NORMALIZAR DADOS (discentes e docentes)
-        // ============================================================
+        // ================================================================
+        // DADOS E CONFIGURAÇÕES
+        // ================================================================
+        let dadosDiscentes = [];
+        let dadosDocentes = [];
+        let charts = {};
+        let modalChartInstance = null;
+        let modalRawData = null;
+        let modalChartTitle = '';
+
+        // ================================================================
+        // NORMALIZAR DADOS
+        // ================================================================
         function normalizarDadosDiscentes(dadosRaw) {
             return dadosRaw.map(item => {
                 let curso = item["Qual é o seu curso no IFPB?"] ||
@@ -813,7 +1894,7 @@
                 return {
                     campus: item["Em qual campus do IFPB você estuda?"] || "",
                     cidade: item["Em qual cidade você reside atualmente?"] || "",
-                    curso,
+                    curso: curso,
                     estudaPropriaCidade: item["Sobre a cidade onde você estuda:"] || "",
                     distancia: item["[Se deslocamento] Qual é a distância aproximada (em km) da sua cidade até a cidade onde você estuda?"] || "",
                     tempoDeslocamento: item["[Se deslocamento] Quanto tempo, em média, você gasta no deslocamento (ida e volta) para frequentar as aulas presenciais ou atividades no polo?"] || "",
@@ -861,15 +1942,13 @@
                 mudarInstituicao: item["Você considera mudar de instituição de ensino nos próximos 5 anos?"] || "",
                 reconhecimento: item["Como você avalia o reconhecimento do seu trabalho pela gestão do campus?"] || "",
                 relacionamentoAlunos: item["Como você avalia o relacionamento com os alunos de maneira geral?"] || "",
-                cidadeResidencia: item["Em qual cidade você reside atualmente?"] || "",
-                vinculo: item["Qual o seu vínculo com o IFPB?"] || "",
                 deixarCarreira: item["Você considera deixar a carreira docente nos próximos 5 anos?"] || ""
             }));
         }
 
-        // ============================================================
-        // 2. FUNÇÃO DE CONTAGEM (auxiliar)
-        // ============================================================
+        // ================================================================
+        // FUNÇÕES AUXILIARES
+        // ================================================================
         function contarFrequencia(data, campo) {
             const freq = {};
             data.forEach(item => {
@@ -886,100 +1965,124 @@
             return { labels: sorted.map(s => s[0]), values: sorted.map(s => s[1]) };
         }
 
-        // ============================================================
-        // 3. FUNÇÃO PARA ESCREVER MENSAGEM NO CANVAS
-        // ============================================================
-        function escreverMensagemNoCanvas(canvasId, mensagem = 'Dados insuficientes para o gráfico') {
+        // ================================================================
+        // FUNÇÕES DE CRIAÇÃO DE GRÁFICOS (COM SCROLL)
+        // ================================================================
+        function criarPieScroll(canvasId, labels, values, cores = null) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
+            const parent = canvas.parentElement;
+            if (parent) {
+                parent.style.width = '100%';
+                parent.style.minWidth = '100%';
+            }
             const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#5a5c69';
-            ctx.font = '16px Roboto, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(mensagem, canvas.width / 2, canvas.height / 2);
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+            const defaultCores = ['#ff9a3c', '#da9b1c', '#f6c23e', '#36b9cc', '#4e73df', '#e74a3b', '#1cc88a', '#ffb86b'];
+            const bgCores = cores || labels.map((_, i) => defaultCores[i % defaultCores.length]);
+            const total = values.reduce((a, b) => a + b, 0);
+            charts[canvasId] = new Chart(ctx, {
+                type: 'pie',
+                data: { labels, datasets: [{ data: values, backgroundColor: bgCores, borderWidth: 0 }] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 14, padding: 12 } },
+                        tooltip: {
+                            callbacks: {
+                                label: (c) => `${c.label}: ${c.raw} (${((c.raw / total) * 100).toFixed(1)}%)`
+                            }
+                        }
+                    }
+                }
+            });
+            return charts[canvasId];
         }
 
-        // ============================================================
-        // 4. GRÁFICO RADAR COM DADOS REAIS (discentes)
-        // ============================================================
-        function criarRadarPerfilCursos(canvasId, dados) {
+        function criarBarraVerticalScroll(canvasId, labels, values, tituloY = 'Quantidade') {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
+            const parent = canvas.parentElement;
+            if (parent) {
+                parent.style.width = '100%';
+                parent.style.minWidth = '100%';
+            }
+            const ctx = canvas.getContext('2d');
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!labels || labels.length === 0) return;
 
-            // Verifica se há dados
-            if (!dados || dados.length === 0) {
-                escreverMensagemNoCanvas(canvasId);
-                return;
+            function shortenText(text, maxChars = 18) {
+                if (!text) return '';
+                if (text.length <= maxChars) return text;
+                return text.substring(0, maxChars - 3) + '...';
             }
 
-            const cursosContagem = contarFrequencia(dados, 'curso');
-            // Pega apenas cursos com pelo menos 3 alunos
-            const cursosTop = cursosContagem.labels.filter((c, i) => cursosContagem.values[i] >= 3);
+            const shortLabels = labels.map(label => shortenText(label, 14));
 
-            if (cursosTop.length < 2) {
-                escreverMensagemNoCanvas(canvasId);
-                return;
-            }
-
-            const metricas = ["Trabalha/estagia","Transporte público","Conhece assistência","Já pensou em desistir","Participa de projetos"];
-            const cores = ['#ff9a3c','#36b9cc','#f6c23e','#e74a3b','#4e73df'];
-
-            // Limita a 5 cursos para não poluir o gráfico
-            const cursosSelecionados = cursosTop.slice(0, 5);
-
-            const datasets = cursosSelecionados.map((curso, idx) => {
-                const dc = dados.filter(d => d.curso === curso);
-                const total = dc.length || 1;
-                const valores = metricas.map(m => {
-                    if (m === "Trabalha/estagia") {
-                        return (dc.filter(d => d.trabalha !== "Não, apenas estudo" && d.trabalha !== "").length / total) * 100;
-                    }
-                    if (m === "Transporte público") {
-                        return (dc.filter(d => d.transporte === "Transporte público (ônibus, trem, metrô)").length / total) * 100;
-                    }
-                    if (m === "Conhece assistência") {
-                        return (dc.filter(d => d.conheceAssistencia === "Sim, conheço todos" || d.conheceAssistencia === "Conheço alguns").length / total) * 100;
-                    }
-                    if (m === "Já pensou em desistir") {
-                        return (dc.filter(d => d.pensouDesistir !== "Nunca pensei" && d.pensouDesistir !== "").length / total) * 100;
-                    }
-                    if (m === "Participa de projetos") {
-                        return (dc.filter(d => d.participaProjetos !== "Nunca participei" && d.participaProjetos !== "").length / total) * 100;
-                    }
-                    return 0;
-                });
-                return {
-                    label: curso.length > 30 ? curso.substring(0, 27) + '…' : curso,
-                    data: valores,
-                    backgroundColor: `${cores[idx % cores.length]}20`,
-                    borderColor: cores[idx % cores.length],
-                    borderWidth: 2,
-                    pointBackgroundColor: cores[idx % cores.length],
-                    pointBorderColor: '#fff',
-                    pointRadius: 4
-                };
-            }).filter(Boolean);
-
-            if (datasets.length === 0) {
-                escreverMensagemNoCanvas(canvasId);
-                return;
-            }
-
-            // Destroi gráfico anterior se existir
-            const chartKey = 'radarChart';
-            if (window[chartKey]) { window[chartKey].destroy(); }
-
-            window[chartKey] = new Chart(canvas.getContext('2d'), {
-                type: 'radar',
+            charts[canvasId] = new Chart(ctx, {
+                type: 'bar',
                 data: {
-                    labels: metricas,
-                    datasets: datasets
+                    labels: shortLabels,
+                    datasets: [{
+                        label: tituloY,
+                        data: values,
+                        backgroundColor: '#ff9a3c',
+                        borderRadius: 5
+                    }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: tituloY },
+                            ticks: { font: { size: 11 } }
+                        },
+                        x: {
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 35,
+                                minRotation: 25,
+                                font: { size: 8 }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: (c) => `${c.raw} respostas`,
+                                afterBody: function(tooltipItems) {
+                                    const index = tooltipItems[0].dataIndex;
+                                    return labels[index] ? `\n${labels[index]}` : '';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            return charts[canvasId];
+        }
+
+        function criarRadarScroll(canvasId, labels, datasets) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const parent = canvas.parentElement;
+            if (parent) {
+                parent.style.width = '100%';
+                parent.style.minWidth = '100%';
+            }
+            const ctx = canvas.getContext('2d');
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+            charts[canvasId] = new Chart(ctx, {
+                type: 'radar',
+                data: { labels, datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         r: {
                             beginAtZero: true,
@@ -988,9 +2091,6 @@
                                 stepSize: 20,
                                 callback: v => v + '%',
                                 font: { size: 10 }
-                            },
-                            pointLabels: {
-                                font: { size: 11, weight: '500' }
                             }
                         }
                     },
@@ -1005,98 +2105,312 @@
                             labels: {
                                 font: { size: 10 },
                                 boxWidth: 12,
-                                padding: 12
+                                padding: 10
                             }
                         }
                     }
                 }
             });
+            return charts[canvasId];
         }
 
-        // ============================================================
-        // 5. GRÁFICO DE PIZZA: Área de formação/atuação dos docentes
-        // ============================================================
-        function criarGraficoAreaDocentes(canvasId, dadosDocentes) {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return;
+        // ================================================================
+        // FUNÇÕES PADRONIZADAS PARA CARDS
+        // ================================================================
+        function criarChartCard(cardId, canvasId, iconClass, titulo, descricao) {
+            return `
+                <div class="chart-card" id="${cardId}">
+                    <div class="card-header">
+                        <h3>
+                            <i class="${iconClass}"></i>
+                            ${titulo}
+                        </h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn" data-expand="${canvasId}" title="Expandir gráfico">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="chart-btn" data-download="${canvasId}" title="Baixar PNG">
+                                <i class="fas fa-image"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-scroll-wrapper">
+                        <div class="chart-scroll-inner">
+                            <canvas id="${canvasId}"></canvas>
+                        </div>
+                    </div>
+                    <div class="descricao-card">
+                        <span class="texto">
+                            <i class="fas fa-info-circle"></i>
+                            ${descricao}
+                        </span>
+                        <button class="btn-ver-mais" data-expand-full="${canvasId}">
+                            Ver mais
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
 
-            if (!dadosDocentes || dadosDocentes.length === 0) {
-                escreverMensagemNoCanvas(canvasId);
-                return;
+        function configurarEventosCard(cardId, canvasId, titulo, rawData) {
+            const card = document.getElementById(cardId);
+            if (!card) return;
+
+            const expandBtn = card.querySelector(`[data-expand="${canvasId}"]`);
+            if (expandBtn) {
+                expandBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    abrirModalGrafico(canvasId, titulo, rawData);
+                });
             }
 
-            const freq = contarFrequencia(dadosDocentes, 'area');
-            const labels = freq.labels;
-            const values = freq.values;
-
-            if (labels.length === 0) {
-                escreverMensagemNoCanvas(canvasId);
-                return;
+            const verMaisBtn = card.querySelector(`[data-expand-full="${canvasId}"]`);
+            if (verMaisBtn) {
+                verMaisBtn.addEventListener('click', () => {
+                    abrirModalGrafico(canvasId, titulo, rawData);
+                });
             }
 
-            const cores = ['#ff9a3c','#36b9cc','#e74a3b','#4e73df','#1cc88a','#f6c23e','#9b59b6','#e84393','#00b894','#0984e3'];
+            const downloadBtn = card.querySelector(`[data-download="${canvasId}"]`);
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const canvas = document.getElementById(canvasId);
+                    if (canvas) {
+                        const link = document.createElement('a');
+                        link.download = `${titulo.replace(/\s+/g, '_')}.png`;
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                    }
+                });
+            }
+        }
 
-            // Destroi gráfico anterior se existir
-            const chartKey = 'areaChart';
-            if (window[chartKey]) { window[chartKey].destroy(); }
+        // ================================================================
+        // FUNÇÃO PARA ABRIR O MODAL
+        // ================================================================
+        function abrirModalGrafico(canvasId, titulo, rawData) {
+            const canvasOrigem = document.getElementById(canvasId);
+            if (!canvasOrigem) return;
 
-            window[chartKey] = new Chart(canvas.getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: values,
-                        backgroundColor: labels.map((_, i) => cores[i % cores.length]),
-                        borderWidth: 0,
-                        hoverOffset: 8
-                    }]
-                },
+            const chartObj = charts[canvasId];
+            if (!chartObj) return;
+
+            const modalCanvas = document.getElementById('modalCanvas');
+            if (modalChartInstance) {
+                modalChartInstance.destroy();
+                modalChartInstance = null;
+            }
+
+            const chartType = chartObj.config.type;
+            let modalData = JSON.parse(JSON.stringify(chartObj.config.data));
+
+            modalChartInstance = new Chart(modalCanvas.getContext('2d'), {
+                type: chartType,
+                data: modalData,
                 options: {
+                    ...chartObj.config.options,
                     responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                font: { size: 10 },
-                                boxWidth: 12,
-                                padding: 10
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: ctx => {
-                                    const total = values.reduce((a,b)=>a+b,0);
-                                    return `${ctx.label}: ${ctx.raw} docentes (${total > 0 ? ((ctx.raw/total)*100).toFixed(1) : 0}%)`;
-                                }
-                            }
-                        }
-                    },
-                    cutout: '50%'
+                    maintainAspectRatio: true
+                }
+            });
+
+            document.getElementById('modalTitle').innerHTML = `<i class="fas fa-chart-bar"></i> ${titulo}`;
+            modalRawData = rawData;
+            modalChartTitle = titulo;
+
+            const descricao = document.getElementById('modalDescricao');
+            if (descricao) {
+                descricao.innerHTML = `
+                    <i class="fas fa-info-circle" aria-hidden="true"></i>
+                    Este gráfico apresenta dados da pesquisa com discentes e docentes do IFPB.
+                    <br><br>
+                    <strong>Como interpretar:</strong>
+                    <ul>
+                        <li>Barras representam a distribuição das respostas por categoria.</li>
+                        <li>Gráficos de pizza indicam a proporção de cada resposta.</li>
+                        <li>Gráficos de linha ilustram a evolução ou distribuição dos dados.</li>
+                        <li>Recomendamos a visualização em telas maiores para uma melhor experiência.</li>
+                    </ul>
+                    <br>
+                    <strong>💡 Dica:</strong> Utilize a barra de rolagem horizontal para visualizar todos os dados.
+                `;
+            }
+
+            document.getElementById('modal').classList.add('active');
+
+            setTimeout(() => {
+                if (modalChartInstance && modalChartInstance.resize) {
+                    modalChartInstance.resize();
+                }
+                const modalBody = document.querySelector('.modal-body');
+                if (modalBody) {
+                    modalBody.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }, 200);
+        }
+
+        // ================================================================
+        // CONFIGURAÇÃO DOS BOTÕES DO MODAL
+        // ================================================================
+        function configurarBotoesModal() {
+            document.getElementById('closeModalBtn').addEventListener('click', fecharModal);
+            document.getElementById('modal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('modal')) fecharModal();
+            });
+
+            document.getElementById('modalPngBtn').addEventListener('click', () => {
+                if (modalChartInstance) {
+                    const canvas = document.getElementById('modalCanvas');
+                    const link = document.createElement('a');
+                    link.download = `${modalChartTitle || 'grafico'}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                }
+            });
+
+            document.getElementById('modalJsonBtn').addEventListener('click', () => {
+                if (modalRawData) {
+                    const blob = new Blob([JSON.stringify(modalRawData, null, 2)], { type: 'application/json' });
+                    const link = document.createElement('a');
+                    link.download = `${modalChartTitle || 'dados'}.json`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                }
+            });
+
+            document.getElementById('modalCsvBtn').addEventListener('click', () => {
+                if (modalRawData && modalRawData.length) {
+                    const headers = Object.keys(modalRawData[0]);
+                    const rows = [headers.join(',')];
+                    for (const row of modalRawData) {
+                        rows.push(headers.map(h => `"${String(row[h] || '').replace(/"/g, '""')}"`).join(','));
+                    }
+                    const blob = new Blob(['\uFEFF' + rows.join('\n')], { type: 'text/csv;charset=utf-8' });
+                    const link = document.createElement('a');
+                    link.download = `${modalChartTitle || 'dados'}.csv`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
                 }
             });
         }
 
-        // ============================================================
-        // 6. FUNÇÃO PRINCIPAL: CARREGAR DADOS E RENDERIZAR
-        // ============================================================
+        function fecharModal() {
+            document.getElementById('modal').classList.remove('active');
+            if (modalChartInstance) {
+                modalChartInstance.destroy();
+                modalChartInstance = null;
+            }
+        }
+
+        // ================================================================
+        // RENDERIZAR DESTAQUE
+        // ================================================================
+        function renderizarDestaque() {
+            const grid = document.getElementById('destaqueGrid');
+
+            // Gráfico 1: Radar Perfil dos Cursos (Discentes)
+            grid.innerHTML = criarChartCard(
+                'card_radarPerfil',
+                'radarPerfilCursos',
+                'fas fa-chart-radar',
+                'Comparativo: Perfil dos Cursos',
+                'Radar comparando características dos principais cursos do IFPB.'
+            );
+
+            // Gráfico 2: Área de formação dos Docentes
+            grid.innerHTML += criarChartCard(
+                'card_areaDocentes',
+                'areaDocentesChart',
+                'fas fa-microscope',
+                'Área de formação/atuação dos Docentes',
+                'Distribuição das áreas de formação dos docentes do IFPB.'
+            );
+
+            // Criar gráficos após renderizar os cards
+            setTimeout(() => {
+                criarGraficosDestaque();
+            }, 100);
+        }
+
+        // ================================================================
+        // CRIAR GRÁFICOS DE DESTAQUE
+        // ================================================================
+        function criarGraficosDestaque() {
+            // Radar - Perfil dos Cursos
+            if (dadosDiscentes && dadosDiscentes.length > 0) {
+                const cursosContagem = contarFrequencia(dadosDiscentes, 'curso');
+                const cursosTop = cursosContagem.labels.filter((c, i) => cursosContagem.values[i] >= 3).slice(0, 5);
+
+                if (cursosTop.length >= 2) {
+                    const metricas = ["Trabalha/estagia", "Transporte público", "Conhece assistência", "Já pensou em desistir", "Participa de projetos"];
+                    const cores = ['#ff9a3c', '#36b9cc', '#f6c23e', '#e74a3b', '#4e73df'];
+
+                    const datasets = cursosTop.map((curso, idx) => {
+                        const dc = dadosDiscentes.filter(d => d.curso === curso);
+                        const total = dc.length || 1;
+                        const valores = metricas.map(m => {
+                            if (m === "Trabalha/estagia") return (dc.filter(d => d.trabalha !== "Não, apenas estudo" && d.trabalha !== "").length / total) * 100;
+                            if (m === "Transporte público") return (dc.filter(d => d.transporte === "Transporte público (ônibus, trem, metrô)").length / total) * 100;
+                            if (m === "Conhece assistência") return (dc.filter(d => d.conheceAssistencia === "Sim, conheço todos" || d.conheceAssistencia === "Conheço alguns").length / total) * 100;
+                            if (m === "Já pensou em desistir") return (dc.filter(d => d.pensouDesistir !== "Nunca pensei" && d.pensouDesistir !== "").length / total) * 100;
+                            if (m === "Participa de projetos") return (dc.filter(d => d.participaProjetos !== "Nunca participei" && d.participaProjetos !== "").length / total) * 100;
+                            return 0;
+                        });
+                        return {
+                            label: curso.length > 30 ? curso.substring(0, 27) + '…' : curso,
+                            data: valores,
+                            backgroundColor: `${cores[idx % cores.length]}20`,
+                            borderColor: cores[idx % cores.length],
+                            borderWidth: 2,
+                            pointBackgroundColor: cores[idx % cores.length],
+                            pointBorderColor: '#fff',
+                            pointRadius: 4
+                        };
+                    }).filter(Boolean);
+
+                    if (datasets.length > 0) {
+                        criarRadarScroll('radarPerfilCursos', metricas, datasets);
+                    }
+                }
+            }
+
+            // Área de formação dos Docentes
+            if (dadosDocentes && dadosDocentes.length > 0) {
+                const freq = contarFrequencia(dadosDocentes, 'area');
+                if (freq.labels.length > 0) {
+                    criarPieScroll('areaDocentesChart', freq.labels, freq.values);
+                }
+            }
+
+            // Configurar eventos dos cards
+            configurarEventosCard('card_radarPerfil', 'radarPerfilCursos', 'Comparativo: Perfil dos Cursos', dadosDiscentes);
+            configurarEventosCard('card_areaDocentes', 'areaDocentesChart', 'Área de formação/atuação dos Docentes', dadosDocentes);
+        }
+
+        // ================================================================
+        // CARREGAR DADOS
+        // ================================================================
         async function carregarDados() {
             try {
                 let caminhoDiscentes, caminhoDocentes;
                 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
                     caminhoDiscentes = '../../assets/data/DadosFormularios/dadosDiscentes.json';
-                    caminhoDocentes = '../../assets/data/DadosFormularios/DadosDocentes.json';
+                    caminhoDocentes = '../../assets/data/DadosFormularios/dadosDocentes.json';
                 } else {
                     caminhoDiscentes = '/ifpb-data-plataform/assets/data/DadosFormularios/dadosDiscentes.json';
-                    caminhoDocentes = '/ifpb-data-plataform/assets/data/DadosFormularios/DadosDocentes.json';
+                    caminhoDocentes = '/ifpb-data-plataform/assets/data/DadosFormularios/dadosDocentes.json';
                 }
 
                 console.log('Carregando dados de discentes:', caminhoDiscentes);
-                const respDiscentes = await fetch(caminhoDiscentes);
+                const respDiscentes = await fetch(caminhoDiscentes + '?t=' + Date.now());
                 if (!respDiscentes.ok) throw new Error(`HTTP ${respDiscentes.status} - Discentes`);
 
                 console.log('Carregando dados de docentes:', caminhoDocentes);
-                const respDocentes = await fetch(caminhoDocentes);
+                const respDocentes = await fetch(caminhoDocentes + '?t=' + Date.now());
                 if (!respDocentes.ok) throw new Error(`HTTP ${respDocentes.status} - Docentes`);
 
                 const rawDiscentes = await respDiscentes.json();
@@ -1105,12 +2419,12 @@
                 console.log('✅ Discentes:', rawDiscentes.length, 'registros');
                 console.log('✅ Docentes:', rawDocentes.length, 'registros');
 
-                const discentes = normalizarDadosDiscentes(rawDiscentes);
-                const docentes = normalizarDadosDocentes(rawDocentes);
+                dadosDiscentes = normalizarDadosDiscentes(rawDiscentes);
+                dadosDocentes = normalizarDadosDocentes(rawDocentes);
 
                 // Atualiza os cards do hero
-                const totalDiscentes = discentes.length;
-                const totalDocentes = docentes.length;
+                const totalDiscentes = dadosDiscentes.length;
+                const totalDocentes = dadosDocentes.length;
                 document.getElementById('statDiscentes').textContent = totalDiscentes;
                 document.getElementById('statDocentes').textContent = totalDocentes;
                 document.getElementById('statTotal').textContent = totalDiscentes + totalDocentes;
@@ -1120,67 +2434,28 @@
                 document.getElementById('faq-docentes').textContent = totalDocentes;
                 document.getElementById('faq-total').textContent = totalDiscentes + totalDocentes;
 
-                // Renderiza os gráficos (eles próprios exibirão mensagem se insuficientes)
-                criarRadarPerfilCursos('radarPerfilCursos', discentes);
-                criarGraficoAreaDocentes('areaDocentesChart', docentes);
+                // Renderiza os gráficos de destaque
+                renderizarDestaque();
+
+                // Configura os botões do modal
+                configurarBotoesModal();
 
             } catch (erro) {
                 console.error('❌ Erro ao carregar dados:', erro);
-                // Em caso de erro, exibe 0 nos indicadores
                 document.getElementById('statDiscentes').textContent = '0';
                 document.getElementById('statDocentes').textContent = '0';
                 document.getElementById('statTotal').textContent = '0';
                 document.getElementById('faq-discentes').textContent = '0';
                 document.getElementById('faq-docentes').textContent = '0';
                 document.getElementById('faq-total').textContent = '0';
-
-                // Exibe mensagem de dados insuficientes nos gráficos
-                escreverMensagemNoCanvas('radarPerfilCursos', 'Erro ao carregar dados');
-                escreverMensagemNoCanvas('areaDocentesChart', 'Erro ao carregar dados');
             }
         }
 
-        // ============================================================
-        // FAQ – Acordeão
-        // ============================================================
+        // ================================================================
+        // INICIALIZAÇÃO
+        // ================================================================
         document.addEventListener('DOMContentLoaded', function() {
-            const faqItems = document.querySelectorAll('.faq-item');
-            faqItems.forEach(item => {
-                const question = item.querySelector('.faq-question');
-                question.addEventListener('click', function() {
-                    faqItems.forEach(other => {
-                        if (other !== item && other.classList.contains('active')) {
-                            other.classList.remove('active');
-                            other.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
-                        }
-                    });
-                    const isActive = item.classList.contains('active');
-                    item.classList.toggle('active');
-                    question.setAttribute('aria-expanded', !isActive);
-                });
-                question.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        this.click();
-                    }
-                });
-            });
-
             carregarDados();
-        });
-
-        // Rolagem suave
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const targetId = this.getAttribute('href');
-                if(targetId && targetId !== "#" && targetId !== "" && targetId !== "#dados-destaque" && targetId !== "#como-explorar") {
-                    const targetElement = document.querySelector(targetId);
-                    if(targetElement) {
-                        e.preventDefault();
-                        targetElement.scrollIntoView({ behavior: 'smooth' });
-                    }
-                }
-            });
         });
     </script>
 </body>
