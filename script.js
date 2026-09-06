@@ -1,9 +1,6 @@
 'use strict';
 
-// ============================================================
-// FUNÇÕES AUXILIARES
-// ============================================================
-
+/* auxiliares */
 function debounce(fn, delay = 100) {
     let t;
     return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), delay); };
@@ -46,9 +43,7 @@ function abreviarCampus(nome) {
     return siglas[nome] || nome.substring(0, 3).toUpperCase();
 }
 
-// ============================================================
-// FUNÇÃO PARA PARSE DE NOTAS (CORRIGIDA)
-// ============================================================
+/* parse notas */
 function parseNota(valor) {
     if (!valor || valor === '') return null;
     let str = String(valor).trim();
@@ -62,9 +57,7 @@ function parseNota(valor) {
     return parsed;
 }
 
-// ============================================================
-// COORDENADAS
-// ============================================================
+/* coordenadas */
 const coordenadas = {
     'JOÃO PESSOA': [-7.1355914, -34.8737658],
     'MANGABEIRA': [-7.144524049356752, -34.84309308192913],
@@ -93,10 +86,7 @@ const coordenadas = {
     'SOLEDADE': [-7.060223036828175, -36.35652361471836]
 };
 
-// ============================================================
-// DADOS REAIS (variável global)
-// ============================================================
-
+/* dados globais */
 let dadosReais = {
     totalCampi: 0,
     totalEstudantes: 0,
@@ -124,21 +114,19 @@ let dadosReais = {
         notaMedia: 0,
         cursosConceitoMaximo: 0
     },
-    dadosCampiMapa: [] // array com os dados do mapa
+    dadosCampiMapa: []
 };
 
-// ============================================================
-// RENDERIZAR MAPA
-// ============================================================
+/* renderizar mapa */
 function renderizarMapaPreview() {
     const container = document.getElementById('map-preview-container');
     if (!container) {
-        console.warn('Container do mapa não encontrado.');
+        console.warn('Container do mapa nao encontrado.');
         return;
     }
 
     if (typeof L === 'undefined') {
-        console.warn('Leaflet não carregado. Tentando novamente em 1s...');
+        console.warn('Leaflet nao carregado. Tentando novamente em 1s...');
         setTimeout(renderizarMapaPreview, 1000);
         return;
     }
@@ -149,7 +137,7 @@ function renderizarMapaPreview() {
 
     const dadosCampi = dadosReais.dadosCampiMapa || [];
     if (dadosCampi.length === 0) {
-        console.warn('Nenhum dado de campi disponível. Usando fallback.');
+        console.warn('Nenhum dado de campi disponivel. Usando fallback.');
         const fallbackCampi = Object.keys(coordenadas).map(nome => ({
             Nome: nome,
             Municipio: nome,
@@ -193,7 +181,7 @@ function renderizarMapaPreview() {
             coords = coordenadas[nomeSemCampus];
         }
         if (!coords) {
-            console.warn('Coordenadas não encontradas para:', campus.Nome);
+            console.warn('Coordenadas nao encontradas para:', campus.Nome);
             return;
         }
         const situacao = (campus.Situacao || '').trim();
@@ -210,12 +198,12 @@ function renderizarMapaPreview() {
         const marker = L.marker(coords, { icon: icon })
             .bindPopup(`
                 <strong>${campus.Nome}</strong><br>
-                Município: ${campus.Municipio || ''}<br>
-                Situação: ${situacao}<br>
+                Municipio: ${campus.Municipio || ''}<br>
+                Situacao: ${situacao}<br>
                 Servidores: ${campus.Total_Servidores || 'N/D'}<br>
                 Docentes: ${campus.Docentes || 'N/D'}<br>
                 TAEs: ${campus.TAEs || 'N/D'}<br>
-                Área: ${campus.AreaFisica || 'N/D'}
+                Area: ${campus.AreaFisica || 'N/D'}
             `);
         marker.addTo(map);
         marcadores.push({ numero, nome: campus.Nome, coords });
@@ -244,12 +232,10 @@ function renderizarMapaPreview() {
         }
     });
 
-    console.log(`Mapa renderizado com ${marcadores.length} marcadores.`);
+    console.log('Mapa renderizado com ' + marcadores.length + ' marcadores.');
 }
 
-// ============================================================
-// CARREGAR DADOS
-// ============================================================
+/* carregar dados */
 async function carregarDadosReais() {
     try {
         const basePath = 'assets/data/';
@@ -276,7 +262,7 @@ async function carregarDadosReais() {
         ]);
 
         if (!resCampi.ok || !resServ.ok || !resMat.ok || !resOrc.ok) {
-            throw new Error(`HTTP ${resCampi.status} / ${resServ.status} / ${resMat.status} / ${resOrc.status}`);
+            throw new Error('HTTP ' + resCampi.status + ' / ' + resServ.status + ' / ' + resMat.status + ' / ' + resOrc.status);
         }
 
         const campi = await resCampi.json();
@@ -284,35 +270,35 @@ async function carregarDadosReais() {
         const dadosMat = await resMat.json();
         const dadosOrc = await resOrc.json();
 
-        // ----- CARREGAR DADOS INSTITUCIONAIS (mapa) -----
+        /* dados institucionais */
         let dadosInst = [];
         if (resInst && resInst.ok) {
             dadosInst = await resInst.json();
-            console.log(`Institucional (AnoCriaçãoAreaFísica.json): ${dadosInst.length} registros carregados`);
+            console.log('Institucional (AnoCriacaoAreaFisica.json): ' + dadosInst.length + ' registros carregados');
         } else {
-            console.warn('Arquivo institucional (AnoCriaçãoAreaFísica.json) não encontrado. Usando fallback.');
+            console.warn('Arquivo institucional (AnoCriacaoAreaFisica.json) nao encontrado. Usando fallback.');
         }
 
-        // ----- DADOS DE PESQUISA (formulários) -----
+        /* dados pesquisa */
         let discentes = [];
         let docentes = [];
         let dataColeta = null;
 
         if (resDiscentes.ok) {
             discentes = await resDiscentes.json();
-            console.log(`Discentes: ${discentes.length} respostas`);
+            console.log('Discentes: ' + discentes.length + ' respostas');
         } else {
-            console.warn('Arquivo de discentes não encontrado. Usando fallback.');
+            console.warn('Arquivo de discentes nao encontrado. Usando fallback.');
         }
 
         if (resDocentes.ok) {
             docentes = await resDocentes.json();
-            console.log(`Docentes: ${docentes.length} respostas`);
+            console.log('Docentes: ' + docentes.length + ' respostas');
         } else {
-            console.warn('Arquivo de docentes não encontrado. Usando fallback.');
+            console.warn('Arquivo de docentes nao encontrado. Usando fallback.');
         }
 
-        // Processa datas de coleta
+        /* processa datas */
         const todasRespostas = [...discentes, ...docentes];
         if (todasRespostas.length > 0) {
             const timestamps = todasRespostas
@@ -326,7 +312,7 @@ async function carregarDadosReais() {
             }
         }
 
-        // Calcula satisfação média dos docentes
+        /* satisfacao media */
         let somaSatisfacao = 0;
         let countSatisfacao = 0;
         const mapaSatisfacao = {
@@ -345,7 +331,7 @@ async function carregarDadosReais() {
         });
         const satisfacaoMedia = countSatisfacao > 0 ? (somaSatisfacao / countSatisfacao) : 0;
 
-               // ----- DADOS ENADE (TODOS OS ANOS) -----
+        /* dados enade */
         let dadosEnade = [];
         let faixaAnos = 'Todos os anos';
         let cursosAvaliados = 0;
@@ -355,7 +341,7 @@ async function carregarDadosReais() {
         if (resEnade.ok) {
             dadosEnade = await resEnade.json();
             window.dadosEnadeBrutos = dadosEnade;
-            console.log(`ENADE: ${dadosEnade.length} registros carregados`);
+            console.log('ENADE: ' + dadosEnade.length + ' registros carregados');
 
             let minAno = Infinity;
             let maxAno = 0;
@@ -367,9 +353,9 @@ async function carregarDadosReais() {
                 }
             });
             if (minAno !== Infinity && maxAno > 0) {
-                faixaAnos = minAno === maxAno ? `${minAno}` : `${minAno} – ${maxAno}`;
+                faixaAnos = minAno === maxAno ? '' + minAno : minAno + ' – ' + maxAno;
             } else {
-                faixaAnos = 'Dados indisponíveis';
+                faixaAnos = 'Dados indisponiveis';
             }
 
             const cursosSet = new Set();
@@ -378,7 +364,7 @@ async function carregarDadosReais() {
             });
             cursosAvaliados = cursosSet.size;
 
-            // ----- CÁLCULO DA MÉDIA GERAL (apenas NOTA_GERAL, sem fallback) -----
+            /* calculo media geral */
             let somaNotas = 0;
             let countNotas = 0;
             dadosEnade.forEach(item => {
@@ -409,10 +395,10 @@ async function carregarDadosReais() {
             cursosConceitoMaximo = cursosAlta;
 
         } else {
-            console.warn('Arquivo ENADE não encontrado. Usando fallback.');
+            console.warn('Arquivo ENADE nao encontrado. Usando fallback.');
         }
 
-        // ----- PROCESSAMENTO DOS DADOS INSTITUCIONAIS (para o mapa) -----
+        /* processamento institucional */
         const mapaServ = {};
         dadosServ.forEach(item => {
             const nome = item.Estrutura.trim().toUpperCase();
@@ -425,7 +411,7 @@ async function carregarDadosReais() {
             };
         });
 
-        // ===== CONSTRUIR OS DADOS DO MAPA =====
+        /* construir dados mapa */
         let dadosCampiParaMapa = [];
 
         if (dadosInst && dadosInst.length > 0) {
@@ -463,7 +449,7 @@ async function carregarDadosReais() {
         }
 
         if (dadosCampiParaMapa.length === 0) {
-            console.warn('⚠️ Usando campi.json como fallback para o mapa.');
+            console.warn('Usando campi.json como fallback para o mapa.');
             dadosCampiParaMapa = campi
                 .filter(item => item.Nome && item.Nome.toUpperCase().includes('CAMPUS'))
                 .map(c => {
@@ -490,7 +476,7 @@ async function carregarDadosReais() {
             if (!dadosCampiParaMapa.some(d => d.Nome.toUpperCase().includes('REITORIA'))) {
                 dadosCampiParaMapa.push({
                     Nome: 'REITORIA',
-                    Municipio: 'João Pessoa',
+                    Municipio: 'Joao Pessoa',
                     Situacao: 'Centro administrativo e executivo',
                     AreaFisica: '1,63 hectare = 16.315 m²',
                     Ano: '29 de dezembro de 2008',
@@ -504,9 +490,9 @@ async function carregarDadosReais() {
         }
 
         dadosReais.dadosCampiMapa = dadosCampiParaMapa;
-        console.log(`${dadosCampiParaMapa.length} campi preparados para o mapa.`);
+        console.log(dadosCampiParaMapa.length + ' campi preparados para o mapa.');
 
-        // ----- PROCESSAMENTO DOS DADOS INSTITUCIONAIS (cards) -----
+        /* processamento cards */
         const campiFiltrados = campi.filter(item => 
             item.Nome && item.Nome.toUpperCase().includes('CAMPUS')
         );
@@ -554,7 +540,7 @@ async function carregarDadosReais() {
             .slice(0, 8);
         dadosReais.topCampi = topCampi;
 
-        // ----- ATUALIZAR CARDS -----
+        /* atualizar cards ifpb */
         const ifpbCard = document.querySelector('.data-card[data-type="ifpb"]');
         if (ifpbCard) {
             const valores = ifpbCard.querySelectorAll('.data-stat-value');
@@ -574,6 +560,7 @@ async function carregarDadosReais() {
             }
         }
 
+        /* atualizar cards enade */
         const enadeCard = document.querySelector('.data-card[data-type="enade"]');
         if (enadeCard) {
             const valores = enadeCard.querySelectorAll('.data-stat-value');
@@ -585,6 +572,7 @@ async function carregarDadosReais() {
             }
         }
 
+        /* atualizar cards pesquisa */
         const pesquisaCard = document.querySelector('.data-card[data-type="pesquisa"]');
         if (pesquisaCard) {
             const valores = pesquisaCard.querySelectorAll('.data-stat-value');
@@ -619,11 +607,11 @@ async function carregarDadosReais() {
             const card = budgetEl.closest('.card');
             if (card) {
                 const h3 = card.querySelector('h3');
-                if (h3) h3.textContent = `Orçamento`;
+                if (h3) h3.textContent = 'Orçamento';
             }
         }
 
-        // Atualiza variável global
+        /* atualizar globais */
         dadosReais.totalCampi = totalCampi;
         dadosReais.totalEstudantes = totalEstudantes;
         dadosReais.totalServidores = totalServidores;
@@ -641,30 +629,28 @@ async function carregarDadosReais() {
         dadosReais.enade.cursosConceitoMaximo = cursosConceitoMaximo;
 
         console.log('Dados atualizados:');
-        console.log(`Campi: ${totalCampi}, Estudantes: ${totalEstudantes}, Servidores: ${totalServidores}, Docentes: ${totalDocentes}, TAEs: ${totalTAEs}, Orçamento: ${totalOrcamento}`);
-        console.log(`Pesquisa: ${discentes.length} alunos, ${docentes.length} docentes, satisfação: ${satisfacaoMedia.toFixed(1)}/5, coleta: ${dataColeta}`);
-        console.log(`ENADE: ${faixaAnos} | ${cursosAvaliados} cursos | nota média: ${notaMedia.toFixed(1)} | ${cursosConceitoMaximo} cursos com nota >= 80`);
+        console.log('Campi: ' + totalCampi + ', Estudantes: ' + totalEstudantes + ', Servidores: ' + totalServidores + ', Docentes: ' + totalDocentes + ', TAEs: ' + totalTAEs + ', Orcamento: ' + totalOrcamento);
+        console.log('Pesquisa: ' + discentes.length + ' alunos, ' + docentes.length + ' docentes, satisfacao: ' + satisfacaoMedia.toFixed(1) + '/5, coleta: ' + dataColeta);
+        console.log('ENADE: ' + faixaAnos + ' | ' + cursosAvaliados + ' cursos | nota media: ' + notaMedia.toFixed(1) + ' | ' + cursosConceitoMaximo + ' cursos com nota >= 80');
 
-        // ----- RENDERIZAR MAPA -----
+        /* renderizar mapa */
         renderizarMapaPreview();
 
-        // Gráficos – usa dadosMat para evolução
+        /* graficos */
         renderizarEvolucao(dadosMat);
         renderizarComparativos();
 
-        // ----- RENDERIZAR RADAR DE PERFIL DOS CURSOS -----
+        /* radar perfil cursos */
         renderizarRadarPerfilCursos(discentes);
 
         return true;
     } catch (erro) {
-        console.warn('Falha ao carregar dados. Usando fallback estático.', erro);
+        console.warn('Falha ao carregar dados. Usando fallback estatico.', erro);
         return false;
     }
 }
 
-// ============================================================
-// ATUALIZAR ELEMENTOS (fallback)
-// ============================================================
+/* atualizar elementos */
 function atualizarElementosComDadosReais() {
     const campiEl = document.getElementById('campi-count');
     if (campiEl) campiEl.textContent = dadosReais.totalCampi || '23';
@@ -698,7 +684,7 @@ function atualizarElementosComDadosReais() {
 
     const trendBadge = document.querySelector('.trend-badge');
     if (trendBadge && dadosReais.ultimoAno) {
-        trendBadge.innerHTML = `<i class="fas fa-calendar-alt"></i> Dados de ${dadosReais.ultimoAno}`;
+        trendBadge.innerHTML = '<i class="fas fa-calendar-alt"></i> Dados de ' + dadosReais.ultimoAno;
     }
 
     const pesquisaCard = document.querySelector('.data-card[data-type="pesquisa"]');
@@ -708,7 +694,7 @@ function atualizarElementosComDadosReais() {
             valores[0].textContent = dadosReais.pesquisa.alunosRespondentes > 0 ? formatarNumero(dadosReais.pesquisa.alunosRespondentes) : '1.247';
             valores[1].textContent = dadosReais.pesquisa.professoresRespondentes > 0 ? formatarNumero(dadosReais.pesquisa.professoresRespondentes) : '342';
             valores[2].textContent = dadosReais.pesquisa.satisfacaoMedia > 0 ? dadosReais.pesquisa.satisfacaoMedia.toFixed(1) + ' / 5' : '4.2 / 5';
-            valores[3].textContent = dadosReais.pesquisa.dataColeta || 'Março/2026';
+            valores[3].textContent = dadosReais.pesquisa.dataColeta || 'Marco/2026';
         }
     }
 
@@ -724,16 +710,13 @@ function atualizarElementosComDadosReais() {
     }
 }
 
-// ============================================================
-// GRÁFICOS
-// ============================================================
-
+/* grafico evolucao */
 function renderizarEvolucao(dados) {
     const ctx = document.getElementById('timelineChart')?.getContext('2d');
     if (!ctx) return;
 
     if (typeof Chart === 'undefined') {
-        console.warn('Chart.js não carregado. Gráfico de evolução não renderizado.');
+        console.warn('Chart.js nao carregado. Grafico de evolucao nao renderizado.');
         return;
     }
 
@@ -749,7 +732,7 @@ function renderizarEvolucao(dados) {
     const valores = anos.map(a => mapa[a]);
 
     if (anos.length === 0) {
-        console.warn('Nenhum dado para o gráfico de evolução.');
+        console.warn('Nenhum dado para o grafico de evolucao.');
         return;
     }
 
@@ -758,7 +741,7 @@ function renderizarEvolucao(dados) {
         data: {
             labels: anos,
             datasets: [{
-                label: 'Matrículas',
+                label: 'Matriculas',
                 data: valores,
                 borderColor: '#4e73df',
                 backgroundColor: 'rgba(78,115,223,0.1)',
@@ -786,12 +769,13 @@ function renderizarEvolucao(dados) {
     });
 }
 
+/* grafico comparativos */
 function renderizarComparativos() {
     const ctx = document.getElementById('comparisonChart')?.getContext('2d');
     if (!ctx) return;
 
     if (typeof Chart === 'undefined') {
-        console.warn('Chart.js não carregado. Gráfico de comparativos não renderizado.');
+        console.warn('Chart.js nao carregado. Grafico de comparativos nao renderizado.');
         return;
     }
 
@@ -830,26 +814,23 @@ function renderizarComparativos() {
     });
 }
 
-// ============================================================
-// MÉDIA GERAL ANUAL - ENADE
-// ============================================================
+/* media geral anual */
 function renderizarMediaGeralAnual() {
     const canvas = document.getElementById('mediaGeralAnualChart');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
     if (typeof Chart === 'undefined') {
-        console.warn('Chart.js não carregado.');
+        console.warn('Chart.js nao carregado.');
         return;
     }
 
     const dados = window.dadosEnadeBrutos;
     if (!dados || dados.length === 0) {
-        console.warn('Dados do ENADE não disponíveis para o gráfico de média geral.');
+        console.warn('Dados do ENADE nao disponiveis para o grafico de media geral.');
         return;
     }
 
-    // Agrupa por ano
     const anos = [...new Set(dados.map(d => d.ANO_EXAME).filter(a => a && a !== ''))].sort();
     const medias = anos.map(ano => {
         const registros = dados.filter(d => d.ANO_EXAME === ano);
@@ -866,7 +847,7 @@ function renderizarMediaGeralAnual() {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Média Geral',
+                label: 'Media Geral',
                 data: medias,
                 borderColor: '#2c3e50',
                 backgroundColor: 'rgba(44,62,80,0.1)',
@@ -884,7 +865,7 @@ function renderizarMediaGeralAnual() {
                 legend: { display: false },
                 tooltip: {
                     callbacks: {
-                        label: (ctx) => `Média: ${ctx.parsed.y?.toFixed(1) || 'N/D'}`
+                        label: (ctx) => 'Media: ' + (ctx.parsed.y?.toFixed(1) || 'N/D')
                     }
                 }
             },
@@ -901,31 +882,26 @@ function renderizarMediaGeralAnual() {
     });
 }
 
-// ============================================================
-// COMPARATIVO: PERFIL DOS CURSOS (RADAR)
-// ============================================================
+/* radar perfil cursos */
 function renderizarRadarPerfilCursos(dadosDiscentes) {
     const canvas = document.getElementById('radarPerfilCursos');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
     if (typeof Chart === 'undefined') {
-        console.warn('Chart.js não carregado.');
+        console.warn('Chart.js nao carregado.');
         return;
     }
 
-    // Se não houver dados, não renderiza
     if (!dadosDiscentes || dadosDiscentes.length === 0) {
-        console.warn('Nenhum dado de discentes disponível para o radar.');
+        console.warn('Nenhum dado de discentes disponivel para o radar.');
         return;
     }
 
-    // 1. Agrupar por curso e pegar os 5 mais frequentes
     const contagemCursos = {};
     dadosDiscentes.forEach(d => {
-        // Extrai o curso (pode estar em campos diferentes)
-        const curso = d["Qual é o seu curso no IFPB?"] ||
-                      d["Qual é o seu curso no IFPB? (Exemplo: Técnico em Informática, Sistemas para Internet, etc.)"] ||
+        const curso = d['Qual e o seu curso no IFPB?'] ||
+                      d['Qual e o seu curso no IFPB? (Exemplo: Tecnico em Informatica, Sistemas para Internet, etc.)'] ||
                       'Desconhecido';
         if (curso && curso !== 'Desconhecido') {
             contagemCursos[curso] = (contagemCursos[curso] || 0) + 1;
@@ -942,23 +918,20 @@ function renderizarRadarPerfilCursos(dadosDiscentes) {
         return;
     }
 
-    // 2. Métricas a serem comparadas
     const metricas = [
-        "Trabalha/estagia",
-        "Transporte público",
-        "Conhece assistência",
-        "Já pensou em desistir",
-        "Participa de projetos"
+        'Trabalha/estagia',
+        'Transporte publico',
+        'Conhece assistencia',
+        'Ja pensou em desistir',
+        'Participa de projetos'
     ];
 
-    // 3. Cores
     const cores = ['#387f1c', '#36b9cc', '#f6c23e', '#e74a3b', '#4e73df'];
 
-    // 4. Calcular porcentagens para cada curso
     const datasets = cursos.map((curso, idx) => {
         const alunosCurso = dadosDiscentes.filter(d => {
-            const c = d["Qual é o seu curso no IFPB?"] ||
-                      d["Qual é o seu curso no IFPB? (Exemplo: Técnico em Informática, Sistemas para Internet, etc.)"] ||
+            const c = d['Qual e o seu curso no IFPB?'] ||
+                      d['Qual e o seu curso no IFPB? (Exemplo: Tecnico em Informatica, Sistemas para Internet, etc.)'] ||
                       '';
             return c === curso;
         });
@@ -966,38 +939,38 @@ function renderizarRadarPerfilCursos(dadosDiscentes) {
         if (total === 0) return null;
 
         const valores = metricas.map(metrica => {
-            if (metrica === "Trabalha/estagia") {
+            if (metrica === 'Trabalha/estagia') {
                 const count = alunosCurso.filter(d => {
-                    const val = d["Durante o Ensino Médio, você trabalha?"] || '';
-                    return val && val !== "Não, apenas estudo" && val !== "";
+                    const val = d['Durante o Ensino Medio, voce trabalha?'] || '';
+                    return val && val !== 'Nao, apenas estudo' && val !== '';
                 }).length;
                 return (count / total) * 100;
             }
-            if (metrica === "Transporte público") {
+            if (metrica === 'Transporte publico') {
                 const count = alunosCurso.filter(d => {
-                    const val = d["[Se deslocamento] Qual meio de transporte você utiliza com mais frequência para esse deslocamento?"] || '';
-                    return val === "Transporte público (ônibus, trem, metrô)";
+                    const val = d['[Se deslocamento] Qual meio de transporte voce utiliza com mais frequencia para esse deslocamento?'] || '';
+                    return val === 'Transporte publico (onibus, trem, metro)';
                 }).length;
                 return (count / total) * 100;
             }
-            if (metrica === "Conhece assistência") {
+            if (metrica === 'Conhece assistencia') {
                 const count = alunosCurso.filter(d => {
-                    const val = d["Você conhece os programas de assistência estudantil oferecidos pelo IFPB?"] || '';
-                    return val === "Sim, conheço todos" || val === "Conheço alguns";
+                    const val = d['Voce conhece os programas de assistencia estudantil oferecidos pelo IFPB?'] || '';
+                    return val === 'Sim, conheco todos' || val === 'Conheco alguns';
                 }).length;
                 return (count / total) * 100;
             }
-            if (metrica === "Já pensou em desistir") {
+            if (metrica === 'Ja pensou em desistir') {
                 const count = alunosCurso.filter(d => {
-                    const val = d["Você já pensou em desistir do curso?"] || '';
-                    return val && val !== "Nunca pensei" && val !== "";
+                    const val = d['Voce ja pensou em desistir do curso?'] || '';
+                    return val && val !== 'Nunca pensei' && val !== '';
                 }).length;
                 return (count / total) * 100;
             }
-            if (metrica === "Participa de projetos") {
+            if (metrica === 'Participa de projetos') {
                 const count = alunosCurso.filter(d => {
-                    const val = d["Você participa ou já participou de algum projeto no IFPB? "] || '';
-                    return val && val !== "Nunca participei" && val !== "";
+                    const val = d['Voce participa ou ja participou de algum projeto no IFPB? '] || '';
+                    return val && val !== 'Nunca participei' && val !== '';
                 }).length;
                 return (count / total) * 100;
             }
@@ -1021,12 +994,10 @@ function renderizarRadarPerfilCursos(dadosDiscentes) {
 
     if (datasets.length === 0) return;
 
-    // 5. Destruir gráfico anterior se existir
     if (window._radarChart) {
         window._radarChart.destroy();
     }
 
-    // 6. Criar o gráfico
     try {
         window._radarChart = new Chart(ctx, {
             type: 'radar',
@@ -1072,18 +1043,15 @@ function renderizarRadarPerfilCursos(dadosDiscentes) {
             }
         });
     } catch (e) {
-        console.error('Erro ao criar gráfico radar:', e);
+        console.error('Erro ao criar grafico radar:', e);
     }
 }
 
-// ============================================================
-// FUNÇÕES DE INICIALIZAÇÃO (menu, scroll, etc.)
-// ============================================================
-
+/* inicializacao */
 function atualizarGraficoAnimado() {
     const container = document.querySelector('.chart-animation');
     if (!container) return;
-    console.log('Gráfico animado mantido estático.');
+    console.log('Grafico animado mantido estatico.');
 }
 
 function atualizarDataAtualizacao() {
@@ -1092,7 +1060,7 @@ function atualizarDataAtualizacao() {
     const dataStr = now.toLocaleDateString('pt-BR', opts);
     const statusEl = document.querySelector('.status-indicator:last-child');
     if (statusEl) {
-        statusEl.innerHTML = `<i class="fas fa-calendar-alt"></i> Atualizado em ${dataStr}`;
+        statusEl.innerHTML = '<i class="fas fa-calendar-alt"></i> Atualizado em ' + dataStr;
     }
 }
 
@@ -1152,10 +1120,7 @@ function initHeaderScroll() {
     onScroll();
 }
 
-// ============================================================
-// INICIALIZAÇÃO PRINCIPAL
-// ============================================================
-
+/* dom ready */
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('IFPB Data Platform - Inicializando...');
 
@@ -1168,9 +1133,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         atualizarElementosComDadosReais();
         atualizarDataAtualizacao();
         renderizarMediaGeralAnual();
-        // A chamada para renderizarRadarPerfilCursos(discentes) agora está dentro de carregarDadosReais
     } catch (e) {
-        console.warn('Erro no carregamento de dados, mas página continua funcionando.', e);
+        console.warn('Erro no carregamento de dados, mas pagina continua funcionando.', e);
         atualizarElementosComDadosReais();
     }
 
