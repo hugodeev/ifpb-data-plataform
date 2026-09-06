@@ -244,7 +244,7 @@ function renderizarMapaPreview() {
         }
     });
 
-    console.log(`🗺️ Mapa renderizado com ${marcadores.length} marcadores.`);
+    console.log(`Mapa renderizado com ${marcadores.length} marcadores.`);
 }
 
 // ============================================================
@@ -262,7 +262,7 @@ async function carregarDadosReais() {
         const caminhoEnade = basePath + 'DadosENADE/DADOSENADEGERAL.json';
         const caminhoInst = basePath + 'Dadosinstitucionais/AnoCriaçãoAreaFísica.json';
 
-        console.log('📥 Carregando dados...');
+        console.log('Carregando dados...');
 
         const [resCampi, resServ, resMat, resOrc, resDiscentes, resDocentes, resEnade, resInst] = await Promise.all([
             fetch(caminhoCampi),
@@ -288,9 +288,9 @@ async function carregarDadosReais() {
         let dadosInst = [];
         if (resInst && resInst.ok) {
             dadosInst = await resInst.json();
-            console.log(`✅ Institucional (AnoCriaçãoAreaFísica.json): ${dadosInst.length} registros carregados`);
+            console.log(`Institucional (AnoCriaçãoAreaFísica.json): ${dadosInst.length} registros carregados`);
         } else {
-            console.warn('⚠️ Arquivo institucional (AnoCriaçãoAreaFísica.json) não encontrado. Usando fallback.');
+            console.warn('Arquivo institucional (AnoCriaçãoAreaFísica.json) não encontrado. Usando fallback.');
         }
 
         // ----- DADOS DE PESQUISA (formulários) -----
@@ -300,16 +300,16 @@ async function carregarDadosReais() {
 
         if (resDiscentes.ok) {
             discentes = await resDiscentes.json();
-            console.log(`✅ Discentes: ${discentes.length} respostas`);
+            console.log(`Discentes: ${discentes.length} respostas`);
         } else {
-            console.warn('⚠️ Arquivo de discentes não encontrado. Usando fallback.');
+            console.warn('Arquivo de discentes não encontrado. Usando fallback.');
         }
 
         if (resDocentes.ok) {
             docentes = await resDocentes.json();
-            console.log(`✅ Docentes: ${docentes.length} respostas`);
+            console.log(`Docentes: ${docentes.length} respostas`);
         } else {
-            console.warn('⚠️ Arquivo de docentes não encontrado. Usando fallback.');
+            console.warn('Arquivo de docentes não encontrado. Usando fallback.');
         }
 
         // Processa datas de coleta
@@ -355,7 +355,7 @@ async function carregarDadosReais() {
         if (resEnade.ok) {
             dadosEnade = await resEnade.json();
             window.dadosEnadeBrutos = dadosEnade;
-            console.log(`✅ ENADE: ${dadosEnade.length} registros carregados`);
+            console.log(`ENADE: ${dadosEnade.length} registros carregados`);
 
             let minAno = Infinity;
             let maxAno = 0;
@@ -409,7 +409,7 @@ async function carregarDadosReais() {
             cursosConceitoMaximo = cursosAlta;
 
         } else {
-            console.warn('⚠️ Arquivo ENADE não encontrado. Usando fallback.');
+            console.warn('Arquivo ENADE não encontrado. Usando fallback.');
         }
 
         // ----- PROCESSAMENTO DOS DADOS INSTITUCIONAIS (para o mapa) -----
@@ -504,7 +504,7 @@ async function carregarDadosReais() {
         }
 
         dadosReais.dadosCampiMapa = dadosCampiParaMapa;
-        console.log(`🗺️ ${dadosCampiParaMapa.length} campi preparados para o mapa.`);
+        console.log(`${dadosCampiParaMapa.length} campi preparados para o mapa.`);
 
         // ----- PROCESSAMENTO DOS DADOS INSTITUCIONAIS (cards) -----
         const campiFiltrados = campi.filter(item => 
@@ -640,7 +640,7 @@ async function carregarDadosReais() {
         dadosReais.enade.notaMedia = notaMedia;
         dadosReais.enade.cursosConceitoMaximo = cursosConceitoMaximo;
 
-        console.log('✅ Dados atualizados:');
+        console.log('Dados atualizados:');
         console.log(`Campi: ${totalCampi}, Estudantes: ${totalEstudantes}, Servidores: ${totalServidores}, Docentes: ${totalDocentes}, TAEs: ${totalTAEs}, Orçamento: ${totalOrcamento}`);
         console.log(`Pesquisa: ${discentes.length} alunos, ${docentes.length} docentes, satisfação: ${satisfacaoMedia.toFixed(1)}/5, coleta: ${dataColeta}`);
         console.log(`ENADE: ${faixaAnos} | ${cursosAvaliados} cursos | nota média: ${notaMedia.toFixed(1)} | ${cursosConceitoMaximo} cursos com nota >= 80`);
@@ -657,7 +657,7 @@ async function carregarDadosReais() {
 
         return true;
     } catch (erro) {
-        console.warn('⚠️ Falha ao carregar dados. Usando fallback estático.', erro);
+        console.warn('Falha ao carregar dados. Usando fallback estático.', erro);
         return false;
     }
 }
@@ -1157,7 +1157,7 @@ function initHeaderScroll() {
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', async function() {
-    console.log('🚀 IFPB Data Platform - Inicializando...');
+    console.log('IFPB Data Platform - Inicializando...');
 
     initMobileMenu();
     initScrollReveal();
