@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -7,108 +6,34 @@
     <title>IFPB Data Platform - Vida Acadêmica | Dados Reais</title>
     <link rel="shortcut icon" href="../../assets/img/logosite.png" type="image/x-icon">
     <meta name="description" content="Dados acadêmicos do IFPB a partir do dadosAdministrativos.json">
-    <link rel="stylesheet" href="../../assets/css/academico.css">
     <link rel="stylesheet" href="../../style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        
-        /* --- CSS com cores padronizadas para o tema IFPB (azul escuro) --- */
-:root {
-    --primary-blue: #1a5f7a;
-    --secondary-blue: #11214a;      /* ← agora azul escuro (igual ao institucional) */
-    --light-blue: #e8f1ff;
-    --success-green: #1cc88a;
-    --warning-yellow: #f6c23e;
-    --danger-red: #e74a3b;
-    --dark-gray: #2e3a59;
-    --medium-gray: #5a5c69;
-    --light-gray: #f8f9fc;
-    --white: #ffffff;
-    --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.07);
-    --shadow-medium: 0 6px 15px rgba(0, 0, 0, 0.1);
-    --shadow-heavy: 0 10px 25px rgba(0, 0, 0, 0.15);
-    --border-radius: 10px;
-    --transition: all 0.3s ease;
-    --primary-color: #1a5f7a;
-    --secondary-color: #11214a;     /* ← agora azul escuro, não mais verde */
-    --radius: 10px;
-}
+        :root {
+            --primary-blue: #1a5f7a;
+            --secondary-blue: #11214a;
+            --light-blue: #e8f1ff;
+            --success-green: #1cc88a;
+            --warning-yellow: #f6c23e;
+            --danger-red: #e74a3b;
+            --dark-gray: #2e3a59;
+            --medium-gray: #5a5c69;
+            --light-gray: #f8f9fc;
+            --white: #ffffff;
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-medium: 0 6px 15px rgba(0, 0, 0, 0.1);
+            --shadow-heavy: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --border-radius: 10px;
+            --transition: all 0.3s ease;
+            --primary-color: #1a5f7a;
+            --secondary-color: #11214a;
+            --radius: 10px;
+        }
 
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-        }
-        .modal-overlay.show { display: flex; }
-        .modal-content {
-            background: var(--white);
-            border-radius: var(--radius);
-            width: 90%;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow-y: auto;
-            text-align: center;
-            padding: 2rem;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            transform: translateY(20px);
-            animation: slideUp 0.3s ease forwards;
-        }
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--white);
-            border-radius: 8px;
-            padding: 1rem 1.5rem;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            z-index: 10000;
-            font-family: 'Roboto', sans-serif;
-            font-size: 0.9rem;
-            transform: translateX(100%);
-            animation: slideInRight 0.3s ease forwards;
-            border-left: 4px solid;
-        }
-        .notification.success { border-left-color: var(--primary-blue); }
-        .notification.error { border-left-color: var(--danger-red); }
-        .notification.warning { border-left-color: var(--warning-yellow); }
-        .notification.info { border-left-color: var(--secondary-blue); }
-        .notification-close {
-            background: none;
-            border: none;
-            color: var(--medium-gray);
-            cursor: pointer;
-            padding: 0.25rem;
-            margin-left: auto;
-        }
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes slideOutRight {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        * { box-sizing: border-box; }
+
         .page-header {
             background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
             color: white;
@@ -118,6 +43,7 @@
             position: relative;
             overflow: hidden;
         }
+
         .page-header::before {
             content: '';
             position: absolute;
@@ -128,6 +54,7 @@
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
             background-size: cover;
         }
+
         .breadcrumb {
             display: flex;
             align-items: center;
@@ -137,17 +64,38 @@
             opacity: 0.9;
             flex-wrap: wrap;
         }
-        .breadcrumb a { color: white; text-decoration: none; transition: var(--transition); }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
         .breadcrumb a:hover { opacity: 0.8; }
+
         .breadcrumb i { font-size: 0.7rem; }
-        .page-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.2; }
-        .page-subtitle { font-size: 1.1rem; opacity: 0.9; max-width: 800px; line-height: 1.6; }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+
         .status-indicators {
             display: flex;
             gap: 1rem;
             margin-top: 1.5rem;
             flex-wrap: wrap;
         }
+
         .status-indicator {
             background: rgba(255,255,255,0.15);
             backdrop-filter: blur(10px);
@@ -159,6 +107,7 @@
             gap: 0.5rem;
             font-size: 0.85rem;
         }
+
         .status-dot {
             width: 8px;
             height: 8px;
@@ -166,114 +115,22 @@
             background: var(--success-green);
             animation: pulse 2s infinite;
         }
+
         @keyframes pulse {
             0% { opacity: 1; }
             50% { opacity: 0.5; }
             100% { opacity: 1; }
         }
-        .data-filters {
-            background-color: var(--white);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            margin-bottom: 3rem;
-            box-shadow: var(--shadow-medium);
-            border: 1px solid #e3e6f0;
-        }
-        .data-filters h2 {
-            font-size: 1.4rem;
-            margin-bottom: 1.5rem;
-            color: var(--primary-blue);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        .data-filters h2::before {
-            content: '';
-            display: block;
-            width: 4px;
-            height: 24px;
-            background: var(--secondary-blue);
-            border-radius: 2px;
-        }
-        .filters-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            align-items: end;
-        }
-        .filter-group { position: relative; }
-        .filter-group label {
-            display: block;
-            margin-bottom: 0.75rem;
-            font-weight: 600;
-            color: var(--dark-gray);
-            font-size: 0.95rem;
-        }
-        .filter-group label i { margin-right: 0.5rem; color: var(--secondary-blue); width: 20px; text-align: center; }
-        .filter-select {
-            width: 100%;
-            padding: 0.85rem 1rem;
-            border: 2px solid #e3e6f0;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            color: var(--dark-gray);
-            background-color: var(--white);
-            transition: var(--transition);
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%234e73df' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 16px;
-            cursor: pointer;
-        }
-        .filter-select:focus {
-            border-color: var(--secondary-blue);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(78,115,223,0.15);
-        }
-        .btn-filter {
-            padding: 0.85rem 2rem;
-            background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            font-size: 1rem;
-            box-shadow: 0 4px 6px rgba(78,115,223,0.3);
-            height: fit-content;
-        }
-        .btn-filter:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(78,115,223,0.4); }
-        .btn-filter:active { transform: translateY(0); }
-        .btn-filter.btn-secondary {
-            background: linear-gradient(135deg, #6c757d, #5a6268);
-            box-shadow: 0 4px 6px rgba(108,117,125,0.3);
-        }
-        .btn-filter.btn-secondary:hover { box-shadow: 0 6px 12px rgba(108,117,125,0.4); }
-        .filter-count {
-            display: inline-block;
-            background: #e74a3b;
-            color: white;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            padding: 0.2rem 0.5rem;
-            margin-left: 0.5rem;
-            min-width: 20px;
-            text-align: center;
-        }
-        .academic-summary { margin-bottom: 3rem; }
+
         .section-title {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             color: var(--dark-gray);
-            margin-bottom: 2rem;
-            position: relative;
+            margin: 2.5rem 0 1.5rem;
             padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--light-gray);
+            position: relative;
         }
+
         .section-title::after {
             content: '';
             position: absolute;
@@ -281,14 +138,90 @@
             left: 0;
             width: 60px;
             height: 2px;
-            background: linear-gradient(90deg, var(--secondary-blue), var(--primary-blue));
-            border-radius: 2px;
+            background: var(--secondary-blue);
         }
+
+        /* ===== FILTERS ===== */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        .filters label {
+            font-weight: 600;
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+        }
+
+        .filters select {
+            padding: 0.6rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: var(--white);
+            min-width: 160px;
+            max-width: 220px;
+            transition: var(--transition);
+        }
+
+        .filters select:hover {
+            border-color: var(--primary-blue);
+        }
+
+        .filters button {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filters button:hover {
+            background: var(--secondary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 95, 122, 0.3);
+        }
+
+        .filters .btn-reset {
+            background: #6c757d;
+        }
+
+        .filters .btn-reset:hover {
+            background: #5a6268;
+        }
+
+        @media (max-width: 768px) {
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filters select {
+                width: 100%;
+                max-width: 100%;
+            }
+            .filters button {
+                width: 100%;
+            }
+        }
+
+        /* ===== CARDS ===== */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1.5rem;
+            margin: 2rem 0;
         }
+
         .academic-card {
             background: var(--white);
             border-radius: var(--border-radius);
@@ -296,395 +229,787 @@
             box-shadow: var(--shadow-medium);
             transition: var(--transition);
             border-top: 4px solid var(--secondary-blue);
-            position: relative;
-            overflow: hidden;
+            text-align: center;
         }
-        .academic-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-heavy); }
-        .academic-card:nth-child(2) { border-top-color: var(--success-green); }
-        .academic-card:nth-child(3) { border-top-color: var(--warning-yellow); }
-        .academic-card:nth-child(4) { border-top-color: #6f42c1; }
-        .card-icon {
-            width: 60px;
-            height: 60px;
+
+        .academic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .academic-card .card-icon {
+            width: 50px;
+            height: 50px;
             background: linear-gradient(135deg, var(--light-blue), #d4e2ff);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+            font-size: 1.3rem;
             color: var(--secondary-blue);
         }
-        .academic-card:nth-child(2) .card-icon {
-            background: linear-gradient(135deg, #d1f7e8, #a8f1d6);
-            color: var(--success-green);
-        }
-        .academic-card:nth-child(3) .card-icon {
-            background: linear-gradient(135deg, #fff5e1, #ffe9b3);
-            color: var(--warning-yellow);
-        }
-        .academic-card:nth-child(4) .card-icon {
-            background: linear-gradient(135deg, #e8e1ff, #d4c7ff);
-            color: #6f42c1;
-        }
-        .academic-card h3 {
-            font-size: 1.1rem;
-            color: var(--medium-gray);
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-        .card-value {
-            font-size: 2.5rem;
+
+        .academic-card .card-value {
+            font-size: 2rem;
             font-weight: 700;
             color: var(--dark-gray);
             margin: 0.5rem 0;
-            line-height: 1;
         }
-        .card-desc {
+
+        .academic-card .card-label {
             font-size: 0.9rem;
-            color: #858796;
+            color: var(--medium-gray);
+        }
+
+        /* ============================================================ */
+        /* ===== CHART CARD PADRÃO - COM SCROLL HORIZONTAL ===== */
+        /* ============================================================ */
+        .chart-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            min-width: 0;
+            position: relative;
+            transition: var(--transition);
+            border: 1px solid #e9ecef;
             margin-bottom: 1.5rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
-        .trend-up { color: var(--success-green); font-weight: 600; }
-        .trend-down { color: var(--danger-red); font-weight: 600; }
-        .card-detail {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #f0f0f0;
+
+        .chart-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
-        .detail-item {
+
+        .chart-card .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+
+        .chart-card .card-header h3 {
+            color: var(--dark-gray);
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin: 0;
+            flex: 1;
+            min-width: 150px;
+            border-left: 3px solid var(--primary-blue);
+            padding-left: 0.8rem;
+        }
+
+        .chart-card .card-header h3 i {
+            color: var(--primary-blue);
+        }
+
+        .chart-card .chart-actions {
+            display: flex;
+            gap: 0.3rem;
+            flex-shrink: 0;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+            padding-top: 0.2rem;
+        }
+
+        .chart-card:hover .chart-actions {
+            opacity: 1;
+        }
+
+        .chart-card .chart-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid #d1d3e2;
+            background: rgba(255, 255, 255, 0.95);
+            color: #5a5c69;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            flex-shrink: 0;
+        }
+
+        .chart-card .chart-btn:hover {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+            transform: scale(1.08);
+        }
+
+        .chart-card .chart-btn i {
+            font-size: 13px;
+        }
+
+        .chart-card .chart-scroll-wrapper {
+            flex: 1;
+            min-height: 280px;
+            max-height: 380px;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 8px;
+            background: #fafafa;
+            border: 1px solid #e9ecef;
+            position: relative;
+        }
+
+        .chart-card .chart-scroll-inner {
+            min-width: 700px;
+            width: 700px;
+            height: 100%;
+            min-height: 280px;
+            max-height: 380px;
+            position: relative;
+        }
+
+        .chart-card .chart-scroll-inner canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .chart-card .chart-scroll-wrapper::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .chart-card .chart-scroll-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .chart-card .chart-scroll-wrapper::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 4px;
+        }
+        .chart-card .chart-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-blue);
+        }
+
+        .chart-card .descricao-card {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+
+        .chart-card .descricao-card .texto {
+            font-size: 0.85rem;
+            color: var(--medium-gray);
+            line-height: 1.6;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .chart-card .descricao-card .texto i {
+            color: var(--primary-blue);
+            margin-right: 0.3rem;
+        }
+
+        .chart-card .descricao-card .btn-ver-mais {
+            background: none;
+            border: none;
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 0.4rem 1rem;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid var(--primary-blue);
+            border-radius: 6px;
+            background: rgba(26, 95, 122, 0.05);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .chart-card .descricao-card .btn-ver-mais:hover {
+            background: var(--primary-blue);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .chart-card .descricao-card .btn-ver-mais i {
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+        }
+
+        .chart-card .descricao-card .btn-ver-mais:hover i {
+            transform: translateX(4px);
+        }
+
+        /* ============================================================ */
+        /* ===== GRID DE GRÁFICOS ===== */
+        /* ============================================================ */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chart-card {
+                padding: 0.75rem;
+            }
+            .chart-card .card-header h3 {
+                font-size: 0.8rem;
+                padding-left: 0.5rem;
+            }
+            .chart-card .chart-actions {
+                opacity: 1;
+                gap: 0.15rem;
+            }
+            .chart-card .chart-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 9px;
+            }
+            .chart-card .chart-btn i {
+                font-size: 9px;
+            }
+            .chart-card .chart-scroll-wrapper {
+                min-height: 200px;
+                max-height: 240px;
+            }
+            .chart-card .chart-scroll-inner {
+                min-width: 420px;
+                width: 420px;
+                min-height: 200px;
+                max-height: 240px;
+            }
+            .chart-card .descricao-card {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+            .chart-card .descricao-card .btn-ver-mais {
+                align-self: flex-start;
+                font-size: 0.7rem;
+                padding: 0.2rem 0.7rem;
+            }
+            .chart-card .descricao-card .texto {
+                font-size: 0.75rem;
+            }
+            .charts-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .chart-card .chart-scroll-inner {
+                min-width: 340px;
+                width: 340px;
+            }
+        }
+
+        /* ============================================================ */
+        /* ===== MODAL ===== */
+        /* ============================================================ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(46, 58, 89, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--white);
+            border-radius: var(--radius);
+            max-width: 95vw;
+            width: 90%;
+            max-height: 95vh;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            animation: modalSlideUp 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes modalSlideUp {
+            from { transform: translateY(30px) scale(0.95); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.75rem;
-            padding: 0.5rem;
-            border-radius: 6px;
-            transition: var(--transition);
+            padding: 0.8rem 1.5rem;
+            border-bottom: 1px solid #eee;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            border-radius: var(--radius) var(--radius) 0 0;
+            color: white;
+            flex-shrink: 0;
         }
-        .detail-item:hover { background-color: var(--light-gray); }
-        .detail-label {
-            color: var(--medium-gray);
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .detail-value {
-            font-weight: 700;
-            color: var(--dark-gray);
-            font-size: 1.1rem;
-        }
-        .viz-tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-            padding: 0.5rem;
-            background: var(--light-gray);
-            border-radius: var(--border-radius);
-            overflow-x: auto;
-        }
-        .viz-tabs::-webkit-scrollbar { height: 6px; }
-        .viz-tabs::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 3px; }
-        .viz-tabs::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
-        .viz-tab {
-            padding: 1rem 1.5rem;
-            background: transparent;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            color: var(--medium-gray);
-            cursor: pointer;
-            transition: var(--transition);
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex: 1;
-            justify-content: center;
-            min-width: 140px;
-        }
-        .viz-tab:hover { background: rgba(255,255,255,0.8); color: var(--secondary-blue); }
-        .viz-tab.active { background: var(--white); color: var(--secondary-blue); box-shadow: var(--shadow-light); }
-        .viz-tab i { font-size: 1.1rem; }
-        .viz-tab-content { display: none; animation: fadeIn 0.5s ease; }
-        .viz-tab-content.active { display: block; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .viz-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-        .viz-chart {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            box-shadow: var(--shadow-medium);
-            border: 1px solid #e3e6f0;
-        }
-        .viz-chart h3 {
-            font-size: 1.2rem;
-            color: var(--dark-gray);
-            margin-bottom: 1.5rem;
+
+        .modal-header h3 {
+            font-size: 1rem;
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid var(--light-gray);
+            margin-bottom: 0;
+            padding-right: 0;
         }
-        .viz-chart h3 i { color: var(--secondary-blue); font-size: 1.3rem; }
-        .chart-container { height: 300px; position: relative; margin-bottom: 1.5rem; }
-        .table-container {
-            overflow-x: auto;
-            margin-bottom: 2rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-medium);
+
+        .modal-header h3 i {
+            color: white;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: white;
+            transition: var(--transition);
+            padding: 0.3rem 0.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 0.8rem 1.5rem 1rem 1.5rem;
+            flex: 1;
+            overflow: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-body .grafico-wrapper {
+            flex: 1;
+            min-height: 60vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .modal-scroll-wrapper {
+            width: 100%;
+            height: 100%;
+            min-height: 50vh;
+            max-height: 75vh;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 8px;
+        }
+
+        .modal-scroll-inner {
+            width: 100%;
+            height: 100%;
+            min-height: 45vh;
+            position: relative;
+        }
+
+        .modal-scroll-inner canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .modal-scroll-wrapper::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        .modal-scroll-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 5px;
+        }
+        .modal-scroll-wrapper::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 5px;
+        }
+        .modal-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-blue);
+        }
+
+        .modal-descricao {
+            margin-top: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid #e9ecef;
+            flex-shrink: 0;
+        }
+
+        .modal-descricao .descricao-texto {
+            font-size: 0.85rem;
+            color: var(--medium-gray);
+            line-height: 1.7;
+        }
+
+        .modal-descricao .descricao-texto ul {
+            margin: 0.5rem 0 0.5rem 1.5rem;
+            padding: 0;
+            list-style: none;
+        }
+
+        .modal-descricao .descricao-texto li {
+            position: relative;
+            padding: 0.25rem 0 0.25rem 1.5rem;
+            line-height: 1.6;
+            color: var(--medium-gray);
+        }
+
+        .modal-descricao .descricao-texto li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--primary-blue);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.6rem;
+            padding: 0.8rem 1.5rem;
+            border-top: 1px solid #eee;
+            flex-wrap: wrap;
+            flex-shrink: 0;
             background: var(--white);
         }
+
+        .modal-action-btn {
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid #e3e6f0;
+            background: var(--white);
+            color: var(--dark-gray);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .modal-action-btn:hover {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 95, 122, 0.25);
+        }
+
+        .modal-action-btn i {
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .modal-box {
+                width: 95%;
+                max-height: 90vh;
+            }
+            .modal-body .grafico-wrapper {
+                min-height: 50vh;
+            }
+            .modal-scroll-wrapper {
+                min-height: 40vh;
+                max-height: 65vh;
+            }
+            .modal-scroll-inner {
+                min-height: 35vh;
+            }
+            .modal-header {
+                padding: 0.6rem 1rem;
+            }
+            .modal-header h3 {
+                font-size: 0.9rem;
+            }
+            .modal-body {
+                padding: 0.6rem 1rem 0.8rem 1rem;
+            }
+            .modal-descricao .descricao-texto {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modal-box {
+                max-width: 100%;
+                margin: 0.5rem;
+                border-radius: 8px;
+                min-width: 0;
+                width: calc(100vw - 1rem);
+                max-height: 88vh;
+            }
+            .modal-header {
+                padding: 0.5rem 0.8rem;
+            }
+            .modal-header h3 {
+                font-size: 0.8rem;
+            }
+            .modal-body {
+                padding: 0.5rem 0.8rem 0.7rem 0.8rem;
+            }
+            .modal-body .grafico-wrapper {
+                min-height: 50vh;
+            }
+            .modal-scroll-wrapper {
+                min-height: 40vh;
+                max-height: 55vh;
+            }
+            .modal-scroll-inner {
+                min-width: 420px;
+            }
+            .modal-actions {
+                padding: 0.4rem 0.6rem;
+                gap: 0.3rem;
+            }
+            .modal-action-btn {
+                font-size: 0.6rem;
+                padding: 0.25rem 0.6rem;
+            }
+            .modal-descricao .descricao-texto {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* ============================================================ */
+        /* ===== TABELA ===== */
+        /* ============================================================ */
+        .table-container {
+            overflow-x: auto;
+            margin: 2rem 0;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            background: var(--white);
+            border: 1px solid #e9ecef;
+        }
+
         .data-table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            min-width: 800px;
+            border-collapse: collapse;
+            min-width: 700px;
+            font-size: 0.9rem;
         }
+
         .data-table th {
             background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
             color: white;
             text-align: left;
-            padding: 1.25rem 1.5rem;
+            padding: 1rem 1.5rem;
             font-weight: 600;
-            font-size: 0.95rem;
             position: sticky;
             top: 0;
             z-index: 10;
         }
-        .data-table th:first-child { border-top-left-radius: var(--border-radius); }
-        .data-table th:last-child { border-top-right-radius: var(--border-radius); }
+
         .data-table td {
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid #e3e6f0;
-            color: var(--medium-gray);
-            font-size: 0.95rem;
-            transition: var(--transition);
-        }
-        .data-table tr:last-child td { border-bottom: none; }
-        .data-table tr:hover td { background-color: var(--light-gray); }
-        .data-table tr:hover { transform: scale(1.005); box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
-        .rate-high { color: var(--success-green); font-weight: 700; display: inline-flex; align-items: center; gap: 0.25rem; }
-        .rate-high::before { content: '▲'; font-size: 0.8rem; }
-        .rate-medium { color: var(--warning-yellow); font-weight: 700; }
-        .rate-low { color: var(--danger-red); font-weight: 700; display: inline-flex; align-items: center; gap: 0.25rem; }
-        .rate-low::before { content: '▼'; font-size: 0.8rem; }
-        .btn-table {
-            padding: 0.5rem 1rem;
-            background: var(--light-blue);
-            border: 1px solid var(--secondary-blue);
-            border-radius: 6px;
-            color: var(--secondary-blue);
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-        }
-        .btn-table:hover {
-            background: var(--secondary-blue);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(78,115,223,0.2);
-        }
-        .loading-cell {
-            text-align: center;
-            padding: 3rem;
+            padding: 0.8rem 1.5rem;
+            border-bottom: 1px solid #e9ecef;
             color: var(--medium-gray);
         }
-        .loading-cell i { margin-right: 0.75rem; font-size: 1.2rem; }
-        .table-actions {
+
+        .data-table tr:hover td {
+            background-color: var(--light-gray);
+        }
+
+        .table-footer {
             display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
-            margin-top: 2rem;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
             flex-wrap: wrap;
+            gap: 1rem;
         }
-        .btn-small {
-            padding: 0.75rem 1.5rem;
-            background: var(--white);
-            border: 2px solid var(--secondary-blue);
-            border-radius: 8px;
-            color: var(--secondary-blue);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.95rem;
-        }
-        .btn-small:hover {
-            background: var(--secondary-blue);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(78,115,223,0.25);
-        }
-        .methodology {
-            background: linear-gradient(135deg, #f8f9fc, #eef2ff);
-            border-radius: var(--border-radius);
-            padding: 2.5rem;
-            margin-top: 3rem;
-            border-left: 5px solid var(--secondary-blue);
-        }
-        .methodology-content h3 {
-            color: var(--primary-blue);
-            margin-bottom: 1.5rem;
-            font-size: 1.4rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        .methodology-content h3 i { font-size: 1.6rem; }
-        .methodology-list {
-            margin-bottom: 2rem;
-            list-style: none;
-            padding-left: 0;
-        }
-        .methodology-list li {
-            margin-bottom: 1rem;
-            color: var(--medium-gray);
-            line-height: 1.6;
-            padding-left: 2rem;
+
+        .search-box {
             position: relative;
         }
-        .methodology-list li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--success-green);
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-        .last-update {
-            background: var(--white);
-            border-radius: 8px;
-            padding: 1.5rem;
-            border-left: 4px solid var(--success-green);
-            box-shadow: var(--shadow-light);
-        }
-        .last-update p {
-            margin-bottom: 0.75rem;
-            color: var(--medium-gray);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-        .last-update strong {
-            color: var(--dark-gray);
-            min-width: 160px;
-            display: inline-block;
-        }
-        .search-box { position: relative; }
+
         .search-box input {
             padding: 0.5rem 1rem 0.5rem 2.5rem;
-            border: 1px solid #d1d3e2;
+            border: 1px solid #ddd;
             border-radius: 20px;
             font-size: 0.9rem;
+            width: 200px;
         }
+
         .search-box i {
             position: absolute;
             left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            color: #6c757d;
+            color: var(--medium-gray);
         }
-        [data-tooltip] { position: relative; cursor: help; }
-        [data-tooltip]:hover::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--dark-gray);
-            color: white;
+
+        .btn-small {
             padding: 0.5rem 1rem;
             border-radius: 6px;
-            font-size: 0.85rem;
-            white-space: nowrap;
-            z-index: 1000;
-            margin-bottom: 0.5rem;
-            box-shadow: var(--shadow-heavy);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid #ddd;
+            background: var(--white);
+            color: var(--dark-gray);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        [data-tooltip]:hover::before {
-            content: '';
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            border: 6px solid transparent;
-            border-top-color: var(--dark-gray);
-            margin-bottom: -6px;
+
+        .btn-small:hover {
+            background: var(--light-gray);
         }
-        @media (max-width: 1200px) {
-            .viz-row { grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); }
-            .cards-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+
+        /* ============================================================ */
+        /* ===== FOOTER ===== */
+        /* ============================================================ */
+        .main-footer {
+            color: #ffffff;
         }
+
+        .main-footer h3 {
+            color: #ffffff;
+        }
+
+        .main-footer p {
+            color: #ffffff;
+        }
+
+        .main-footer .footer-links a {
+            color: #ffffff;
+            transition: var(--transition);
+        }
+
+        .main-footer .footer-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .main-footer .social-links a {
+            color: #ffffff;
+            transition: var(--transition);
+        }
+
+        .main-footer .social-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .main-footer .footer-brand h3 {
+            color: #ffffff;
+        }
+
+        /* ============================================================ */
+        /* ===== RESPONSIVIDADE GERAL ===== */
+        /* ============================================================ */
         @media (max-width: 1024px) {
+            .container { padding: 0 1.5rem; }
             .page-title { font-size: 2.2rem; }
-            .section-title { font-size: 1.7rem; }
+            .charts-grid { grid-template-columns: 1fr; }
         }
+
         @media (max-width: 900px) {
-            .page-header { padding: 2rem 1.5rem; margin: 1rem 0; }
+            .page-header { padding: 2rem 1.5rem; }
         }
+
         @media (max-width: 768px) {
             .container { padding: 0 1.25rem; }
-            .section-title { font-size: 1.6rem; }
-            .page-title { font-size: 1.9rem; }
-            .data-filters { padding: 1.5rem; }
-            .filters-container { grid-template-columns: 1fr; }
-            .btn-filter { width: 100%; }
-            .cards-grid { grid-template-columns: 1fr; }
-            .academic-card { padding: 1.2rem; }
-            .card-icon { width: 50px; height: 50px; font-size: 1.3rem; }
-            .card-value { font-size: 2rem; }
-            .viz-tabs { flex-direction: column; }
-            .viz-tab { min-width: 100%; justify-content: flex-start; padding: 0.7rem 1rem; }
-            .viz-row { grid-template-columns: 1fr; gap: 1.5rem; }
-            .viz-chart { padding: 1rem; }
-            .chart-container { height: 260px; }
-            .data-table th, .data-table td { padding: 0.8rem 1rem; }
-            .btn-small { padding: 0.6rem 1.2rem; font-size: 0.85rem; }
-            .methodology { padding: 1.5rem; }
-            .last-update p { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
-            .last-update strong { min-width: auto; }
+            .page-title { font-size: 1.8rem; }
+            .page-subtitle { font-size: 1rem; }
+            .cards-grid { grid-template-columns: 1fr 1fr; }
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filters select {
+                width: 100%;
+                max-width: 100%;
+            }
+            .filters button {
+                width: 100%;
+            }
         }
+
         @media (max-width: 480px) {
-            .notification { right: 20px; left: 90px; }
+            .container { padding: 0 1rem; }
             .page-title { font-size: 1.6rem; }
-            .card-value { font-size: 1.8rem; }
-            .chart-container { height: 220px; }
-            .data-table th, .data-table td { padding: 0.6rem 0.8rem; font-size: 0.85rem; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .data-table th,
+            .data-table td { padding: 0.6rem 0.8rem; font-size: 0.8rem; }
+            .search-box input { width: 150px; }
         }
-        /* Footer e menu mobile (mantidos do original, apenas referência) */
-        .main-header { /* ... */ }
-        .nav-menu-mobile { /* ... */ }
-        .main-footer { /* ... */ }
+
+        @media (min-width: 901px) {
+            .nav-list { display: flex !important; }
+            .hamburger { display: none !important; }
+            .nav-menu-mobile { display: none !important; }
+            .menu-overlay { display: none !important; }
+        }
+
+        /* ===== LOADING ===== */
+        .loading-cell {
+            text-align: center;
+            padding: 3rem;
+            color: var(--medium-gray);
+        }
+
+        .loading-cell i {
+            margin-right: 0.75rem;
+            font-size: 1.2rem;
+        }
+
+        .modal-overlay-loading {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        .modal-overlay-loading.show { display: flex; }
     </style>
 </head>
 <body>
 
     <!-- Overlay de Carregamento -->
-    <div id="loading-overlay" class="modal-overlay">
-        <div class="modal-content">
-            <div style="width:80px;height:80px;border:4px solid #f3f3f3;border-top:4px solid var(--secondary-blue);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 2rem;"></div>
-            <h3 style="color:var(--dark-gray);margin-bottom:1rem;">Carregando Dados...</h3>
-            <p style="color:var(--medium-gray);margin-bottom:1.5rem;" id="loading-message">Carregando dados acadêmicos...</p>
-            <div style="height:6px;background:var(--light-gray);border-radius:3px;overflow:hidden;">
-                <div id="loading-progress" style="height:100%;background:linear-gradient(90deg,var(--secondary-blue),var(--primary-blue));width:0%;transition:width 0.3s ease;"></div>
-            </div>
+    <div id="loading-overlay" class="modal-overlay-loading show">
+        <div class="modal-content" style="background:var(--white);border-radius:var(--radius);padding:2rem;max-width:400px;text-align:center;">
+            <div style="width:60px;height:60px;border:4px solid #f3f3f3;border-top:4px solid var(--secondary-blue);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 1rem;"></div>
+            <h3 style="color:var(--dark-gray);">Carregando Dados...</h3>
+            <p style="color:var(--medium-gray);font-size:0.9rem;" id="loading-message">Carregando dados acadêmicos...</p>
         </div>
     </div>
 
@@ -707,6 +1032,7 @@
             </nav>
         </div>
     </header>
+
     <div class="menu-overlay" id="menuOverlay"></div>
     <nav class="nav-menu-mobile" id="navMenuMobile">
         <div class="menu-header">
@@ -725,7 +1051,7 @@
     <!-- Conteúdo Principal -->
     <main class="container">
 
-        <!-- ===== CABEÇALHO DA PÁGINA (estilo institucional) ===== -->
+        <!-- ===== CABEÇALHO DA PÁGINA ===== -->
         <section class="page-header fade-in">
             <div class="breadcrumb">
                 <a href="../../index.html">Início</a>
@@ -745,155 +1071,76 @@
                     <i class="fas fa-user-graduate"></i>
                     <span id="header-estudantes">Carregando...</span>
                 </div>
-<div class="status-indicator">
-    <i class="fas fa-chalkboard-teacher"></i>   <!-- ícone de docente -->
-    <span id="header-docentes">Carregando...</span>
-</div>
-
+                <div class="status-indicator">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span id="header-docentes">Carregando...</span>
+                </div>
             </div>
         </section>
 
-        <!-- Filtros Avançados -->
- <!-- Filtros (estilo desempenho) -->
-<section class="filters-section fade-in">
-    <div class="filters" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; background: var(--white); padding: 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
-        <div>
-            <label for="campus-filter" style="font-weight: 600; color: var(--dark-gray); font-size: 0.9rem;">Campus:</label>
-            <select id="campus-filter" style="padding: 0.6rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; background: var(--white); min-width: 160px; max-width: 220px;">
-                <option value="all">Todos os Campi</option>
-            </select>
+        <!-- ===== FILTERS ===== -->
+        <div class="filters">
+            <div>
+                <label for="campus-filter"><i class="fas fa-university"></i> Campus:</label>
+                <select id="campus-filter">
+                    <option value="all">Todos os Campi</option>
+                </select>
+            </div>
+            <div>
+                <label for="ano-filter"><i class="fas fa-calendar"></i> Ano:</label>
+                <select id="ano-filter">
+                    <option value="all">Todos os Anos</option>
+                </select>
+            </div>
+            <button id="apply-filters"><i class="fas fa-filter"></i> Aplicar</button>
+            <button id="reset-filters" class="btn-reset"><i class="fas fa-undo"></i> Resetar</button>
         </div>
-        <div>
-            <label for="curso-filter" style="font-weight: 600; color: var(--dark-gray); font-size: 0.9rem;">Nível do Curso:</label>
-            <select id="curso-filter" style="padding: 0.6rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; background: var(--white); min-width: 160px; max-width: 220px;">
-                <option value="all">Todos os Níveis</option>
-                <option value="tecnico">Técnico</option>
-                <option value="graduacao">Graduação</option>
-                <option value="pos">Pós-Graduação</option>
-            </select>
-        </div>
-        <div>
-            <label for="ano-filter" style="font-weight: 600; color: var(--dark-gray); font-size: 0.9rem;">Ano Letivo:</label>
-            <select id="ano-filter" style="padding: 0.6rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; background: var(--white); min-width: 160px; max-width: 220px;">
-                <option value="all">Todos os Anos</option>
-            </select>
-        </div>
-        <div>
-            <label for="modalidade-filter" style="font-weight: 600; color: var(--dark-gray); font-size: 0.9rem;">Modalidade:</label>
-            <select id="modalidade-filter" style="padding: 0.6rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 0.95rem; background: var(--white); min-width: 160px; max-width: 220px;">
-                <option value="all">Todas</option>
-                <option value="presencial">Presencial</option>
-                <option value="ead">EaD</option>
-            </select>
-        </div>
-        <button id="apply-filters" style="background: var(--primary-blue); color: white; border: none; padding: 0.6rem 1.8rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition);">
-            <i class="fas fa-filter"></i> Aplicar 
-        </button>
-        <button id="reset-filters" style="background: #6c757d; color: white; border: none; padding: 0.6rem 1.8rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition);">
-            <i class="fas fa-undo"></i> Resetar
-        </button>
-    </div>
-</section>
 
-        <!-- Cards de Resumo -->
+        <!-- ===== CARDS DE RESUMO ===== -->
         <section class="academic-summary fade-in">
             <h2 class="section-title">Visão Geral Acadêmica</h2>
             <div class="cards-grid">
-                <div class="card academic-card">
+                <div class="academic-card">
                     <div class="card-icon"><i class="fas fa-users"></i></div>
-                    <h3>Total de Estudantes</h3>
                     <div class="card-value" id="total-students">---</div>
-                    <p class="card-desc">Matriculados no último ano disponível</p>
-                    <div class="card-detail">
-                        <div class="detail-item"><span class="detail-label"><i class="fas fa-university"></i> Campi atendidos:</span><span class="detail-value" id="campi-count">---</span></div>
-                        <div class="detail-item"><span class="detail-label"><i class="fas fa-calendar-alt"></i> Ano base:</span><span class="detail-value" id="ano-base">---</span></div>
-                    </div>
+                    <div class="card-label">Total de Estudantes</div>
                 </div>
-                <div class="card academic-card">
+                <div class="academic-card">
                     <div class="card-icon"><i class="fas fa-chalkboard-teacher"></i></div>
-                    <h3>Corpo Docente</h3>
                     <div class="card-value" id="total-docentes">---</div>
-                    <p class="card-desc">Docentes em exercício</p>
-                    <div class="card-detail">
-                        <div class="detail-item"><span class="detail-label"><i class="fas fa-user-tie"></i> Docentes Efetivos:</span><span class="detail-value" id="docentes-efetivos">---</span></div>
-                    </div>
+                    <div class="card-label">Corpo Docente</div>
                 </div>
-                <div class="card academic-card">
+                <div class="academic-card">
                     <div class="card-icon"><i class="fas fa-user-cog"></i></div>
-                    <h3>TAEs</h3>
                     <div class="card-value" id="total-taes">---</div>
-                    <p class="card-desc">Técnico-Administrativos</p>
-                    <div class="card-detail">
-                        <div class="detail-item"><span class="detail-label"><i class="fas fa-users-cog"></i> Total de Servidores:</span><span class="detail-value" id="total-servidores">---</span></div>
-                    </div>
+                    <div class="card-label">TAEs</div>
                 </div>
-                <div class="card academic-card">
+                <div class="academic-card">
                     <div class="card-icon"><i class="fas fa-chart-line"></i></div>
-                    <h3>Média por Campus</h3>
                     <div class="card-value" id="media-estudantes">---</div>
-                    <p class="card-desc">Estudantes por campus (último ano)</p>
-                    <div class="card-detail">
-                        <div class="detail-item"><span class="detail-label"><i class="fas fa-arrows-alt-h"></i> Maior campus:</span><span class="detail-value" id="maior-campus">---</span></div>
-                        <div class="detail-item"><span class="detail-label"><i class="fas fa-arrow-down"></i> Menor campus:</span><span class="detail-value" id="menor-campus">---</span></div>
-                    </div>
+                    <div class="card-label">Média por Campus</div>
                 </div>
             </div>
         </section>
 
-        <!-- Visualizações Gráficas -->
-        <section class="academic-visualizations fade-in">
-            <h2 class="section-title">Visualizações Interativas</h2>
-            <div class="viz-tabs">
-                <button class="viz-tab active" data-tab="matriculas"><i class="fas fa-user-graduate"></i> Matrículas</button>
-                <button class="viz-tab" data-tab="servidores"><i class="fas fa-users"></i> Servidores</button>
-                <button class="viz-tab" data-tab="evolucao"><i class="fas fa-chart-line"></i> Evolução</button>
-            </div>
-            <div class="viz-content">
-                <!-- Matrículas -->
-                <div class="viz-tab-content active" id="matriculas-content">
-                    <div class="viz-row">
-                        <div class="viz-chart">
-                            <h3><i class="fas fa-chart-bar"></i> Matrículas por Campus (Último Ano)</h3>
-                            <div class="chart-container"><canvas id="chartMatriculas"></canvas></div>
-                        </div>
-                        <div class="viz-chart">
-                            <h3><i class="fas fa-chart-pie"></i> Distribuição de Servidores</h3>
-                            <div class="chart-container"><canvas id="chartServidores"></canvas></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Evolução -->
-                <div class="viz-tab-content" id="evolucao-content">
-                    <div class="viz-row">
-                        <div class="viz-chart">
-                            <h3><i class="fas fa-chart-line"></i> Evolução de Matrículas Totais</h3>
-                            <div class="chart-container"><canvas id="chartEvolucao"></canvas></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Servidores (já incluso na primeira aba) -->
-                <div class="viz-tab-content" id="servidores-content">
-                    <div class="viz-row">
-                        <div class="viz-chart">
-                            <h3><i class="fas fa-chart-bar"></i> Docentes por Campus</h3>
-                            <div class="chart-container"><canvas id="chartDocentes"></canvas></div>
-                        </div>
-                        <div class="viz-chart">
-                            <h3><i class="fas fa-chart-bar"></i> TAEs por Campus</h3>
-                            <div class="chart-container"><canvas id="chartTAEs"></canvas></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- ===== GRÁFICOS ===== -->
+        <section class="charts-section fade-in">
+            <h2 class="section-title">Visualizações Gráficas</h2>
+            <div class="charts-grid" id="charts-grid"></div>
         </section>
 
-        <!-- Tabela de Dados -->
-        <section class="academic-details fade-in">
-            <div class="section-header" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
-                <h2 class="section-title">Dados Detalhados por Campus</h2>
-                <div class="table-info" style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
-                    <span class="table-count" id="table-count">Carregando...</span>
-                    <div class="search-box"><input type="text" id="table-search" placeholder="Buscar campus..."><i class="fas fa-search"></i></div>
+        <!-- ===== TABELA ===== -->
+        <section class="table-section fade-in">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+                <h3 style="font-size:1.2rem;color:var(--dark-gray);display:flex;align-items:center;gap:0.75rem;">
+                    <i class="fas fa-table"></i> Dados Detalhados por Campus
+                </h3>
+                <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;">
+                    <div class="search-box">
+                        <input type="text" id="table-search" placeholder="Buscar campus...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <button class="btn-small" id="export-data"><i class="fas fa-download"></i> Exportar CSV</button>
                 </div>
             </div>
             <div class="table-container">
@@ -901,59 +1148,107 @@
                     <thead>
                         <tr>
                             <th>Campus</th>
-                            <th>Estudantes (último ano)</th>
+                            <th>Estudantes</th>
                             <th>Docentes</th>
                             <th>TAEs</th>
                             <th>Total Servidores</th>
-                            <th>Ano base</th>
                         </tr>
                     </thead>
                     <tbody id="academic-table-body">
-                        <tr><td colspan="6" class="loading-cell"><i class="fas fa-spinner fa-spin"></i> Carregando dados...</td></tr>
+                        <tr><td colspan="5" class="loading-cell"><i class="fas fa-spinner fa-spin"></i> Carregando dados...</td></tr>
                     </tbody>
                 </table>
             </div>
-            <div class="table-footer" style="display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;flex-wrap:wrap;gap:1rem;">
-                <div class="pagination-info" style="color:var(--medium-gray);font-size:0.9rem;">
-                    Mostrando <span id="showing-from">0</span>-<span id="showing-to">0</span> de <span id="total-items">0</span> campi
-                </div>
-                <div class="table-actions">
-                    <button class="btn-small" id="export-data"><i class="fas fa-download"></i> Exportar CSV</button>
-                    <button class="btn-small" id="refresh-data"><i class="fas fa-sync-alt"></i> Atualizar</button>
-                </div>
+            <div class="table-footer">
+                <span style="color:var(--medium-gray);font-size:0.9rem;" id="table-count">Carregando...</span>
             </div>
         </section>
 
-        <!-- Metodologia -->
-        <section class="methodology fade-in">
-            <div class="methodology-content">
-                <h3><i class="fas fa-info-circle"></i> Metodologia</h3>
-                <div class="methodology-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;margin-bottom:2rem;">
-                    <div>
-                        <h4 style="color:var(--primary-blue);margin-bottom:1rem;font-size:1.1rem;">Fonte dos Dados</h4>
-                        <ul class="methodology-list">
-                            <li>Arquivo dadosAdministrativos.json</li>
-                            <li>Dados consolidados de matrículas e servidores</li>
-                            <li>Atualizado automaticamente</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 style="color:var(--primary-blue);margin-bottom:1rem;font-size:1.1rem;">Processamento</h4>
-                        <ul class="methodology-list">
-                            <li>Último ano disponível para cada campus</li>
-                            <li>Agregação de totais por campus</li>
-                            <li>Cálculo de médias e distribuições</li>
-                        </ul>
-                    </div>
+        <!-- ===== METODOLOGIA ===== -->
+        <section class="methodology-section" style="background:linear-gradient(135deg,var(--light-gray),#eef2ff);border-radius:var(--radius);padding:2.5rem;margin:3rem 0;border-left:5px solid var(--secondary-blue);">
+            <h2 class="section-title">Metodologia e Fontes</h2>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem;margin-bottom:2rem;">
+                <div>
+                    <h4 style="color:var(--primary-blue);margin-bottom:1rem;font-size:1.1rem;">Fonte dos Dados</h4>
+                    <ul style="list-style:none;padding-left:0;">
+                        <li style="margin-bottom:0.75rem;color:var(--medium-gray);line-height:1.6;padding-left:1.5rem;position:relative;">✓ dadosAdministrativos.json</li>
+                        <li style="margin-bottom:0.75rem;color:var(--medium-gray);line-height:1.6;padding-left:1.5rem;position:relative;">✓ Dados consolidados de matrículas</li>
+                        <li style="margin-bottom:0.75rem;color:var(--medium-gray);line-height:1.6;padding-left:1.5rem;position:relative;">✓ Informações de servidores por campus</li>
+                    </ul>
                 </div>
-                <div class="last-update">
-                    <p><strong><i class="fas fa-calendar-check"></i> Última atualização:</strong> <span id="last-update-date">Carregando...</span></p>
-                    <p><strong><i class="fas fa-database"></i> Fonte:</strong> dadosAdministrativos.json</p>
-                    <p><strong><i class="fas fa-shield-alt"></i> Qualidade:</strong> <span class="rate-high">Dados oficiais</span></p>
+                <div>
+                    <h4 style="color:var(--primary-blue);margin-bottom:1rem;font-size:1.1rem;">Processamento</h4>
+                    <ul style="list-style:none;padding-left:0;">
+                        <li style="margin-bottom:0.75rem;color:var(--medium-gray);line-height:1.6;padding-left:1.5rem;position:relative;">✓ Agregação de totais por campus</li>
+                        <li style="margin-bottom:0.75rem;color:var(--medium-gray);line-height:1.6;padding-left:1.5rem;position:relative;">✓ Cálculo de médias e distribuições</li>
+                        <li style="margin-bottom:0.75rem;color:var(--medium-gray);line-height:1.6;padding-left:1.5rem;position:relative;">✓ Atualização automática</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color:var(--primary-blue);margin-bottom:1rem;font-size:1.1rem;">Qualidade</h4>
+                    <ul style="list-style:none;padding-left:0;">
+                        <li style="margin-bottom:0.75rem;color:var(--medium-gray);line-height:1.6;padding-left:1.5rem;position:relative;">✓ Dados oficiais do IFPB</li>
+                        <li style="margin-bottom:0.75rem;color:var(--medium-gray);line-height:1.6;padding-left:1.5rem;position:relative;">✓ Consistência verificada</li>
+                    </ul>
                 </div>
             </div>
+            <div style="background:var(--white);border-radius:8px;padding:1.5rem;border-left:4px solid var(--success-green);">
+                <p style="margin-bottom:0.5rem;color:var(--medium-gray);display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+                    <strong style="color:var(--dark-gray);min-width:140px;"><i class="fas fa-calendar-check"></i> Última atualização:</strong>
+                    <span id="last-update-date">Carregando...</span>
+                </p>
+                <p style="margin-bottom:0.5rem;color:var(--medium-gray);display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+                    <strong style="color:var(--dark-gray);min-width:140px;"><i class="fas fa-database"></i> Fonte:</strong>
+                    <span>dadosAdministrativos.json</span>
+                </p>
+                <p style="color:var(--medium-gray);display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+                    <strong style="color:var(--dark-gray);min-width:140px;"><i class="fas fa-shield-alt"></i> Qualidade:</strong>
+                    <span style="color:var(--success-green);font-weight:700;">Dados oficiais</span>
+                </p>
+            </div>
         </section>
+
     </main>
+
+    <!-- ===== MODAL ===== -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modalTitle"><i class="fas fa-chart-bar"></i> Gráfico Expandido</h3>
+                <button class="modal-close" id="closeModalBtn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="grafico-wrapper">
+                    <div class="modal-scroll-wrapper">
+                        <div class="modal-scroll-inner">
+                            <canvas id="modalCanvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-descricao">
+                    <div class="descricao-texto" id="modalDescricao">
+                        <i class="fas fa-info-circle" aria-hidden="true"></i>
+                        Este gráfico apresenta dados acadêmicos do IFPB.
+                        <br><br>
+                        <strong>Como interpretar:</strong>
+                        <ul>
+                            <li>Barras representam a distribuição dos dados por categoria.</li>
+                            <li>Gráficos de pizza indicam a proporção de cada categoria.</li>
+                            <li>Gráficos de linha ilustram a evolução dos dados ao longo do tempo.</li>
+                            <li>Recomendamos a visualização em telas maiores para uma melhor experiência.</li>
+                        </ul>
+                        <br>
+                        <strong>💡 Dica:</strong> Utilize a barra de rolagem horizontal para visualizar todos os dados.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-action-btn" id="modalPngBtn"><i class="fas fa-image"></i> PNG</button>
+                <button class="modal-action-btn" id="modalJsonBtn"><i class="fas fa-code"></i> JSON</button>
+                <button class="modal-action-btn" id="modalCsvBtn"><i class="fas fa-table"></i> CSV</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Rodapé -->
     <footer class="main-footer">
@@ -971,9 +1266,9 @@
                     <h3>Navegação</h3>
                     <ul class="footer-links">
                         <li><a href="../../index.html"><i class="fas fa-chevron-right"></i> Início</a></li>
-                        <li><a href="../pages dados abertos/institucional.html"><i class="fas fa-chevron-right"></i> A Instituição</a></li>
-                        <li><a href="../pages dados abertos/academico.html"><i class="fas fa-chevron-right"></i> Vida Acadêmica</a></li>
-                        <li><a href="../pages dados abertos/orcamento.html"><i class="fas fa-chevron-right"></i> Gestão e Orçamento</a></li>
+                        <li><a href="institucional.html"><i class="fas fa-chevron-right"></i> A Instituição</a></li>
+                        <li><a href="academico.html"><i class="fas fa-chevron-right"></i> Vida Acadêmica</a></li>
+                        <li><a href="orcamento.html"><i class="fas fa-chevron-right"></i> Gestão e Orçamento</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -993,610 +1288,877 @@
         </div>
     </footer>
 
-<script>
-    // ============================================================
-    // VARIÁVEIS GLOBAIS
-    // ============================================================
-    let dadosAdm = [];
-    let dadosAgrupados = {};      // { campus: { servidores, docentes, taes, matriculas_por_ano } }
-    let ultimoAnoGlobal = null;
-    let filteredCampi = [];
-    let academicCharts = {};
+    <script>
+        // ================================================================
+        // MENU MOBILE
+        // ================================================================
+        const hamburger = document.getElementById('hamburger');
+        const navMenuMobile = document.getElementById('navMenuMobile');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const menuCloseBtn = document.getElementById('menuCloseBtn');
 
-    // ============================================================
-    // FUNÇÕES AUXILIARES
-    // ============================================================
-    function showLoading(message = 'Carregando dados...') {
-        const overlay = document.getElementById('loading-overlay');
-        const msgEl = document.getElementById('loading-message');
-        const progressEl = document.getElementById('loading-progress');
-        if (overlay) {
-            if (msgEl) msgEl.textContent = message;
-            if (progressEl) progressEl.style.width = '0%';
-            overlay.classList.add('show');
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += Math.random() * 10;
-                if (progress > 90) { clearInterval(interval); if (progressEl) progressEl.style.width = '90%'; }
-                else { if (progressEl) progressEl.style.width = progress + '%'; }
-            }, 200);
-            window._loadingInterval = interval;
+        function closeMenu() {
+            hamburger?.classList.remove('active');
+            navMenuMobile?.classList.remove('active');
+            menuOverlay?.classList.remove('active');
+            document.body.classList.remove('menu-open');
         }
-    }
 
-    function hideLoading() {
-        const overlay = document.getElementById('loading-overlay');
-        const progressEl = document.getElementById('loading-progress');
-        if (overlay) {
-            if (progressEl) progressEl.style.width = '100%';
-            if (window._loadingInterval) clearInterval(window._loadingInterval);
-            setTimeout(() => overlay.classList.remove('show'), 300);
+        function openMenu() {
+            hamburger?.classList.add('active');
+            navMenuMobile?.classList.add('active');
+            menuOverlay?.classList.add('active');
+            document.body.classList.add('menu-open');
         }
-    }
 
-    function showNotification(message, type = 'info') {
-        const existing = document.querySelector('.notification');
-        if (existing) existing.remove();
-        const notification = document.createElement('div');
-        notification.className = 'notification ' + type;
-        const icons = { success: 'check-circle', error: 'exclamation-circle', warning: 'exclamation-triangle', info: 'info-circle' };
-        notification.innerHTML = '<i class="fas fa-' + (icons[type] || icons.info) + '"></i><span>' + message + '</span><button class="notification-close"><i class="fas fa-times"></i></button>';
-        document.body.appendChild(notification);
-        notification.querySelector('.notification-close').addEventListener('click', function() {
-            notification.style.animation = 'slideOutRight 0.3s ease forwards';
-            setTimeout(() => notification.remove(), 300);
+        if (hamburger) {
+            hamburger.addEventListener('click', function() {
+                navMenuMobile?.classList.contains('active') ? closeMenu() : openMenu();
+            });
+        }
+
+        if (menuCloseBtn) menuCloseBtn.addEventListener('click', closeMenu);
+        if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
+
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 900 && navMenuMobile?.classList.contains('active')) closeMenu();
         });
-        setTimeout(() => {
-            if (notification.parentElement) {
-                notification.style.animation = 'slideOutRight 0.3s ease forwards';
+
+        document.querySelectorAll('.nav-menu-mobile a').forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+
+        // ================================================================
+        // VARIÁVEIS GLOBAIS
+        // ================================================================
+        let dadosAdm = [];
+        let dadosAgrupados = {};
+        let ultimoAnoGlobal = null;
+        let filteredCampi = [];
+        let academicCharts = {};
+        let modalChartInstance = null;
+        let modalRawData = null;
+        let modalChartTitle = '';
+
+        // ================================================================
+        // FUNÇÕES AUXILIARES
+        // ================================================================
+        function showLoading(message = 'Carregando dados...') {
+            const overlay = document.getElementById('loading-overlay');
+            const msgEl = document.getElementById('loading-message');
+            if (overlay && msgEl) {
+                msgEl.textContent = message;
+                overlay.classList.add('show');
+            }
+        }
+
+        function hideLoading() {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                overlay.classList.remove('show');
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const existing = document.querySelector('.notification');
+            if (existing) existing.remove();
+            const notification = document.createElement('div');
+            notification.className = 'notification ' + type;
+            notification.style.cssText = `
+                position: fixed; top: 20px; right: 20px;
+                background: ${type === 'success' ? '#1cc88a' : type === 'error' ? '#e74a3b' : '#36b9cc'};
+                color: white; padding: 12px 24px;
+                border-radius: 8px; font-family: 'Poppins', sans-serif;
+                font-size: 14px; font-weight: 500;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 9999; transform: translateX(120%);
+                transition: transform 0.3s ease;
+                max-width: 90%;
+            `;
+            notification.innerHTML =
+                `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i> ${message}`;
+            document.body.appendChild(notification);
+            setTimeout(() => { notification.style.transform = 'translateX(0)'; }, 10);
+            setTimeout(() => {
+                notification.style.transform = 'translateX(120%)';
                 setTimeout(() => notification.remove(), 300);
-            }
-        }, 5000);
-    }
-
-    function debounce(func, wait) {
-        let timeout;
-        return function(...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
-        };
-    }
-
-    // ============================================================
-    // CARREGAR E PROCESSAR DADOS
-    // ============================================================
-    async function carregarDadosAcademicos() {
-        try {
-            const caminho = '../../assets/data/EstruturaAdministrativa/dadosAdministrativos.json';
-            console.log('📥 Carregando dados acadêmicos de:', caminho);
-            const res = await fetch(caminho);
-            if (!res.ok) throw new Error('HTTP ' + res.status);
-            dadosAdm = await res.json();
-            console.log('✅ Dados carregados:', dadosAdm.length, 'registros');
-
-            processarDados();
-            atualizarFiltros();
-            atualizarCards();
-            atualizarHeader();   // <-- CHAMADA ADICIONADA
-            atualizarTabela();
-            atualizarGraficos();
-            atualizarData();
-
-            showNotification('Dados acadêmicos carregados com sucesso!', 'success');
-            return true;
-        } catch (erro) {
-            console.error('❌ Erro ao carregar dados:', erro);
-            showNotification('Erro ao carregar dados. Verifique o console.', 'error');
-            return false;
+            }, 4000);
         }
-    }
 
-    function processarDados() {
-        // Agrupa por campus
-        const mapa = {};
-        dadosAdm.forEach(item => {
-            const campus = item.Estrutura;
-            if (!mapa[campus]) {
-                mapa[campus] = {
-                    servidores: item['Total de Servidores'] || 0,
-                    taes: item.TAEs || 0,
-                    docentes: item.Docentes || 0,
-                    docentesEfetivos: item['Docentes Efetivos'] || 0,
-                    itcd: item.ITCD || null,
-                    matriculas: {}  // ano -> valor
-                };
+        // ================================================================
+        // CARREGAR DADOS
+        // ================================================================
+        async function carregarDadosAcademicos() {
+            try {
+                const caminho = '../../assets/data/EstruturaAdministrativa/dadosAdministrativos.json';
+                console.log('📥 Carregando dados acadêmicos de:', caminho);
+                const res = await fetch(caminho + '?t=' + Date.now());
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                dadosAdm = await res.json();
+                console.log('✅ Dados carregados:', dadosAdm.length, 'registros');
+
+                processarDados();
+                atualizarFiltros();
+                atualizarCards();
+                atualizarHeader();
+                atualizarTabela();
+                renderizarGraficos();
+                atualizarData();
+
+                showNotification('Dados acadêmicos carregados com sucesso!', 'success');
+                return true;
+            } catch (erro) {
+                console.error('❌ Erro ao carregar dados:', erro);
+                showNotification('Erro ao carregar dados.', 'error');
+                return false;
             }
-            const ano = item.Ano;
-            const valor = item.Matrículas;
-            if (valor !== null && valor !== undefined && valor !== '(Em branco)' && !isNaN(valor)) {
-                mapa[campus].matriculas[ano] = Number(valor);
-            }
-            // Atualiza servidores (caso haja diferença, pega o último)
-            mapa[campus].servidores = item['Total de Servidores'] || mapa[campus].servidores;
-            mapa[campus].taes = item.TAEs || mapa[campus].taes;
-            mapa[campus].docentes = item.Docentes || mapa[campus].docentes;
-            mapa[campus].docentesEfetivos = item['Docentes Efetivos'] || mapa[campus].docentesEfetivos;
-        });
+        }
 
-        dadosAgrupados = mapa;
-
-        // Determina o último ano global (maior ano presente em qualquer campus)
-        let maxAno = 0;
-        Object.values(mapa).forEach(c => {
-            Object.keys(c.matriculas).forEach(a => {
-                if (parseInt(a) > maxAno) maxAno = parseInt(a);
-            });
-        });
-        ultimoAnoGlobal = maxAno;
-
-        // Popula filteredCampi (lista de nomes)
-        filteredCampi = Object.keys(mapa).sort();
-
-        console.log('📊 Dados processados:', filteredCampi.length, 'campi, último ano:', ultimoAnoGlobal);
-    }
-
-    // ============================================================
-    // ATUALIZAR FILTROS
-    // ============================================================
-    function atualizarFiltros() {
-        const campusSelect = document.getElementById('campus-filter');
-        const anoSelect = document.getElementById('ano-filter');
-        if (!campusSelect) return;
-
-        // Preenche campi
-        campusSelect.innerHTML = '<option value="all">Todos os Campi</option>';
-        filteredCampi.forEach(c => {
-            const opt = document.createElement('option');
-            opt.value = c;
-            opt.textContent = c;
-            campusSelect.appendChild(opt);
-        });
-
-        // Preenche anos
-        if (anoSelect) {
-            anoSelect.innerHTML = '<option value="all">Todos os Anos</option>';
-            const anosSet = new Set();
+        function processarDados() {
+            const mapa = {};
             dadosAdm.forEach(item => {
-                if (item.Ano) anosSet.add(item.Ano);
-            });
-            [...anosSet].sort((a, b) => b - a).forEach(a => {
-                const opt = document.createElement('option');
-                opt.value = a;
-                opt.textContent = a;
-                anoSelect.appendChild(opt);
-            });
-        }
-    }
-
-    // ============================================================
-    // ATUALIZAR CARDS (agora com total acumulado de todos os anos)
-    // ============================================================
-    function atualizarCards() {
-        let totalEstudantes = 0;
-        let totalDocentes = 0;
-        let totalTAEs = 0;
-        let totalServidores = 0;
-        let docentesEfetivos = 0;
-        let campusCount = 0;
-        let maior = { nome: '', valor: 0 };
-        let menor = { nome: '', valor: Infinity };
-
-        Object.entries(dadosAgrupados).forEach(([campus, dados]) => {
-            // Soma todas as matrículas de todos os anos
-            let somaMatriculas = 0;
-            Object.values(dados.matriculas).forEach(val => {
-                if (val !== null && val !== undefined && !isNaN(val)) {
-                    somaMatriculas += Number(val);
+                const campus = item.Estrutura;
+                if (!mapa[campus]) {
+                    mapa[campus] = {
+                        servidores: item['Total de Servidores'] || 0,
+                        taes: item.TAEs || 0,
+                        docentes: item.Docentes || 0,
+                        docentesEfetivos: item['Docentes Efetivos'] || 0,
+                        itcd: item.ITCD || null,
+                        matriculas: {}
+                    };
                 }
-            });
-            totalEstudantes += somaMatriculas;
-
-            // Atualiza maior e menor campus por matrícula acumulada
-            if (somaMatriculas > maior.valor) { maior = { nome: campus, valor: somaMatriculas }; }
-            if (somaMatriculas < menor.valor && somaMatriculas > 0) { menor = { nome: campus, valor: somaMatriculas }; }
-
-            totalDocentes += dados.docentes || 0;
-            totalTAEs += dados.taes || 0;
-            totalServidores += dados.servidores || 0;
-            docentesEfetivos += dados.docentesEfetivos || 0;
-            campusCount++;
-        });
-
-        if (menor.valor === Infinity) menor = { nome: 'N/A', valor: 0 };
-
-        // Atualiza elementos DOM
-        document.getElementById('total-students').textContent = totalEstudantes.toLocaleString();
-        document.getElementById('total-docentes').textContent = totalDocentes.toLocaleString();
-        document.getElementById('total-taes').textContent = totalTAEs.toLocaleString();
-        document.getElementById('total-servidores').textContent = totalServidores.toLocaleString();
-        document.getElementById('docentes-efetivos').textContent = docentesEfetivos.toLocaleString();
-        document.getElementById('campi-count').textContent = campusCount;
-        document.getElementById('ano-base').textContent = 'Acumulado (2017–2025)';
-        document.getElementById('media-estudantes').textContent = campusCount > 0 ? Math.round(totalEstudantes / campusCount).toLocaleString() : '---';
-        document.getElementById('maior-campus').textContent = maior.nome + ' (' + maior.valor.toLocaleString() + ')';
-        document.getElementById('menor-campus').textContent = menor.nome + ' (' + (menor.valor > 0 ? menor.valor.toLocaleString() : '0') + ')';
-    }
-
-    // ============================================================
-    // ATUALIZAR INDICADORES DO CABEÇALHO
-    // ============================================================
-    function atualizarHeader() {
-        const anoEl = document.getElementById('header-ano');
-        const estudantesEl = document.getElementById('header-estudantes');
-        const docentesEl = document.getElementById('header-docentes');
-
-        if (anoEl) {
-            const anoAtual = new Date().getFullYear();
-            anoEl.textContent = anoAtual;
-        }
-
-        // Calcular totais a partir dos dados agrupados
-        let totalEstudantes = 0;
-        let totalDocentes = 0;
-        let totalTAEs = 0;
-        Object.values(dadosAgrupados).forEach(d => {
-            Object.values(d.matriculas).forEach(v => {
-                if (v !== null && v !== undefined && !isNaN(v)) totalEstudantes += Number(v);
-            });
-            totalDocentes += d.docentes || 0;
-            totalTAEs += d.taes || 0;
-        });
-        const totalServidores = totalDocentes + totalTAEs;
-
-        if (estudantesEl) estudantesEl.textContent = totalEstudantes.toLocaleString() + ' Estudantes';
-        if (docentesEl) docentesEl.textContent = totalDocentes.toLocaleString() + ' Docentes';
-    }
-
-    // ============================================================
-    // ATUALIZAR TABELA (com total acumulado)
-    // ============================================================
-    function atualizarTabela() {
-        const tbody = document.getElementById('academic-table-body');
-        if (!tbody) return;
-
-        const campusList = filteredCampi.length > 0 ? filteredCampi : Object.keys(dadosAgrupados).sort();
-
-        if (campusList.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" class="loading-cell">Nenhum dado encontrado.</td></tr>';
-            return;
-        }
-
-        let html = '';
-        campusList.forEach(campus => {
-            const dados = dadosAgrupados[campus];
-            if (!dados) return;
-            let matricula = 0;
-            Object.values(dados.matriculas).forEach(v => {
-                if (v !== null && v !== undefined && !isNaN(v)) {
-                    matricula += Number(v);
+                const ano = item.Ano;
+                const valor = item.Matrículas;
+                if (valor !== null && valor !== undefined && valor !== '(Em branco)' && !isNaN(valor)) {
+                    mapa[campus].matriculas[ano] = Number(valor);
                 }
+                mapa[campus].servidores = item['Total de Servidores'] || mapa[campus].servidores;
+                mapa[campus].taes = item.TAEs || mapa[campus].taes;
+                mapa[campus].docentes = item.Docentes || mapa[campus].docentes;
+                mapa[campus].docentesEfetivos = item['Docentes Efetivos'] || mapa[campus].docentesEfetivos;
             });
-            html += `<tr>
-                <td><strong>${campus}</strong></td>
-                <td>${matricula.toLocaleString()}</td>
-                <td>${dados.docentes || 0}</td>
-                <td>${dados.taes || 0}</td>
-                <td>${dados.servidores || 0}</td>
-                <td>Acumulado</td>
-            </tr>`;
-        });
 
-        tbody.innerHTML = html;
+            dadosAgrupados = mapa;
 
-        // Atualiza info de paginação
-        const total = campusList.length;
-        document.getElementById('showing-from').textContent = total > 0 ? 1 : 0;
-        document.getElementById('showing-to').textContent = total;
-        document.getElementById('total-items').textContent = total;
-        document.getElementById('table-count').textContent = total + ' campi encontrados';
-    }
+            let maxAno = 0;
+            Object.values(mapa).forEach(c => {
+                Object.keys(c.matriculas).forEach(a => {
+                    if (parseInt(a) > maxAno) maxAno = parseInt(a);
+                });
+            });
+            ultimoAnoGlobal = maxAno;
 
-    // ============================================================
-    // GRÁFICOS (com dados acumulados e títulos atualizados)
-    // ============================================================
-    function atualizarGraficos() {
-        if (typeof Chart === 'undefined') {
-            console.warn('Chart.js não carregado.');
-            return;
+            filteredCampi = Object.keys(mapa).sort();
+            console.log('📊 Dados processados:', filteredCampi.length, 'campi, último ano:', ultimoAnoGlobal);
         }
 
-        // Destroi gráficos anteriores
-        Object.keys(academicCharts).forEach(key => {
-            if (academicCharts[key]) {
-                academicCharts[key].destroy();
-                delete academicCharts[key];
+        // ================================================================
+        // FUNÇÕES DE CRIAÇÃO DE GRÁFICOS (COM SCROLL)
+        // ================================================================
+        function criarBarraVerticalScroll(canvasId, labels, values, tituloY = 'Quantidade', cores = null) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const parent = canvas.parentElement;
+            if (parent) {
+                parent.style.width = '100%';
+                parent.style.minWidth = '100%';
             }
-        });
+            const ctx = canvas.getContext('2d');
+            if (academicCharts[canvasId]) { academicCharts[canvasId].destroy(); delete academicCharts[canvasId]; }
+            if (!labels || labels.length === 0) return;
 
-        const campusList = Object.keys(dadosAgrupados).sort();
+            function shortenText(text, maxChars = 18) {
+                if (!text) return '';
+                if (text.length <= maxChars) return text;
+                return text.substring(0, maxChars - 3) + '...';
+            }
 
-        // ---- Gráfico 1: Matrículas acumuladas por campus ----
-        const labels = [];
-        const dataMatriculas = [];
-        campusList.forEach(campus => {
-            const dados = dadosAgrupados[campus];
-            let total = 0;
-            Object.values(dados.matriculas).forEach(v => {
-                if (v !== null && v !== undefined && !isNaN(v)) {
-                    total += Number(v);
-                }
-            });
-            labels.push(campus);
-            dataMatriculas.push(total);
-        });
+            const shortLabels = labels.map(label => shortenText(label, 14));
 
-        const ctx1 = document.getElementById('chartMatriculas')?.getContext('2d');
-        if (ctx1) {
-            academicCharts.matriculas = new Chart(ctx1, {
+            const defaultCores = ['#1a5f7a', '#36b9cc', '#1cc88a', '#f6c23e', '#4e73df', '#e74a3b'];
+            const bgCores = cores || defaultCores;
+
+            academicCharts[canvasId] = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: labels,
+                    labels: shortLabels,
                     datasets: [{
-                        label: 'Matrículas (total acumulado 2017–2025)',
-                        data: dataMatriculas,
-                        backgroundColor: 'rgba(78,115,223,0.7)',
-                        borderColor: 'rgba(78,115,223,1)',
-                        borderWidth: 1
+                        label: tituloY,
+                        data: values,
+                        backgroundColor: bgCores.length > 1 ? bgCores : '#1a5f7a',
+                        borderRadius: 5
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { callbacks: { label: (ctx) => ctx.parsed.y.toLocaleString() } }
-                    },
                     scales: {
-                        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
-                        x: { grid: { display: false } }
-                    }
-                }
-            });
-        }
-
-        // ---- Gráfico 2: Servidores (pizza) ----
-        const totalDocentes = campusList.reduce((s, c) => s + (dadosAgrupados[c].docentes || 0), 0);
-        const totalTAEs = campusList.reduce((s, c) => s + (dadosAgrupados[c].taes || 0), 0);
-        const totalOutros = campusList.reduce((s, c) => s + (dadosAgrupados[c].servidores || 0), 0) - totalDocentes - totalTAEs;
-
-        const ctx2 = document.getElementById('chartServidores')?.getContext('2d');
-        if (ctx2) {
-            academicCharts.servidores = new Chart(ctx2, {
-                type: 'pie',
-                data: {
-                    labels: ['Docentes', 'TAEs', 'Outros'],
-                    datasets: [{
-                        data: [totalDocentes, totalTAEs, Math.max(totalOutros, 0)],
-                        backgroundColor: ['#4e73df', '#1cc88a', '#f6c23e'],
-                        borderWidth: 2,
-                        borderColor: '#fff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: tituloY },
+                            ticks: { font: { size: 11 } }
+                        },
+                        x: {
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 35,
+                                minRotation: 25,
+                                font: { size: 8 }
+                            }
+                        }
+                    },
                     plugins: {
-                        legend: { position: 'right' },
-                        tooltip: { callbacks: { label: (ctx) => ctx.label + ': ' + ctx.parsed.toLocaleString() } }
+                        tooltip: {
+                            callbacks: {
+                                label: (c) => `${c.raw} respostas`,
+                                afterBody: function(tooltipItems) {
+                                    const index = tooltipItems[0].dataIndex;
+                                    return labels[index] ? `\n${labels[index]}` : '';
+                                }
+                            }
+                        }
                     }
                 }
             });
+            return academicCharts[canvasId];
         }
 
-        // ---- Gráfico 3: Evolução de matrículas totais (ano a ano) ----
-        const anosSet = new Set();
-        Object.values(dadosAgrupados).forEach(d => {
-            Object.keys(d.matriculas).forEach(a => anosSet.add(parseInt(a)));
-        });
-        const anosOrdenados = [...anosSet].sort((a, b) => a - b);
-        const evolData = anosOrdenados.map(ano => {
-            let total = 0;
-            Object.values(dadosAgrupados).forEach(d => {
-                if (d.matriculas[ano] !== undefined && d.matriculas[ano] !== null && !isNaN(d.matriculas[ano])) {
-                    total += Number(d.matriculas[ano]);
-                }
-            });
-            return total;
-        });
-
-        const ctx3 = document.getElementById('chartEvolucao')?.getContext('2d');
-        if (ctx3) {
-            academicCharts.evolucao = new Chart(ctx3, {
+        function criarLinhaScroll(canvasId, labels, values, titulo = 'Frequência') {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const parent = canvas.parentElement;
+            if (parent) {
+                parent.style.width = '100%';
+                parent.style.minWidth = '100%';
+            }
+            const ctx = canvas.getContext('2d');
+            if (academicCharts[canvasId]) { academicCharts[canvasId].destroy(); delete academicCharts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+            academicCharts[canvasId] = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: anosOrdenados,
+                    labels,
                     datasets: [{
-                        label: 'Total de Matrículas (por ano)',
-                        data: evolData,
-                        borderColor: '#4e73df',
-                        backgroundColor: 'rgba(78,115,223,0.1)',
+                        label: titulo,
+                        data: values,
+                        borderColor: '#1a5f7a',
+                        backgroundColor: 'rgba(26,95,122,0.1)',
                         borderWidth: 3,
                         fill: true,
-                        tension: 0.3
+                        tension: 0.3,
+                        pointBackgroundColor: '#1a5f7a',
+                        pointRadius: 5
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        tooltip: { callbacks: { label: (ctx) => ctx.parsed.y.toLocaleString() } }
-                    },
                     scales: {
-                        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } }
+                        y: { beginAtZero: true, title: { display: true, text: titulo }, ticks: { font: { size: 11 } } },
+                        x: { ticks: { font: { size: 10 } } }
                     }
                 }
             });
+            return academicCharts[canvasId];
         }
 
-        // ---- Gráficos extras (Docentes e TAEs por campus) ----
-        const ctx4 = document.getElementById('chartDocentes')?.getContext('2d');
-        if (ctx4) {
-            const docentesData = campusList.map(c => dadosAgrupados[c].docentes || 0);
-            academicCharts.docentes = new Chart(ctx4, {
-                type: 'bar',
-                data: {
-                    labels: campusList,
-                    datasets: [{ label: 'Docentes', data: docentesData, backgroundColor: 'rgba(28,200,138,0.7)', borderColor: '#1cc88a', borderWidth: 1 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
-            });
-        }
-
-        const ctx5 = document.getElementById('chartTAEs')?.getContext('2d');
-        if (ctx5) {
-            const taesData = campusList.map(c => dadosAgrupados[c].taes || 0);
-            academicCharts.taes = new Chart(ctx5, {
-                type: 'bar',
-                data: {
-                    labels: campusList,
-                    datasets: [{ label: 'TAEs', data: taesData, backgroundColor: 'rgba(246,194,62,0.7)', borderColor: '#f6c23e', borderWidth: 1 }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
-            });
-        }
-    }
-
-    // ============================================================
-    // ATUALIZAR DATA
-    // ============================================================
-    function atualizarData() {
-        const now = new Date();
-        const opts = { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' };
-        const str = now.toLocaleDateString('pt-BR', opts);
-
-        const lastUpdate = document.getElementById('last-update-date');
-        if (lastUpdate) lastUpdate.textContent = str;
-
-        const statusData = document.getElementById('data-atualizacao-status');
-        if (statusData) statusData.textContent = str;
-    }
-
-    // ============================================================
-    // FILTROS (simples, por campus)
-    // ============================================================
-    function aplicarFiltros() {
-        const campusFiltro = document.getElementById('campus-filter')?.value || 'all';
-        const anoFiltro = document.getElementById('ano-filter')?.value || 'all';
-
-        let lista = Object.keys(dadosAgrupados).sort();
-        if (campusFiltro !== 'all') {
-            lista = lista.filter(c => c === campusFiltro);
-        }
-        // O filtro de ano não é aplicado na tabela (mostra todos os dados), mas pode ser usado futuramente
-        filteredCampi = lista;
-        atualizarTabela();
-        // Atualiza gráficos apenas se mudar o campus (para não recriar toda vez)
-        // Por simplicidade, recria os gráficos (já que são poucos)
-        atualizarGraficos();
-        // Atualiza cards (recalcula com os filtros)
-        // atualmente os cards são globais; se quiser filtrar, adaptar
-        // Vamos manter globais para não complicar
-        showNotification('Filtros aplicados', 'info');
-    }
-
-    // ============================================================
-    // EXPORTAR CSV (com dados acumulados)
-    // ============================================================
-    function exportarCSV() {
-        const rows = [];
-        const headers = ['Campus', 'Estudantes (total acumulado)', 'Docentes', 'TAEs', 'Total Servidores', 'Período'];
-        rows.push(headers.join(','));
-
-        Object.entries(dadosAgrupados).forEach(([campus, dados]) => {
-            let matricula = 0;
-            Object.values(dados.matriculas).forEach(v => {
-                if (v !== null && v !== undefined && !isNaN(v)) {
-                    matricula += Number(v);
+        function criarPieScroll(canvasId, labels, values, cores = null) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const parent = canvas.parentElement;
+            if (parent) {
+                parent.style.width = '100%';
+                parent.style.minWidth = '100%';
+            }
+            const ctx = canvas.getContext('2d');
+            if (academicCharts[canvasId]) { academicCharts[canvasId].destroy(); delete academicCharts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+            const defaultCores = ['#1a5f7a', '#36b9cc', '#1cc88a', '#f6c23e', '#4e73df', '#e74a3b'];
+            const bgCores = cores || labels.map((_, i) => defaultCores[i % defaultCores.length]);
+            const total = values.reduce((a, b) => a + b, 0);
+            academicCharts[canvasId] = new Chart(ctx, {
+                type: 'pie',
+                data: { labels, datasets: [{ data: values, backgroundColor: bgCores, borderWidth: 0 }] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 14, padding: 12 } },
+                        tooltip: {
+                            callbacks: {
+                                label: (c) => `${c.label}: ${c.raw} (${((c.raw / total) * 100).toFixed(1)}%)`
+                            }
+                        }
+                    }
                 }
             });
-            const linha = [campus, matricula, dados.docentes || 0, dados.taes || 0, dados.servidores || 0, '2017-2025'];
-            rows.push(linha.join(','));
-        });
+            return academicCharts[canvasId];
+        }
 
-        const csv = rows.join('\n');
-        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'dados_academicos_acumulado_' + new Date().toISOString().slice(0,10) + '.csv';
-        link.click();
-        URL.revokeObjectURL(link.href);
-        showNotification('CSV exportado!', 'success');
-    }
+        // ================================================================
+        // FUNÇÕES PADRONIZADAS PARA CARDS
+        // ================================================================
+        function criarChartCard(cardId, canvasId, iconClass, titulo, descricao) {
+            return `
+                <div class="chart-card" id="${cardId}">
+                    <div class="card-header">
+                        <h3>
+                            <i class="${iconClass}"></i>
+                            ${titulo}
+                        </h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn" data-expand="${canvasId}" title="Expandir gráfico">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="chart-btn" data-download="${canvasId}" title="Baixar PNG">
+                                <i class="fas fa-image"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-scroll-wrapper">
+                        <div class="chart-scroll-inner">
+                            <canvas id="${canvasId}"></canvas>
+                        </div>
+                    </div>
+                    <div class="descricao-card">
+                        <span class="texto">
+                            <i class="fas fa-info-circle"></i>
+                            ${descricao}
+                        </span>
+                        <button class="btn-ver-mais" data-expand-full="${canvasId}">
+                            Ver mais
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
 
-    // ============================================================
-    // EVENTOS E INICIALIZAÇÃO
-    // ============================================================
-    document.addEventListener('DOMContentLoaded', async function() {
-        showLoading('Carregando dados acadêmicos...');
+        function configurarEventosCard(cardId, canvasId, titulo, rawData) {
+            const card = document.getElementById(cardId);
+            if (!card) return;
 
-        // Inicializa filtros
-        document.getElementById('apply-filters')?.addEventListener('click', aplicarFiltros);
-        document.getElementById('reset-filters')?.addEventListener('click', function() {
+            const expandBtn = card.querySelector(`[data-expand="${canvasId}"]`);
+            if (expandBtn) {
+                expandBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    abrirModalGrafico(canvasId, titulo, rawData);
+                });
+            }
+
+            const verMaisBtn = card.querySelector(`[data-expand-full="${canvasId}"]`);
+            if (verMaisBtn) {
+                verMaisBtn.addEventListener('click', () => {
+                    abrirModalGrafico(canvasId, titulo, rawData);
+                });
+            }
+
+            const downloadBtn = card.querySelector(`[data-download="${canvasId}"]`);
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const canvas = document.getElementById(canvasId);
+                    if (canvas) {
+                        const link = document.createElement('a');
+                        link.download = `${titulo.replace(/\s+/g, '_')}.png`;
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                    }
+                });
+            }
+        }
+
+        // ================================================================
+        // FUNÇÃO PARA ABRIR O MODAL
+        // ================================================================
+        function abrirModalGrafico(canvasId, titulo, rawData) {
+            const canvasOrigem = document.getElementById(canvasId);
+            if (!canvasOrigem) return;
+
+            const chartObj = academicCharts[canvasId];
+            if (!chartObj) return;
+
+            const modalCanvas = document.getElementById('modalCanvas');
+            if (modalChartInstance) {
+                modalChartInstance.destroy();
+                modalChartInstance = null;
+            }
+
+            const chartType = chartObj.config.type;
+            let modalData = JSON.parse(JSON.stringify(chartObj.config.data));
+
+            modalChartInstance = new Chart(modalCanvas.getContext('2d'), {
+                type: chartType,
+                data: modalData,
+                options: {
+                    ...chartObj.config.options,
+                    responsive: true,
+                    maintainAspectRatio: true
+                }
+            });
+
+            document.getElementById('modalTitle').innerHTML = `<i class="fas fa-chart-bar"></i> ${titulo}`;
+            modalRawData = rawData;
+            modalChartTitle = titulo;
+
+            const descricao = document.getElementById('modalDescricao');
+            if (descricao) {
+                descricao.innerHTML = `
+                    <i class="fas fa-info-circle" aria-hidden="true"></i>
+                    Este gráfico apresenta dados acadêmicos do IFPB.
+                    <br><br>
+                    <strong>Como interpretar:</strong>
+                    <ul>
+                        <li>Barras representam a distribuição dos dados por categoria.</li>
+                        <li>Gráficos de pizza indicam a proporção de cada categoria.</li>
+                        <li>Gráficos de linha ilustram a evolução dos dados ao longo do tempo.</li>
+                        <li>Recomendamos a visualização em telas maiores para uma melhor experiência.</li>
+                    </ul>
+                    <br>
+                    <strong>💡 Dica:</strong> Utilize a barra de rolagem horizontal para visualizar todos os dados.
+                `;
+            }
+
+            document.getElementById('modal').classList.add('active');
+
+            setTimeout(() => {
+                if (modalChartInstance && modalChartInstance.resize) {
+                    modalChartInstance.resize();
+                }
+                const modalBody = document.querySelector('.modal-body');
+                if (modalBody) {
+                    modalBody.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }, 200);
+        }
+
+        // ================================================================
+        // CONFIGURAÇÃO DOS BOTÕES DO MODAL
+        // ================================================================
+        function configurarBotoesModal() {
+            document.getElementById('closeModalBtn').addEventListener('click', fecharModal);
+            document.getElementById('modal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('modal')) fecharModal();
+            });
+
+            document.getElementById('modalPngBtn').addEventListener('click', () => {
+                if (modalChartInstance) {
+                    const canvas = document.getElementById('modalCanvas');
+                    const link = document.createElement('a');
+                    link.download = `${modalChartTitle || 'grafico'}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                }
+            });
+
+            document.getElementById('modalJsonBtn').addEventListener('click', () => {
+                if (modalRawData) {
+                    const blob = new Blob([JSON.stringify(modalRawData, null, 2)], { type: 'application/json' });
+                    const link = document.createElement('a');
+                    link.download = `${modalChartTitle || 'dados'}.json`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                }
+            });
+
+            document.getElementById('modalCsvBtn').addEventListener('click', () => {
+                if (modalRawData && modalRawData.length) {
+                    const headers = Object.keys(modalRawData[0]);
+                    const rows = [headers.join(',')];
+                    for (const row of modalRawData) {
+                        rows.push(headers.map(h => `"${String(row[h] || '').replace(/"/g, '""')}"`).join(','));
+                    }
+                    const blob = new Blob(['\uFEFF' + rows.join('\n')], { type: 'text/csv;charset=utf-8' });
+                    const link = document.createElement('a');
+                    link.download = `${modalChartTitle || 'dados'}.csv`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                }
+            });
+        }
+
+        function fecharModal() {
+            document.getElementById('modal').classList.remove('active');
+            if (modalChartInstance) {
+                modalChartInstance.destroy();
+                modalChartInstance = null;
+            }
+        }
+
+        // ================================================================
+        // RENDERIZAR GRÁFICOS
+        // ================================================================
+        function renderizarGraficos() {
+            const grid = document.getElementById('charts-grid');
+            if (!grid) return;
+
+            grid.innerHTML = '';
+
+            const campusList = Object.keys(dadosAgrupados).sort();
+
+            // 1. Matrículas por Campus
+            const labels = [];
+            const dataMatriculas = [];
+            campusList.forEach(campus => {
+                const dados = dadosAgrupados[campus];
+                let total = 0;
+                Object.values(dados.matriculas).forEach(v => {
+                    if (v !== null && v !== undefined && !isNaN(v)) {
+                        total += Number(v);
+                    }
+                });
+                labels.push(campus);
+                dataMatriculas.push(total);
+            });
+
+            grid.innerHTML = criarChartCard(
+                'card_matriculas',
+                'chartMatriculas',
+                'fas fa-user-graduate',
+                'Matrículas por Campus',
+                'Distribuição de matrículas acumuladas por campus do IFPB.'
+            );
+
+            // 2. Evolução de Matrículas
+            const anosSet = new Set();
+            Object.values(dadosAgrupados).forEach(d => {
+                Object.keys(d.matriculas).forEach(a => anosSet.add(parseInt(a)));
+            });
+            const anosOrdenados = [...anosSet].sort((a, b) => a - b);
+            const evolData = anosOrdenados.map(ano => {
+                let total = 0;
+                Object.values(dadosAgrupados).forEach(d => {
+                    if (d.matriculas[ano] !== undefined && d.matriculas[ano] !== null && !isNaN(d
+                        .matriculas[ano])) {
+                        total += Number(d.matriculas[ano]);
+                    }
+                });
+                return total;
+            });
+
+            if (evolData.length > 0) {
+                grid.innerHTML += criarChartCard(
+                    'card_evolucao',
+                    'chartEvolucao',
+                    'fas fa-chart-line',
+                    'Evolução de Matrículas',
+                    'Evolução do total de matrículas ao longo dos anos.'
+                );
+            }
+
+            // 3. Servidores por Campus (Top 10)
+            const topServidores = [...campusList].sort((a, b) => (dadosAgrupados[b]?.servidores || 0) - (dadosAgrupados[a]
+                ?.servidores || 0)).slice(0, 10);
+
+            grid.innerHTML += criarChartCard(
+                'card_servidores',
+                'chartServidores',
+                'fas fa-users',
+                'Servidores por Campus (Top 10)',
+                'Os 10 campi com maior número de servidores.'
+            );
+
+            // 4. Distribuição de Servidores (Pizza)
+            const totalDocentes = campusList.reduce((s, c) => s + (dadosAgrupados[c]?.docentes || 0), 0);
+            const totalTAEs = campusList.reduce((s, c) => s + (dadosAgrupados[c]?.taes || 0), 0);
+            const totalOutros = campusList.reduce((s, c) => s + (dadosAgrupados[c]?.servidores || 0), 0) - totalDocentes -
+                totalTAEs;
+
+            if (totalDocentes > 0 || totalTAEs > 0) {
+                grid.innerHTML += criarChartCard(
+                    'card_distribuicao',
+                    'chartDistribuicao',
+                    'fas fa-chart-pie',
+                    'Distribuição de Servidores',
+                    'Distribuição dos servidores por categoria (Docentes, TAEs e outros).'
+                );
+            }
+
+            // ===== CRIAR GRÁFICOS =====
+            setTimeout(() => {
+                // Matrículas
+                criarBarraVerticalScroll('chartMatriculas', labels, dataMatriculas, 'Matrículas');
+
+                // Evolução
+                if (evolData.length > 0) {
+                    criarLinhaScroll('chartEvolucao', anosOrdenados, evolData, 'Total de Matrículas');
+                }
+
+                // Servidores Top 10
+                criarBarraVerticalScroll('chartServidores',
+                    topServidores.map(c => c),
+                    topServidores.map(c => dadosAgrupados[c]?.servidores || 0),
+                    'Servidores'
+                );
+
+                // Distribuição de Servidores
+                const distLabels = ['Docentes', 'TAEs'];
+                const distData = [totalDocentes, totalTAEs];
+                if (totalOutros > 0) {
+                    distLabels.push('Outros');
+                    distData.push(totalOutros);
+                }
+                criarPieScroll('chartDistribuicao', distLabels, distData);
+
+                // ===== CONFIGURAR EVENTOS DOS CARDS =====
+                const cards = [
+                    { id: 'card_matriculas', canvas: 'chartMatriculas', title: 'Matrículas por Campus' },
+                    { id: 'card_evolucao', canvas: 'chartEvolucao', title: 'Evolução de Matrículas' },
+                    { id: 'card_servidores', canvas: 'chartServidores', title: 'Servidores por Campus' },
+                    { id: 'card_distribuicao', canvas: 'chartDistribuicao', title: 'Distribuição de Servidores' }
+                ];
+
+                cards.forEach(({ id, canvas, title }) => {
+                    if (document.getElementById(canvas)) {
+                        configurarEventosCard(id, canvas, title, dadosAdm);
+                    }
+                });
+
+            }, 100);
+        }
+
+        // ================================================================
+        // ATUALIZAR CARDS
+        // ================================================================
+        function atualizarCards() {
+            let totalEstudantes = 0;
+            let totalDocentes = 0;
+            let totalTAEs = 0;
+            let totalServidores = 0;
+            let campusCount = 0;
+
+            Object.entries(dadosAgrupados).forEach(([campus, dados]) => {
+                let somaMatriculas = 0;
+                Object.values(dados.matriculas).forEach(v => {
+                    if (v !== null && v !== undefined && !isNaN(v)) {
+                        somaMatriculas += Number(v);
+                    }
+                });
+                totalEstudantes += somaMatriculas;
+                totalDocentes += dados.docentes || 0;
+                totalTAEs += dados.taes || 0;
+                totalServidores += dados.servidores || 0;
+                campusCount++;
+            });
+
+            document.getElementById('total-students').textContent = totalEstudantes.toLocaleString();
+            document.getElementById('total-docentes').textContent = totalDocentes.toLocaleString();
+            document.getElementById('total-taes').textContent = totalTAEs.toLocaleString();
+            document.getElementById('media-estudantes').textContent = campusCount > 0 ? Math.round(totalEstudantes /
+                campusCount).toLocaleString() : '---';
+        }
+
+        // ================================================================
+        // ATUALIZAR HEADER
+        // ================================================================
+        function atualizarHeader() {
+            const anoEl = document.getElementById('header-ano');
+            const estudantesEl = document.getElementById('header-estudantes');
+            const docentesEl = document.getElementById('header-docentes');
+
+            if (anoEl) {
+                anoEl.textContent = new Date().getFullYear();
+            }
+
+            let totalEstudantes = 0;
+            let totalDocentes = 0;
+            Object.values(dadosAgrupados).forEach(d => {
+                Object.values(d.matriculas).forEach(v => {
+                    if (v !== null && v !== undefined && !isNaN(v)) totalEstudantes += Number(v);
+                });
+                totalDocentes += d.docentes || 0;
+            });
+
+            if (estudantesEl) estudantesEl.textContent = totalEstudantes.toLocaleString() + ' Estudantes';
+            if (docentesEl) docentesEl.textContent = totalDocentes.toLocaleString() + ' Docentes';
+        }
+
+        // ================================================================
+        // ATUALIZAR TABELA
+        // ================================================================
+        function atualizarTabela() {
+            const tbody = document.getElementById('academic-table-body');
+            if (!tbody) return;
+
+            const campusList = filteredCampi.length > 0 ? filteredCampi : Object.keys(dadosAgrupados).sort();
+
+            if (campusList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="loading-cell">Nenhum dado encontrado.</td></tr>';
+                return;
+            }
+
+            let html = '';
+            campusList.forEach(campus => {
+                const dados = dadosAgrupados[campus];
+                if (!dados) return;
+                let matricula = 0;
+                Object.values(dados.matriculas).forEach(v => {
+                    if (v !== null && v !== undefined && !isNaN(v)) {
+                        matricula += Number(v);
+                    }
+                });
+                html += `<tr>
+                    <td><strong>${campus}</strong></td>
+                    <td>${matricula.toLocaleString()}</td>
+                    <td>${dados.docentes || 0}</td>
+                    <td>${dados.taes || 0}</td>
+                    <td>${dados.servidores || 0}</td>
+                </tr>`;
+            });
+
+            tbody.innerHTML = html;
+            document.getElementById('table-count').textContent = campusList.length + ' campi encontrados';
+        }
+
+        // ================================================================
+        // ATUALIZAR FILTROS
+        // ================================================================
+        function atualizarFiltros() {
+            const campusSelect = document.getElementById('campus-filter');
+            const anoSelect = document.getElementById('ano-filter');
+
+            if (campusSelect) {
+                campusSelect.innerHTML = '<option value="all">Todos os Campi</option>';
+                filteredCampi.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c;
+                    opt.textContent = c;
+                    campusSelect.appendChild(opt);
+                });
+            }
+
+            if (anoSelect) {
+                anoSelect.innerHTML = '<option value="all">Todos os Anos</option>';
+                const anosSet = new Set();
+                dadosAdm.forEach(item => {
+                    if (item.Ano) anosSet.add(item.Ano);
+                });
+                [...anosSet].sort((a, b) => b - a).forEach(a => {
+                    const opt = document.createElement('option');
+                    opt.value = a;
+                    opt.textContent = a;
+                    anoSelect.appendChild(opt);
+                });
+            }
+        }
+
+        // ================================================================
+        // FILTROS APLICAR/RESETAR
+        // ================================================================
+        function aplicarFiltros() {
+            const campusFiltro = document.getElementById('campus-filter').value;
+            const anoFiltro = document.getElementById('ano-filter').value;
+
+            let lista = Object.keys(dadosAgrupados).sort();
+            if (campusFiltro !== 'all') {
+                lista = lista.filter(c => c === campusFiltro);
+            }
+
+            filteredCampi = lista;
+            atualizarTabela();
+
+            // Se houver apenas um campus, recria gráficos apenas para ele
+            if (lista.length === 1) {
+                // Recria gráficos com filtro
+                renderizarGraficos();
+                // Reconfigura eventos
+                configurarBotoesModal();
+            } else if (lista.length > 1) {
+                // Recria gráficos com todos
+                renderizarGraficos();
+                configurarBotoesModal();
+            }
+
+            showNotification('Filtros aplicados!', 'success');
+        }
+
+        function resetarFiltros() {
             document.getElementById('campus-filter').value = 'all';
             document.getElementById('ano-filter').value = 'all';
-            aplicarFiltros();
-            showNotification('Filtros resetados', 'info');
-        });
-        document.getElementById('export-data')?.addEventListener('click', exportarCSV);
-        document.getElementById('refresh-data')?.addEventListener('click', function() {
-            this.querySelector('i').classList.add('fa-spin');
-            carregarDadosAcademicos().finally(() => {
-                this.querySelector('i').classList.remove('fa-spin');
-            });
-        });
-
-        // Busca na tabela
-        document.getElementById('table-search')?.addEventListener('input', function() {
-            const term = this.value.toLowerCase();
-            const rows = document.querySelectorAll('#academic-table-body tr');
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                row.style.display = text.includes(term) ? '' : 'none';
-            });
-        });
-
-        // Abas dos gráficos
-        document.querySelectorAll('.viz-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.viz-tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.viz-tab-content').forEach(c => c.classList.remove('active'));
-                this.classList.add('active');
-                const target = document.getElementById(this.dataset.tab + '-content');
-                if (target) target.classList.add('active');
-            });
-        });
-
-        // Menu mobile (simplificado)
-        const hamburger = document.getElementById('hamburger');
-        const navMobile = document.getElementById('navMenuMobile');
-        const overlay = document.getElementById('menuOverlay');
-        const closeBtn = document.getElementById('menuCloseBtn');
-        if (hamburger && navMobile) {
-            hamburger.addEventListener('click', () => {
-                navMobile.classList.toggle('active');
-                overlay.classList.toggle('active');
-                document.body.classList.toggle('menu-open');
-            });
-            if (closeBtn) closeBtn.addEventListener('click', () => {
-                navMobile.classList.remove('active');
-                overlay.classList.remove('active');
-                document.body.classList.remove('menu-open');
-            });
-            if (overlay) overlay.addEventListener('click', () => {
-                navMobile.classList.remove('active');
-                overlay.classList.remove('active');
-                document.body.classList.remove('menu-open');
-            });
+            filteredCampi = Object.keys(dadosAgrupados).sort();
+            atualizarTabela();
+            renderizarGraficos();
+            configurarBotoesModal();
+            showNotification('Filtros resetados.', 'info');
         }
 
-        // Carrega dados
-        const success = await carregarDadosAcademicos();
-        hideLoading();
-        if (!success) {
-            showNotification('Erro ao carregar dados. Verifique o console.', 'error');
-        }
-    });
-</script>
+        // ================================================================
+        // ATUALIZAR DATA
+        // ================================================================
+        function atualizarData() {
+            const now = new Date();
+            const opts = { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+            const str = now.toLocaleDateString('pt-BR', opts);
 
+            const lastUpdate = document.getElementById('last-update-date');
+            if (lastUpdate) lastUpdate.textContent = str;
+        }
+
+        // ================================================================
+        // EXPORTAR CSV
+        // ================================================================
+        function exportarCSV() {
+            const rows = [];
+            const headers = ['Campus', 'Estudantes (total)', 'Docentes', 'TAEs', 'Total Servidores'];
+            rows.push(headers.join(','));
+
+            Object.entries(dadosAgrupados).forEach(([campus, dados]) => {
+                let matricula = 0;
+                Object.values(dados.matriculas).forEach(v => {
+                    if (v !== null && v !== undefined && !isNaN(v)) {
+                        matricula += Number(v);
+                    }
+                });
+                const linha = [campus, matricula, dados.docentes || 0, dados.taes || 0, dados.servidores || 0];
+                rows.push(linha.join(','));
+            });
+
+            const csv = rows.join('\n');
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'dados_academicos_' + new Date().toISOString().slice(0, 10) + '.csv';
+            link.click();
+            URL.revokeObjectURL(link.href);
+            showNotification('CSV exportado!', 'success');
+        }
+
+        // ================================================================
+        // INICIALIZAÇÃO
+        // ================================================================
+        document.addEventListener('DOMContentLoaded', async function() {
+            showLoading('Carregando dados acadêmicos...');
+
+            // Eventos dos filtros
+            document.getElementById('apply-filters').addEventListener('click', aplicarFiltros);
+            document.getElementById('reset-filters').addEventListener('click', resetarFiltros);
+
+            // Exportar CSV
+            document.getElementById('export-data').addEventListener('click', exportarCSV);
+
+            // Busca na tabela
+            document.getElementById('table-search').addEventListener('input', function() {
+                const term = this.value.toLowerCase();
+                const rows = document.querySelectorAll('#academic-table-body tr');
+                rows.forEach(row => {
+                    row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
+                });
+            });
+
+            // Carrega dados
+            const success = await carregarDadosAcademicos();
+            hideLoading();
+
+            // Configura botões do modal
+            configurarBotoesModal();
+
+            if (!success) {
+                showNotification('Erro ao carregar dados.', 'error');
+            }
+        });
+    </script>
 </body>
 </html>
