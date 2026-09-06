@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ENADE - Infraestrutura e Correlações | IFPB Data Platform</title>
+    <link rel="shortcut icon" href="../../assets/img/logosite.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../assets/css/Dadosabertosifpb.css">
+    <link rel="stylesheet" href="../../style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../assets/js/conversor.js"></script>
+    <style>
+:root {
+    /* cores principais */
+    --primary-color: #4aa47d;
+    --primary-dark: #38a169;
+    --primary-light: #6ddbb3;
+    --secondary-color: #57cc99;
+    --accent-color: #ff9a3c;
+    --accent-dark: #e68a2e;
+    --success-color: #1cc88a;
+    --warning-color: #f6c23e;
+    --danger-color: #e74a3b;
+    --info-color: #36b9cc;
+
+    /* tons neutros */
+    --dark-color: #2e3a59;
+    --medium-color: #5a5c69;
+    --light-color: #f8f9fc;
+    --white: #ffffff;
+
+    /* sombras */
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+
+    /* arredondamento */
+    --radius: 10px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+        /* page header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #55af9a 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: var(--radius);
+            margin: 0 0 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            background-size: cover;
+            pointer-events: none;
+        }
+
+        /* breadcrumb */
+      .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .breadcrumb a:hover {
+            opacity: 0.8;
+        }
+
+        .breadcrumb i {
+            font-size: 0.7rem;
+        }
+
+        .breadcrumb span {
+            opacity: 0.8;
+        }
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .status-indicators {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .status-indicator {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-color);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* filtros */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+        }
+        .filters label { font-weight: 600; color: var(--dark-color); font-size: 0.9rem; }
+        .filters select {
+            padding: 0.6rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: var(--white);
+            min-width: 160px;
+        }
+        .filters button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .filters button:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+        /* stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border-bottom: 4px solid var(--primary-color);
+        }
+        .stat-card .number { font-size: 2rem; font-weight: 700; color: var(--primary-color); }
+        .stat-card .label { color: var(--medium-color); font-size: 0.85rem; }
+
+        /* charts */
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .chart-container.single { grid-template-columns: 1fr; }
+        .chart-box {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+        }
+        .chart-box h3 { margin-bottom: 1rem; color: var(--dark-color); font-size: 1.1rem; }
+
+        /* avaliacao grid */
+        .avaliacao-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .avaliacao-item {
+            background: var(--white);
+            padding: 1rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .avaliacao-item .nome { font-weight: 500; color: var(--dark-color); }
+        .avaliacao-item .nota { font-weight: 700; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.9rem; }
+        .nota-excelente { background: #1cc88a; color: white; }
+        .nota-bom { background: #36b9cc; color: white; }
+        .nota-regular { background: #f6c23e; color: #2e3a59; }
+        .nota-ruim { background: #e74a3b; color: white; }
+        .nota-pessimo { background: #858796; color: white; }
+
+        /* percepcao */
+        .percepcao-box {
+            background: linear-gradient(135deg, #f8f9fc, #eef2ff);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-right: 5px solid var(--primary-color);
+        }
+
+        /* badges */
+        .badge-conceito {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+        .conceito-5 { background: #1cc88a; color: white; }
+        .conceito-4 { background: #36b9cc; color: white; }
+        .conceito-3 { background: #f6c23e; color: #2e3a59; }
+        .conceito-2 { background: #e74a3b; color: white; }
+        .conceito-1 { background: #858796; color: white; }
+
+        /* loading */
+        .loading { text-align: center; padding: 3rem; color: var(--medium-color); }
+        .loading i { font-size: 2rem; margin-bottom: 1rem; display: block; }
+
+        /* responsivo 768 */
+        @media (max-width: 768px) {
+            .chart-container { grid-template-columns: 1fr; }
+            .filters { flex-direction: column; align-items: stretch; }
+            .filters select { width: 100%; }
+            .page-title { font-size: 1.8rem; }
+            .page-subtitle { font-size: 1rem; }
+            .page-header { padding: 2rem 1.5rem; }
+        }
+
+        /* responsivo 480 */
+        @media (max-width: 480px) {
+            .page-title { font-size: 1.6rem; }
+            .breadcrumb { font-size: 0.75rem; padding: 0.2rem 0.8rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <!-- header -->
+    <header class="main-header" id="main-header">
+        <div class="container">
+            <a href="../../index.html" class="logo">
+                <div class="logo-icon-wrap"><i class="fas fa-chart-bar"></i></div>
+                <div class="logo-text">
+                    <h1>IFPB Data Platform</h1>
+                    <p>Transparência • Análise • Inovação</p>
+                </div>
+            </a>
+            <nav class="main-nav" role="navigation">
+                <ul class="nav-list">
+                    <li><a href="dadosenade.html"><i class="fas fa-home"></i>Início</a></li>
+                    <li><a href="desempenho.html"><i class="fas fa-graduation-cap"></i>Desempenho</a></li>
+                    <li><a href="infraestrutura.html" class="active"><i class="fas fa-database"></i>Infraestrutura</a></li>
+                    <li><a href="perfil-estudante.html"><i class="fas fa-chart-pie"></i>Perfil Estudante</a></li>
+                    <li><a href="../PagesGeral/dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i>Explorar Dados</a></li>
+                </ul>
+                <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <nav class="nav-menu-mobile" id="navMenuMobile">
+        <div class="menu-header">
+            <div class="menu-logo">
+                <i class="fas fa-chart-bar"></i>
+                <div class="menu-logo-text">
+                    <span class="menu-logo-main">IFPB Data Platform</span>
+                    <span class="menu-logo-sub">Dados Abertos</span>
+                </div>
+            </div>
+            <button class="menu-close-btn" id="menuCloseBtn"><i class="fas fa-times"></i></button>
+        </div>
+        <ul>
+            <li><a href="../../index.html"><i class="fas fa-home"></i> Início</a></li>
+            <li><a href="dadosenade.html"><i class="fas fa-graduation-cap"></i> ENADE</a></li>
+            <li><a href="desempenho.html"><i class="fas fa-chart-bar"></i> Desempenho</a></li>
+            <li><a href="perfil-estudante.html"><i class="fas fa-user-graduate"></i> Perfil</a></li>
+            <li><a href="infraestrutura.html"><i class="fas fa-building"></i> Infraestrutura</a></li>
+            <li><a href="../dashboard.html"><i class="fas fa-chart-line"></i>Explorar Dados</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+
+        <!-- page header -->
+        <section class="page-header fade-in" style="margin-top: 2rem;">
+            <div class="breadcrumb">
+                <a href="../../index.html">Início</a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="DadosENADE.html">ENADE</a>
+                <i class="fas fa-chevron-right"></i>
+                <a href="infraestrutura.html">Infraestrutura</a>
+            </div>
+            <h1 class="page-title">Infraestrutura, Metodologia e Correlações</h1>
+            <p class="page-subtitle">Análise detalhada da percepção dos estudantes e correlação com o desempenho</p>
+            <div class="status-indicators">
+                <div class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>Dados Atualizados <span id="status-ano">2026</span></span>
+                </div>
+                <div class="status-indicator">
+                    <i class="fas fa-building"></i>
+                    <span id="status-itens">Carregando...</span>
+                </div>
+                <div class="status-indicator">
+                    <i class="fas fa-chart-line"></i>
+                    <span id="status-correlacao">Carregando...</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- filtros -->
+        <div class="filters">
+            <div><label for="anoInfra">Ano:</label><select id="anoInfra"><option value="todos">Todos os Anos</option></select></div>
+            <div><label for="cursoInfra">Curso:</label><select id="cursoInfra"><option value="todos">Todos os Cursos</option></select></div>
+            <div><label for="campusInfra">Campus:</label><select id="campusInfra"><option value="todos">Todos</option></select></div>
+            <button onclick="aplicarFiltrosInfra()"><i class="fas fa-filter"></i> Aplicar</button>
+            <button onclick="resetarFiltrosInfra()" style="background:#6c757d;"><i class="fas fa-undo"></i> Resetar</button>
+        </div>
+
+        <!-- stats -->
+        <div class="stats-grid" id="statsInfra">
+            <div class="stat-card"><div class="number" id="mediaInfra">-</div><div class="label">Média Infraestrutura</div></div>
+            <div class="stat-card"><div class="number" id="melhorItem">-</div><div class="label">Item Melhor Avaliado</div></div>
+            <div class="stat-card"><div class="number" id="piorItem">-</div><div class="label">Item Pior Avaliado</div></div>
+            <div class="stat-card"><div class="number" id="avaliacaoGeral">-</div><div class="label">Avaliação Geral do Curso</div></div>
+        </div>
+
+        <!-- radar charts -->
+        <div class="chart-container">
+            <div class="chart-box"><h3><i class="fas fa-chart-radar"></i> Avaliação da Infraestrutura</h3><canvas id="infraRadar" height="220"></canvas></div>
+            <div class="chart-box"><h3><i class="fas fa-chart-radar"></i> Avaliação da Metodologia</h3><canvas id="metodologiaRadar" height="220"></canvas></div>
+        </div>
+
+        <!-- correlacao -->
+        <div class="chart-container single">
+            <div class="chart-box"><h3><i class="fas fa-link"></i> Correlação entre Infraestrutura e Nota Geral</h3><canvas id="correlacaoInfraNota" height="250"></canvas></div>
+        </div>
+
+        <!-- percepcao -->
+        <div class="chart-container">
+            <div class="chart-box"><h3><i class="fas fa-chart-bar"></i> Percepção sobre a Prova</h3><canvas id="percepcaoChart" height="220"></canvas></div>
+            <div class="chart-box"><h3><i class="fas fa-chart-bar"></i> Nível de Exigência do Curso</h3><canvas id="nivelExigenciaChart" height="220"></canvas></div>
+        </div>
+
+        <!-- avaliacao curso -->
+        <div class="percepcao-box" id="avaliacaoCurso">
+            <h3><i class="fas fa-graduation-cap"></i> Avaliação Geral do Curso</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                <div><strong>Contribuição para Cultura Geral:</strong><div style="margin-top:0.3rem;"><span id="avaliacaoCultura" class="badge-conceito conceito-3">-</span></div></div>
+                <div><strong>Contribuição para Formação Teórica:</strong><div style="margin-top:0.3rem;"><span id="avaliacaoTeorica" class="badge-conceito conceito-3">-</span></div></div>
+                <div><strong>Contribuição para Exercício Profissional:</strong><div style="margin-top:0.3rem;"><span id="avaliacaoProfissional" class="badge-conceito conceito-3">-</span></div></div>
+                <div><strong>Avaliação Geral do Curso:</strong><div style="margin-top:0.3rem;"><span id="avaliacaoGeralCurso" class="badge-conceito conceito-3">-</span></div></div>
+            </div>
+        </div>
+
+        <!-- infra itens -->
+        <div class="avaliacao-grid" id="infraItens"></div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-brand">
+                        <div class="footer-logo-icon"><i class="fas fa-chart-bar"></i></div>
+                        <h3>IFPB Data Platform</h3>
+                    </div>
+                    <p>Plataforma de visualização e análise de dados públicos do Instituto Federal da Paraíba.</p>
+                    <div class="social-links">
+                        <a href="https://github.com/hugodeev/ifpb-data-plataform" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="mailto:ifpbdata@gmail.com" aria-label="E-mail"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h3>ENADE</h3>
+                    <ul class="footer-links">
+                        <li><a href="desempenho.html"><i class="fas fa-chevron-right"></i> Desempenho</a></li>
+                        <li><a href="perfil-estudante.html"><i class="fas fa-chevron-right"></i> Perfil do Estudante</a></li>
+                        <li><a href="infraestrutura.html"><i class="fas fa-chevron-right"></i> Infraestrutura</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Links Úteis</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://www.gov.br/inep" target="_blank"><i class="fas fa-chevron-right"></i> INEP</a></li>
+                        <li><a href="https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enade" target="_blank"><i class="fas fa-chevron-right"></i> Portal ENADE</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // dados e configuracoes
+        let dadosCompletos = [];
+        let dadosFiltrados = [];
+        let charts = {};
+
+        const campusMap = {
+            '2507507': 'João Pessoa',
+            '2503704': 'Cajazeiras',
+            '2512309': 'Princesa Isabel',
+            '2506301': 'Guarabira',
+            '2503209': 'Cabedelo',
+            '2504009': 'Campina Grande',
+            '2509701': 'Monteiro',
+            '2516201': 'Sousa',
+            '2510808': 'Patos'
+        };
+
+        const cursosMap = {
+            '49960':'Design de Interiores', '58391':'Redes de Computadores', '81312':'Química',
+            '95089':'Automação Industrial', '95093':'Automação Industrial',
+            '95104':'Análise e Desenvolvimento de Sistemas', '1166614':'Análise e Desenvolvimento de Sistemas',
+            '114944':'Construção de Edifícios', '1167926':'Gestão Comercial',
+            '123002':'Gestão Ambiental', '123105':'Design Gráfico', '123116':'Segurança no Trabalho',
+            '123120':'Gestão Ambiental', '103481':'Engenharia Elétrica', '1262856':'Engenharia Civil',
+            '1342196':'Engenharia de Computação', '1457168':'Engenharia Civil', '1457169':'Engenharia Civil',
+            '1457171':'Engenharia Mecânica', '1128030':'Matemática', '1128096':'Matemática',
+            '1176228':'Letras - Língua Portuguesa', '1188374':'Física', '1188396':'Educação Física',
+            '123233':'Química', '1307356':'Computação e Informática', '1341255':'Ciências Biológicas',
+            '100260':'Administração', '123237':'Medicina Veterinária', '1261262':'Administração Pública'
+        };
+
+        function getNomeCurso(c) { return cursosMap[c] || window.converterValor('CODIGO_CURSO', c, null) || c; }
+        function getNomeCampus(c) { return campusMap[c] || c; }
+        function parseNota(v) { if(!v) return null; const p=parseFloat(v); return isNaN(p)?null:p; }
+
+        function getNotaClass(v) {
+            const map={'1':{label:'Excelente',class:'nota-excelente'},'2':{label:'Bom',class:'nota-bom'},'3':{label:'Regular',class:'nota-regular'},'4':{label:'Ruim',class:'nota-ruim'},'5':{label:'Péssimo',class:'nota-pessimo'}};
+            return map[v]||{label:v,class:''};
+        }
+
+        const infraLabels = {
+            'INSTALACOES_GERAIS':'Instalações Gerais','SALAS_AULA':'Salas de Aula',
+            'LABORATORIOS':'Laboratórios','AMBIENTES_PRATICAS':'Ambientes Práticos',
+            'EQUIPAMENTOS_PRATICAS':'Equipamentos','ACESSO_INTERNET':'Acesso Internet',
+            'RECURSOS_AUDIOVISUAIS':'Recursos Audiovisuais','FREQUENCIA_BIBLIOTECA':'Freq. Biblioteca',
+            'ACESSO_ACERVO':'Acesso ao Acervo','ATUALIZACAO_ACERVO':'Atualização Acervo',
+            'PERIODICOS_CIENTIFICOS':'Periódicos','HORARIO_BIBLIOTECA':'Horário Biblioteca'
+        };
+
+        const metodologiaLabels = {
+            'PLANOS_ENSINO':'Planos de Ensino','COERENCIA_CONTEUDOS':'Coerência Conteúdos',
+            'ATIVIDADES_PESQUISA':'Atividades Pesquisa','USO_LIVROS_TEXTO':'Uso Livros-texto',
+            'USO_ARTIGOS_CIENTIFICOS':'Uso Artigos','MATERIAIS_PROFESSORES':'Materiais Professores',
+            'EXIGENCIA_IDIOMA':'Exigência Idiomas','DISPONIBILIDADE_PROFESSORES':'Disponibilidade Professores',
+            'DOMINIO_CONTEUDO':'Domínio Conteúdo','CONTEXTUALIZACAO':'Contextualização',
+            'INTEGRACAO_CURRICULO':'Integração Currículo'
+        };
+
+        /* atualizar status */
+        function atualizarStatusIndicators() {
+            const total = dadosFiltrados.length;
+            const elAno = document.getElementById('status-ano');
+            const elItens = document.getElementById('status-itens');
+            const elCorrelacao = document.getElementById('status-correlacao');
+
+            if (elAno) {
+                const anoAtual = new Date().getFullYear();
+                elAno.textContent = anoAtual;
+            }
+
+            const items = Object.keys(infraLabels);
+            let itensComDados = 0;
+            items.forEach(item => {
+                const vals = dadosFiltrados.map(d => d[item]).filter(v => v && v !== '');
+                if (vals.length > 0) itensComDados++;
+            });
+            if (elItens) elItens.textContent = itensComDados + ' itens avaliados';
+
+            const pares = dadosFiltrados.map(d => ({ infra: parseNota(d.INSTALACOES_GERAIS), nota: parseNota(d.NOTA_GERAL) ?? parseNota(d.NOTA_FORMACAO_GERAL) }))
+                .filter(p => p.infra !== null && p.nota !== null);
+            if (pares.length > 1 && elCorrelacao) {
+                const n = pares.length;
+                const sumX = pares.reduce((s,p) => s + p.infra, 0);
+                const sumY = pares.reduce((s,p) => s + p.nota, 0);
+                const sumXY = pares.reduce((s,p) => s + p.infra * p.nota, 0);
+                const sumX2 = pares.reduce((s,p) => s + p.infra * p.infra, 0);
+                const sumY2 = pares.reduce((s,p) => s + p.nota * p.nota, 0);
+                const corr = (n * sumXY - sumX * sumY) / (Math.sqrt(n * sumX2 - sumX * sumX) * Math.sqrt(n * sumY2 - sumY * sumY));
+                elCorrelacao.textContent = 'Correlação: ' + (isNaN(corr) ? '0.00' : corr.toFixed(2));
+            } else if (elCorrelacao) {
+                elCorrelacao.textContent = 'Dados insuficientes';
+            }
+        }
+
+        /* carregar dados */
+        function carregarDados() {
+            fetch('../../assets/data/DadosENADE/DADOSENADEGERAL.json')
+                .then(r => r.ok ? r.json() : Promise.reject('HTTP ' + r.status))
+                .then(data => {
+                    dadosCompletos = data;
+                    dadosFiltrados = [...dadosCompletos];
+                    preencherFiltros();
+                    atualizarStatusIndicators();
+                    atualizarTudo();
+                })
+                .catch(err => console.error('Erro:', err));
+        }
+
+        function preencherFiltros() {
+            const anos = [...new Set(dadosCompletos.map(d => String(d.ANO_EXAME || '').replace(/\.0$/, '')).filter(a => /^\d{4}$/.test(a)))].sort();
+            const cursos = [...new Set(dadosCompletos.map(d => String(d.CODIGO_CURSO || '').trim()).filter(c => c))];
+            const campi = [...new Set(dadosCompletos.map(d => String(d.CO_MUNIC_CURSO || '')).filter(c => c))];
+
+            const selA = document.getElementById('anoInfra');
+            selA.innerHTML = '<option value="todos">Todos os Anos</option>';
+            anos.forEach(a => { const o = document.createElement('option'); o.value = a; o.textContent = a; selA.appendChild(o); });
+
+            const selC = document.getElementById('cursoInfra');
+            selC.innerHTML = '<option value="todos">Todos os Cursos</option>';
+            cursos.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = getNomeCurso(c); selC.appendChild(o); });
+
+            const selCamp = document.getElementById('campusInfra');
+            selCamp.innerHTML = '<option value="todos">Todos</option>';
+            campi.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = getNomeCampus(c); selCamp.appendChild(o); });
+        }
+
+        function aplicarFiltrosInfra() {
+            const ano = document.getElementById('anoInfra').value;
+            const curso = document.getElementById('cursoInfra').value;
+            const campus = document.getElementById('campusInfra').value;
+            dadosFiltrados = dadosCompletos.filter(d => {
+                const a = String(d.ANO_EXAME || '').replace(/\.0$/, '');
+                const c = String(d.CODIGO_CURSO || '').trim();
+                const camp = String(d.CO_MUNIC_CURSO || '');
+                let ok = true;
+                if (ano !== 'todos' && a !== ano) ok = false;
+                if (curso !== 'todos' && c !== curso) ok = false;
+                if (campus !== 'todos' && camp !== campus) ok = false;
+                return ok;
+            });
+            atualizarStatusIndicators();
+            atualizarTudo();
+        }
+
+        function resetarFiltrosInfra() {
+            document.getElementById('anoInfra').value = 'todos';
+            document.getElementById('cursoInfra').value = 'todos';
+            document.getElementById('campusInfra').value = 'todos';
+            dadosFiltrados = [...dadosCompletos];
+            atualizarStatusIndicators();
+            atualizarTudo();
+        }
+
+        function atualizarTudo() {
+            atualizarStats();
+            renderGraficos();
+            renderAvaliacaoCurso();
+            renderInfraItens();
+        }
+
+        /* stats */
+        function atualizarStats() {
+            const items = Object.keys(infraLabels);
+            let soma = 0, cont = 0;
+            const valores = {};
+            items.forEach(item => {
+                const vals = dadosFiltrados.map(d => parseNota(d[item])).filter(v => v !== null);
+                if (vals.length) {
+                    const media = vals.reduce((a, b) => a + b, 0) / vals.length;
+                    valores[item] = media;
+                    soma += media;
+                    cont++;
+                }
+            });
+            document.getElementById('mediaInfra').textContent = cont ? (soma / cont).toFixed(1) : '-';
+            const entries = Object.entries(valores);
+            if (entries.length) {
+                const melhor = entries.reduce((a, b) => a[1] > b[1] ? a : b);
+                const pior = entries.reduce((a, b) => a[1] < b[1] ? a : b);
+                document.getElementById('melhorItem').textContent = infraLabels[melhor[0]] || melhor[0];
+                document.getElementById('piorItem').textContent = infraLabels[pior[0]] || pior[0];
+            } else {
+                document.getElementById('melhorItem').textContent = '-';
+                document.getElementById('piorItem').textContent = '-';
+            }
+
+            const avaliacoes = dadosFiltrados.map(d => d.AVALIACAO_GERAL_CURSO).filter(a => a && a !== '');
+            if (avaliacoes.length) {
+                const freq = {};
+                avaliacoes.forEach(a => freq[a] = (freq[a] || 0) + 1);
+                const moda = Object.keys(freq).reduce((a, b) => freq[a] > freq[b] ? a : b);
+                const conceito = { 'A': '5', 'B': '4', 'C': '3', 'D': '2', 'E': '1' }[moda] || '3';
+                document.getElementById('avaliacaoGeral').textContent = conceito;
+                document.getElementById('avaliacaoGeral').className = 'badge-conceito conceito-' + conceito;
+            } else {
+                document.getElementById('avaliacaoGeral').textContent = '-';
+                document.getElementById('avaliacaoGeral').className = 'badge-conceito conceito-3';
+            }
+        }
+
+        /* graficos */
+        function renderGraficos() {
+            renderRadar('infraRadar', Object.keys(infraLabels), infraLabels, '#387f1c');
+            renderRadar('metodologiaRadar', Object.keys(metodologiaLabels), metodologiaLabels, '#36b9cc');
+            renderCorrelacaoInfraNota();
+            renderPercepcao();
+            renderNivelExigencia();
+        }
+
+        function renderRadar(id, keys, labelsMap, cor) {
+            const ctx = document.getElementById(id)?.getContext('2d');
+            if (!ctx) return;
+            const medias = keys.map(item => {
+                const vals = dadosFiltrados.map(d => parseNota(d[item])).filter(v => v !== null);
+                return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+            });
+            if (charts[id]) charts[id].destroy();
+            charts[id] = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: keys.map(k => labelsMap[k]),
+                    datasets: [{
+                        label: 'Avaliação',
+                        data: medias,
+                        backgroundColor: cor + '33',
+                        borderColor: cor,
+                        pointBackgroundColor: cor,
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { r: { min: 0, max: 6, ticks: { stepSize: 1 } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function renderCorrelacaoInfraNota() {
+            const ctx = document.getElementById('correlacaoInfraNota')?.getContext('2d');
+            if (!ctx) return;
+            const items = Object.keys(infraLabels);
+            const correlacoes = items.map(item => {
+                const pares = dadosFiltrados.map(d => ({ infra: parseNota(d[item]), nota: parseNota(d.NOTA_GERAL) ?? parseNota(d.NOTA_FORMACAO_GERAL) }))
+                    .filter(p => p.infra !== null && p.nota !== null);
+                if (pares.length < 2) return { label: infraLabels[item], corr: 0 };
+                const n = pares.length;
+                const sumX = pares.reduce((s, p) => s + p.infra, 0);
+                const sumY = pares.reduce((s, p) => s + p.nota, 0);
+                const sumXY = pares.reduce((s, p) => s + p.infra * p.nota, 0);
+                const sumX2 = pares.reduce((s, p) => s + p.infra * p.infra, 0);
+                const sumY2 = pares.reduce((s, p) => s + p.nota * p.nota, 0);
+                const corr = (n * sumXY - sumX * sumY) / (Math.sqrt(n * sumX2 - sumX * sumX) * Math.sqrt(n * sumY2 - sumY * sumY));
+                return { label: infraLabels[item], corr: isNaN(corr) ? 0 : corr };
+            });
+            if (charts.correlacaoInfraNota) charts.correlacaoInfraNota.destroy();
+            charts.correlacaoInfraNota = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: correlacoes.map(c => c.label),
+                    datasets: [{
+                        label: 'Correlação com Nota',
+                        data: correlacoes.map(c => c.corr),
+                        backgroundColor: correlacoes.map(c => c.corr > 0 ? '#1cc88a' : '#e74a3b'),
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, title: { display: true, text: 'Coeficiente de Correlação' } } }
+                }
+            });
+        }
+
+        function renderPercepcao() {
+            const ctx = document.getElementById('percepcaoChart')?.getContext('2d');
+            if (!ctx) return;
+            const percepcoes = [
+                { key: 'PERCEPCAO_DIFICULDADE_FG', label: 'Dificuldade FG' },
+                { key: 'PERCEPCAO_DIFICULDADE_CE', label: 'Dificuldade CE' },
+                { key: 'PERCEPCAO_EXTENSAO_PROVA', label: 'Extensão' },
+                { key: 'PERCEPCAO_CLAREZA_FG', label: 'Clareza FG' },
+                { key: 'PERCEPCAO_CLAREZA_CE', label: 'Clareza CE' },
+                { key: 'PERCEPCAO_SUFICIENCIA_INFO', label: 'Suficiência Info' },
+                { key: 'PERCEPCAO_DIFICULDADE_RESPONDER', label: 'Dificuldade Responder' },
+                { key: 'PERCEPCAO_CONHECIMENTO_CONTEUDO', label: 'Conhecimento Conteúdo' },
+                { key: 'PERCEPCAO_TEMPO_GASTO', label: 'Tempo Gasto' }
+            ];
+            const mapLetraNum = { 'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5 };
+            const dados = percepcoes.map(p => {
+                const vals = dadosFiltrados.map(d => d[p.key]).filter(v => v && v !== '');
+                if (!vals.length) return 0;
+                const nums = vals.map(v => mapLetraNum[v] || 3);
+                return nums.reduce((a, b) => a + b, 0) / nums.length;
+            });
+            if (charts.percepcao) charts.percepcao.destroy();
+            charts.percepcao = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: percepcoes.map(p => p.label),
+                    datasets: [{
+                        label: 'Percepção (1=Melhor, 5=Pior)',
+                        data: dados,
+                        backgroundColor: ['#36b9cc', '#1cc88a', '#f6c23e', '#f6c23e', '#36b9cc', '#1cc88a', '#e74a3b', '#9b59b6', '#e84393'],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, max: 5, ticks: { stepSize: 1 } } }
+                }
+            });
+        }
+
+        function renderNivelExigencia() {
+            const ctx = document.getElementById('nivelExigenciaChart')?.getContext('2d');
+            if (!ctx) return;
+            const dados = dadosFiltrados.filter(d => d.NIVEL_EXIGENCIA && d.NIVEL_EXIGENCIA !== '');
+            const freq = {};
+            dados.forEach(d => {
+                const texto = window.converterValor('NIVEL_EXIGENCIA', d.NIVEL_EXIGENCIA, window.detectarAno(d));
+                freq[texto] = (freq[texto] || 0) + 1;
+            });
+            const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1]);
+            if (charts.nivelExigencia) charts.nivelExigencia.destroy();
+            charts.nivelExigencia = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sorted.map(s => s[0]),
+                    datasets: [{ data: sorted.map(s => s[1]), backgroundColor: '#f39c12', borderRadius: 8 }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        function renderAvaliacaoCurso() {
+            const campos = [
+                { key: 'CONTRIBUICAO_CULTURA_GERAL', id: 'avaliacaoCultura' },
+                { key: 'CONTRIBUICAO_FORMACAO_TEORICA', id: 'avaliacaoTeorica' },
+                { key: 'CONTRIBUICAO_EXERCICIO_PROFISSIONAL', id: 'avaliacaoProfissional' },
+                { key: 'AVALIACAO_GERAL_CURSO', id: 'avaliacaoGeralCurso' }
+            ];
+            campos.forEach(campo => {
+                const vals = dadosFiltrados.map(d => d[campo.key]).filter(v => v && v !== '');
+                if (vals.length) {
+                    const freq = {};
+                    vals.forEach(v => freq[v] = (freq[v] || 0) + 1);
+                    const moda = Object.keys(freq).reduce((a, b) => freq[a] > freq[b] ? a : b);
+                    const conceito = { 'A': '5', 'B': '4', 'C': '3', 'D': '2', 'E': '1' }[moda] || '3';
+                    const el = document.getElementById(campo.id);
+                    el.textContent = conceito;
+                    el.className = 'badge-conceito conceito-' + conceito;
+                } else {
+                    const el = document.getElementById(campo.id);
+                    el.textContent = 'N/A';
+                    el.className = 'badge-conceito conceito-3';
+                }
+            });
+        }
+
+        function renderInfraItens() {
+            const container = document.getElementById('infraItens');
+            const items = Object.keys(infraLabels);
+            let html = '';
+            items.forEach(item => {
+                const vals = dadosFiltrados.map(d => d[item]).filter(v => v && v !== '');
+                let nota = 'N/A', notaClass = '';
+                if (vals.length) {
+                    const freq = {};
+                    vals.forEach(v => freq[v] = (freq[v] || 0) + 1);
+                    const moda = Object.keys(freq).reduce((a, b) => freq[a] > freq[b] ? a : b);
+                    const info = getNotaClass(moda);
+                    nota = info.label;
+                    notaClass = info.class;
+                }
+                html += '<div class="avaliacao-item"><span class="nome">' + infraLabels[item] + '</span><span class="nota ' + notaClass + '">' + nota + '</span></div>';
+            });
+            container.innerHTML = html;
+        }
+
+        /* menu mobile */
+        const hamburger = document.getElementById('hamburger');
+        const navMenuMobile = document.getElementById('navMenuMobile');
+        const menuOverlay = document.getElementById('menuOverlay');
+
+        function closeMenu() { hamburger?.classList.remove('active'); navMenuMobile?.classList.remove('active'); menuOverlay?.classList.remove('active'); document.body.classList.remove('menu-open'); }
+        function openMenu() { hamburger?.classList.add('active'); navMenuMobile?.classList.add('active'); menuOverlay?.classList.add('active'); document.body.classList.add('menu-open'); }
+        hamburger?.addEventListener('click', () => { navMenuMobile?.classList.contains('active') ? closeMenu() : openMenu(); });
+        menuOverlay?.addEventListener('click', closeMenu);
+
+        document.addEventListener('DOMContentLoaded', carregarDados);
+    </script>
+</body>
+</html>

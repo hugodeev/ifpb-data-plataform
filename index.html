@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IFPB Data Platform - Transparência e Análise de Dados</title>
-    <!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- chartjs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Leaflet CSS e JS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <link rel="shortcut icon" href="assets/img/logosite.png" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
@@ -20,7 +18,7 @@
 </head>
 <body>
 
-    <!-- cabeçalho e navegação -->
+    <!-- header -->
     <header class="main-header" id="main-header">
         <div class="container">
             <a href="index.html" class="logo">
@@ -48,7 +46,7 @@
             </nav>
         </div>
 
-        <!-- mobiile dropdown -->
+        <!-- mobile dropdown -->
         <div class="mobile-nav" id="mobile-nav">
             <ul>
                 <li><a href="index.html"><i class="fas fa-home"></i> Início</a></li>
@@ -60,10 +58,10 @@
         </div>
     </header>
 
-    <!-- conteúdo do main -->
+    <!-- main -->
     <main class="container">
 
-        <!-- hero section (apenas texto, sem o gráfico) -->
+        <!-- hero -->
         <section class="hero">
             <div class="hero-content reveal-up" style="--delay: 0s">
                 <div class="hero-badge">
@@ -104,7 +102,7 @@
 
         </section>
 
-        <!-- seção de cards das páginas -->
+        <!-- data cards -->
         <section class="data-cards-section">
             <div class="section-header reveal-up" style="--delay: 0s">
                 <span class="section-tag">Bases de Dados</span>
@@ -113,7 +111,7 @@
             </div>
 
             <div class="data-cards-grid">
-                <!-- card dados abertos IFPB -->
+                <!-- card ifpb -->
                 <div class="data-card reveal-up" data-type="ifpb" style="--delay: 0.05s">
                     <div class="data-card-header">
                         <div class="data-card-icon-wrap">
@@ -147,7 +145,7 @@
                     </div>
                 </div>
 
-                <!-- card ENADE -->
+                <!-- card enade -->
                 <div class="data-card reveal-up" data-type="enade" style="--delay: 0.15s">
                     <div class="data-card-header">
                         <div class="data-card-icon-wrap">
@@ -181,7 +179,7 @@
                     </div>
                 </div>
 
-                <!-- card dados de Pesquisa -->
+                <!-- card pesquisa -->
                 <div class="data-card reveal-up" data-type="pesquisa" style="--delay: 0.25s">
                     <div class="data-card-header">
                         <div class="data-card-icon-wrap">
@@ -217,7 +215,7 @@
             </div>
         </section>
 
-        <!-- cards de destaque -->
+        <!-- highlights -->
         <section class="highlights">
             <div class="section-header reveal-up" style="--delay: 0s">
                 <span class="section-tag">Indicadores</span>
@@ -267,43 +265,43 @@
             </div>
         </section>
 
-<!-- visualizações -->
-<section class="visualizations">
-    <div class="section-header reveal-up" style="--delay: 0s">
-        <span class="section-tag">Dashboard</span>
-        <h2 class="section-title">Visualizações Interativas</h2>
-        <p class="section-subtitle">Explore dados através de gráficos e painéis interativos</p>
-    </div>
-
-    <div class="viz-container">
-        <!-- Mapa dos Campi -->
-        <div class="viz-preview reveal-up" style="--delay: 0.05s">
-          <div id="map-preview-container" style="height:250px;width:100%;border-radius:8px;overflow:hidden;"></div>
-            <p>Localização geográfica de todas as unidades do IFPB</p>
-          <span class="btn-small" onclick="window.location.href='../pages/pages dados abertos/institucional.html#chart-mapa'">Explorar Mapa <i class="fas fa-arrow-right"></i></span>
-        </div>
-
-        <!-- Média Geral Anual - ENADE -->
-        <div class="viz-preview reveal-up" style="--delay: 0.1s">
-            <div class="chart-container" style="height:200px;position:relative;">
-                <canvas id="mediaGeralAnualChart"></canvas>
+        <!-- visualizacoes -->
+        <section class="visualizations">
+            <div class="section-header reveal-up" style="--delay: 0s">
+                <span class="section-tag">Dashboard</span>
+                <h2 class="section-title">Visualizações Interativas</h2>
+                <p class="section-subtitle">Explore dados através de gráficos e painéis interativos</p>
             </div>
-            <p>Evolução da média geral anual do ENADE para os cursos do IFPB</p>
-            <span class="btn-small" onclick="window.location.href='pages/Pages%20Enade/desempenho.html'">Ver no ENADE <i class="fas fa-arrow-right"></i></span>
-        </div>
 
-        <!-- Comparativo: Perfil dos Cursos -->
-        <div class="viz-preview reveal-up" style="--delay: 0.15s">
-            <div class="chart-container" style="height:200px;position:relative;">
-                <canvas id="radarPerfilCursos"></canvas>
+            <div class="viz-container">
+                <!-- mapa -->
+                <div class="viz-preview reveal-up" style="--delay: 0.05s">
+                  <div id="map-preview-container" style="height:250px;width:100%;border-radius:8px;overflow:hidden;"></div>
+                    <p>Localização geográfica de todas as unidades do IFPB</p>
+                  <span class="btn-small" onclick="window.location.href='../pages/pages dados abertos/institucional.html#chart-mapa'">Explorar Mapa <i class="fas fa-arrow-right"></i></span>
+                </div>
+
+                <!-- media geral anual -->
+                <div class="viz-preview reveal-up" style="--delay: 0.1s">
+                    <div class="chart-container" style="height:200px;position:relative;">
+                        <canvas id="mediaGeralAnualChart"></canvas>
+                    </div>
+                    <p>Evolução da média geral anual do ENADE para os cursos do IFPB</p>
+                    <span class="btn-small" onclick="window.location.href='pages/Pages%20Enade/desempenho.html'">Ver no ENADE <i class="fas fa-arrow-right"></i></span>
+                </div>
+
+                <!-- radar perfil -->
+                <div class="viz-preview reveal-up" style="--delay: 0.15s">
+                    <div class="chart-container" style="height:200px;position:relative;">
+                        <canvas id="radarPerfilCursos"></canvas>
+                    </div>
+                    <p>Comparação do perfil dos cursos do IFPB com base em indicadores acadêmicos e socioeconômicos</p>
+                    <span class="btn-small" onclick="window.location.href='pages/Pagesdadosformularios/DadosDiscentes.html'">Ver na Pesquisa <i class="fas fa-arrow-right"></i></span>
+                </div>
             </div>
-            <p>Comparação do perfil dos cursos do IFPB com base em indicadores acadêmicos e socioeconômicos</p>
-            <span class="btn-small" onclick="window.location.href='pages/Pagesdadosformularios/DadosDiscentes.html'">Ver na Pesquisa <i class="fas fa-arrow-right"></i></span>
-        </div>
-    </div>
-</section>
+        </section>
 
-        <!-- CTA dados abertos para todos-->
+        <!-- cta -->
         <section class="cta reveal-up" style="--delay: 0s">
             <div class="cta-content">
                 <div class="cta-icon-wrap" aria-hidden="true">
@@ -324,7 +322,7 @@
 
     </main>
 
-    <!-- rodapé final da pages -->
+    <!-- footer -->
     <footer class="main-footer">
         <div class="container">
             <div class="footer-grid">
@@ -381,10 +379,9 @@
 
     <script src="script.js"></script>
 
-        <!-- Script para carregar dados do gráfico do hero -->
+    <!-- hero chart -->
     <script>
         (function() {
-            // Função auxiliar para abreviar nomes (já existe no script.js, mas mantemos aqui para independência)
             function abreviarCampus(nome) {
                 var siglas = {
                     'CAMPUS JOÃO PESSOA': 'JOÃO PESSOA',
