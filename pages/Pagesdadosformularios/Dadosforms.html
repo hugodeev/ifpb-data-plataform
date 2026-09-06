@@ -13,6 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap@2.3.1/dist/chartjs-chart-treemap.min.js"></script>
     <style>
+        /* variaveis */
         :root {
             --primary-color: #ff9a3c;
             --primary-dark: #e68a2e;
@@ -37,6 +38,7 @@
 
         * { box-sizing: border-box; }
 
+        /* hero */
         .hero {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -81,6 +83,7 @@
             flex-wrap: wrap;
         }
 
+        /* botoes */
         .btn-primary {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
@@ -133,6 +136,7 @@
             color: var(--primary-color);
         }
 
+        /* cards */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -227,9 +231,7 @@
             border-radius: 3px;
         }
 
-        /* ============================================================ */
-        /* ===== CHART CARD PADRÃO - COM SCROLL HORIZONTAL ===== */
-        /* ============================================================ */
+        /* chart card */
         .chart-card {
             background: var(--white);
             padding: 1.5rem;
@@ -276,7 +278,7 @@
             color: var(--primary-color);
         }
 
-        /* ===== AÇÕES DO GRÁFICO ===== */
+        /* acoes grafico */
         .chart-card .chart-actions {
             display: flex;
             gap: 0.3rem;
@@ -318,7 +320,7 @@
             font-size: 13px;
         }
 
-        /* ===== SCROLL WRAPPER ===== */
+        /* scroll wrapper */
         .chart-card .chart-scroll-wrapper {
             flex: 1;
             min-height: 280px;
@@ -361,7 +363,7 @@
             background: var(--primary-dark);
         }
 
-        /* ===== DESCRIÇÃO NO CARD ===== */
+        /* descricao card */
         .chart-card .descricao-card {
             margin-top: 1rem;
             padding-top: 1rem;
@@ -422,9 +424,7 @@
             transform: translateX(4px);
         }
 
-        /* ============================================================ */
-        /* ===== MODAL ===== */
-        /* ============================================================ */
+        /* modal */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -622,9 +622,7 @@
             font-size: 0.85rem;
         }
 
-        /* ============================================================ */
-        /* ===== RESPONSIVIDADE DOS CARDS ===== */
-        /* ============================================================ */
+        /* responsivo 1024 */
         @media (max-width: 1024px) {
             .chart-card .chart-scroll-inner {
                 min-width: 600px;
@@ -632,6 +630,7 @@
             }
         }
 
+        /* responsivo 768 */
         @media (max-width: 768px) {
             .chart-card .chart-scroll-inner {
                 min-width: 500px;
@@ -646,6 +645,7 @@
             
         }
 
+        /* responsivo 480 */
         @media (max-width: 480px) {
             .chart-card {
                 padding: 0.75rem;
@@ -691,6 +691,7 @@
             }
         }
 
+        /* responsivo 360 */
         @media (max-width: 360px) {
             .chart-card .chart-scroll-inner {
                 min-width: 340px;
@@ -698,9 +699,7 @@
             }
         }
 
-        /* ============================================================ */
-        /* ===== RESPONSIVIDADE DO MODAL ===== */
-        /* ============================================================ */
+        /* modal responsivo */
         @media (max-width: 768px) {
             .modal-box {
                 width: 95%;
@@ -800,9 +799,7 @@
             }
         }
 
-        /* ============================================================ */
-        /* ===== DESCRIÇÃO DO MODAL - LISTA SEMÂNTICA ===== */
-        /* ============================================================ */
+        /* descricao modal */
         .modal-descricao .descricao-texto ul {
             margin: 0.5rem 0 0.5rem 1.5rem;
             padding: 0;
@@ -834,9 +831,7 @@
             color: var(--dark-color);
         }
 
-        /* ============================================================ */
-        /* ===== FOOTER ===== */
-        /* ============================================================ */
+        /* footer */
         .main-footer {
             color: #ffffff;
         }
@@ -871,9 +866,7 @@
             color: #ffffff;
         }
 
-        /* ============================================================ */
-        /* ===== OUTROS ===== */
-        /* ============================================================ */
+        /* outros */
         .modulo-descricao {
             background: var(--white);
             border-radius: var(--radius);
@@ -899,6 +892,7 @@
             font-weight: 600;
         }
 
+        /* faq */
         .faq-list {
             overflow: hidden;
         }
@@ -976,522 +970,494 @@
             }
         }
 
-        /* ===== HERO SECTION - RESPONSIVA ===== */
-.hero {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    align-items: center;
-    padding: 3rem 0 2rem;
-}
+        /* hero responsivo */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            padding: 3rem 0 2rem;
+        }
 
-.hero-badge {
-    background: var(--light-color);
-    color: var(--primary-color);
-    padding: 0.3rem 1rem;
-    border-radius: 40px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    display: inline-block;
-    margin-bottom: 1rem;
-}
+        .hero-badge {
+            background: var(--light-color);
+            color: var(--primary-color);
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
 
-.hero h1 {
-    font-size: 2.8rem;
-    font-weight: 700;
-    letter-spacing: -1px;
-    line-height: 1.2;
-    color: var(--dark-color);
-}
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            line-height: 1.2;
+            color: var(--dark-color);
+        }
 
-.hero h1 span {
-    color: var(--primary-color);
-}
+        .hero h1 span {
+            color: var(--primary-color);
+        }
 
-.hero p {
-    font-size: 1.1rem;
-    color: var(--medium-color);
-    margin: 1.5rem 0;
-    max-width: 90%;
-}
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--medium-color);
+            margin: 1.5rem 0;
+            max-width: 90%;
+        }
 
-.hero-buttons {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
 
-.hero-stats {
-    background: var(--white);
-    border-radius: var(--radius);
-    padding: 2rem;
-    box-shadow: var(--shadow-md);
-    border: 1px solid var(--light-color);
-    width: 100%;
-}
+        .hero-stats {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--light-color);
+            width: 100%;
+        }
 
-.hero-stats .stat-item {
-    text-align: center;
-    flex: 1;
-    min-width: 80px;
-}
+        .hero-stats .stat-item {
+            text-align: center;
+            flex: 1;
+            min-width: 80px;
+        }
 
-.hero-stats .stat-number {
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: var(--primary-color);
-}
+        .hero-stats .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
 
-.hero-stats .stat-item div:last-child {
-    font-size: 0.85rem;
-    color: var(--medium-color);
-    line-height: 1.3;
-}
+        .hero-stats .stat-item div:last-child {
+            font-size: 0.85rem;
+            color: var(--medium-color);
+            line-height: 1.3;
+        }
 
-.hero-stats .stat-row {
-    display: flex;
-    justify-content: space-around;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
+        .hero-stats .stat-row {
+            display: flex;
+            justify-content: space-around;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
 
-.hero-stats .info-footer {
-    margin-top: 1.5rem;
-    background: var(--light-color);
-    padding: 0.8rem 1rem;
-    border-radius: 20px;
-    text-align: center;
-    font-size: 0.8rem;
-    color: var(--medium-color);
-}
+        .hero-stats .info-footer {
+            margin-top: 1.5rem;
+            background: var(--light-color);
+            padding: 0.8rem 1rem;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--medium-color);
+        }
 
-/* ===== RESPONSIVIDADE ===== */
+        /* responsivo 1024 */
+        @media (max-width: 1024px) {
+            .hero {
+                gap: 2rem;
+                padding: 2rem 0;
+            }
+            
+            .hero h1 {
+                font-size: 2.4rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+                max-width: 100%;
+            }
+            
+            .hero-stats .stat-number {
+                font-size: 2rem;
+            }
+        }
 
-/* Tablets e telas médias */
-@media (max-width: 1024px) {
-    .hero {
-        gap: 2rem;
-        padding: 2rem 0;
-    }
-    
-    .hero h1 {
-        font-size: 2.4rem;
-    }
-    
-    .hero p {
-        font-size: 1rem;
-        max-width: 100%;
-    }
-    
-    .hero-stats .stat-number {
-        font-size: 2rem;
-    }
-}
+        /* responsivo 900 */
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2rem;
+                padding: 1.5rem 0;
+            }
+            
+            .hero p {
+                max-width: 100%;
+                margin: 1rem auto;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .hero-stats {
+                padding: 1.5rem;
+            }
+            
+            .hero-stats .stat-number {
+                font-size: 1.8rem;
+            }
+        }
 
-/* Telas menores que 900px - empilha */
-@media (max-width: 900px) {
-    .hero {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 2rem;
-        padding: 1.5rem 0;
-    }
-    
-    .hero p {
-        max-width: 100%;
-        margin: 1rem auto;
-    }
-    
-    .hero-buttons {
-        justify-content: center;
-    }
-    
-    .hero-stats {
-        padding: 1.5rem;
-    }
-    
-    .hero-stats .stat-number {
-        font-size: 1.8rem;
-    }
-}
+        /* responsivo 768 */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 1rem 0;
+                gap: 1.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero h1 span {
+                display: inline-block;
+            }
+            
+            .hero p {
+                font-size: 0.95rem;
+            }
+            
+            .hero-badge {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.8rem;
+            }
+            
+            .hero-buttons .btn-primary,
+            .hero-buttons .btn-outline {
+                padding: 0.6rem 1.4rem;
+                font-size: 0.9rem;
+            }
+            
+            .hero-stats {
+                padding: 1.2rem;
+            }
+            
+            .hero-stats .stat-row {
+                gap: 0.5rem;
+            }
+            
+            .hero-stats .stat-item {
+                min-width: 60px;
+            }
+            
+            .hero-stats .stat-number {
+                font-size: 1.6rem;
+            }
+            
+            .hero-stats .stat-item div:last-child {
+                font-size: 0.75rem;
+            }
+            
+            .hero-stats .info-footer {
+                font-size: 0.7rem;
+                padding: 0.5rem 0.8rem;
+                margin-top: 1rem;
+            }
+        }
 
-/* Tablets pequenos e celulares grandes */
-@media (max-width: 768px) {
-    .hero {
-        padding: 1rem 0;
-        gap: 1.5rem;
-    }
-    
-    .hero h1 {
-        font-size: 2rem;
-    }
-    
-    .hero h1 span {
-        display: inline-block;
-    }
-    
-    .hero p {
-        font-size: 0.95rem;
-    }
-    
-    .hero-badge {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.8rem;
-    }
-    
-    .hero-buttons .btn-primary,
-    .hero-buttons .btn-outline {
-        padding: 0.6rem 1.4rem;
-        font-size: 0.9rem;
-    }
-    
-    .hero-stats {
-        padding: 1.2rem;
-    }
-    
-    .hero-stats .stat-row {
-        gap: 0.5rem;
-    }
-    
-    .hero-stats .stat-item {
-        min-width: 60px;
-    }
-    
-    .hero-stats .stat-number {
-        font-size: 1.6rem;
-    }
-    
-    .hero-stats .stat-item div:last-child {
-        font-size: 0.75rem;
-    }
-    
-    .hero-stats .info-footer {
-        font-size: 0.7rem;
-        padding: 0.5rem 0.8rem;
-        margin-top: 1rem;
-    }
-}
+        /* responsivo 480 */
+        @media (max-width: 480px) {
+            .hero {
+                padding: 0.5rem 0;
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+            
+            .hero p {
+                font-size: 0.85rem;
+                margin: 0.8rem 0;
+            }
+            
+            .hero-badge {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.6rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.6rem;
+            }
+            
+            .hero-buttons .btn-primary,
+            .hero-buttons .btn-outline {
+                width: 100%;
+                justify-content: center;
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+            
+            .hero-stats {
+                padding: 1rem;
+                border-radius: 8px;
+            }
+            
+            .hero-stats .stat-row {
+                gap: 0.3rem;
+            }
+            
+            .hero-stats .stat-item {
+                min-width: 50px;
+            }
+            
+            .hero-stats .stat-number {
+                font-size: 1.4rem;
+            }
+            
+            .hero-stats .stat-item div:last-child {
+                font-size: 0.65rem;
+            }
+            
+            .hero-stats .info-footer {
+                font-size: 0.6rem;
+                padding: 0.4rem 0.6rem;
+                margin-top: 0.8rem;
+                border-radius: 12px;
+            }
+        }
 
-/* Celulares */
-@media (max-width: 480px) {
-    .hero {
-        padding: 0.5rem 0;
-        gap: 1rem;
-    }
-    
-    .hero h1 {
-        font-size: 1.6rem;
-    }
-    
-    .hero p {
-        font-size: 0.85rem;
-        margin: 0.8rem 0;
-    }
-    
-    .hero-badge {
-        font-size: 0.65rem;
-        padding: 0.2rem 0.6rem;
-    }
-    
-    .hero-buttons {
-        flex-direction: column;
-        align-items: center;
-        gap: 0.6rem;
-    }
-    
-    .hero-buttons .btn-primary,
-    .hero-buttons .btn-outline {
-        width: 100%;
-        justify-content: center;
-        padding: 0.5rem 1rem;
-        font-size: 0.85rem;
-    }
-    
-    .hero-stats {
-        padding: 1rem;
-        border-radius: 8px;
-    }
-    
-    .hero-stats .stat-row {
-        gap: 0.3rem;
-    }
-    
-    .hero-stats .stat-item {
-        min-width: 50px;
-    }
-    
-    .hero-stats .stat-number {
-        font-size: 1.4rem;
-    }
-    
-    .hero-stats .stat-item div:last-child {
-        font-size: 0.65rem;
-    }
-    
-    .hero-stats .info-footer {
-        font-size: 0.6rem;
-        padding: 0.4rem 0.6rem;
-        margin-top: 0.8rem;
-        border-radius: 12px;
-    }
-}
+        /* responsivo 360 */
+        @media (max-width: 360px) {
+            .hero h1 {
+                font-size: 1.3rem;
+            }
+            
+            .hero p {
+                font-size: 0.75rem;
+            }
+            
+            .hero-stats .stat-number {
+                font-size: 1.1rem;
+            }
+            
+            .hero-stats .stat-item div:last-child {
+                font-size: 0.55rem;
+            }
+            
+            .hero-buttons .btn-primary,
+            .hero-buttons .btn-outline {
+                font-size: 0.75rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
 
-/* Celulares muito pequenos */
-@media (max-width: 360px) {
-    .hero h1 {
-        font-size: 1.3rem;
-    }
-    
-    .hero p {
-        font-size: 0.75rem;
-    }
-    
-    .hero-stats .stat-number {
-        font-size: 1.1rem;
-    }
-    
-    .hero-stats .stat-item div:last-child {
-        font-size: 0.55rem;
-    }
-    
-    .hero-buttons .btn-primary,
-    .hero-buttons .btn-outline {
-        font-size: 0.75rem;
-        padding: 0.4rem 0.8rem;
-    }
-}
+        /* paisagem */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .hero {
+                grid-template-columns: 1fr 1fr;
+                gap: 1.5rem;
+                padding: 0.5rem 0;
+                align-items: center;
+            }
+            
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+            
+            .hero p {
+                font-size: 0.8rem;
+                margin: 0.5rem 0;
+            }
+            
+            .hero-buttons .btn-primary,
+            .hero-buttons .btn-outline {
+                padding: 0.3rem 1rem;
+                font-size: 0.75rem;
+            }
+            
+            .hero-stats {
+                padding: 0.8rem;
+            }
+            
+            .hero-stats .stat-number {
+                font-size: 1.2rem;
+            }
+            
+            .hero-stats .stat-item div:last-child {
+                font-size: 0.6rem;
+            }
+            
+            .hero-stats .info-footer {
+                font-size: 0.55rem;
+                padding: 0.3rem 0.6rem;
+                margin-top: 0.5rem;
+            }
 
-/* Telas em modo paisagem (celular deitado) */
-@media (max-height: 500px) and (orientation: landscape) {
-    .hero {
-        grid-template-columns: 1fr 1fr;
-        gap: 1.5rem;
-        padding: 0.5rem 0;
-        align-items: center;
-    }
-    
-    .hero h1 {
-        font-size: 1.6rem;
-    }
-    
-    .hero p {
-        font-size: 0.8rem;
-        margin: 0.5rem 0;
-    }
-    
-    .hero-buttons .btn-primary,
-    .hero-buttons .btn-outline {
-        padding: 0.3rem 1rem;
-        font-size: 0.75rem;
-    }
-    
-    .hero-stats {
-        padding: 0.8rem;
-    }
-    
-    .hero-stats .stat-number {
-        font-size: 1.2rem;
-    }
-    
-    .hero-stats .stat-item div:last-child {
-        font-size: 0.6rem;
-    }
-    
-    .hero-stats .info-footer {
-        font-size: 0.55rem;
-        padding: 0.3rem 0.6rem;
-        margin-top: 0.5rem;
-    }
+        /* fontes responsivas */
+        body {
+            font-size: 16px;
+            line-height: 1.6;
+        }
 
-    /* ============================================================ */
-/* ===== FONTES RESPONSIVAS PARA TODAS AS TELAS ===== */
-/* ============================================================ */
+        .hero h1 {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+        }
 
-/* ===== BASE ===== */
-body {
-    font-size: 16px;
-    line-height: 1.6;
-}
+        .hero p {
+            font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+        }
 
-/* ===== HERO ===== */
-.hero h1 {
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
-}
+        .hero-badge {
+            font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+        }
 
-.hero p {
-    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
-}
+        .hero-stats .stat-number {
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+        }
 
-.hero-badge {
-    font-size: clamp(0.7rem, 0.9vw, 0.85rem);
-}
+        .hero-stats .stat-item div:last-child {
+            font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+        }
 
-.hero-stats .stat-number {
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
-}
+        .hero-stats .info-footer {
+            font-size: clamp(0.65rem, 0.8vw, 0.8rem);
+        }
 
-.hero-stats .stat-item div:last-child {
-    font-size: clamp(0.7rem, 0.9vw, 0.85rem);
-}
+        .btn-primary,
+        .btn-outline {
+            font-size: clamp(0.8rem, 1vw, 1rem);
+            padding: clamp(0.5rem, 0.8vw, 0.8rem) clamp(1rem, 1.5vw, 1.8rem);
+        }
 
-.hero-stats .info-footer {
-    font-size: clamp(0.65rem, 0.8vw, 0.8rem);
-}
+        .card-modern h3 {
+            font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+        }
 
-/* ===== BOTÕES ===== */
-.btn-primary,
-.btn-outline {
-    font-size: clamp(0.8rem, 1vw, 1rem);
-    padding: clamp(0.5rem, 0.8vw, 0.8rem) clamp(1rem, 1.5vw, 1.8rem);
-}
+        .card-modern p {
+            font-size: clamp(0.8rem, 1vw, 0.95rem);
+        }
 
-/* ===== CARDS ===== */
-.card-modern h3 {
-    font-size: clamp(1.1rem, 1.8vw, 1.4rem);
-}
+        .card-link {
+            font-size: clamp(0.8rem, 0.9vw, 0.95rem);
+        }
 
-.card-modern p {
-    font-size: clamp(0.8rem, 1vw, 0.95rem);
-}
+        .section-title {
+            font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+        }
 
-.card-link {
-    font-size: clamp(0.8rem, 0.9vw, 0.95rem);
-}
+        .section-header span {
+            font-size: clamp(0.7rem, 0.8vw, 0.85rem);
+        }
 
-/* ===== SECTION TITLES ===== */
-.section-title {
-    font-size: clamp(1.4rem, 2.5vw, 1.8rem);
-}
+        .chart-card .card-header h3 {
+            font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+        }
 
-.section-header span {
-    font-size: clamp(0.7rem, 0.8vw, 0.85rem);
-}
+        .chart-card .descricao-card .texto {
+            font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+        }
 
-/* ===== CHART CARDS ===== */
-.chart-card .card-header h3 {
-    font-size: clamp(0.85rem, 1.2vw, 1.05rem);
-}
+        .chart-card .descricao-card .btn-ver-mais {
+            font-size: clamp(0.7rem, 0.85vw, 0.8rem);
+        }
 
-.chart-card .descricao-card .texto {
-    font-size: clamp(0.75rem, 0.9vw, 0.85rem);
-}
+        .modal-header h3 {
+            font-size: clamp(0.9rem, 1.2vw, 1rem);
+        }
 
-.chart-card .descricao-card .btn-ver-mais {
-    font-size: clamp(0.7rem, 0.85vw, 0.8rem);
-}
+        .modal-descricao .descricao-texto {
+            font-size: clamp(0.75rem, 0.9vw, 0.85rem);
+        }
 
-/* ===== MODAL ===== */
-.modal-header h3 {
-    font-size: clamp(0.9rem, 1.2vw, 1rem);
-}
+        .modal-action-btn {
+            font-size: clamp(0.65rem, 0.8vw, 0.78rem);
+        }
 
-.modal-descricao .descricao-texto {
-    font-size: clamp(0.75rem, 0.9vw, 0.85rem);
-}
+        .faq-question {
+            font-size: clamp(0.85rem, 1vw, 1rem);
+        }
 
-.modal-action-btn {
-    font-size: clamp(0.65rem, 0.8vw, 0.78rem);
-}
+        .faq-answer p {
+            font-size: clamp(0.8rem, 0.9vw, 0.95rem);
+        }
 
-/* ===== FAQ ===== */
-.faq-question {
-    font-size: clamp(0.85rem, 1vw, 1rem);
-}
+        .descricao-texto-only p {
+            font-size: clamp(0.85rem, 1vw, 0.98rem);
+        }
 
-.faq-answer p {
-    font-size: clamp(0.8rem, 0.9vw, 0.95rem);
-}
+        .main-footer p {
+            font-size: clamp(0.8rem, 0.9vw, 0.95rem);
+        }
 
-/* ===== TUTORIAL ===== */
-.tutorial-step strong {
-    font-size: clamp(0.85rem, 1vw, 1rem);
-}
+        .main-footer h3 {
+            font-size: clamp(0.95rem, 1.1vw, 1.2rem);
+        }
 
-.tutorial-step p {
-    font-size: clamp(0.75rem, 0.85vw, 0.85rem);
-}
+        .main-footer .footer-links li a {
+            font-size: clamp(0.75rem, 0.85vw, 0.9rem);
+        }
 
-/* ===== DESCRIÇÃO ===== */
-.descricao-texto-only p {
-    font-size: clamp(0.85rem, 1vw, 0.98rem);
-}
+        .footer-btn {
+            font-size: clamp(0.75rem, 0.85vw, 0.9rem);
+        }
 
-/* ===== FOOTER ===== */
-.main-footer p {
-    font-size: clamp(0.8rem, 0.9vw, 0.95rem);
-}
+        /* responsivo 360 adicional */
+        @media (max-width: 360px) {
+            body {
+                font-size: 14px;
+            }
+            
+            .hero h1 {
+                font-size: 1.4rem;
+            }
+            
+            .hero p {
+                font-size: 0.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+            }
+            
+            .chart-card .card-header h3 {
+                font-size: 0.75rem;
+            }
+            
+            .modal-header h3 {
+                font-size: 0.75rem;
+            }
+        }
 
-.main-footer h3 {
-    font-size: clamp(0.95rem, 1.1vw, 1.2rem);
-}
-
-.main-footer .footer-links li a {
-    font-size: clamp(0.75rem, 0.85vw, 0.9rem);
-}
-
-.footer-btn {
-    font-size: clamp(0.75rem, 0.85vw, 0.9rem);
-}
-
-/* ============================================================ */
-/* ===== RESPONSIVIDADE ADICIONAL ===== */
-/* ============================================================ */
-
-/* Telas muito pequenas (360px) */
-@media (max-width: 360px) {
-    body {
-        font-size: 14px;
-    }
-    
-    .hero h1 {
-        font-size: 1.4rem;
-    }
-    
-    .hero p {
-        font-size: 0.8rem;
-    }
-    
-    .section-title {
-        font-size: 1.2rem;
-    }
-    
-    .chart-card .card-header h3 {
-        font-size: 0.75rem;
-    }
-    
-    .modal-header h3 {
-        font-size: 0.75rem;
-    }
-}
-
-/* Telas muito grandes (acima de 1400px) */
-@media (min-width: 1400px) {
-    body {
-        font-size: 18px;
-    }
-    
-    .hero h1 {
-        font-size: 3.2rem;
-    }
-    
-    .hero p {
-        font-size: 1.2rem;
-    }
-    
-    .section-title {
-        font-size: 2rem;
-    }
-    
-    .chart-card .card-header h3 {
-        font-size: 1.2rem;
-    }
-}
-}
+        /* responsivo 1400 */
+        @media (min-width: 1400px) {
+            body {
+                font-size: 18px;
+            }
+            
+            .hero h1 {
+                font-size: 3.2rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .chart-card .card-header h3 {
+                font-size: 1.2rem;
+            }
+        }
+        }
     </style>
 </head>
 <body>
 
-    <!-- cabeçalho e navegação -->
+    <!-- header -->
     <header class="main-header" id="main-header">
         <div class="container">
             <a href="../../index.html" class="logo">
@@ -1523,7 +1489,7 @@ body {
 
     <div class="menu-overlay" id="menuOverlay"></div>
 
-    <!-- Menu Mobile -->
+    <!-- mobile menu -->
     <nav class="nav-menu-mobile" id="navMenuMobile">
         <div class="menu-header">
             <div class="menu-logo">
@@ -1545,9 +1511,9 @@ body {
         </ul>
     </nav>
 
-    <!-- conteúdo principal -->
+    <!-- main -->
     <main class="container">
-        <!-- Seção Hero -->
+        <!-- hero -->
         <section class="hero">
             <div>
                 <div class="hero-badge"><i class="fas fa-clipboard-list"></i> Última atualização: Agosto/2026</div>
@@ -1579,7 +1545,7 @@ body {
             </div>
         </section>
 
-        <!-- Cards de navegação principal -->
+        <!-- cards navegacao -->
         <div class="cards-grid" id="dados-destaque">
             <div class="card-modern">
                 <div class="card-icon"><i class="fas fa-user-graduate"></i></div>
@@ -1595,7 +1561,7 @@ body {
             </div>
         </div>
 
-        <!-- DESCRIÇÃO – Sobre o Módulo Dados de Pesquisa -->
+        <!-- descricao modulo -->
         <div class="modulo-descricao">
             <div class="section-header">
                 <h2 class="section-title">Sobre o Módulo Dados de Pesquisa</h2>
@@ -1613,7 +1579,7 @@ body {
             </div>
         </div>
 
-        <!-- INDICADORES EM DESTAQUE -->
+        <!-- indicadores destaque -->
         <section id="indicadores-destaque">
             <div class="highlights">
                 <div class="section-header">
@@ -1627,7 +1593,7 @@ body {
             </div>
         </section>
 
-        <!-- PERGUNTAS FREQUENTES -->
+        <!-- faq -->
         <div class="modulo-descricao">
             <div class="section-header">
                 <h2 class="section-title">Perguntas Frequentes</h2>
@@ -1692,7 +1658,7 @@ body {
             </div>
         </div>
 
-        <!-- COMO EXPLORAR OS DADOS -->
+        <!-- como explorar -->
         <div class="modulo-descricao" id="como-explorar">
             <div class="section-header">
                 <h2 class="section-title">Como Explorar os Dados de Pesquisa</h2>
@@ -1720,7 +1686,7 @@ body {
 
     </main>
 
-    <!-- ===== MODAL ===== -->
+    <!-- modal -->
     <div class="modal-overlay" id="modal">
         <div class="modal-box">
             <div class="modal-header">
@@ -1748,7 +1714,7 @@ body {
                             <li>Recomendamos a visualização em telas maiores para uma melhor experiência.</li>
                         </ul>
                         <br>
-                        <strong>💡 Dica:</strong> Utilize a barra de rolagem horizontal para visualizar todos os dados.
+                        <strong>Dica:</strong> Utilize a barra de rolagem horizontal para visualizar todos os dados.
                     </div>
                 </div>
             </div>
@@ -1760,7 +1726,7 @@ body {
         </div>
     </div>
 
-    <!-- rodapé final -->
+    <!-- footer -->
     <footer class="main-footer">
         <div class="container">
             <div class="footer-grid">
@@ -1810,9 +1776,7 @@ body {
     </footer>
 
     <script>
-        // ================================================================
-        // MENU MOBILE
-        // ================================================================
+        // menu mobile
         const hamburger = document.getElementById('hamburger');
         const navMenuMobile = document.getElementById('navMenuMobile');
         const menuOverlay = document.getElementById('menuOverlay');
@@ -1846,9 +1810,7 @@ body {
             anchor.addEventListener('click', closeMenu);
         });
 
-        // ================================================================
-        // FAQ – Acordeão
-        // ================================================================
+        // faq acordeao
         document.addEventListener('DOMContentLoaded', function() {
             const faqItems = document.querySelectorAll('.faq-item');
             faqItems.forEach(item => {
@@ -1873,9 +1835,7 @@ body {
             });
         });
 
-        // ================================================================
-        // DADOS E CONFIGURAÇÕES
-        // ================================================================
+        // dados e configuracoes
         let dadosDiscentes = [];
         let dadosDocentes = [];
         let charts = {};
@@ -1883,9 +1843,7 @@ body {
         let modalRawData = null;
         let modalChartTitle = '';
 
-        // ================================================================
-        // NORMALIZAR DADOS
-        // ================================================================
+        // normalizar dados
         function normalizarDadosDiscentes(dadosRaw) {
             return dadosRaw.map(item => {
                 let curso = item["Qual é o seu curso no IFPB?"] ||
@@ -1946,9 +1904,7 @@ body {
             }));
         }
 
-        // ================================================================
-        // FUNÇÕES AUXILIARES
-        // ================================================================
+        /* funcoes auxiliares */
         function contarFrequencia(data, campo) {
             const freq = {};
             data.forEach(item => {
@@ -1965,9 +1921,7 @@ body {
             return { labels: sorted.map(s => s[0]), values: sorted.map(s => s[1]) };
         }
 
-        // ================================================================
-        // FUNÇÕES DE CRIAÇÃO DE GRÁFICOS (COM SCROLL)
-        // ================================================================
+        /* criar graficos */
         function criarPieScroll(canvasId, labels, values, cores = null) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
@@ -2114,9 +2068,7 @@ body {
             return charts[canvasId];
         }
 
-        // ================================================================
-        // FUNÇÕES PADRONIZADAS PARA CARDS
-        // ================================================================
+        /* criar chart card */
         function criarChartCard(cardId, canvasId, iconClass, titulo, descricao) {
             return `
                 <div class="chart-card" id="${cardId}">
@@ -2187,9 +2139,7 @@ body {
             }
         }
 
-        // ================================================================
-        // FUNÇÃO PARA ABRIR O MODAL
-        // ================================================================
+        /* abrir modal */
         function abrirModalGrafico(canvasId, titulo, rawData) {
             const canvasOrigem = document.getElementById(canvasId);
             if (!canvasOrigem) return;
@@ -2234,7 +2184,7 @@ body {
                         <li>Recomendamos a visualização em telas maiores para uma melhor experiência.</li>
                     </ul>
                     <br>
-                    <strong>💡 Dica:</strong> Utilize a barra de rolagem horizontal para visualizar todos os dados.
+                    <strong>Dica:</strong> Utilize a barra de rolagem horizontal para visualizar todos os dados.
                 `;
             }
 
@@ -2251,9 +2201,7 @@ body {
             }, 200);
         }
 
-        // ================================================================
-        // CONFIGURAÇÃO DOS BOTÕES DO MODAL
-        // ================================================================
+        /* botoes modal */
         function configurarBotoesModal() {
             document.getElementById('closeModalBtn').addEventListener('click', fecharModal);
             document.getElementById('modal').addEventListener('click', (e) => {
@@ -2306,13 +2254,10 @@ body {
             }
         }
 
-        // ================================================================
-        // RENDERIZAR DESTAQUE
-        // ================================================================
+        /* renderizar destaque */
         function renderizarDestaque() {
             const grid = document.getElementById('destaqueGrid');
 
-            // Gráfico 1: Radar Perfil dos Cursos (Discentes)
             grid.innerHTML = criarChartCard(
                 'card_radarPerfil',
                 'radarPerfilCursos',
@@ -2321,7 +2266,6 @@ body {
                 'Radar comparando características dos principais cursos do IFPB.'
             );
 
-            // Gráfico 2: Área de formação dos Docentes
             grid.innerHTML += criarChartCard(
                 'card_areaDocentes',
                 'areaDocentesChart',
@@ -2330,17 +2274,13 @@ body {
                 'Distribuição das áreas de formação dos docentes do IFPB.'
             );
 
-            // Criar gráficos após renderizar os cards
             setTimeout(() => {
                 criarGraficosDestaque();
             }, 100);
         }
 
-        // ================================================================
-        // CRIAR GRÁFICOS DE DESTAQUE
-        // ================================================================
+        /* criar graficos destaque */
         function criarGraficosDestaque() {
-            // Radar - Perfil dos Cursos
             if (dadosDiscentes && dadosDiscentes.length > 0) {
                 const cursosContagem = contarFrequencia(dadosDiscentes, 'curso');
                 const cursosTop = cursosContagem.labels.filter((c, i) => cursosContagem.values[i] >= 3).slice(0, 5);
@@ -2378,7 +2318,6 @@ body {
                 }
             }
 
-            // Área de formação dos Docentes
             if (dadosDocentes && dadosDocentes.length > 0) {
                 const freq = contarFrequencia(dadosDocentes, 'area');
                 if (freq.labels.length > 0) {
@@ -2386,14 +2325,11 @@ body {
                 }
             }
 
-            // Configurar eventos dos cards
             configurarEventosCard('card_radarPerfil', 'radarPerfilCursos', 'Comparativo: Perfil dos Cursos', dadosDiscentes);
             configurarEventosCard('card_areaDocentes', 'areaDocentesChart', 'Área de formação/atuação dos Docentes', dadosDocentes);
         }
 
-        // ================================================================
-        // CARREGAR DADOS
-        // ================================================================
+        /* carregar dados */
         async function carregarDados() {
             try {
                 let caminhoDiscentes, caminhoDocentes;
@@ -2416,32 +2352,27 @@ body {
                 const rawDiscentes = await respDiscentes.json();
                 const rawDocentes = await respDocentes.json();
 
-                console.log('✅ Discentes:', rawDiscentes.length, 'registros');
-                console.log('✅ Docentes:', rawDocentes.length, 'registros');
+                console.log('Discentes:', rawDiscentes.length, 'registros');
+                console.log('Docentes:', rawDocentes.length, 'registros');
 
                 dadosDiscentes = normalizarDadosDiscentes(rawDiscentes);
                 dadosDocentes = normalizarDadosDocentes(rawDocentes);
 
-                // Atualiza os cards do hero
                 const totalDiscentes = dadosDiscentes.length;
                 const totalDocentes = dadosDocentes.length;
                 document.getElementById('statDiscentes').textContent = totalDiscentes;
                 document.getElementById('statDocentes').textContent = totalDocentes;
                 document.getElementById('statTotal').textContent = totalDiscentes + totalDocentes;
 
-                // Atualiza a FAQ
                 document.getElementById('faq-discentes').textContent = totalDiscentes;
                 document.getElementById('faq-docentes').textContent = totalDocentes;
                 document.getElementById('faq-total').textContent = totalDiscentes + totalDocentes;
 
-                // Renderiza os gráficos de destaque
                 renderizarDestaque();
-
-                // Configura os botões do modal
                 configurarBotoesModal();
 
             } catch (erro) {
-                console.error('❌ Erro ao carregar dados:', erro);
+                console.error('Erro ao carregar dados:', erro);
                 document.getElementById('statDiscentes').textContent = '0';
                 document.getElementById('statDocentes').textContent = '0';
                 document.getElementById('statTotal').textContent = '0';
@@ -2451,9 +2382,7 @@ body {
             }
         }
 
-        // ================================================================
-        // INICIALIZAÇÃO
-        // ================================================================
+        /* inicializacao */
         document.addEventListener('DOMContentLoaded', function() {
             carregarDados();
         });
