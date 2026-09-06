@@ -1,13 +1,12 @@
-/* beleza, bora resetar margens e paddings padrão */
+/* reset */
 *, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/*  as cores de sempre (paleta original)  */
+/* cores */
 :root {
-    /* as cores que a gente definiu */
     --primary-color: #1a5f7a;
     --primary-dark:  #0e4a63;
     --primary-light: #2a7a9a;
@@ -15,41 +14,41 @@
     --accent-color: #ff9a3c;
     --accent-dark: #e68a2e;
 
-    /* pras letras e textos */
+    /* textos */
     --text-color: #2c3e50;
     --text-light: #6b7c93;
     --text-muted: #9aaab8;
 
-    /* fundos e superfícies */
+    /* fundos */
     --bg-light: #f0f4f8;
     --bg-white: #ffffff;
     --bg-soft: #f8fafc;
     --border-color: #dde3ea;
 
-    /* sombras suaves */
+    /* sombras */
     --shadow-xs: 0 1px 3px rgba(0,0,0,0.06);
     --shadow:    0 4px 16px rgba(26, 95, 122, 0.1);
     --shadow-hover: 0 12px 32px rgba(26, 95, 122, 0.16);
     --shadow-card: 0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(26,95,122,0.08);
 
-    /* fontes escolhidas a dedo */
+    /* fontes */
     --font-heading: 'Poppins', sans-serif;
     --font-body: 'Roboto', sans-serif;
 
-    /* medidas de layout */
+    /* medidas */
     --header-height: 72px;
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 16px;
     --radius-xl: 24px;
 
-    /* tempos de transição */
+    /* transicoes */
     --t-fast: 0.18s ease;
     --t-base: 0.28s ease;
     --t-slow: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* configurações básicas da página */
+/* base */
 html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
 
 body {
@@ -63,14 +62,14 @@ body {
 a { text-decoration: none; color: inherit; }
 img { display: block; max-width: 100%; }
 
-/* container centralizador */
+/* container */
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 24px;          
 }
 
-/*  animação de aparecer rolando a página  */
+/* animacoes */
 .reveal-up {
     opacity: 0;
     transform: translateY(28px);
@@ -89,7 +88,7 @@ img { display: block; max-width: 100%; }
     transform: none;
 }
 
-/*  cabeçalhos das seções */
+/* cabecalhos */
 .section-header {
     text-align: center;
     margin-bottom: 48px;
@@ -124,14 +123,14 @@ img { display: block; max-width: 100%; }
     line-height: 1.7;
 }
 
-/*  foco pra navegação por teclado*/
+/* foco */
 :focus-visible {
     outline: 2px solid var(--primary-color);
     outline-offset: 3px;
     border-radius: 4px;
 }
 
-/* cabeçalho fixo no topo */
+/* header */
 .main-header {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(12px);
@@ -155,7 +154,7 @@ img { display: block; max-width: 100%; }
     width: 100%;
 }
 
-/* logotipo e marca */
+/* logo */
 .logo {
     display: flex;
     align-items: center;
@@ -189,7 +188,7 @@ img { display: block; max-width: 100%; }
     letter-spacing: 0.3px;
 }
 
-/* navegação principal */
+/* navegacao */
 .main-nav {
     display: flex;
     align-items: center;
@@ -219,7 +218,7 @@ img { display: block; max-width: 100%; }
     font-weight: 600;
 }
 
-/* botão de dashboard diferenciado */
+/* botao dashboard */
 .dashboard-btn {
     background: var(--accent-color) !important;
     color: white !important;
@@ -235,7 +234,7 @@ img { display: block; max-width: 100%; }
     box-shadow: 0 6px 20px rgba(255, 154, 60, 0.35) !important;
 }
 
-/* botão do menu pra celular */
+/* menu mobile */
 .mobile-menu-btn {
     display: none;
     flex-direction: column;
@@ -260,7 +259,7 @@ img { display: block; max-width: 100%; }
 .mobile-menu-btn.active span:nth-child(2) { opacity: 0; }
 .mobile-menu-btn.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); width: 100%; }
 
-/* menu que aparece nos dispositivos pequenos */
+/* mobile nav */
 .mobile-nav {
     display: none;
     position: absolute;
@@ -289,7 +288,7 @@ img { display: block; max-width: 100%; }
 }
 .mobile-nav a:hover { color: var(--primary-color); background: rgba(26, 95, 122, 0.06); }
 
-/* seção hero (destaque inicial) */
+/* hero */
 .hero {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -299,7 +298,7 @@ img { display: block; max-width: 100%; }
     position: relative;
 }
 
-/* um fundinho suave pra dar charme */
+/* fundo hero */
 .hero::before {
     content: '';
     position: absolute;
@@ -314,7 +313,7 @@ img { display: block; max-width: 100%; }
 }
 .hero-content, .hero-visual { position: relative; z-index: 1; }
 
-/* selo / distintivo do hero */
+/* badge hero */
 .hero-badge {
     display: inline-flex;
     align-items: center;
@@ -382,7 +381,7 @@ img { display: block; max-width: 100%; }
     flex-wrap: wrap;
 }
 
-/* estilos gerais de botão */
+/* botoes */
 .btn-primary, .btn-secondary {
     display: inline-flex;
     align-items: center;
@@ -413,7 +412,7 @@ img { display: block; max-width: 100%; }
     transform: translateY(-2px);
 }
 
-/* cartão visual do gráfico no hero */
+/* card hero */
 .hero-visual { padding: 8px; }
 .hero-card {
     background: var(--bg-white);
@@ -448,7 +447,7 @@ img { display: block; max-width: 100%; }
     color: var(--primary-color);
     border-radius: 100px;
 }
-/* barras do gráfico mais caprichadas */
+/* grafico barras */
 .chart-animation-wrap {
     padding-bottom: 4px;
     width: 100%;
@@ -488,14 +487,14 @@ img { display: block; max-width: 100%; }
 }
 .bar-value {
     position: absolute;
-    bottom: calc(100% + 6px); /* fica acima da barra */
+    bottom: calc(100% + 6px);
     left: 50%;
     transform: translateX(-50%);
     font-size: 0.75rem;
     font-weight: 500;
     color: var(--primary-dark);
     white-space: nowrap;
-    opacity: 1; /* sempre visível */
+    opacity: 1;
     transition: none;
     background: rgba(255,255,255,0.8);
     padding: 0 4px;
@@ -516,7 +515,7 @@ img { display: block; max-width: 100%; }
     width: 100%;
 }
 
-/* container específico para o gráfico gerado pelo JavaScript */
+/* chart js */
 #hero-chart-bars {
     display: flex;
     align-items: flex-end;
@@ -533,7 +532,7 @@ img { display: block; max-width: 100%; }
     padding: 20px 0;
 }
 
-/* responsividade para telas pequenas */
+/* responsivo 480 */
 @media (max-width: 480px) {
     .chart-animation {
         height: 120px;
@@ -566,7 +565,7 @@ img { display: block; max-width: 100%; }
     color: #1fa870;
 }
 
-/* cards com dados do ifpb, enade, pesquisa */
+/* data cards */
 .data-cards-section { padding: 80px 0; }
 
 .data-cards-grid {
@@ -628,10 +627,9 @@ img { display: block; max-width: 100%; }
 }
 .data-card-header p { font-size: 0.82rem; opacity: 0.85; color: white; }
 
-/* degradês diferentes pra cada card */
+/* cores cards */
 .data-card[data-type="ifpb"] .data-card-header { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); }
 .data-card[data-type="enade"] .data-card-header { background: linear-gradient(135deg,  #4aa47d, #22c56e); }   
-
 .data-card[data-type="pesquisa"] .data-card-header { background: linear-gradient(135deg, #ff9a3c, var(--accent-dark)); }
 
 .data-card-body { padding: 20px 24px; flex: 1; }
@@ -706,7 +704,7 @@ img { display: block; max-width: 100%; }
     box-shadow: 0 6px 20px rgba(255, 154, 60, 0.35);
 }
 
-/* cards de destaque com números importantes */
+/* highlights */
 .highlights { padding: 80px 0; }
 
 .cards-grid {
@@ -794,7 +792,7 @@ img { display: block; max-width: 100%; }
 }
 .card-link:hover { gap: 10px; color: var(--accent-dark); }
 
-/* área com prévias de gráficos e visualizações */
+/* visualizations */
 .visualizations {
     padding: 80px 32px;
     background: var(--bg-white);
@@ -882,7 +880,7 @@ img { display: block; max-width: 100%; }
 .btn-small i { transition: transform var(--t-base); }
 .btn-small:hover i { transform: translateX(3px); }
 
-/* chamada pra ação final */
+/* cta */
 .cta {
     background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
     border-radius: var(--radius-xl);
@@ -892,7 +890,7 @@ img { display: block; max-width: 100%; }
     position: relative;
     overflow: hidden;
 }
-/* uns detalhes geométricos bonitinhos */
+/* decoracoes cta */
 .cta::before {
     content: '';
     position: absolute;
@@ -957,7 +955,7 @@ img { display: block; max-width: 100%; }
     border-color: rgba(255,255,255,0.8);
 }
 
-/* rodapé com informações e links */
+/* footer */
 .main-footer {
     background: var(--primary-dark);
     color: white;
@@ -999,7 +997,6 @@ img { display: block; max-width: 100%; }
     color: white;
     margin-bottom: 18px;
 }
-/* esse parágrafo não existe na real, mas é só pra garantir */
 .footer-brand + p,
 .footer-col > p {
     font-size: 0.875rem;
@@ -1068,12 +1065,13 @@ img { display: block; max-width: 100%; }
     color: rgba(255,255,255,0.4);
 }
 
-/*ajustes pra telas menores*/
+/* responsivo 1024 */
 @media (max-width: 1024px) {
     .data-cards-grid { grid-template-columns: 1fr; gap: 20px; }
     .footer-grid { grid-template-columns: 1fr 1fr; }
 }
 
+/* responsivo 900 */
 @media (max-width: 900px) {
     .hero {
         grid-template-columns: 1fr;
@@ -1085,14 +1083,12 @@ img { display: block; max-width: 100%; }
     .hero-content > p { max-width: 100%; }
     .hero-buttons { justify-content: center; }
     .hero-title-highlight::after { display: none; }
-
-    /* esconde o gráfico no mobile, foco no texto */
     .hero-visual { display: none; }
-
     .nav-list { display: none; }
     .mobile-menu-btn { display: flex; }
 }
 
+/* responsivo 768 */
 @media (max-width: 768px) {
     .data-cards-grid { grid-template-columns: 1fr; }
     .cards-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1104,6 +1100,7 @@ img { display: block; max-width: 100%; }
     .footer-bottom { flex-direction: column; text-align: center; }
 }
 
+/* responsivo 480 */
 @media (max-width: 480px) {
     .container { padding: 0 16px; }
     .cards-grid { grid-template-columns: 1fr; }
@@ -1112,7 +1109,7 @@ img { display: block; max-width: 100%; }
     .viz-container { grid-template-columns: 1fr; }
 }
 
-/* respeita quem prefere menos animação */
+/* reduz animacao */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -1120,4 +1117,3 @@ img { display: block; max-width: 100%; }
     }
     .reveal-up, .reveal-right { opacity: 1; transform: none; }
 }
-
