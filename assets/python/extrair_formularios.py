@@ -1,17 +1,13 @@
 import json
 from collections import Counter
 
-# ============================================================
-# CONFIGURAÇÃO: caminhos dos arquivos JSON
-# ============================================================
+# configuracao
 caminho_discentes = r"H:\HUGO\ProjetoPIBIC\Projeto-PIBIC-Site\ifpb-data-plataform\assets\data\DadosFormularios\dadosDiscentes.json"
 caminho_docentes = r"H:\HUGO\ProjetoPIBIC\Projeto-PIBIC-Site\ifpb-data-plataform\assets\data\DadosFormularios\dadosDocentes.json"
 
-# ============================================================
-# FUNÇÕES AUXILIARES
-# ============================================================
+# funcoes auxiliares
 def contar_por_campo(dados, campo):
-    """Conta quantos responderam a uma pergunta específica (resposta não vazia)"""
+    """Conta quantos responderam a uma pergunta especifica (resposta nao vazia)"""
     count = 0
     for item in dados:
         val = item.get(campo, "")
@@ -21,7 +17,7 @@ def contar_por_campo(dados, campo):
 
 def contar_individual_contem(dados, campo, palavras_chave):
     """
-    Conta respondentes cuja resposta CONTÉM alguma das palavras-chave
+    Conta respondentes cuja resposta CONTEM alguma das palavras-chave
     """
     count = 0
     for item in dados:
@@ -35,7 +31,7 @@ def contar_individual_contem(dados, campo, palavras_chave):
     return count
 
 def contar_individual_exato(dados, campo, opcoes_validas):
-    """Conta respondentes que selecionaram EXATAMENTE uma das opções"""
+    """Conta respondentes que selecionaram EXATAMENTE uma das opcoes"""
     count = 0
     for item in dados:
         val = item.get(campo, "")
@@ -44,13 +40,10 @@ def contar_individual_exato(dados, campo, opcoes_validas):
                 count += 1
     return count
 
-# ============================================================
-# NORMALIZAÇÃO DOS DADOS
-# ============================================================
+# normalizacao discentes
 def normalizar_dados_discentes(raw):
     dados = []
     for item in raw:
-        # Pula registros vazios (sem campus)
         campus = item.get("Em qual campus do IFPB você estuda?", "")
         if not campus or campus == "":
             continue
@@ -78,6 +71,7 @@ def normalizar_dados_discentes(raw):
         })
     return dados
 
+# normalizacao docentes
 def normalizar_dados_docentes(raw):
     dados = []
     for item in raw:
@@ -115,11 +109,9 @@ def normalizar_dados_docentes(raw):
         })
     return dados
 
-# ============================================================
-# CARREGAR DADOS DOS DISCENTES
-# ============================================================
+# analise discentes
 print("=" * 70)
-print("ANÁLISE DOS FORMULÁRIOS - DISCENTES")
+print("ANALISE DOS FORMULARIOS - DISCENTES")
 print("=" * 70)
 
 try:
@@ -129,85 +121,81 @@ try:
     dados_discentes = normalizar_dados_discentes(raw_discentes)
     total_discentes = len(dados_discentes)
     
-    print(f"Total de respostas válidas de discentes: {total_discentes}")
+    print(f"Total de respostas validas de discentes: {total_discentes}")
     print()
     
-    # ============ INDICADORES DO TEXTO ============
-    
-    # 1. TRABALHA OU ESTAGIA (57,7% dos que responderam)
+    # 1. trabalho
     total_responderam_trabalho = contar_por_campo(dados_discentes, 'trabalha')
     trabalha = contar_individual_contem(dados_discentes, 'trabalha', 
                                        ["trabalho", "estágio", "estagio", "jovem aprendiz", "ajudo", "Sim"])
     
-    print("1. SITUAÇÃO DE TRABALHO")
-    print(f"   Total que responderam à pergunta: {total_responderam_trabalho}")
+    print("1. SITUACAO DE TRABALHO")
+    print(f"   Total que responderam a pergunta: {total_responderam_trabalho}")
     print(f"   Trabalha ou estagia: {trabalha} ({trabalha/total_responderam_trabalho*100:.1f}% dos que responderam)")
     print(f"   Trabalha ou estagia: {trabalha} ({trabalha/total_discentes*100:.1f}% do total de discentes)")
     print()
     
-    # 2. TRANSPORTE PÚBLICO (48,7% dos que responderam)
+    # 2. transporte
     total_responderam_transporte = contar_por_campo(dados_discentes, 'transporte')
     transporte = contar_individual_contem(dados_discentes, 'transporte',
                                          ["ônibus", "onibus", "público", "publico", "metrô", "metro", "trem"])
     
     print("2. MEIO DE TRANSPORTE")
-    print(f"   Total que responderam à pergunta: {total_responderam_transporte}")
-    print(f"   Utiliza transporte público: {transporte} ({transporte/total_responderam_transporte*100:.1f}% dos que responderam)")
-    print(f"   Utiliza transporte público: {transporte} ({transporte/total_discentes*100:.1f}% do total de discentes)")
+    print(f"   Total que responderam a pergunta: {total_responderam_transporte}")
+    print(f"   Utiliza transporte publico: {transporte} ({transporte/total_responderam_transporte*100:.1f}% dos que responderam)")
+    print(f"   Utiliza transporte publico: {transporte} ({transporte/total_discentes*100:.1f}% do total de discentes)")
     print()
     
-    # 3. CONHECE ASSISTÊNCIA (71,8% dos que responderam)
+    # 3. assistencia
     total_responderam_assistencia = contar_por_campo(dados_discentes, 'conhece_assistencia')
     conhece = contar_individual_contem(dados_discentes, 'conhece_assistencia',
                                       ["Sim", "conheço", "conheco", "Já ouvi"])
     
-    print("3. CONHECIMENTO SOBRE ASSISTÊNCIA ESTUDANTIL")
-    print(f"   Total que responderam à pergunta: {total_responderam_assistencia}")
+    print("3. CONHECIMENTO SOBRE ASSISTENCIA ESTUDANTIL")
+    print(f"   Total que responderam a pergunta: {total_responderam_assistencia}")
     print(f"   Conhece os programas: {conhece} ({conhece/total_responderam_assistencia*100:.1f}% dos que responderam)")
     print(f"   Conhece os programas: {conhece} ({conhece/total_discentes*100:.1f}% do total de discentes)")
     print()
     
-    # 4. JÁ PENSOU EM DESISTIR (41,0% dos que responderam)
+    # 4. desistencia
     total_responderam_desistir = contar_por_campo(dados_discentes, 'pensou_desistir')
     pensou = contar_individual_contem(dados_discentes, 'pensou_desistir',
                                      ["Já", "Sim", "pensei", "frequência", "frequencia", "considerando"])
     
-    print("4. INTENÇÃO DE DESISTÊNCIA")
-    print(f"   Total que responderam à pergunta: {total_responderam_desistir}")
-    print(f"   Já pensou em desistir: {pensou} ({pensou/total_responderam_desistir*100:.1f}% dos que responderam)")
-    print(f"   Já pensou em desistir: {pensou} ({pensou/total_discentes*100:.1f}% do total de discentes)")
+    print("4. INTENCAO DE DESISTENCIA")
+    print(f"   Total que responderam a pergunta: {total_responderam_desistir}")
+    print(f"   Ja pensou em desistir: {pensou} ({pensou/total_responderam_desistir*100:.1f}% dos que responderam)")
+    print(f"   Ja pensou em desistir: {pensou} ({pensou/total_discentes*100:.1f}% do total de discentes)")
     
-    # Cruzamento: trabalho × desistência (57,7% dos que trabalham pensaram em desistir)
+    # cruzamento trabalho x desistencia
     trabalha_e_pensou = 0
     for item in dados_discentes:
         if item.get('trabalha', '') and item.get('trabalha', '') != "Não, apenas estudo":
             if item.get('pensou_desistir', '') and item.get('pensou_desistir', '') != "Nunca pensei":
                 trabalha_e_pensou += 1
     
-    print(f"   Cruzamento (trabalha ∩ já pensou em desistir): {trabalha_e_pensou} ({trabalha_e_pensou/trabalha*100:.1f}% dos que trabalham)")
+    print(f"   Cruzamento (trabalha ∩ ja pensou em desistir): {trabalha_e_pensou} ({trabalha_e_pensou/trabalha*100:.1f}% dos que trabalham)")
     print()
     
-    # 5. PARTICIPA DE PROJETOS
+    # 5. projetos
     total_responderam_projetos = contar_por_campo(dados_discentes, 'participa_projetos')
     participa = contar_individual_contem(dados_discentes, 'participa_projetos',
                                         ["Sim", "participei", "participo", "Já", "Programa", "Projeto"])
     
-    print("5. PARTICIPAÇÃO EM PROJETOS")
-    print(f"   Total que responderam à pergunta: {total_responderam_projetos}")
-    print(f"   Participa ou já participou: {participa} ({participa/total_responderam_projetos*100:.1f}% dos que responderam)")
-    print(f"   Participa ou já participou: {participa} ({participa/total_discentes*100:.1f}% do total de discentes)")
+    print("5. PARTICIPACAO EM PROJETOS")
+    print(f"   Total que responderam a pergunta: {total_responderam_projetos}")
+    print(f"   Participa ou ja participou: {participa} ({participa/total_responderam_projetos*100:.1f}% dos que responderam)")
+    print(f"   Participa ou ja participou: {participa} ({participa/total_discentes*100:.1f}% do total de discentes)")
     
 except FileNotFoundError:
-    print("❌ Arquivo de discentes não encontrado!")
+    print("Arquivo de discentes nao encontrado!")
 except Exception as e:
-    print(f"❌ Erro ao processar dados dos discentes: {e}")
+    print(f"Erro ao processar dados dos discentes: {e}")
 
-# ============================================================
-# CARREGAR DADOS DOS DOCENTES
-# ============================================================
+# analise docentes
 print()
 print("=" * 70)
-print("ANÁLISE DOS FORMULÁRIOS - DOCENTES")
+print("ANALISE DOS FORMULARIOS - DOCENTES")
 print("=" * 70)
 
 try:
@@ -217,74 +205,72 @@ try:
     dados_docentes = normalizar_dados_docentes(raw_docentes)
     total_docentes = len(dados_docentes)
     
-    print(f"Total de respostas válidas de docentes: {total_docentes}")
+    print(f"Total de respostas validas de docentes: {total_docentes}")
     print()
     
-    # ============ INDICADORES DO TEXTO ============
-    
-    # 1. TITULAÇÃO
+    # 1. titulacao
     doutores = contar_individual_contem(dados_docentes, 'titulacao', ["Doutorado", "Doutor"])
     mestres = contar_individual_contem(dados_docentes, 'titulacao', ["Mestrado", "Mestre"])
     
-    print("1. TITULAÇÃO")
+    print("1. TITULACAO")
     print(f"   Doutores: {doutores} ({doutores/total_docentes*100:.1f}%)")
     print(f"   Mestres: {mestres} ({mestres/total_docentes*100:.1f}%)")
     print()
     
-    # 2. ATUAÇÃO EM PESQUISA
+    # 2. pesquisa
     atua_pesquisa = contar_individual_contem(dados_docentes, 'pesquisa',
                                             ["coordeno", "colaborador", "pesquisador", "atuo"])
     
-    print("2. ATUAÇÃO EM PESQUISA")
-    print(f"   Atua ou já atuou em pesquisa: {atua_pesquisa} ({atua_pesquisa/total_docentes*100:.1f}%)")
+    print("2. ATUACAO EM PESQUISA")
+    print(f"   Atua ou ja atuou em pesquisa: {atua_pesquisa} ({atua_pesquisa/total_docentes*100:.1f}%)")
     print()
     
-    # 3. INFRAESTRUTURA PARA ENSINO (63,6% dos que responderam)
+    # 3. infra ensino
     total_responderam_infra_ensino = contar_por_campo(dados_docentes, 'infra_ensino')
     boa_otima_ensino = contar_individual_contem(dados_docentes, 'infra_ensino',
                                                ["Boa", "Ótima", "Otima"])
     
     print("3. INFRAESTRUTURA PARA ENSINO")
-    print(f"   Total que responderam à pergunta: {total_responderam_infra_ensino}")
-    print(f"   Avaliam como boa ou ótima: {boa_otima_ensino} ({boa_otima_ensino/total_responderam_infra_ensino*100:.1f}% dos que responderam)")
-    print(f"   Avaliam como boa ou ótima: {boa_otima_ensino} ({boa_otima_ensino/total_docentes*100:.1f}% do total de docentes)")
+    print(f"   Total que responderam a pergunta: {total_responderam_infra_ensino}")
+    print(f"   Avaliam como boa ou otima: {boa_otima_ensino} ({boa_otima_ensino/total_responderam_infra_ensino*100:.1f}% dos que responderam)")
+    print(f"   Avaliam como boa ou otima: {boa_otima_ensino} ({boa_otima_ensino/total_docentes*100:.1f}% do total de docentes)")
     print()
     
-    # 4. INFRAESTRUTURA PARA PESQUISA (45,5% dos que responderam)
+    # 4. infra pesquisa
     total_responderam_infra_pesquisa = contar_por_campo(dados_docentes, 'infra_pesquisa')
     boa_otima_pesquisa = contar_individual_contem(dados_docentes, 'infra_pesquisa',
                                                  ["Boa", "Ótima", "Otima"])
     
     print("4. INFRAESTRUTURA PARA PESQUISA")
-    print(f"   Total que responderam à pergunta: {total_responderam_infra_pesquisa}")
-    print(f"   Avaliam como boa ou ótima: {boa_otima_pesquisa} ({boa_otima_pesquisa/total_responderam_infra_pesquisa*100:.1f}% dos que responderam)")
-    print(f"   Avaliam como boa ou ótima: {boa_otima_pesquisa} ({boa_otima_pesquisa/total_docentes*100:.1f}% do total de docentes)")
+    print(f"   Total que responderam a pergunta: {total_responderam_infra_pesquisa}")
+    print(f"   Avaliam como boa ou otima: {boa_otima_pesquisa} ({boa_otima_pesquisa/total_responderam_infra_pesquisa*100:.1f}% dos que responderam)")
+    print(f"   Avaliam como boa ou otima: {boa_otima_pesquisa} ({boa_otima_pesquisa/total_docentes*100:.1f}% do total de docentes)")
     print()
     
-    # 5. SATISFAÇÃO
+    # 5. satisfacao
     satisfeitos = contar_individual_contem(dados_docentes, 'satisfacao',
                                           ["Satisfeito", "Muito satisfeito"])
     
-    print("5. SATISFAÇÃO COM O TRABALHO")
+    print("5. SATISFACAO COM O TRABALHO")
     print(f"   Satisfeitos ou muito satisfeitos: {satisfeitos} ({satisfeitos/total_docentes*100:.1f}%)")
     print()
     
-    # 6. INTENÇÃO DE DEIXAR A CARREIRA (36,4% dos que responderam)
+    # 6. deixar carreira
     total_responderam_deixar = contar_por_campo(dados_docentes, 'deixar_carreira')
     considera_deixar = contar_individual_contem(dados_docentes, 'deixar_carreira',
                                                ["Sim", "Talvez", "avaliando"])
     
-    print("6. INTENÇÃO DE DEIXAR A CARREIRA")
-    print(f"   Total que responderam à pergunta: {total_responderam_deixar}")
+    print("6. INTENCAO DE DEIXAR A CARREIRA")
+    print(f"   Total que responderam a pergunta: {total_responderam_deixar}")
     print(f"   Considera deixar a carreira: {considera_deixar} ({considera_deixar/total_responderam_deixar*100:.1f}% dos que responderam)")
     print(f"   Considera deixar a carreira: {considera_deixar} ({considera_deixar/total_docentes*100:.1f}% do total de docentes)")
 
 except FileNotFoundError:
-    print("❌ Arquivo de docentes não encontrado!")
+    print("Arquivo de docentes nao encontrado!")
 except Exception as e:
-    print(f"❌ Erro ao processar dados dos docentes: {e}")
+    print(f"Erro ao processar dados dos docentes: {e}")
 
 print()
 print("=" * 70)
-print("FIM DA ANÁLISE")
+print("FIM DA ANALISE")
 print("=" * 70)
