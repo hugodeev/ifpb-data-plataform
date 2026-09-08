@@ -1494,6 +1494,120 @@
             }
         }
 
+        // atualizar indicadores de status 
+        function atualizarStatusIndicators() {
+            const total = dadosFiltrados.length;
+            const elRenda = document.getElementById('status-renda');
+            const elPerfil = document.getElementById('status-perfil');
+            const elAno = document.getElementById('status-ano');
+
+            if (elAno) {
+                const anoAtual = new Date().getFullYear();
+                elAno.textContent = anoAtual;
+            }
+
+            const rendas = dadosFiltrados.filter(d => d.RENDA_FAMILIAR && d.RENDA_FAMILIAR !== '');
+            const ab = rendas.filter(d => ['A', 'B'].includes(d.RENDA_FAMILIAR)).length;
+            const pctRenda = rendas.length ? (ab / rendas.length * 100).toFixed(1) : 0;
+            if (elRenda) elRenda.textContent = pctRenda + '% Renda até 3 SM';
+
+            if (elPerfil) {
+                const sexos = dadosFiltrados.filter(d => d.SEXO && d.SEXO !== '');
+                const fem = sexos.filter(d => d.SEXO === 'F').length;
+                const pctFem = sexos.length ? (fem / sexos.length * 100).toFixed(1) : 0;
+                elPerfil.textContent = pctFem + '% Feminino';
+            }
+        }
+
+        // Status 
+        function atualizarStats() {
+            const total = dadosFiltrados.length;
+            document.getElementById('totalEstudantes').textContent = total;
+            const idades = dadosFiltrados.map(d => parseIdade(d.IDADE)).filter(i => i !== null && !isNaN(i));
+            document.getElementById('mediaIdade').textContent = idades.length ? (idades.reduce((a, b) => a + b, 0) / idades.length).toFixed(1) : '-';
+            const sexos = dadosFiltrados.filter(d => d.SEXO && d.SEXO !== '');
+            const fem = sexos.filter(d => d.SEXO === 'F').length;
+            document.getElementById('percentualFeminino').textContent = sexos.length ? (fem / sexos.length * 100).toFixed(1) + '%' : '-';
+            const rendas = dadosFiltrados.filter(d => d.RENDA_FAMILIAR && d.RENDA_FAMILIAR !== '');
+            const ab = rendas.filter(d => ['A', 'B'].includes(d.RENDA_FAMILIAR)).length;
+            document.getElementById('percentualRendaA').textContent = rendas.length ? (ab / rendas.length * 100).toFixed(1) + '%' : '-';
+        }
+
+        // preencher filtros com valores únicos 
+        function preencherFiltros() {
+            const anos = [...new Set(
+                dadosCompletos.map(d => String(d.ANO_EXAME || '').replace(/\.0$/, ''))
+                    .filter(a => /^\d{4}$/.test(a))
+            )].sort();
+
+            const nomesCursos = [...new Set(
+                dadosCompletos.map(d => getNomeCurso(d.CODIGO_CURSO))
+                    .filter(n => n && n !== '')
+            )].sort();
+
+            const campi = [...new Set(
+                dadosCompletos.map(d => String(d.CO_MUNIC_CURSO || ''))
+                    .filter(c => c && c !== '')
+            )];
+
+            const selA = document.getElementById('anoPerfil');
+            selA.innerHTML = '<option value="todos">Todos os Anos</option>';
+            anos.forEach(ano => {
+                const opt = document.createElement('option');
+                opt.value = ano;
+                opt.textContent = ano;
+                selA.appendChild(opt);
+            });
+
+            const selC = document.getElementById('cursoPerfil');
+            selC.innerHTML = '<option value="todos">Todos os Cursos</option>';
+            nomesCursos.forEach(nome => {
+                const opt = document.createElement('option');
+                opt.value = nome;
+                opt.textContent = nome;
+                selC.appendChild(opt);
+            });
+
+            const selCamp = document.getElementById('campusPerfil');
+            selCamp.innerHTML = '<option value="todos">Todos</option>';
+            campi.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c;
+                opt.textContent = getNomeCampus(c) || c;
+                selCamp.appendChild(opt);
+            });
+        }
+
+        // filtros de perfil
+        function aplicarFiltrosPerfil() {
+            const ano = document.getElementById('anoPerfil').value;
+            const curso = document.getElementById('cursoPerfil').value;
+            const campus = document.getElementById('campusPerfil').value;
+
+            dadosFiltrados = dadosCompletos.filter(d => {
+                const anoDado = String(d.ANO_EXAME || '').replace(/\.0$/, '');
+                const nomeCurso = getNomeCurso(d.CODIGO_CURSO);
+                const campusDado = String(d.CO_MUNIC_CURSO || '');
+
+                let ok = true;
+                if (ano !== 'todos' && anoDado !== ano) ok = false;
+                if (curso !== 'todos' && nomeCurso !== curso) ok = false;
+                if (campus !== 'todos' && campusDado !== campus) ok = false;
+                return ok;
+            });
+
+            atualizarTudo();
+        }
+
+        function resetarFiltrosPerfil() {
+            document.getElementById('anoPerfil').value = 'todos';
+            document.getElementById('cursoPerfil').value = 'todos';
+            document.getElementById('campusPerfil').value = 'todos';
+            dadosFiltrados = [...dadosCompletos];
+            atualizarTudo();
+        }
+
+
     </script>
 </body>
 </html>
