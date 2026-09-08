@@ -1607,6 +1607,312 @@
             atualizarTudo();
         }
 
+       // rederizar gráficos
+        function renderGraficos() {
+            const dados = dadosFiltrados;
+            if (!dados.length) {
+                document.getElementById('graficosGrid').innerHTML = `
+                    <div class="chart-card" style="text-align:center;padding:2rem;grid-column:1/-1;">
+                        <i class="fas fa-chart-simple" style="font-size:2rem;color:var(--medium-color);"></i>
+                        <p style="margin-top:1rem;color:var(--medium-color);">Nenhum dado disponível para este filtro</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // preparação dos dados
+            const sexoFreq = contarFrequencia(dados, 'SEXO');
+            const idadeFreq = contarFrequencia(dados, 'IDADE');
+            const rendaFreq = contarFrequencia(dados, 'RENDA_FAMILIAR');
+            const escolaridadePai = contarFrequencia(dados, 'ESCOLARIDADE_PAI');
+            const escolaridadeMae = contarFrequencia(dados, 'ESCOLARIDADE_MAE');
+            const estadoCivilFreq = contarFrequencia(dados, 'ESTADO_CIVIL');
+            const corRacaFreq = contarFrequencia(dados, 'COR_RACA');
+            const nacionalidadeFreq = contarFrequencia(dados, 'NACIONALIDADE');
+            const moradiaFreq = contarFrequencia(dados, 'MORADIA');
+            const pessoasFamiliaFreq = contarFrequencia(dados, 'PESSOAS_FAMILIA');
+            const situacaoFinanceiraFreq = contarFrequencia(dados, 'SITUACAO_FINANCEIRA');
+            const situacaoTrabalhoFreq = contarFrequencia(dados, 'SITUACAO_TRABALHO');
+            const estagioFreq = contarFrequencia(dados, 'ESTAGIO');
+            const bolsaMensalidadeFreq = contarFrequencia(dados, 'BOLSA_FINANCIAMENTO_TIPO');
+            const bolsaOutrasFreq = contarFrequencia(dados, 'BOLSA_CUSTEIO');
+            const acaoAfirmativaFreq = contarFrequencia(dados, 'ACAO_AFIRMATIVA');
+            const tipoEscolaFreq = contarFrequencia(dados, 'TIPO_ESCOLA_EM');
+            const modalidadeEMFreq = contarFrequencia(dados, 'TIPO_CURSO_EM');
+            const ufEMFreq = contarFrequencia(dados, 'UF_ENSINO_MEDIO');
+            const mudancaCidadeFreq = contarFrequencia(dados, 'MUDANCA_CIDADE_CURSO');
+            const turnoConcentradoFreq = contarFrequencia(dados, 'TURNO_CONCENTRADO');
+            const motivoCursoFreq = contarFrequencia(dados, 'MOTIVO_CURSO');
+            const motivoIESFreq = contarFrequencia(dados, 'MOTIVO_IES');
+            const livrosFreq = contarFrequencia(dados, 'LIVROS_LIDOS_ANO');
+            const horasEstudoFreq = contarFrequencia(dados, 'HORAS_ESTUDO_SEMANA');
+            const atividadesComplementaresFreq = contarFrequencia(dados, 'ATIVIDADES_COMPLEMENTARES');
+            const apoioEventosFreq = contarFrequencia(dados, 'APOIO_EVENTOS');
+
+            // Participação em programas (multipla escolha)
+            const programas = ['INICIACAO_CIENTIFICA', 'MONITORIA', 'EXTENSAO'];
+            const programasLabels = ['Iniciação Científica', 'Monitoria', 'Extensão'];
+            const opcoes = ['A', 'B', 'C', 'D', 'E'];
+            const programasDados = programas.map(campo => {
+                const vals = dados.filter(d => d[campo] && d[campo] !== '');
+                const freq = {};
+                vals.forEach(d => {
+                    const chave = d[campo];
+                    freq[chave] = (freq[chave] || 0) + 1;
+                });
+                return opcoes.map(o => freq[o] || 0);
+            });
+            const opcoesLabels = opcoes.map(o => window.converterValor('INICIACAO_CIENTIFICA', o, null));
+
+            let html = '';
+
+            // Linha 1: Sexo, Idade, Renda
+            html += criarChartCard('card_sexo', 'chartSexo', 'fas fa-venus-mars', 'Distribuição por Sexo', 'Distribuição dos participantes por gênero.');
+            html += criarChartCard('card_idade', 'chartIdade', 'fas fa-calendar-alt', 'Distribuição por Idade', 'Distribuição etária dos participantes.');
+            html += criarChartCard('card_renda', 'chartRenda', 'fas fa-money-bill-wave', 'Renda Familiar', 'Distribuição da renda familiar dos participantes.');
+
+            // Linha 2: Escolaridade Pais, Estado Civil, Cor/Raça
+            html += criarChartCard('card_escolaridade', 'chartEscolaridade', 'fas fa-graduation-cap', 'Escolaridade dos Pais', 'Nível de escolaridade do pai e da mãe.');
+            html += criarChartCard('card_estadoCivil', 'chartEstadoCivil', 'fas fa-users', 'Estado Civil', 'Distribuição do estado civil dos participantes.');
+            html += criarChartCard('card_corRaca', 'chartCorRaca', 'fas fa-flag', 'Cor/Raça', 'Distribuição por cor/raça declarada.');
+
+            // Linha 3: Nacionalidade, Moradia, Pessoas na Família
+            html += criarChartCard('card_nacionalidade', 'chartNacionalidade', 'fas fa-globe-americas', 'Nacionalidade', 'Distribuição por nacionalidade.');
+            html += criarChartCard('card_moradia', 'chartMoradia', 'fas fa-home', 'Tipo de Moradia', 'Tipo de moradia dos participantes.');
+            html += criarChartCard('card_pessoasFamilia', 'chartPessoasFamilia', 'fas fa-user-friends', 'Pessoas na Família', 'Número de pessoas na família.');
+
+            // Linha 4: Situação Financeira, Situação Trabalho, Estágio
+            html += criarChartCard('card_situacaoFinanceira', 'chartSituacaoFinanceira', 'fas fa-hand-holding-usd', 'Situação Financeira', 'Avaliação da situação financeira.');
+            html += criarChartCard('card_situacaoTrabalho', 'chartSituacaoTrabalho', 'fas fa-briefcase', 'Situação de Trabalho', 'Situação atual de trabalho.');
+            html += criarChartCard('card_estagio', 'chartEstagio', 'fas fa-user-tie', 'Tipo de Estágio', 'Tipo de estágio realizado.');
+
+            // Linha 5: Bolsas, Ação Afirmativa
+            html += criarChartCard('card_bolsaMensalidade', 'chartBolsaMensalidade', 'fas fa-hand-holding-heart', 'Bolsa para Mensalidades', 'Tipos de bolsa/ financiamento para mensalidades.');
+            html += criarChartCard('card_bolsaOutras', 'chartBolsaOutras', 'fas fa-coins', 'Bolsa para Outras Despesas', 'Tipos de bolsa para custeio de outras despesas.');
+            html += criarChartCard('card_acaoAfirmativa', 'chartAcaoAfirmativa', 'fas fa-balance-scale', 'Ação Afirmativa', 'Distribuição por tipo de ação afirmativa.');
+
+            // Linha 6: Tipo Escola, Modalidade EM, UF EM
+            html += criarChartCard('card_tipoEscola', 'chartTipoEscola', 'fas fa-school', 'Tipo de Escola (EM)', 'Tipo de escola onde cursou o Ensino Médio.');
+            html += criarChartCard('card_modalidadeEM', 'chartModalidadeEM', 'fas fa-book-open', 'Modalidade do EM', 'Modalidade do Ensino Médio cursado.');
+            html += criarChartCard('card_ufEM', 'chartUFEM', 'fas fa-map-marker-alt', 'UF do Ensino Médio', 'UF onde cursou o Ensino Médio.');
+
+            // Linha 7: Mudança de Cidade, Turno Concentrado
+            html += criarChartCard('card_mudancaCidade', 'chartMudancaCidade', 'fas fa-route', 'Mudou de Cidade para o Curso', 'Se mudou de cidade para cursar o curso.');
+            html += criarChartCard('card_turnoConcentrado', 'chartTurnoConcentrado', 'fas fa-clock', 'Turno Concentrado', 'Se o curso é em turno concentrado.');
+
+            // Linha 8: Motivo Curso, Motivo IES
+            html += criarChartCard('card_motivoCurso', 'chartMotivoCurso', 'fas fa-question-circle', 'Motivo para Escolher o Curso', 'Principal motivo para escolher o curso.');
+            html += criarChartCard('card_motivoIES', 'chartMotivoIES', 'fas fa-university', 'Motivo para Escolher a IES', 'Principal motivo para escolher a IES.');
+
+            // Linha 9: Livros, Horas Estudo
+            html += criarChartCard('card_livros', 'chartLivros', 'fas fa-book', 'Livros Lidos no Ano', 'Quantidade de livros lidos no último ano.');
+            html += criarChartCard('card_horasEstudo', 'chartHorasEstudo', 'fas fa-clock', 'Horas de Estudo por Semana', 'Horas de estudo semanais.');
+
+            // Linha 10: Participação Programas, Atividades Complementares
+            html += criarChartCard('card_participacaoProgramas', 'chartParticipacaoProgramas', 'fas fa-flask', 'Participação em Programas', 'Participação em IC, monitoria ou extensão.');
+            html += criarChartCard('card_atividadesComplementares', 'chartAtividadesComplementares', 'fas fa-calendar-plus', 'Atividades Complementares', 'Participação em atividades complementares.');
+            html += criarChartCard('card_apoioEventos', 'chartApoioEventos', 'fas fa-handshake', 'Apoio da IES para Eventos', 'Avaliação do apoio da IES para eventos.');
+
+            document.getElementById('graficosGrid').innerHTML = html;
+
+            // ===== RENDERIZAR GRÁFICOS =====
+            criarPieScroll('chartSexo', sexoFreq.labels, sexoFreq.values);
+            criarBarraVerticalScroll('chartIdade', idadeFreq.labels, idadeFreq.values, 'Quantidade');
+            criarPieScroll('chartRenda', rendaFreq.labels, rendaFreq.values);
+
+            // Escolaridade (barra empilhada)
+            const escLabels = ['A', 'B', 'C', 'D', 'E', 'F'];
+            const escLabelTexts = escLabels.map(l => window.converterValor('ESCOLARIDADE_PAI', l, null));
+            const escPai = escLabels.map(l => dados.filter(d => d.ESCOLARIDADE_PAI === l).length);
+            const escMae = escLabels.map(l => dados.filter(d => d.ESCOLARIDADE_MAE === l).length);
+            const escCanvas = document.getElementById('chartEscolaridade');
+            if (escCanvas) {
+                const ctx = escCanvas.getContext('2d');
+                if (charts['chartEscolaridade']) { charts['chartEscolaridade'].destroy(); delete charts['chartEscolaridade']; }
+                charts['chartEscolaridade'] = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: escLabelTexts,
+                        datasets: [
+                            { label: 'Pai', data: escPai, backgroundColor: '#e74a3b', borderRadius: 4 },
+                            { label: 'Mãe', data: escMae, backgroundColor: '#f6c23e', borderRadius: 4 }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'top' } },
+                        scales: { x: { stacked: true, ticks: { font: { size: 10 } } }, y: { stacked: true, beginAtZero: true } }
+                    }
+                });
+                charts['chartEscolaridade'].canvas.parentElement.style.width = '100%';
+                charts['chartEscolaridade'].canvas.parentElement.style.minWidth = '100%';
+            }
+
+            criarBarraVerticalScroll('chartEstadoCivil', estadoCivilFreq.labels, estadoCivilFreq.values, 'Quantidade');
+            criarBarraVerticalScroll('chartCorRaca', corRacaFreq.labels, corRacaFreq.values, 'Quantidade');
+            criarPieScroll('chartNacionalidade', nacionalidadeFreq.labels, nacionalidadeFreq.values);
+            criarBarraVerticalScroll('chartMoradia', moradiaFreq.labels, moradiaFreq.values, 'Quantidade');
+            criarBarraVerticalScroll('chartPessoasFamilia', pessoasFamiliaFreq.labels, pessoasFamiliaFreq.values, 'Quantidade');
+            criarBarraVerticalScroll('chartSituacaoFinanceira', situacaoFinanceiraFreq.labels, situacaoFinanceiraFreq.values, 'Quantidade');
+            criarBarraVerticalScroll('chartSituacaoTrabalho', situacaoTrabalhoFreq.labels, situacaoTrabalhoFreq.values, 'Quantidade');
+            criarBarraVerticalScroll('chartEstagio', estagioFreq.labels, estagioFreq.values, 'Quantidade');
+            criarBarraVerticalScroll('chartBolsaMensalidade', bolsaMensalidadeFreq.labels, bolsaMensalidadeFreq.values, 'Quantidade');
+            criarBarraVerticalScroll('chartBolsaOutras', bolsaOutrasFreq.labels, bolsaOutrasFreq.values, 'Quantidade');
+            criarPieScroll('chartAcaoAfirmativa', acaoAfirmativaFreq.labels, acaoAfirmativaFreq.values);
+            criarBarraVerticalScroll('chartTipoEscola', tipoEscolaFreq.labels, tipoEscolaFreq.values, 'Quantidade');
+            criarBarraVerticalScroll('chartModalidadeEM', modalidadeEMFreq.labels, modalidadeEMFreq.values, 'Quantidade');
+
+            // UF EM (top 15)
+            const ufSorted = ufEMFreq.labels.map((l, i) => ({ label: l, value: ufEMFreq.values[i] })).sort((a, b) => b.value - a.value).slice(0, 15);
+            criarBarraVerticalScroll('chartUFEM', ufSorted.map(s => s.label), ufSorted.map(s => s.value), 'Quantidade');
+
+            criarBarraVerticalScroll('chartMudancaCidade', mudancaCidadeFreq.labels, mudancaCidadeFreq.values, 'Quantidade');
+            criarBarraVerticalScroll('chartTurnoConcentrado', turnoConcentradoFreq.labels, turnoConcentradoFreq.values, 'Quantidade');
+            criarBarraVerticalScroll('chartMotivoCurso', motivoCursoFreq.labels, motivoCursoFreq.values, 'Quantidade');
+            criarBarraVerticalScroll('chartMotivoIES', motivoIESFreq.labels, motivoIESFreq.values, 'Quantidade');
+            criarBarraVerticalScroll('chartLivros', livrosFreq.labels, livrosFreq.values, 'Quantidade');
+            criarBarraVerticalScroll('chartHorasEstudo', horasEstudoFreq.labels, horasEstudoFreq.values, 'Quantidade');
+
+            // Participação em programas (multipla escolha - barra empilhada)
+            const progCanvas = document.getElementById('chartParticipacaoProgramas');
+            if (progCanvas) {
+                const ctx = progCanvas.getContext('2d');
+                if (charts['chartParticipacaoProgramas']) { charts['chartParticipacaoProgramas'].destroy(); delete charts['chartParticipacaoProgramas']; }
+                const cores = ['#e74a3b', '#f6c23e', '#1cc88a', '#36b9cc', '#9b59b6'];
+                const datasets = programas.map((p, idx) => ({
+                    label: programasLabels[idx],
+                    data: programasDados[idx],
+                    backgroundColor: cores[idx],
+                    borderRadius: 4
+                }));
+                charts['chartParticipacaoProgramas'] = new Chart(ctx, {
+                    type: 'bar',
+                    data: { labels: opcoesLabels, datasets: datasets },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'top' } },
+                        scales: { x: { stacked: true, ticks: { font: { size: 10 } } }, y: { stacked: true, beginAtZero: true } }
+                    }
+                });
+                charts['chartParticipacaoProgramas'].canvas.parentElement.style.width = '100%';
+                charts['chartParticipacaoProgramas'].canvas.parentElement.style.minWidth = '100%';
+            }
+
+            criarBarraVerticalScroll('chartAtividadesComplementares', atividadesComplementaresFreq.labels, atividadesComplementaresFreq.values, 'Quantidade');
+            criarBarraVerticalScroll('chartApoioEventos', apoioEventosFreq.labels, apoioEventosFreq.values, 'Quantidade');
+
+            // Configurar eventos dos cards
+            const configs = [
+                { id: 'card_sexo', canvas: 'chartSexo', titulo: 'Distribuição por Sexo' },
+                { id: 'card_idade', canvas: 'chartIdade', titulo: 'Distribuição por Idade' },
+                { id: 'card_renda', canvas: 'chartRenda', titulo: 'Renda Familiar' },
+                { id: 'card_escolaridade', canvas: 'chartEscolaridade', titulo: 'Escolaridade dos Pais' },
+                { id: 'card_estadoCivil', canvas: 'chartEstadoCivil', titulo: 'Estado Civil' },
+                { id: 'card_corRaca', canvas: 'chartCorRaca', titulo: 'Cor/Raça' },
+                { id: 'card_nacionalidade', canvas: 'chartNacionalidade', titulo: 'Nacionalidade' },
+                { id: 'card_moradia', canvas: 'chartMoradia', titulo: 'Tipo de Moradia' },
+                { id: 'card_pessoasFamilia', canvas: 'chartPessoasFamilia', titulo: 'Pessoas na Família' },
+                { id: 'card_situacaoFinanceira', canvas: 'chartSituacaoFinanceira', titulo: 'Situação Financeira' },
+                { id: 'card_situacaoTrabalho', canvas: 'chartSituacaoTrabalho', titulo: 'Situação de Trabalho' },
+                { id: 'card_estagio', canvas: 'chartEstagio', titulo: 'Tipo de Estágio' },
+                { id: 'card_bolsaMensalidade', canvas: 'chartBolsaMensalidade', titulo: 'Bolsa para Mensalidades' },
+                { id: 'card_bolsaOutras', canvas: 'chartBolsaOutras', titulo: 'Bolsa para Outras Despesas' },
+                { id: 'card_acaoAfirmativa', canvas: 'chartAcaoAfirmativa', titulo: 'Ação Afirmativa' },
+                { id: 'card_tipoEscola', canvas: 'chartTipoEscola', titulo: 'Tipo de Escola (EM)' },
+                { id: 'card_modalidadeEM', canvas: 'chartModalidadeEM', titulo: 'Modalidade do EM' },
+                { id: 'card_ufEM', canvas: 'chartUFEM', titulo: 'UF do Ensino Médio' },
+                { id: 'card_mudancaCidade', canvas: 'chartMudancaCidade', titulo: 'Mudou de Cidade para o Curso' },
+                { id: 'card_turnoConcentrado', canvas: 'chartTurnoConcentrado', titulo: 'Turno Concentrado' },
+                { id: 'card_motivoCurso', canvas: 'chartMotivoCurso', titulo: 'Motivo para Escolher o Curso' },
+                { id: 'card_motivoIES', canvas: 'chartMotivoIES', titulo: 'Motivo para Escolher a IES' },
+                { id: 'card_livros', canvas: 'chartLivros', titulo: 'Livros Lidos no Ano' },
+                { id: 'card_horasEstudo', canvas: 'chartHorasEstudo', titulo: 'Horas de Estudo por Semana' },
+                { id: 'card_participacaoProgramas', canvas: 'chartParticipacaoProgramas', titulo: 'Participação em Programas' },
+                { id: 'card_atividadesComplementares', canvas: 'chartAtividadesComplementares', titulo: 'Atividades Complementares' },
+                { id: 'card_apoioEventos', canvas: 'chartApoioEventos', titulo: 'Apoio da IES para Eventos' }
+            ];
+
+            configs.forEach(cfg => {
+                configurarEventosCard(cfg.id, cfg.canvas, cfg.titulo, dados);
+            });
+        }
+    
+        // atualizar insights
+        function atualizarInsights() {
+            const dados = dadosFiltrados;
+
+            const sexos = dados.filter(d => d.SEXO && d.SEXO !== '');
+            const fem = sexos.filter(d => d.SEXO === 'F').length;
+            document.getElementById('insightPerfil').textContent = (fem > sexos.length / 2 ? 'Mulher' : 'Homem') + ', entre 18-22 anos, renda familiar de até 3 SM';
+
+            const pai = dados.filter(d => d.ESCOLARIDADE_PAI && d.ESCOLARIDADE_PAI !== '');
+            const mae = dados.filter(d => d.ESCOLARIDADE_MAE && d.ESCOLARIDADE_MAE !== '');
+            let txtPai = '', txtMae = '';
+            if (pai.length) {
+                const f = {};
+                pai.forEach(d => f[d.ESCOLARIDADE_PAI] = (f[d.ESCOLARIDADE_PAI] || 0) + 1);
+                const max = Object.keys(f).reduce((a, b) => f[a] > f[b] ? a : b);
+                txtPai = window.converterValor('ESCOLARIDADE_PAI', max, null);
+            }
+            if (mae.length) {
+                const f = {};
+                mae.forEach(d => f[d.ESCOLARIDADE_MAE] = (f[d.ESCOLARIDADE_MAE] || 0) + 1);
+                const max = Object.keys(f).reduce((a, b) => f[a] > f[b] ? a : b);
+                txtMae = window.converterValor('ESCOLARIDADE_MAE', max, null);
+            }
+            document.getElementById('insightEscolaridade').textContent = 'Pai: ' + (txtPai || 'N/D') + ', Mãe: ' + (txtMae || 'N/D');
+
+            const idades = dados.map(d => parseIdade(d.IDADE)).filter(i => i !== null && !isNaN(i));
+            if (idades.length) {
+                const f = [0, 0, 0];
+                idades.forEach(i => { if (i <= 20) f[0]++; else if (i <= 23) f[1]++; else f[2]++; });
+                const maxIdx = f.indexOf(Math.max(...f));
+                document.getElementById('insightIdade').textContent = ['18-20 anos', '21-23 anos', '24+ anos'][maxIdx] || 'N/D';
+            } else document.getElementById('insightIdade').textContent = 'N/D';
+
+            const motivo = dados.filter(d => d.MOTIVO_CURSO && d.MOTIVO_CURSO !== '');
+            if (motivo.length) {
+                const f = {};
+                motivo.forEach(d => f[d.MOTIVO_CURSO] = (f[d.MOTIVO_CURSO] || 0) + 1);
+                const max = Object.keys(f).reduce((a, b) => f[a] > f[b] ? a : b);
+                document.getElementById('insightMotivoCurso').textContent = window.converterValor('MOTIVO_CURSO', max, null) || 'N/D';
+            }
+
+            const ic = dados.filter(d => d.INICIACAO_CIENTIFICA && d.INICIACAO_CIENTIFICA !== '');
+            const participou = ic.filter(d => ['A', 'B', 'C'].includes(d.INICIACAO_CIENTIFICA)).length;
+            document.getElementById('insightPesquisa').textContent = participou > 0 ? (participou / ic.length * 100).toFixed(1) + '% participaram de IC' : 'Dados insuficientes';
+        }
+
+        // atualização completa
+        function atualizarTudo() {
+            atualizarStats();
+            atualizarStatusIndicators();
+            renderGraficos();
+            atualizarInsights();
+        }
+
+        // Carregamento dos dados do JSON
+        function carregarDados() {
+            const url = '../../assets/data/DadosENADE/DADOSENADEGERAL.json';
+            fetch(url)
+                .then(r => r.ok ? r.json() : Promise.reject('HTTP ' + r.status))
+                .then(data => {
+                    dadosCompletos = data;
+                    dadosFiltrados = [...dadosCompletos];
+                    preencherFiltros();
+                    atualizarTudo();
+                })
+                .catch(err => console.error('Erro ao carregar dados:', err));
+        }
+
+        // Inicialização ao carregar a página
+        document.addEventListener('DOMContentLoaded', () => {
+            configurarBotoesModal();
+            carregarDados();
+        });
+
 
     </script>
 </body>
