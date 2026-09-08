@@ -10,38 +10,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../assets/css/Dadosabertosifpb.css">
     <link rel="stylesheet" href="../../style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script src="../../assets/js/conversor.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* variaveis */
-:root {
-    --primary-color: #4aa47d;
-    --primary-dark: #38a169;
-    --primary-light: #6ddbb3;
-    --secondary-color: #57cc99;
-    --accent-color: #ff9a3c;
-    --accent-dark: #e68a2e;
-    --success-color: #1cc88a;
-    --warning-color: #f6c23e;
-    --danger-color: #e74a3b;
-    --info-color: #36b9cc;
+        /* ===== VARIÁVEIS ===== */
+        :root {
+            --primary-color: #4aa47d;
+            --primary-dark: #38a169;
+            --primary-light: #6ddbb3;
+            --secondary-color: #57cc99;
+            --accent-color: #ff9a3c;
+            --accent-dark: #e68a2e;
+            --success-color: #1cc88a;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --info-color: #36b9cc;
+            --dark-color: #2e3a59;
+            --medium-color: #5a5c69;
+            --light-color: #f8f9fc;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --radius: 10px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-    --dark-color: #2e3a59;
-    --medium-color: #5a5c69;
-    --light-color: #f8f9fc;
-    --white: #ffffff;
+        * { box-sizing: border-box; }
 
-    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-    --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
-
-    --radius: 10px;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-        /* page header */
+        /* ===== PAGE HEADER ===== */
         .page-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #55af9a 100%);    
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
             padding: 3rem 2rem;
             border-radius: var(--radius);
@@ -62,8 +61,7 @@
             pointer-events: none;
         }
 
-        /* breadcrumb */
-         .breadcrumb {
+        .breadcrumb {
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -81,13 +79,8 @@
             transition: var(--transition);
         }
 
-        .breadcrumb a:hover {
-            opacity: 0.8;
-        }
-
-        .breadcrumb i {
-            font-size: 0.7rem;
-        }
+        .breadcrumb a:hover { opacity: 0.8; }
+        .breadcrumb i { font-size: 0.7rem; }
 
         .page-title {
             font-size: 2.5rem;
@@ -142,7 +135,7 @@
             100% { opacity: 1; transform: scale(1); }
         }
 
-        /* filtros */
+        /* ===== FILTERS ===== */
         .filters {
             display: flex;
             flex-wrap: wrap;
@@ -154,15 +147,27 @@
             box-shadow: var(--shadow-sm);
             margin-bottom: 2rem;
         }
-        .filters label { font-weight: 600; color: var(--dark-color); font-size: 0.9rem; }
+
+        .filters label {
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 0.9rem;
+        }
+
         .filters select {
             padding: 0.6rem 1rem;
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 0.95rem;
             background: var(--white);
-            min-width: 160px;
+            min-width: 180px;
+            max-width: 180px;
+            width: 180px;
+            transition: var(--transition);
         }
+
+        .filters select:hover { border-color: var(--primary-color); }
+
         .filters button {
             background: var(--primary-color);
             color: white;
@@ -173,46 +178,494 @@
             cursor: pointer;
             transition: var(--transition);
         }
-        .filters button:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
-        /* stats */
+        .filters button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 164, 125, 0.3);
+        }
+
+        .filters .btn-reset {
+            background: #6c757d;
+        }
+
+        .filters .btn-reset:hover {
+            background: #5a6268;
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+        }
+
+        /* ===== STATS ===== */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 1.5rem;
             margin: 2rem 0;
         }
+
         .stat-card {
             background: var(--white);
             padding: 1.5rem;
             border-radius: var(--radius);
             text-align: center;
             box-shadow: var(--shadow-sm);
-            border-top: 4px solid var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            transition: var(--transition);
         }
-        .stat-card .number { font-size: 2rem; font-weight: 700; color: var(--primary-color); }
-        .stat-card .label { color: var(--medium-color); font-size: 0.85rem; }
 
-        /* charts */
-        .chart-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
         }
-        .chart-box {
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-card .label {
+            color: var(--medium-color);
+            font-size: 0.9rem;
+        }
+
+        /* ============================================================ */
+        /* ===== CHART CARD PADRÃO ===== */
+        /* ============================================================ */
+        .chart-card {
             background: var(--white);
             padding: 1.5rem;
             border-radius: var(--radius);
             box-shadow: var(--shadow-sm);
+            min-width: 0;
+            position: relative;
+            transition: var(--transition);
+            border: 1px solid #e9ecef;
+            margin-bottom: 1.5rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
-        .chart-box h3 {
+
+        .chart-card:hover { box-shadow: var(--shadow-md); }
+
+        .chart-card .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
             margin-bottom: 1rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+
+        .chart-card .card-header h3 {
             color: var(--dark-color);
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin: 0;
+            flex: 1;
+            min-width: 150px;
+            border-left: 3px solid var(--primary-color);
+            padding-left: 0.8rem;
+        }
+
+        .chart-card .card-header h3 i { color: var(--primary-color); }
+
+        .chart-card .card-header h3 .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--medium-color);
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 700;
+            cursor: help;
+            transition: var(--transition);
+            flex-shrink: 0;
+            margin-left: auto;
+            font-style: normal;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .chart-card .card-header h3 .info-icon:hover {
+            background: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        /* ===== AÇÕES ===== */
+        .chart-card .chart-actions {
+            display: flex;
+            gap: 0.3rem;
+            flex-shrink: 0;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+            padding-top: 0.2rem;
+        }
+
+        .chart-card:hover .chart-actions { opacity: 1; }
+
+        .chart-card .chart-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid #d1d3e2;
+            background: rgba(255, 255, 255, 0.95);
+            color: #5a5c69;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            flex-shrink: 0;
+        }
+
+        .chart-card .chart-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: scale(1.08);
+        }
+
+        .chart-card .chart-btn i { font-size: 13px; }
+
+        /* ===== SCROLL WRAPPER ===== */
+        .chart-card .chart-scroll-wrapper {
+            flex: 1;
+            min-height: 280px;
+            max-height: 380px;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 8px;
+            background: #fafafa;
+            border: 1px solid #e9ecef;
+            position: relative;
+        }
+
+        .chart-card .chart-scroll-inner {
+            min-width: 700px;
+            width: 700px;
+            height: 100%;
+            min-height: 280px;
+            max-height: 380px;
+            position: relative;
+        }
+
+        .chart-card .chart-scroll-inner canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .chart-card .chart-scroll-wrapper::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .chart-card .chart-scroll-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .chart-card .chart-scroll-wrapper::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+        .chart-card .chart-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* ===== DESCRIÇÃO ===== */
+        .chart-card .descricao-card {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+        }
+
+        .chart-card .descricao-card .texto {
+            font-size: 0.85rem;
+            color: var(--medium-color);
+            line-height: 1.6;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .chart-card .descricao-card .texto i {
+            color: var(--primary-color);
+            margin-right: 0.3rem;
+        }
+
+        .chart-card .descricao-card .btn-ver-mais {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 0.4rem 1rem;
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid var(--primary-color);
+            border-radius: 6px;
+            background: rgba(74, 164, 125, 0.05);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .chart-card .descricao-card .btn-ver-mais:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .chart-card .descricao-card .btn-ver-mais i {
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+        }
+
+        .chart-card .descricao-card .btn-ver-mais:hover i {
+            transform: translateX(4px);
+        }
+
+        /* ===== GRID DE GRÁFICOS ===== */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .charts-grid .chart-card { margin-bottom: 0; }
+
+        /* ============================================================ */
+        /* ===== MODAL ===== */
+        /* ============================================================ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(46, 58, 89, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal-box {
+            background: var(--white);
+            border-radius: var(--radius);
+            max-width: 95vw;
+            width: 90%;
+            max-height: 95vh;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlideUp 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes modalSlideUp {
+            from { transform: translateY(30px) scale(0.95); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            border-bottom: 1px solid #eee;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: var(--radius) var(--radius) 0 0;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .modal-header h3 {
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0;
+            padding-right: 0;
+        }
+
+        .modal-header h3 i { color: white; }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: white;
+            transition: var(--transition);
+            padding: 0.3rem 0.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 0.8rem 1.5rem 1rem 1.5rem;
+            flex: 1;
+            overflow: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-body .grafico-wrapper {
+            flex: 1;
+            min-height: 60vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .modal-scroll-wrapper {
+            width: 100%;
+            height: 100%;
+            min-height: 60vh;
+            max-height: 60vh;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-scroll-inner {
+            width: 600px;
+            height: 100%;
+            min-height: 45vh;
+            position: relative;
+            margin-top: 210px;
+        }
+
+        .modal-scroll-inner canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .modal-scroll-wrapper::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        .modal-scroll-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 5px;
+        }
+        .modal-scroll-wrapper::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 5px;
+        }
+        .modal-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        .modal-descricao {
+            margin-top: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid #e9ecef;
+            flex-shrink: 0;
+        }
+
+        .modal-descricao .descricao-texto {
+            font-size: 0.85rem;
+            color: var(--medium-color);
+            line-height: 1.7;
+        }
+
+        .modal-descricao .descricao-texto i {
+            color: var(--primary-color);
+            margin-right: 0.3rem;
+        }
+
+        .modal-descricao .descricao-texto strong {
+            color: var(--dark-color);
+        }
+
+        .modal-descricao .descricao-texto ul {
+            margin: 0.5rem 0 0.5rem 1.5rem;
+            padding: 0;
+            list-style: none;
+        }
+
+        .modal-descricao .descricao-texto li {
+            position: relative;
+            padding: 0.25rem 0 0.25rem 1.5rem;
+            line-height: 1.6;
+            color: var(--medium-color);
+        }
+
+        .modal-descricao .descricao-texto li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: 700;
             font-size: 1.1rem;
         }
 
-        /* perfil destaque */
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.6rem;
+            padding: 0.8rem 1.5rem;
+            border-top: 1px solid #eee;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+            background: var(--white);
+        }
+
+        .modal-action-btn {
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid #e3e6f0;
+            background: var(--white);
+            color: var(--dark-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .modal-action-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 164, 125, 0.25);
+        }
+
+        .modal-action-btn i { font-size: 0.85rem; }
+
+        /* ===== PERFIL DESTAQUE (INSIGHTS) ===== */
         .perfil-destaque {
             background: linear-gradient(135deg, #f8f9fc, #eef2ff);
             border-radius: var(--radius);
@@ -220,37 +673,187 @@
             margin: 2rem 0;
             border-left: 5px solid var(--primary-color);
         }
-        .perfil-destaque h3 { color: var(--dark-color); margin-bottom: 1rem; }
+
+        .perfil-destaque h3 {
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+
         .perfil-destaque .destaque-item {
             display: flex;
             justify-content: space-between;
             padding: 0.5rem 0;
             border-bottom: 1px solid rgba(0,0,0,0.05);
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
-        /* loading */
-        .loading { text-align: center; padding: 3rem; color: var(--medium-color); }
-        .loading i { font-size: 2rem; margin-bottom: 1rem; display: block; }
+        .perfil-destaque .destaque-item span:last-child {
+            color: var(--medium-color);
+        }
 
-        /* responsivo 768 */
+        /* ============================================================ */
+        /* ===== RESPONSIVIDADE ===== */
+        /* ============================================================ */
+        @media (max-width: 1024px) {
+            .chart-card { padding: 1.25rem; }
+            .chart-card .card-header h3 { font-size: 0.95rem; }
+            .chart-card .chart-scroll-wrapper { min-height: 250px; max-height: 320px; }
+            .chart-card .chart-scroll-inner { min-height: 250px; max-height: 320px; min-width: 600px; width: 600px; }
+        }
+
         @media (max-width: 768px) {
-            .chart-container { grid-template-columns: 1fr; }
-            .filters { flex-direction: column; align-items: stretch; }
-            .filters select { width: 100%; }
+            .page-header { padding: 2rem 1.5rem; }
             .page-title { font-size: 1.8rem; }
             .page-subtitle { font-size: 1rem; }
-            .page-header { padding: 2rem 1.5rem; }
+            .filters { flex-direction: column; align-items: stretch; }
+            .filters select { width: 100%; max-width: 100%; }
+            .charts-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+            .chart-card { padding: 1rem; }
+            .chart-card .card-header h3 { font-size: 0.88rem; padding-left: 0.6rem; }
+            .chart-card .chart-scroll-wrapper { min-height: 220px; max-height: 280px; }
+            .chart-card .chart-scroll-inner { min-height: 220px; max-height: 280px; min-width: 500px; width: 500px; }
+            .chart-card .chart-actions { opacity: 0.8; }
+            .chart-card .chart-btn { width: 28px; height: 28px; font-size: 10px; }
+            .chart-card .chart-btn i { font-size: 10px; }
+            .chart-card .descricao-card .texto { font-size: 0.8rem; }
+            .chart-card .descricao-card .btn-ver-mais { font-size: 0.75rem; padding: 0.3rem 0.8rem; }
+            .modal-box { width: 95%; max-height: 90vh; }
+            .modal-body .grafico-wrapper { min-height: 58vh; }
+            .modal-scroll-wrapper { min-height: 58vh; max-height: 58vh; }
+            .modal-scroll-inner { min-width: 750px; padding-left: 18rem; display: flex; align-items: center; justify-content: center; }
+            .modal-header { padding: 0.6rem 1rem; }
+            .modal-header h3 { font-size: 0.9rem; }
+            .modal-body { padding: 0.6rem 1rem 0.8rem 1rem; }
+            .modal-descricao .descricao-texto { font-size: 0.8rem; }
         }
 
-        /* responsivo 480 */
         @media (max-width: 480px) {
-            .page-title { font-size: 1.6rem; }
-            .breadcrumb { font-size: 0.75rem; padding: 0.2rem 0.8rem; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .page-header { padding: 1.5rem 1rem; }
+            .page-title { font-size: 1.3rem; }
+            .page-subtitle { font-size: 0.9rem; }
+            .status-indicator { font-size: 0.7rem; padding: 0.4rem 0.8rem; }
+            .breadcrumb { font-size: 0.7rem; gap: 0.3rem; }
+            .breadcrumb i { font-size: 0.5rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+            .stat-card { padding: 1rem; }
+            .stat-card .number { font-size: 1.5rem; }
+            .stat-card .label { font-size: 0.75rem; }
+            .chart-card { padding: 0.75rem; }
+            .chart-card .card-header h3 { font-size: 0.8rem; padding-left: 0.5rem; gap: 0.4rem; min-width: 120px; }
+            .chart-card .card-header h3 .info-icon { width: 18px; height: 18px; font-size: 0.55rem; }
+            .chart-card .chart-actions { opacity: 1; gap: 0.2rem; }
+            .chart-card .chart-btn { width: 24px; height: 24px; font-size: 9px; }
+            .chart-card .chart-btn i { font-size: 9px; }
+            .chart-card .chart-scroll-wrapper { min-height: 220px; max-height: 260px; }
+            .chart-card .chart-scroll-inner { min-width: 480px; width: 480px; height: 220px; min-height: 220px; max-height: 260px; }
+            .chart-card .chart-scroll-wrapper::-webkit-scrollbar { width: 4px; height: 4px; }
+            .chart-card .chart-scroll-wrapper::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 3px; }
+            .chart-card .chart-scroll-wrapper::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 3px; }
+            .chart-card .descricao-card { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+            .chart-card .descricao-card .btn-ver-mais { align-self: flex-start; font-size: 0.7rem; padding: 0.25rem 0.7rem; }
+            .chart-card .descricao-card .texto { font-size: 0.75rem; }
+            .modal-box { max-width: 100%; margin: 0.5rem; border-radius: 8px; min-width: 0; width: calc(100vw - 1rem); max-height: 88vh; }
+            .modal-header { padding: 0.5rem 0.8rem; }
+            .modal-header h3 { font-size: 0.8rem; gap: 0.5rem; }
+            .modal-body { padding: 0.5rem 0.8rem 0.7rem 0.8rem; }
+            .modal-body .grafico-wrapper { min-height: 58vh; min-width: 80px; }
+            .modal-scroll-wrapper { min-height: 58vh; max-height: 58vh; }
+            .modal-scroll-inner { min-width: 750px; padding-left: 15rem; display: flex; align-items: center; justify-content: center; }
+            .modal-actions { padding: 0.4rem 0.6rem; gap: 0.3rem; }
+            .modal-action-btn { font-size: 0.65rem; padding: 0.25rem 0.7rem; }
+            .modal-action-btn i { font-size: 0.7rem; }
+            .modal-descricao .descricao-texto { font-size: 0.75rem; }
+            .modal-descricao .descricao-texto ul { margin-left: 0.75rem; }
+            .modal-descricao .descricao-texto li { padding-left: 1.2rem; font-size: 0.75rem; }
+            .perfil-destaque { padding: 1.25rem; }
+            .perfil-destaque .destaque-item { flex-direction: column; gap: 0.2rem; }
+            .perfil-destaque .destaque-item span:last-child { font-size: 0.9rem; }
+        }
+
+        @media (max-width: 400px) {
+            .chart-card { padding: 0.6rem; }
+            .chart-card .card-header h3 { font-size: 0.72rem; padding-left: 0.4rem; }
+            .chart-card .card-header h3 .info-icon { width: 16px; height: 16px; font-size: 0.5rem; }
+            .chart-card .chart-btn { width: 22px; height: 22px; font-size: 8px; }
+            .chart-card .chart-btn i { font-size: 8px; }
+            .chart-card .chart-scroll-wrapper { min-height: 150px; max-height: 200px; }
+            .chart-card .chart-scroll-inner { min-height: 150px; max-height: 200px; min-width: 350px; width: 350px; }
+            .chart-card .descricao-card .texto { font-size: 0.7rem; }
+            .chart-card .descricao-card .btn-ver-mais { font-size: 0.65rem; padding: 0.2rem 0.6rem; }
+            .modal-scroll-inner { min-width: 800px; padding-left: 17rem; padding-top: 6rem; }
+        }
+
+        @media (max-width: 360px) {
+            .chart-card { padding: 0.5rem; }
+            .chart-card .card-header h3 { font-size: 0.65rem; padding-left: 0.3rem; gap: 0.3rem; }
+            .chart-card .card-header h3 .info-icon { width: 14px; height: 14px; font-size: 0.45rem; }
+            .chart-card .chart-btn { width: 20px; height: 20px; font-size: 7px; }
+            .chart-card .chart-btn i { font-size: 7px; }
+            .chart-card .chart-scroll-wrapper { min-height: 130px; max-height: 170px; }
+            .chart-card .chart-scroll-inner { min-height: 130px; max-height: 170px; min-width: 300px; width: 300px; }
+            .chart-card .descricao-card .texto { font-size: 0.65rem; }
+            .chart-card .descricao-card .btn-ver-mais { font-size: 0.6rem; padding: 0.2rem 0.5rem; }
+            .modal-box { width: calc(100vw - 0.6rem); margin: 0.3rem; max-height: 90vh; }
+            .modal-header h3 { font-size: 0.7rem; }
+            .modal-body .grafico-wrapper { min-height: 60vh; }
+            .modal-scroll-wrapper { min-height: 60vh; max-height: 60vh; }
+            .modal-scroll-inner { min-height: 60vh; min-width: 800px; padding-left: 17rem; padding-top: 6rem; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+            .modal-action-btn { font-size: 0.55rem; padding: 0.2rem 0.5rem; }
+            .modal-descricao .descricao-texto { font-size: 0.7rem; }
+        }
+
+        @media (max-height: 500px) and (orientation: landscape) {
+            .chart-card .chart-scroll-wrapper { min-height: 140px; max-height: 180px; }
+            .chart-card .chart-scroll-inner { min-height: 140px; max-height: 180px; }
+            .chart-card .card-header h3 { font-size: 0.8rem; }
+            .chart-card .descricao-card .texto { font-size: 0.7rem; }
+            .modal-body .grafico-wrapper { min-height: 45vh; }
+            .modal-scroll-wrapper { min-height: 35vh; max-height: 55vh; }
+            .modal-scroll-inner { min-height: 30vh; }
+            .modal-header h3 { font-size: 0.8rem; }
+            .modal-body { padding: 0.4rem 1rem 0.6rem 1rem; }
+            .modal-descricao .descricao-texto { font-size: 0.7rem; }
+        }
+
+        /* ===== FOOTER ===== */
+        .main-footer {
+            color: #ffffff;
+        }
+
+        .main-footer h3 {
+            color: #ffffff;
+        }
+
+        .main-footer p {
+            color: #ffffff;
+        }
+
+        .main-footer .footer-links a {
+            color: #ffffff;
+            transition: var(--transition);
+        }
+
+        .main-footer .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .main-footer .social-links a {
+            color: #ffffff;
+            transition: var(--transition);
+        }
+
+        .main-footer .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .main-footer .footer-brand h3 {
+            color: #ffffff;
         }
     </style>
 </head>
 <body>
+    <!-- ===== HEADER ===== -->
     <header class="main-header" id="main-header">
         <div class="container">
             <a href="../../index.html" class="logo">
@@ -262,13 +865,15 @@
             </a>
             <nav class="main-nav" role="navigation">
                 <ul class="nav-list">
-                     <li><a href="dadosenade.html"><i class="fas fa-home"></i>Início</a></li>
+                    <li><a href="dadosenade.html"><i class="fas fa-home"></i>Início</a></li>
                     <li><a href="desempenho.html"><i class="fas fa-graduation-cap"></i>Desempenho</a></li>
                     <li><a href="infraestrutura.html"><i class="fas fa-database"></i>Infraestrutura</a></li>
                     <li><a href="perfil-estudante.html"><i class="fas fa-chart-pie"></i>Perfil Estudante</a></li>
                     <li><a href="../PagesGeral/dashboard.html" class="dashboard-btn"><i class="fas fa-chart-line"></i>Explorar Dados</a></li>
                 </ul>
-                <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+                <button class="hamburger" id="hamburger" aria-label="Menu">
+                    <span></span><span></span><span></span>
+                </button>
             </nav>
         </div>
     </header>
@@ -297,7 +902,7 @@
 
     <main class="container">
 
-        <!-- page header -->
+        <!-- ===== PAGE HEADER ===== -->
         <section class="page-header fade-in" style="margin-top: 2rem;">
             <div class="breadcrumb">
                 <a href="../../index.html">Início</a>
@@ -313,10 +918,10 @@
                     <span class="status-dot"></span>
                     <span>Dados Atualizados <span id="status-ano">2026</span></span>
                 </div>
-<div class="status-indicator">
-    <i class="fas fa-coins"></i>
-    <span id="status-renda">Carregando...</span>
-</div>
+                <div class="status-indicator">
+                    <i class="fas fa-coins"></i>
+                    <span id="status-renda">Carregando...</span>
+                </div>
                 <div class="status-indicator">
                     <i class="fas fa-chart-pie"></i>
                     <span id="status-perfil">Carregando...</span>
@@ -324,107 +929,113 @@
             </div>
         </section>
 
-        <!-- filtros -->
+        <!-- ===== FILTERS ===== -->
         <div class="filters">
-            <div><label for="anoPerfil">Ano:</label><select id="anoPerfil"><option value="todos">Todos os Anos</option></select></div>
-            <div><label for="cursoPerfil">Curso:</label><select id="cursoPerfil"><option value="todos">Todos os Cursos</option></select></div>
-            <div><label for="campusPerfil">Campus:</label><select id="campusPerfil"><option value="todos">Todos</option></select></div>
+            <div>
+                <label for="anoPerfil"><i class="fas fa-calendar"></i> Ano:</label>
+                <select id="anoPerfil"><option value="todos">Todos os Anos</option></select>
+            </div>
+            <div>
+                <label for="cursoPerfil"><i class="fas fa-graduation-cap"></i> Curso:</label>
+                <select id="cursoPerfil"><option value="todos">Todos os Cursos</option></select>
+            </div>
+            <div>
+                <label for="campusPerfil"><i class="fas fa-university"></i> Campus:</label>
+                <select id="campusPerfil"><option value="todos">Todos</option></select>
+            </div>
             <button onclick="aplicarFiltrosPerfil()"><i class="fas fa-filter"></i> Aplicar</button>
-            <button onclick="resetarFiltrosPerfil()" style="background:#6c757d;"><i class="fas fa-undo"></i> Resetar</button>
+            <button onclick="resetarFiltrosPerfil()" class="btn-reset"><i class="fas fa-undo"></i> Resetar</button>
         </div>
 
-        <!-- stats -->
+        <!-- ===== STATS ===== -->
         <div class="stats-grid" id="statsPerfil">
-            <div class="stat-card"><div class="number" id="totalEstudantes">-</div><div class="label">Total de Participantes</div></div>
-            <div class="stat-card"><div class="number" id="mediaIdade">-</div><div class="label">Idade Média</div></div>
-            <div class="stat-card"><div class="number" id="percentualFeminino">-</div><div class="label">Participantes Feminino</div></div>
-            <div class="stat-card"><div class="number" id="percentualRendaA">-</div><div class="label">Renda até 3 SM</div></div>
+            <div class="stat-card">
+                <div class="number" id="totalEstudantes">-</div>
+                <div class="label">Total de Participantes</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="mediaIdade">-</div>
+                <div class="label">Idade Média</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="percentualFeminino">-</div>
+                <div class="label">Participantes Feminino</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="percentualRendaA">-</div>
+                <div class="label">Renda até 3 SM</div>
+            </div>
         </div>
 
-        <!-- linha 1 -->
-        <div class="chart-container">
-            <div class="chart-box"><h3><i class="fas fa-venus-mars"></i> Distribuição por Sexo</h3><canvas id="sexoChart" height="200"></canvas></div>
-            <div class="chart-box"><h3><i class="fas fa-calendar-alt"></i> Distribuição por Idade</h3><canvas id="idadeChart" height="200"></canvas></div>
-        </div>
-        <div class="chart-container">
-            <div class="chart-box"><h3><i class="fas fa-money-bill-wave"></i> Renda Familiar</h3><canvas id="rendaChart" height="200"></canvas></div>
-            <div class="chart-box"><h3><i class="fas fa-graduation-cap"></i> Escolaridade dos Pais</h3><canvas id="escolaridadeChart" height="200"></canvas></div>
-        </div>
+        <!-- ===== GRÁFICOS EM CARDS ===== -->
+        <div class="charts-grid" id="graficosGrid"></div>
 
-        <!-- linha 2 -->
-        <div class="chart-container">
-            <div class="chart-box"><h3><i class="fas fa-users"></i> Estado Civil</h3><canvas id="estadoCivilChart" height="200"></canvas></div>
-            <div class="chart-box"><h3><i class="fas fa-flag"></i> Cor/Raça</h3><canvas id="corRacaChart" height="200"></canvas></div>
-        </div>
-        <div class="chart-container">
-            <div class="chart-box"><h3><i class="fas fa-globe-americas"></i> Nacionalidade</h3><canvas id="nacionalidadeChart" height="200"></canvas></div>
-            <div class="chart-box"><h3><i class="fas fa-home"></i> Tipo de Moradia</h3><canvas id="moradiaChart" height="200"></canvas></div>
-        </div>
-
-        <!-- linha 3 -->
-        <div class="chart-container">
-            <div class="chart-box"><h3><i class="fas fa-user-friends"></i> Pessoas na Família</h3><canvas id="pessoasFamiliaChart" height="200"></canvas></div>
-            <div class="chart-box"><h3><i class="fas fa-hand-holding-usd"></i> Situação Financeira</h3><canvas id="situacaoFinanceiraChart" height="200"></canvas></div>
-        </div>
-        <div class="chart-container">
-            <div class="chart-box"><h3><i class="fas fa-briefcase"></i> Situação de Trabalho</h3><canvas id="situacaoTrabalhoChart" height="200"></canvas></div>
-            <div class="chart-box"><h3><i class="fas fa-user-tie"></i> Tipo de Estágio</h3><canvas id="estagioChart" height="200"></canvas></div>
-        </div>
-
-        <!-- linha 4 -->
-        <div class="chart-container">
-            <div class="chart-box"><h3><i class="fas fa-hand-holding-heart"></i> Bolsa para Mensalidades</h3><canvas id="bolsaMensalidadeChart" height="200"></canvas></div>
-            <div class="chart-box"><h3><i class="fas fa-coins"></i> Bolsa para Outras Despesas</h3><canvas id="bolsaOutrasChart" height="200"></canvas></div>
-        </div>
-        <div class="chart-container">
-            <div class="chart-box"><h3><i class="fas fa-balance-scale"></i> Ação Afirmativa</h3><canvas id="acaoAfirmativaChart" height="200"></canvas></div>
-        </div>
-
-        <!-- linha 5 -->
-        <div class="chart-container">
-            <div class="chart-box"><h3><i class="fas fa-school"></i> Tipo de Escola (EM)</h3><canvas id="tipoEscolaChart" height="200"></canvas></div>
-            <div class="chart-box"><h3><i class="fas fa-book-open"></i> Modalidade do EM</h3><canvas id="modalidadeEMChart" height="200"></canvas></div>
-        </div>
-        <div class="chart-container">
-            <div class="chart-box"><h3><i class="fas fa-map-marker-alt"></i> UF do Ensino Médio</h3><canvas id="ufEMChart" height="200"></canvas></div>
-            <div class="chart-box"><h3><i class="fas fa-route"></i> Mudou de Cidade para o Curso</h3><canvas id="mudancaCidadeChart" height="200"></canvas></div>
-        </div>
-        <div class="chart-container">
-            <div class="chart-box"><h3><i class="fas fa-clock"></i> Turno Concentrado</h3><canvas id="turnoConcentradoChart" height="200"></canvas></div>
-        </div>
-
-        <!-- linha 6 -->
-        <div class="chart-container">
-            <div class="chart-box"><h3><i class="fas fa-question-circle"></i> Motivo para Escolher o Curso</h3><canvas id="motivoCursoChart" height="200"></canvas></div>
-            <div class="chart-box"><h3><i class="fas fa-university"></i> Motivo para Escolher a IES</h3><canvas id="motivoIESChart" height="200"></canvas></div>
-        </div>
-
-        <!-- linha 7 -->
-        <div class="chart-container">
-            <div class="chart-box"><h3><i class="fas fa-book"></i> Livros Lidos no Ano</h3><canvas id="livrosChart" height="200"></canvas></div>
-            <div class="chart-box"><h3><i class="fas fa-clock"></i> Horas de Estudo por Semana</h3><canvas id="horasEstudoChart" height="200"></canvas></div>
-        </div>
-
-        <!-- linha 8 -->
-        <div class="chart-container">
-            <div class="chart-box"><h3><i class="fas fa-flask"></i> Participação em Programas</h3><canvas id="participacaoProgramasChart" height="220"></canvas></div>
-            <div class="chart-box"><h3><i class="fas fa-calendar-plus"></i> Atividades Complementares</h3><canvas id="atividadesComplementaresChart" height="200"></canvas></div>
-        </div>
-        <div class="chart-container">
-            <div class="chart-box"><h3><i class="fas fa-handshake"></i> Apoio da IES para Eventos</h3><canvas id="apoioEventosChart" height="200"></canvas></div>
-        </div>
-
-        <!-- insights -->
+        <!-- ===== INSIGHTS ===== -->
         <div class="perfil-destaque" id="insightsContainer">
             <h3><i class="fas fa-lightbulb"></i> Principais Insights</h3>
-            <div class="destaque-item"><span><strong>Perfil predominante:</strong></span><span id="insightPerfil">Carregando...</span></div>
-            <div class="destaque-item"><span><strong>Escolaridade dos pais:</strong></span><span id="insightEscolaridade">Carregando...</span></div>
-            <div class="destaque-item"><span><strong>Faixa etária predominante:</strong></span><span id="insightIdade">Carregando...</span></div>
-            <div class="destaque-item"><span><strong>Principal motivo para escolher o curso:</strong></span><span id="insightMotivoCurso">Carregando...</span></div>
-            <div class="destaque-item"><span><strong>Participação em pesquisa:</strong></span><span id="insightPesquisa">Carregando...</span></div>
+            <div class="destaque-item">
+                <span><strong>Perfil predominante:</strong></span>
+                <span id="insightPerfil">Carregando...</span>
+            </div>
+            <div class="destaque-item">
+                <span><strong>Escolaridade dos pais:</strong></span>
+                <span id="insightEscolaridade">Carregando...</span>
+            </div>
+            <div class="destaque-item">
+                <span><strong>Faixa etária predominante:</strong></span>
+                <span id="insightIdade">Carregando...</span>
+            </div>
+            <div class="destaque-item">
+                <span><strong>Principal motivo para escolher o curso:</strong></span>
+                <span id="insightMotivoCurso">Carregando...</span>
+            </div>
+            <div class="destaque-item">
+                <span><strong>Participação em pesquisa:</strong></span>
+                <span id="insightPesquisa">Carregando...</span>
+            </div>
         </div>
+
     </main>
 
+    <!-- ===== MODAL ===== -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modalTitle"><i class="fas fa-chart-bar"></i> Gráfico Expandido</h3>
+                <button class="modal-close" id="closeModalBtn"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="grafico-wrapper">
+                    <div class="modal-scroll-wrapper">
+                        <div class="modal-scroll-inner">
+                            <canvas id="modalCanvas"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-descricao">
+                    <div class="descricao-texto" id="modalDescricao">
+                        <i class="fas fa-info-circle"></i>
+                        Este gráfico apresenta dados do perfil do estudante do ENADE.
+                        <br><br>
+                        <strong>Como interpretar:</strong>
+                        <ul>
+                            <li>Barras mostram a distribuição das respostas por categoria.</li>
+                            <li>Gráficos de pizza mostram a proporção de cada resposta.</li>
+                            <li>Gráficos de linha mostram a evolução ou distribuição dos dados.</li>
+                            <li>Recomendamos a visualização em telas maiores para uma melhor experiência.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-action-btn" id="modalPngBtn"><i class="fas fa-image"></i> PNG</button>
+                <button class="modal-action-btn" id="modalJsonBtn"><i class="fas fa-code"></i> JSON</button>
+                <button class="modal-action-btn" id="modalCsvBtn"><i class="fas fa-table"></i> CSV</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
     <footer class="main-footer">
         <div class="container">
             <div class="footer-grid">
@@ -459,10 +1070,14 @@
     </footer>
 
     <script>
-        // dados e configuracoes
+
+        // Variáveis globais
         let dadosCompletos = [];
         let dadosFiltrados = [];
         let charts = {};
+        let modalChartInstance = null;
+        let modalRawData = null;
+        let modalChartTitle = '';
 
         const campusMap = {
             '2507507': 'João Pessoa',
@@ -477,550 +1092,276 @@
         };
 
         const cursosMap = {
-            '49960':'Design de Interiores', '58391':'Redes de Computadores', '81312':'Química',
-            '95089':'Automação Industrial', '95093':'Automação Industrial',
-            '95104':'Análise e Desenvolvimento de Sistemas', '1166614':'Análise e Desenvolvimento de Sistemas',
-            '114944':'Construção de Edifícios', '1167926':'Gestão Comercial',
-            '123002':'Gestão Ambiental', '123105':'Design Gráfico', '123116':'Segurança no Trabalho',
-            '123120':'Gestão Ambiental', '103481':'Engenharia Elétrica', '1262856':'Engenharia Civil',
-            '1342196':'Engenharia de Computação', '1457168':'Engenharia Civil', '1457169':'Engenharia Civil',
-            '1457171':'Engenharia Mecânica', '1128030':'Matemática', '1128096':'Matemática',
-            '1176228':'Letras - Língua Portuguesa', '1188374':'Física', '1188396':'Educação Física',
-            '123233':'Química', '1307356':'Computação e Informática', '1341255':'Ciências Biológicas',
-            '100260':'Administração', '123237':'Medicina Veterinária', '1261262':'Administração Pública'
+            '49960': 'Design de Interiores', '58391': 'Redes de Computadores', '81312': 'Química',
+            '95089': 'Automação Industrial', '95093': 'Automação Industrial',
+            '95104': 'Análise e Desenvolvimento de Sistemas', '1166614': 'Análise e Desenvolvimento de Sistemas',
+            '114944': 'Construção de Edifícios', '1167926': 'Gestão Comercial',
+            '123002': 'Gestão Ambiental', '123105': 'Design Gráfico', '123116': 'Segurança no Trabalho',
+            '123120': 'Gestão Ambiental', '103481': 'Engenharia Elétrica', '1262856': 'Engenharia Civil',
+            '1342196': 'Engenharia de Computação', '1457168': 'Engenharia Civil', '1457169': 'Engenharia Civil',
+            '1457171': 'Engenharia Mecânica', '1128030': 'Matemática', '1128096': 'Matemática',
+            '1176228': 'Letras - Língua Portuguesa', '1188374': 'Física', '1188396': 'Educação Física',
+            '123233': 'Química', '1307356': 'Computação e Informática', '1341255': 'Ciências Biológicas',
+            '100260': 'Administração', '123237': 'Medicina Veterinária', '1261262': 'Administração Pública'
         };
 
         function getNomeCurso(c) { return cursosMap[c] || window.converterValor('CODIGO_CURSO', c, null) || c; }
         function getNomeCampus(c) { return campusMap[c] || c; }
-        function parseIdade(v) { if(!v) return null; const p=parseFloat(v); return isNaN(p)?null:p; }
+        function parseIdade(v) { if (!v) return null; const p = parseFloat(v); return isNaN(p) ? null : p; }
 
-        function criarGrafico(id, tipo, dados, opcoes) {
-            const ctx = document.getElementById(id)?.getContext('2d');
-            if(!ctx) return null;
-            if(charts[id]) { charts[id].destroy(); delete charts[id]; }
-            const chart = new Chart(ctx, { type: tipo, data: dados, options: opcoes });
-            charts[id] = chart;
-            return chart;
-        }
-
-        function prepararDados(campo, converter=true) {
-            const dados = dadosFiltrados.filter(d => d[campo] && d[campo] !== '');
+        // Funções auxiliares
+        function contarFrequencia(data, campo, converter = true) {
+            const dados = data.filter(d => d[campo] && d[campo] !== '');
             const freq = {};
             dados.forEach(d => {
-                const ano = window.detectarAno(d);
+                const ano = window.detectarAno ? window.detectarAno(d) : null;
                 const texto = converter ? window.converterValor(campo, d[campo], ano) : d[campo];
                 freq[texto] = (freq[texto] || 0) + 1;
             });
-            const sorted = Object.entries(freq).sort((a,b) => b[1]-a[1]);
-            return { labels: sorted.map(s=>s[0]), values: sorted.map(s=>s[1]) };
+            const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1]);
+            return { labels: sorted.map(s => s[0]), values: sorted.map(s => s[1]) };
         }
 
-        /* carregar dados */
-        function carregarDados() {
-            const url = '../../assets/data/DadosENADE/DADOSENADEGERAL.json';
-            fetch(url)
-                .then(r => r.ok ? r.json() : Promise.reject('HTTP '+r.status))
-                .then(data => {
-                    dadosCompletos = data;
-                    dadosFiltrados = [...dadosCompletos];
-                    preencherFiltros();
-                    atualizarStatusIndicators();
-                    atualizarTudo();
-                })
-                .catch(err => console.error('Erro ao carregar dados:', err));
+        function encurtarTexto(texto, maxChars = 18) {
+            if (!texto) return '';
+            if (texto.length <= maxChars) return texto;
+            return texto.substring(0, maxChars - 3) + '...';
         }
 
-function atualizarStatusIndicators() {
-    const total = dadosFiltrados.length;
-    const elRenda = document.getElementById('status-renda');
-    const elPerfil = document.getElementById('status-perfil');
-    const elAno = document.getElementById('status-ano');
-
-    if (elAno) {
-        const anoAtual = new Date().getFullYear();
-        elAno.textContent = anoAtual;
-    }
-
-    const rendas = dadosFiltrados.filter(d => d.RENDA_FAMILIAR && d.RENDA_FAMILIAR !== '');
-    const ab = rendas.filter(d => ['A', 'B'].includes(d.RENDA_FAMILIAR)).length;
-    const pctRenda = rendas.length ? (ab / rendas.length * 100).toFixed(1) : 0;
-    if (elRenda) elRenda.textContent = pctRenda + '% Renda até 3 SM';
-
-    if (elPerfil) {
-        const sexos = dadosFiltrados.filter(d => d.SEXO && d.SEXO !== '');
-        const fem = sexos.filter(d => d.SEXO === 'F').length;
-        const pctFem = sexos.length ? (fem / sexos.length * 100).toFixed(1) : 0;
-        elPerfil.textContent = pctFem + '% Feminino';
-    }
-}
-        function preencherFiltros() {
-            const anos = [...new Set(
-                dadosCompletos.map(d => String(d.ANO_EXAME || '').replace(/\.0$/, ''))
-                    .filter(a => /^\d{4}$/.test(a))
-            )].sort();
-
-            const nomesCursos = [...new Set(
-                dadosCompletos.map(d => getNomeCurso(d.CODIGO_CURSO))
-                    .filter(n => n && n !== '')
-            )].sort();
-
-            const campi = [...new Set(
-                dadosCompletos.map(d => String(d.CO_MUNIC_CURSO || ''))
-                    .filter(c => c && c !== '')
-            )];
-
-            const selA = document.getElementById('anoPerfil');
-            selA.innerHTML = '<option value="todos">Todos os Anos</option>';
-            anos.forEach(ano => {
-                const opt = document.createElement('option');
-                opt.value = ano;
-                opt.textContent = ano;
-                selA.appendChild(opt);
-            });
-
-            const selC = document.getElementById('cursoPerfil');
-            selC.innerHTML = '<option value="todos">Todos os Cursos</option>';
-            nomesCursos.forEach(nome => {
-                const opt = document.createElement('option');
-                opt.value = nome;
-                opt.textContent = nome;
-                selC.appendChild(opt);
-            });
-
-            const selCamp = document.getElementById('campusPerfil');
-            selCamp.innerHTML = '<option value="todos">Todos</option>';
-            campi.forEach(c => {
-                const opt = document.createElement('option');
-                opt.value = c;
-                opt.textContent = getNomeCampus(c) || c;
-                selCamp.appendChild(opt);
-            });
-        }
-
-        function aplicarFiltrosPerfil() {
-            const ano = document.getElementById('anoPerfil').value;
-            const curso = document.getElementById('cursoPerfil').value;
-            const campus = document.getElementById('campusPerfil').value;
-
-            dadosFiltrados = dadosCompletos.filter(d => {
-                const anoDado = String(d.ANO_EXAME || '').replace(/\.0$/, '');
-                const nomeCurso = getNomeCurso(d.CODIGO_CURSO);
-                const campusDado = String(d.CO_MUNIC_CURSO || '');
-
-                let ok = true;
-                if (ano !== 'todos' && anoDado !== ano) ok = false;
-                if (curso !== 'todos' && nomeCurso !== curso) ok = false;
-                if (campus !== 'todos' && campusDado !== campus) ok = false;
-                return ok;
-            });
-
-            atualizarTudo();
-        }
-
-        function resetarFiltrosPerfil() {
-            document.getElementById('anoPerfil').value='todos';
-            document.getElementById('cursoPerfil').value='todos';
-            document.getElementById('campusPerfil').value='todos';
-            dadosFiltrados=[...dadosCompletos];
-            atualizarTudo();
-        }
-
-        function atualizarTudo() {
-            atualizarStats();
-            atualizarStatusIndicators();
-            renderGraficos();
-            atualizarInsights();
-        }
-
-        function atualizarStats() {
-            const total = dadosFiltrados.length;
-            document.getElementById('totalEstudantes').textContent = total;
-            const idades = dadosFiltrados.map(d=>parseIdade(d.IDADE)).filter(i=>i!==null&&!isNaN(i));
-            document.getElementById('mediaIdade').textContent = idades.length ? (idades.reduce((a,b)=>a+b,0)/idades.length).toFixed(1) : '-';
-            const sexos = dadosFiltrados.filter(d=>d.SEXO&&d.SEXO!=='');
-            const fem = sexos.filter(d=>d.SEXO==='F').length;
-            document.getElementById('percentualFeminino').textContent = sexos.length ? (fem/sexos.length*100).toFixed(1)+'%' : '-';
-            const rendas = dadosFiltrados.filter(d=>d.RENDA_FAMILIAR&&d.RENDA_FAMILIAR!=='');
-            const ab = rendas.filter(d=>['A','B'].includes(d.RENDA_FAMILIAR)).length;
-            document.getElementById('percentualRendaA').textContent = rendas.length ? (ab/rendas.length*100).toFixed(1)+'%' : '-';
-        }
-
-        /* graficos */
-        function renderGraficos() {
-            renderSexo();
-            renderIdade();
-            renderRenda();
-            renderEscolaridade();
-            renderEstadoCivil();
-            renderCorRaca();
-            renderNacionalidade();
-            renderMoradia();
-            renderPessoasFamilia();
-            renderSituacaoFinanceira();
-            renderSituacaoTrabalho();
-            renderEstagio();
-            renderBolsaMensalidade();
-            renderBolsaOutras();
-            renderAcaoAfirmativa();
-            renderTipoEscola();
-            renderModalidadeEM();
-            renderUFEM();
-            renderMudancaCidade();
-            renderTurnoConcentrado();
-            renderMotivoCurso();
-            renderMotivoIES();
-            renderLivros();
-            renderHorasEstudo();
-            renderParticipacaoProgramas();
-            renderAtividadesComplementares();
-            renderApoioEventos();
-        }
-
-        /* sexo */
-        function renderSexo() {
-            const sexos = dadosFiltrados.filter(d=>d.SEXO&&d.SEXO!=='');
-            const fem = sexos.filter(d=>d.SEXO==='F').length;
-            const masc = sexos.filter(d=>d.SEXO==='M').length;
-            criarGrafico('sexoChart', 'doughnut', {
-                labels: ['Feminino','Masculino'],
-                datasets: [{ data:[fem,masc], backgroundColor:['#e83e8c','#36b9cc'], borderWidth:0 }]
-            }, { responsive:true, plugins:{legend:{position:'bottom'}}, cutout:'60%' });
-        }
-
-        /* idade */
-        function renderIdade() {
-            const ctx = document.getElementById('idadeChart')?.getContext('2d');
-            if(!ctx) return;
-            const dados = dadosFiltrados.filter(d=>d.IDADE&&d.SEXO&&d.SEXO!=='')
-                .map(d => ({ idade: parseIdade(d.IDADE), sexo: d.SEXO }))
-                .filter(d => d.idade!==null&&!isNaN(d.idade)&&(d.sexo==='M'||d.sexo==='F'));
-            if(!dados.length) { if(charts['idadeChart']) charts['idadeChart'].destroy(); return; }
-            const faixas = []; const labels = [];
-            for(let i=18; i<=32; i+=3) { faixas.push({min:i,max:i+2}); labels.push(i+'-'+(i+2)); }
-            faixas.push({min:33,max:Infinity}); labels.push('33+');
-            const homens = faixas.map(()=>0), mulheres = faixas.map(()=>0);
-            dados.forEach(d => {
-                let idx = faixas.findIndex(f => d.idade>=f.min && d.idade<=f.max);
-                if(idx===-1 && d.idade>=33) idx = faixas.length-1;
-                if(idx!==-1) { if(d.sexo==='M') homens[idx]++; else mulheres[idx]++; }
-            });
-            criarGrafico('idadeChart', 'bar', {
-                labels: labels,
-                datasets: [
-                    { label:'Homens', data: homens.map(v=>-v), backgroundColor:'#36b9cc', borderColor:'#2c9faf', borderWidth:1, borderRadius:4 },
-                    { label:'Mulheres', data: mulheres, backgroundColor:'#e83e8c', borderColor:'#c72a6f', borderWidth:1, borderRadius:4 }
-                ]
-            }, {
-                indexAxis:'y', responsive:true,
-                plugins: { legend:{position:'top'}, tooltip:{ callbacks:{ label: (ctx) => ctx.dataset.label + ': ' + Math.abs(ctx.parsed.x) } } },
-                scales: {
-                    x: { grid:{color:'rgba(0,0,0,0.04)'}, title:{display:true,text:'Quantidade'}, ticks:{callback:(v)=>Math.abs(v)} },
-                    y: { grid:{display:false}, title:{display:true,text:'Faixa Etária'} }
+        // Funções para criar gráficos com rolagem
+        function criarPieScroll(canvasId, labels, values, cores = null) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const parent = canvas.parentElement;
+            if (parent) { parent.style.width = '100%'; parent.style.minWidth = '100%'; }
+            const ctx = canvas.getContext('2d');
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+            const defaultCores = ['#4aa47d', '#57cc99', '#ff9a3c', '#36b9cc', '#4e73df', '#e74a3b', '#1cc88a', '#f6c23e', '#9b59b6', '#e84393'];
+            const bgCores = cores || labels.map((_, i) => defaultCores[i % defaultCores.length]);
+            const total = values.reduce((a, b) => a + b, 0);
+            charts[canvasId] = new Chart(ctx, {
+                type: 'pie',
+                data: { labels, datasets: [{ data: values, backgroundColor: bgCores, borderWidth: 0 }] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 14, padding: 12 } },
+                        tooltip: {
+                            callbacks: {
+                                label: (c) => `${c.label}: ${c.raw} (${((c.raw / total) * 100).toFixed(1)}%)`
+                            }
+                        }
+                    }
                 }
             });
+            return charts[canvasId];
         }
 
-        /* renda */
-        function renderRenda() {
-            const d = prepararDados('RENDA_FAMILIAR');
-            criarGrafico('rendaChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ label:'Distribuição de Renda', data: d.values, backgroundColor:'#f6c23e', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* escolaridade */
-        function renderEscolaridade() {
-            const pai = dadosFiltrados.filter(d=>d.ESCOLARIDADE_PAI&&d.ESCOLARIDADE_PAI!=='');
-            const mae = dadosFiltrados.filter(d=>d.ESCOLARIDADE_MAE&&d.ESCOLARIDADE_MAE!=='');
-            const labels = ['A','B','C','D','E','F'];
-            const dataPai = labels.map(l => pai.filter(d=>d.ESCOLARIDADE_PAI===l).length);
-            const dataMae = labels.map(l => mae.filter(d=>d.ESCOLARIDADE_MAE===l).length);
-            const labelTexts = labels.map(l => window.converterValor('ESCOLARIDADE_PAI', l, null));
-            criarGrafico('escolaridadeChart', 'bar', {
-                labels: labelTexts,
-                datasets: [
-                    { label:'Pai', data:dataPai, backgroundColor:'#e74a3b', borderRadius:4 },
-                    { label:'Mãe', data:dataMae, backgroundColor:'#f6c23e', borderRadius:4 }
-                ]
-            }, { responsive:true, plugins:{legend:{position:'top'}}, scales:{x:{stacked:true}, y:{stacked:true, beginAtZero:true}} });
-        }
-
-        /* estado civil */
-        function renderEstadoCivil() {
-            const d = prepararDados('ESTADO_CIVIL');
-            criarGrafico('estadoCivilChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#36b9cc', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* cor raca */
-        function renderCorRaca() {
-            const d = prepararDados('COR_RACA');
-            criarGrafico('corRacaChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#9b59b6', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* nacionalidade */
-        function renderNacionalidade() {
-            const d = prepararDados('NACIONALIDADE');
-            criarGrafico('nacionalidadeChart', 'doughnut', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:['#1cc88a','#f6c23e','#e74a3b'], borderWidth:0 }]
-            }, { responsive:true, plugins:{legend:{position:'bottom'}} });
-        }
-
-        /* moradia */
-        function renderMoradia() {
-            const d = prepararDados('MORADIA');
-            criarGrafico('moradiaChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#3498db', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* pessoas familia */
-        function renderPessoasFamilia() {
-            const d = prepararDados('PESSOAS_FAMILIA');
-            criarGrafico('pessoasFamiliaChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#1abc9c', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* situacao financeira */
-        function renderSituacaoFinanceira() {
-            const d = prepararDados('SITUACAO_FINANCEIRA');
-            criarGrafico('situacaoFinanceiraChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#f39c12', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* situacao trabalho */
-        function renderSituacaoTrabalho() {
-            const d = prepararDados('SITUACAO_TRABALHO');
-            criarGrafico('situacaoTrabalhoChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#e67e22', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* estagio */
-        function renderEstagio() {
-            const d = prepararDados('ESTAGIO');
-            criarGrafico('estagioChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#1cc88a', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* bolsa mensalidade */
-        function renderBolsaMensalidade() {
-            const d = prepararDados('BOLSA_FINANCIAMENTO_TIPO');
-            criarGrafico('bolsaMensalidadeChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#9b59b6', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* bolsa outras */
-        function renderBolsaOutras() {
-            const d = prepararDados('BOLSA_CUSTEIO');
-            criarGrafico('bolsaOutrasChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#e84393', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* acao afirmativa */
-        function renderAcaoAfirmativa() {
-            const d = prepararDados('ACAO_AFIRMATIVA');
-            criarGrafico('acaoAfirmativaChart', 'doughnut', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:['#e74a3b','#f6c23e','#1cc88a','#36b9cc','#9b59b6','#e84393'], borderWidth:0 }]
-            }, { responsive:true, plugins:{legend:{position:'bottom'}} });
-        }
-
-        /* tipo escola */
-        function renderTipoEscola() {
-            const d = prepararDados('TIPO_ESCOLA_EM');
-            criarGrafico('tipoEscolaChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#3498db', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* modalidade em */
-        function renderModalidadeEM() {
-            const d = prepararDados('TIPO_CURSO_EM');
-            criarGrafico('modalidadeEMChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#1abc9c', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* uf em */
-        function renderUFEM() {
-            const d = prepararDados('UF_ENSINO_MEDIO');
-            const sorted = d.labels.map((l,i) => ({label:l, value:d.values[i]})).sort((a,b)=>b.value-a.value).slice(0,15);
-            criarGrafico('ufEMChart', 'bar', {
-                labels: sorted.map(s=>s.label),
-                datasets: [{ data: sorted.map(s=>s.value), backgroundColor:'#f39c12', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* mudanca cidade */
-        function renderMudancaCidade() {
-            const d = prepararDados('MUDANCA_CIDADE_CURSO');
-            criarGrafico('mudancaCidadeChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#e67e22', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* turno concentrado */
-        function renderTurnoConcentrado() {
-            const d = prepararDados('TURNO_CONCENTRADO');
-            criarGrafico('turnoConcentradoChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#6c5ce7', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* motivo curso */
-        function renderMotivoCurso() {
-            const d = prepararDados('MOTIVO_CURSO');
-            criarGrafico('motivoCursoChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#00b894', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* motivo ies */
-        function renderMotivoIES() {
-            const d = prepararDados('MOTIVO_IES');
-            criarGrafico('motivoIESChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#0984e3', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* livros */
-        function renderLivros() {
-            const d = prepararDados('LIVROS_LIDOS_ANO');
-            criarGrafico('livrosChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#fdcb6e', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* horas estudo */
-        function renderHorasEstudo() {
-            const d = prepararDados('HORAS_ESTUDO_SEMANA');
-            criarGrafico('horasEstudoChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#e17055', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
-        }
-
-        /* participacao programas */
-        function renderParticipacaoProgramas() {
-            const ctx = document.getElementById('participacaoProgramasChart')?.getContext('2d');
-            if(!ctx) return;
-            const programas = ['INICIACAO_CIENTIFICA', 'MONITORIA', 'EXTENSAO'];
-            const labels = ['Iniciação Científica', 'Monitoria', 'Extensão'];
-            const opcoes = ['A','B','C','D','E'];
-            const dados = programas.map(campo => {
-                const vals = dadosFiltrados.filter(d => d[campo] && d[campo] !== '');
-                const freq = {};
-                vals.forEach(d => {
-                    const chave = d[campo];
-                    freq[chave] = (freq[chave] || 0) + 1;
-                });
-                return opcoes.map(o => freq[o] || 0);
-            });
-            const opcoesLabels = opcoes.map(o => window.converterValor('INICIACAO_CIENTIFICA', o, null));
-            const datasets = programas.map((p, idx) => ({
-                label: labels[idx],
-                data: dados[idx],
-                backgroundColor: ['#e74a3b','#f6c23e','#1cc88a','#36b9cc','#9b59b6'][idx],
-                borderRadius: 4
-            }));
-            if(charts['participacaoProgramasChart']) charts['participacaoProgramasChart'].destroy();
-            const chart = new Chart(ctx, {
+        function criarBarraVerticalScroll(canvasId, labels, values, tituloY = 'Quantidade') {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const parent = canvas.parentElement;
+            if (parent) { parent.style.width = '100%'; parent.style.minWidth = '100%'; }
+            const ctx = canvas.getContext('2d');
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+            const shortLabels = labels.map(label => encurtarTexto(label, 14));
+            charts[canvasId] = new Chart(ctx, {
                 type: 'bar',
-                data: { labels: opcoesLabels, datasets: datasets },
-                options: { responsive:true, plugins:{legend:{position:'top'}}, scales:{x:{stacked:true}, y:{stacked:true, beginAtZero:true}} }
+                data: {
+                    labels: shortLabels,
+                    datasets: [{
+                        label: tituloY,
+                        data: values,
+                        backgroundColor: '#4aa47d',
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: tituloY }, ticks: { font: { size: 11 } } },
+                        x: { ticks: { autoSkip: false, maxRotation: 35, minRotation: 25, font: { size: 8 } } }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: (c) => `${c.raw} respostas`,
+                                afterBody: function(tooltipItems) {
+                                    const index = tooltipItems[0].dataIndex;
+                                    return labels[index] ? `\n${labels[index]}` : '';
+                                }
+                            }
+                        }
+                    }
+                }
             });
-            charts['participacaoProgramasChart'] = chart;
+            return charts[canvasId];
         }
 
-        /* atividades complementares */
-        function renderAtividadesComplementares() {
-            const d = prepararDados('ATIVIDADES_COMPLEMENTARES');
-            criarGrafico('atividadesComplementaresChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#55efc4', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
+        function criarBarraHorizontalScroll(canvasId, labels, values) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const parent = canvas.parentElement;
+            if (parent) { parent.style.width = '100%'; parent.style.minWidth = '100%'; }
+            const ctx = canvas.getContext('2d');
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+            charts[canvasId] = new Chart(ctx, {
+                type: 'bar',
+                data: { labels, datasets: [{ label: 'Respostas', data: values, backgroundColor: '#57cc99', borderRadius: 5 }] },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.raw} respostas` } } },
+                    scales: {
+                        x: { beginAtZero: true, title: { display: true, text: 'Contagem' }, ticks: { font: { size: 11 } } },
+                        y: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+            return charts[canvasId];
         }
 
-        /* apoio eventos */
-        function renderApoioEventos() {
-            const d = prepararDados('APOIO_EVENTOS');
-            criarGrafico('apoioEventosChart', 'bar', {
-                labels: d.labels,
-                datasets: [{ data: d.values, backgroundColor:'#74b9ff', borderRadius:8 }]
-            }, { responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}} });
+        function criarLinhaScroll(canvasId, labels, values, titulo = 'Frequência') {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const parent = canvas.parentElement;
+            if (parent) { parent.style.width = '100%'; parent.style.minWidth = '100%'; }
+            const ctx = canvas.getContext('2d');
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+            charts[canvasId] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: titulo,
+                        data: values,
+                        borderColor: '#4aa47d',
+                        backgroundColor: 'rgba(74,164,125,0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#4aa47d',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: titulo }, ticks: { font: { size: 11 } } },
+                        x: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+            return charts[canvasId];
         }
 
-        /* insights */
-        function atualizarInsights() {
-            const sexos = dadosFiltrados.filter(d=>d.SEXO&&d.SEXO!=='');
-            const fem = sexos.filter(d=>d.SEXO==='F').length;
-            document.getElementById('insightPerfil').textContent = (fem > sexos.length/2 ? 'Mulher' : 'Homem') + ', entre 18-22 anos, renda familiar de até 3 SM';
+        function criarBarraEmpilhadaScroll(canvasId, labels, datasets) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const parent = canvas.parentElement;
+            if (parent) { parent.style.width = '100%'; parent.style.minWidth = '100%'; }
+            const ctx = canvas.getContext('2d');
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+            charts[canvasId] = new Chart(ctx, {
+                type: 'bar',
+                data: { labels, datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, ticks: { autoSkip: true, maxRotation: 40, font: { size: 10 } } },
+                        y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Número de alunos' }, ticks: { font: { size: 11 } } }
+                    },
+                    plugins: { tooltip: { mode: 'index' } }
+                }
+            });
+            return charts[canvasId];
+        }
 
-            const pai = dadosFiltrados.filter(d=>d.ESCOLARIDADE_PAI&&d.ESCOLARIDADE_PAI!=='');
-            const mae = dadosFiltrados.filter(d=>d.ESCOLARIDADE_MAE&&d.ESCOLARIDADE_MAE!=='');
-            let txtPai='', txtMae='';
-            if(pai.length) { const f={}; pai.forEach(d=>f[d.ESCOLARIDADE_PAI]=(f[d.ESCOLARIDADE_PAI]||0)+1); const max=Object.keys(f).reduce((a,b)=>f[a]>f[b]?a:b); txtPai = window.converterValor('ESCOLARIDADE_PAI', max, null); }
-            if(mae.length) { const f={}; mae.forEach(d=>f[d.ESCOLARIDADE_MAE]=(f[d.ESCOLARIDADE_MAE]||0)+1); const max=Object.keys(f).reduce((a,b)=>f[a]>f[b]?a:b); txtMae = window.converterValor('ESCOLARIDADE_MAE', max, null); }
-            document.getElementById('insightEscolaridade').textContent = 'Pai: ' + (txtPai||'N/D') + ', Mãe: ' + (txtMae||'N/D');
+        // Função para criar o card do gráfico
+        function criarChartCard(cardId, canvasId, iconClass, titulo, descricao) {
+            return `
+                <div class="chart-card" id="${cardId}">
+                    <div class="card-header">
+                        <h3>
+                            <i class="${iconClass}"></i>
+                            ${titulo}
+                        </h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn" data-expand="${canvasId}" title="Expandir gráfico">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="chart-btn" data-download="${canvasId}" title="Baixar PNG">
+                                <i class="fas fa-image"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-scroll-wrapper">
+                        <div class="chart-scroll-inner">
+                            <canvas id="${canvasId}"></canvas>
+                        </div>
+                    </div>
+                    <div class="descricao-card">
+                        <span class="texto">
+                            <i class="fas fa-info-circle"></i>
+                            ${descricao}
+                        </span>
+                        <button class="btn-ver-mais" data-expand-full="${canvasId}">
+                            Ver mais
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
 
-            const idades = dadosFiltrados.map(d=>parseIdade(d.IDADE)).filter(i=>i!==null&&!isNaN(i));
-            if(idades.length) {
-                const f=[0,0,0]; idades.forEach(i=>{ if(i<=20) f[0]++; else if(i<=23) f[1]++; else f[2]++; });
-                const maxIdx=f.indexOf(Math.max(...f));
-                document.getElementById('insightIdade').textContent = ['18-20 anos','21-23 anos','24+ anos'][maxIdx] || 'N/D';
-            } else document.getElementById('insightIdade').textContent = 'N/D';
+        //Função para configurar eventos de clique nos botões do card
+        function configurarEventosCard(cardId, canvasId, titulo, dados) {
+            const card = document.getElementById(cardId);
+            if (!card) return;
 
-            const motivo = dadosFiltrados.filter(d=>d.MOTIVO_CURSO&&d.MOTIVO_CURSO!=='');
-            if(motivo.length) {
-                const f={}; motivo.forEach(d=>f[d.MOTIVO_CURSO]=(f[d.MOTIVO_CURSO]||0)+1);
-                const max=Object.keys(f).reduce((a,b)=>f[a]>f[b]?a:b);
-                document.getElementById('insightMotivoCurso').textContent = window.converterValor('MOTIVO_CURSO', max, null) || 'N/D';
+            const descricaoCard = card.querySelector('.descricao-card .texto')?.textContent?.trim() || '';
+            const descricaoFull = descricaoCard.replace(/^[^:]+:\s*/, '');
+
+            const expandBtn = card.querySelector(`[data-expand="${canvasId}"]`);
+            if (expandBtn) {
+                expandBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    abrirModalGrafico(canvasId, titulo, dados, descricaoFull);
+                });
             }
 
-            const ic = dadosFiltrados.filter(d=>d.INICIACAO_CIENTIFICA&&d.INICIACAO_CIENTIFICA!=='');
-            const participou = ic.filter(d=>['A','B','C'].includes(d.INICIACAO_CIENTIFICA)).length;
-            document.getElementById('insightPesquisa').textContent = participou > 0 ? (participou/ic.length*100).toFixed(1) + '% participaram de IC' : 'Dados insuficientes';
+            const verMaisBtn = card.querySelector(`[data-expand-full="${canvasId}"]`);
+            if (verMaisBtn) {
+                verMaisBtn.addEventListener('click', () => {
+                    abrirModalGrafico(canvasId, titulo, dados, descricaoFull);
+                });
+            }
+
+            const downloadBtn = card.querySelector(`[data-download="${canvasId}"]`);
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const canvas = document.getElementById(canvasId);
+                    if (canvas) {
+                        const link = document.createElement('a');
+                        link.download = `${titulo.replace(/\s+/g, '_')}.png`;
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                    }
+                });
+            }
         }
 
-        /* menu mobile */
-        const hamburger = document.getElementById('hamburger');
-        const navMenuMobile = document.getElementById('navMenuMobile');
-        const menuOverlay = document.getElementById('menuOverlay');
-
-        function closeMenu() { hamburger?.classList.remove('active'); navMenuMobile?.classList.remove('active'); menuOverlay?.classList.remove('active'); document.body.classList.remove('menu-open'); }
-        function openMenu() { hamburger?.classList.add('active'); navMenuMobile?.classList.add('active'); menuOverlay?.classList.add('active'); document.body.classList.add('menu-open'); }
-        hamburger?.addEventListener('click', () => { navMenuMobile?.classList.contains('active') ? closeMenu() : openMenu(); });
-        menuOverlay?.addEventListener('click', closeMenu);
-
-        /* inicializacao */
-        document.addEventListener('DOMContentLoaded', carregarDados);
     </script>
 </body>
 </html>
