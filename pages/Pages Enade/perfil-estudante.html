@@ -1913,6 +1913,41 @@
             carregarDados();
         });
 
+        //menu mobile
+        (function() {
+            const hamburger = document.getElementById('hamburger');
+            const navMenuMobile = document.getElementById('navMenuMobile');
+            const menuOverlay = document.getElementById('menuOverlay');
+            const menuCloseBtn = document.getElementById('menuCloseBtn');
+
+            function closeMenu() {
+                hamburger?.classList.remove('active');
+                navMenuMobile?.classList.remove('active');
+                menuOverlay?.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            }
+
+            function openMenu() {
+                hamburger?.classList.add('active');
+                navMenuMobile?.classList.add('active');
+                menuOverlay?.classList.add('active');
+                document.body.classList.add('menu-open');
+            }
+
+            hamburger?.addEventListener('click', () => {
+                navMenuMobile?.classList.contains('active') ? closeMenu() : openMenu();
+            });
+
+            menuCloseBtn?.addEventListener('click', closeMenu);
+            menuOverlay?.addEventListener('click', closeMenu);
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 900 && navMenuMobile?.classList.contains('active')) closeMenu();
+            });
+
+            navMenuMobile?.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
+        })();
+
 
     </script>
 </body>
