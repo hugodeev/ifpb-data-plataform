@@ -2255,6 +2255,78 @@ function renderizarGraficos() {
     }, 100);
 }
 
+// atualizar tabela
+function atualizarTabela() {
+    const tbody = document.getElementById('expensesTableBody');
+    if (!tbody) return;
+
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const dadosPagina = dadosFiltrados.slice(start, end);
+
+    tbody.innerHTML = '';
+
+    if (dadosFiltrados.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:2rem;"><i class="fas fa-search" style="font-size:2rem;color:var(--medium-color);display:block;margin-bottom:1rem;"></i><h4 style="color:var(--dark-color);">Nenhum dado encontrado</h4><p style="color:var(--medium-color);">Tente ajustar seus filtros de busca.</p></td></tr>`;
+    } else {
+        dadosPagina.forEach(item => {
+            const row = document.createElement('tr');
+            const isPositive = item.Variacao && item.Variacao.includes('+');
+            row.innerHTML = `
+                <td><i class="fas ${item.Icon || 'fa-chart-bar'}"></i> ${item.Funcao}</td>
+                <td class="amount">${item.DotInicial}</td>
+                <td class="amount">${item.DotAtual}</td>
+                <td class="amount">${item.Empenhado}</td>
+                <td class="amount">${item.Liquidado}</td>
+                <td style="text-align:center;font-weight:600;">${item.Execucao}</td>
+                <td class="variation ${isPositive ? 'positive' : 'negative'}">${item.Variacao}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    updateTableInfo();
+}
+
+function updateTableInfo() {
+    const total = dadosFiltrados.length;
+    const start = Math.min((currentPage - 1) * rowsPerPage + 1, total);
+    const end = Math.min(currentPage * rowsPerPage, total);
+
+    const infoElement = document.getElementById('tableInfo');
+    if (infoElement) {
+        infoElement.textContent = total > 0
+            ? `Mostrando ${start}-${end} de ${total} funções orçamentárias`
+            : 'Nenhum dado encontrado';
+    }
+
+    const prevBtn = document.getElementById('prev-page');
+    const nextBtn = document.getElementById('next-page');
+    const totalPages = Math.ceil(total / rowsPerPage);
+
+    if (prevBtn) prevBtn.disabled = currentPage === 1;
+    if (nextBtn) nextBtn.disabled = currentPage === totalPages || total === 0;
+}
+
+// filtros
+function aplicarFiltros() {
+    const ano = document.getElementById('anoFilter').value;
+    const tipo = document.getElementById('tipoFilter').value;
+    const campus = document.getElementById('campusFilter').value;
+
+    dadosFiltrados = dadosOrcamentarios.filter(item => {
+        let ok = true;
+        if (ano !== 'todos' && !item.Ano) { /* manter */ }
+        if (tipo !== 'todos' && item.Tipo !== tipo) ok = false;
+        if (campus !== 'todos' && item.Campus !== campus) ok = false;
+        return ok;
+    });
+
+    currentPage = 1;
+    atualizarTabela();
+    showNotification('Filtros aplicados!', 'success');
+}
+
 
 
 </script>
