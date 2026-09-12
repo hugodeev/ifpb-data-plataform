@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        /* ===== TEMA IFPB (azul escuro) ===== */
+        /* tema ifpb */
         :root {
             --primary-color: #1a5f7a;
             --primary-dark: #0e4a63;
@@ -36,6 +36,7 @@
 
         * { box-sizing: border-box; }
 
+        /* cabeçalho */
         .page-header {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: white;
@@ -73,13 +74,8 @@
             transition: var(--transition);
         }
 
-        .breadcrumb a:hover {
-            opacity: 0.8;
-        }
-
-        .breadcrumb i {
-            font-size: 0.7rem;
-        }
+        .breadcrumb a:hover { opacity: 0.8; }
+        .breadcrumb i { font-size: 0.7rem; }
 
         .page-title {
             font-size: 2.5rem;
@@ -147,6 +143,7 @@
             background: var(--secondary-color);
         }
 
+        /* indicadores */
         .indicators-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -240,6 +237,7 @@
             transition: width 1s ease-in-out;
         }
 
+        /* cards dados */
         .data-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -261,13 +259,8 @@
             box-shadow: var(--shadow-lg);
         }
 
-        .data-card.campi {
-            border-top-color: var(--info-color);
-        }
-
-        .data-card.servidores {
-            border-top-color: #9575cd;
-        }
+        .data-card.campi { border-top-color: var(--info-color); }
+        .data-card.servidores { border-top-color: #9575cd; }
 
         .card-header {
             display: flex;
@@ -285,20 +278,10 @@
             gap: 0.75rem;
         }
 
-        .card-title i {
-            font-size: 1.2rem;
-        }
+        .card-title i { font-size: 1.2rem; }
+        .card-total { font-size: 1.5rem; font-weight: 700; color: var(--dark-color); }
 
-        .card-total {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--dark-color);
-        }
-
-        .data-list {
-            margin-top: 1.5rem;
-        }
-
+        .data-list { margin-top: 1.5rem; }
         .data-item {
             display: flex;
             justify-content: space-between;
@@ -306,10 +289,7 @@
             padding: 0.75rem 0;
             border-bottom: 1px solid var(--light-color);
         }
-
-        .data-item:last-child {
-            border-bottom: none;
-        }
+        .data-item:last-child { border-bottom: none; }
 
         .data-label {
             color: var(--medium-color);
@@ -318,12 +298,7 @@
             align-items: center;
             gap: 0.5rem;
         }
-
-        .data-value {
-            font-weight: 600;
-            color: var(--dark-color);
-        }
-
+        .data-value { font-weight: 600; color: var(--dark-color); }
         .data-percentage {
             font-size: 0.85rem;
             color: var(--medium-color);
@@ -333,9 +308,7 @@
             margin-left: 0.5rem;
         }
 
-        /* ============================================================ */
-        /* ===== CHART CARD PADRÃO - COM SCROLL HORIZONTAL ===== */
-        /* ============================================================ */
+        /* card gráfico */
         .chart-card {
             background: var(--white);
             padding: 1.5rem;
@@ -351,9 +324,7 @@
             flex-direction: column;
         }
 
-        .chart-card:hover {
-            box-shadow: var(--shadow-md);
-        }
+        .chart-card:hover { box-shadow: var(--shadow-md); }
 
         .chart-card .card-header {
             display: flex;
@@ -378,9 +349,7 @@
             padding-left: 0.8rem;
         }
 
-        .chart-card .card-header h3 i {
-            color: var(--primary-color);
-        }
+        .chart-card .card-header h3 i { color: var(--primary-color); }
 
         .chart-card .chart-actions {
             display: flex;
@@ -391,9 +360,7 @@
             padding-top: 0.2rem;
         }
 
-        .chart-card:hover .chart-actions {
-            opacity: 1;
-        }
+        .chart-card:hover .chart-actions { opacity: 1; }
 
         .chart-card .chart-btn {
             width: 32px;
@@ -419,9 +386,7 @@
             transform: scale(1.08);
         }
 
-        .chart-card .chart-btn i {
-            font-size: 13px;
-        }
+        .chart-card .chart-btn i { font-size: 13px; }
 
         .chart-card .chart-scroll-wrapper {
             flex: 1;
@@ -525,9 +490,7 @@
             transform: translateX(4px);
         }
 
-        /* ============================================================ */
-        /* ===== GRID DE GRÁFICOS ===== */
-        /* ============================================================ */
+        /* grid gráficos */
         .charts-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
@@ -535,72 +498,7 @@
             margin: 2rem 0;
         }
 
-        @media (max-width: 768px) {
-            .charts-grid {
-                grid-template-columns: 1fr;
-                gap: 1.25rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .chart-card {
-                padding: 0.75rem;
-            }
-            .chart-card .card-header h3 {
-                font-size: 0.8rem;
-                padding-left: 0.5rem;
-            }
-            .chart-card .chart-actions {
-                opacity: 1;
-                gap: 0.15rem;
-            }
-            .chart-card .chart-btn {
-                width: 24px;
-                height: 24px;
-                font-size: 9px;
-            }
-            .chart-card .chart-btn i {
-                font-size: 9px;
-            }
-            .chart-card .chart-scroll-wrapper {
-                min-height: 200px;
-                max-height: 240px;
-            }
-            .chart-card .chart-scroll-inner {
-                min-width: 420px;
-                width: 420px;
-                min-height: 200px;
-                max-height: 240px;
-            }
-            .chart-card .descricao-card {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0.5rem;
-            }
-            .chart-card .descricao-card .btn-ver-mais {
-                align-self: flex-start;
-                font-size: 0.7rem;
-                padding: 0.2rem 0.7rem;
-            }
-            .chart-card .descricao-card .texto {
-                font-size: 0.75rem;
-            }
-            .charts-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-        }
-
-        @media (max-width: 360px) {
-            .chart-card .chart-scroll-inner {
-                min-width: 340px;
-                width: 340px;
-            }
-        }
-
-        /* ============================================================ */
-        /* ===== MODAL ===== */
-        /* ============================================================ */
+        /* modal */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -613,9 +511,7 @@
             padding: 1.5rem;
         }
 
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
 
         .modal-box {
             background: var(--white);
@@ -656,9 +552,7 @@
             padding-right: 0;
         }
 
-        .modal-header h3 i {
-            color: white;
-        }
+        .modal-header h3 i { color: white; }
 
         .modal-close {
             background: none;
@@ -690,7 +584,7 @@
 
         .modal-body .grafico-wrapper {
             flex: 1;
-            min-height: 60vh;
+            min-height: 50vh;
             overflow: hidden;
             position: relative;
         }
@@ -698,17 +592,20 @@
         .modal-scroll-wrapper {
             width: 100%;
             height: 100%;
-            min-height: 50vh;
-            max-height: 75vh;
+            min-height: 40vh;
+            max-height: 65vh;
             overflow: auto;
             -webkit-overflow-scrolling: touch;
             border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .modal-scroll-inner {
             width: 100%;
             height: 100%;
-            min-height: 45vh;
+            min-height: 35vh;
             position: relative;
         }
 
@@ -744,6 +641,15 @@
             font-size: 0.85rem;
             color: var(--medium-color);
             line-height: 1.7;
+        }
+
+        .modal-descricao .descricao-texto i {
+            color: var(--primary-color);
+            margin-right: 0.3rem;
+        }
+
+        .modal-descricao .descricao-texto strong {
+            color: var(--dark-color);
         }
 
         .modal-descricao .descricao-texto ul {
@@ -803,89 +709,9 @@
             box-shadow: 0 4px 12px rgba(26, 95, 122, 0.25);
         }
 
-        .modal-action-btn i {
-            font-size: 0.85rem;
-        }
+        .modal-action-btn i { font-size: 0.85rem; }
 
-        @media (max-width: 768px) {
-            .modal-box {
-                width: 95%;
-                max-height: 90vh;
-            }
-            .modal-body .grafico-wrapper {
-                min-height: 50vh;
-            }
-            .modal-scroll-wrapper {
-                min-height: 40vh;
-                max-height: 65vh;
-            }
-            .modal-scroll-inner {
-                min-height: 35vh;
-            }
-            .modal-header {
-                padding: 0.6rem 1rem;
-            }
-            .modal-header h3 {
-                font-size: 0.9rem;
-            }
-            .modal-body {
-                padding: 0.6rem 1rem 0.8rem 1rem;
-            }
-            .modal-descricao .descricao-texto {
-                font-size: 0.8rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .modal-box {
-                max-width: 100%;
-                margin: 0.5rem;
-                border-radius: 8px;
-                min-width: 0;
-                width: calc(100vw - 1rem);
-                max-height: 88vh;
-            }
-            .modal-header {
-                padding: 0.5rem 0.8rem;
-            }
-            .modal-header h3 {
-                font-size: 0.8rem;
-            }
-            .modal-body {
-                padding: 0.5rem 0.8rem 0.7rem 0.8rem;
-            }
-            .modal-body .grafico-wrapper {
-                min-height: 50vh;
-            }
-            .modal-scroll-wrapper {
-                min-height: 40vh;
-                max-height: 55vh;
-            }
-            .modal-scroll-inner {
-                min-width: 420px;
-            }
-            .modal-actions {
-                padding: 0.4rem 0.6rem;
-                gap: 0.3rem;
-            }
-            .modal-action-btn {
-                font-size: 0.6rem;
-                padding: 0.25rem 0.6rem;
-            }
-            .modal-descricao .descricao-texto {
-                font-size: 0.75rem;
-            }
-        }
-
-        @media (max-width: 360px) {
-            .modal-scroll-inner {
-                min-width: 340px;
-            }
-        }
-
-        /* ============================================================ */
-        /* ===== FILTERS ===== */
-        /* ============================================================ */
+        /* filtros */
         .filters {
             display: flex;
             flex-wrap: wrap;
@@ -915,9 +741,7 @@
             transition: var(--transition);
         }
 
-        .filters select:hover {
-            border-color: var(--primary-color);
-        }
+        .filters select:hover { border-color: var(--primary-color); }
 
         .filters button {
             background: var(--primary-color);
@@ -933,6 +757,7 @@
         .filters button:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 95, 122, 0.3);
         }
 
         .filters .btn-reset {
@@ -941,25 +766,10 @@
 
         .filters .btn-reset:hover {
             background: #5a6268;
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
         }
 
-        @media (max-width: 768px) {
-            .filters {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .filters select {
-                width: 100%;
-                max-width: 100%;
-            }
-            .filters button {
-                width: 100%;
-            }
-        }
-
-        /* ============================================================ */
-        /* ===== TABELA ===== */
-        /* ============================================================ */
+        /* tabela */
         .table-wrapper-scroll-y {
             display: block;
             max-height: 500px;
@@ -1009,9 +819,7 @@
             color: var(--dark-color);
         }
 
-        .tableFixHead tbody tr:hover {
-            background: var(--light-color);
-        }
+        .tableFixHead tbody tr:hover { background: var(--light-color); }
 
         .table-section {
             background: var(--white);
@@ -1080,9 +888,7 @@
             gap: 0.5rem;
         }
 
-        .btn:hover {
-            background: var(--light-color);
-        }
+        .btn:hover { background: var(--light-color); }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
@@ -1111,16 +917,7 @@
             font-size: 0.9rem;
         }
 
-        /* ============================================================ */
-        /* ===== METODOLOGIA ===== */
-        /* ============================================================ */
-        .methodology-section {
-            background: linear-gradient(135deg, var(--light-color), #eef2ff);
-            border-radius: var(--radius);
-            padding: 2.5rem;
-            margin: 3rem 0;
-            border-left: 5px solid var(--secondary-color);
-        }
+       /* config*/
 
         .methodology-grid {
             display: grid;
@@ -1180,95 +977,31 @@
             display: inline-block;
         }
 
-        /* ============================================================ */
-        /* ===== MAPA ===== */
-        /* ============================================================ */
-        #map {
-            height: 450px;
-            width: 100%;
-            border-radius: 8px;
-            z-index: 1;
-        }
-
-        .leaflet-control-zoom {
-            z-index: 2 !important;
-        }
-
-        #map-legend {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-top: 0.8rem;
-            font-size: 0.85rem;
-            color: var(--medium-color);
-            flex-wrap: wrap;
-        }
-
-        .chart-container-mapa {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            box-shadow: var(--shadow-md);
-            border: 1px solid #e3e6f0;
-            margin: 2rem 0;
-        }
-
-        .chart-container-mapa .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .chart-container-mapa .chart-title {
-            font-size: 1.1rem;
-            color: var(--dark-color);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        /* ============================================================ */
-        /* ===== FOOTER ===== */
-        /* ============================================================ */
+        /* rodapé */
         .main-footer {
             color: #ffffff;
         }
 
-        .main-footer h3 {
-            color: #ffffff;
-        }
-
-        .main-footer p {
-            color: #ffffff;
-        }
+        .main-footer h3 { color: #ffffff; }
+        .main-footer p { color: #ffffff; }
 
         .main-footer .footer-links a {
             color: #ffffff;
             transition: var(--transition);
         }
 
-        .main-footer .footer-links a:hover {
-            color: var(--primary-color);
-        }
+        .main-footer .footer-links a:hover { color: var(--primary-color); }
 
         .main-footer .social-links a {
             color: #ffffff;
             transition: var(--transition);
         }
 
-        .main-footer .social-links a:hover {
-            color: var(--primary-color);
-        }
+        .main-footer .social-links a:hover { color: var(--primary-color); }
 
-        .main-footer .footer-brand h3 {
-            color: #ffffff;
-        }
+        .main-footer .footer-brand h3 { color: #ffffff; }
 
-        /* ============================================================ */
-        /* ===== LOADING ===== */
-        /* ============================================================ */
+        /* carregamento */
         .loading {
             text-align: center;
             padding: 3rem;
@@ -1296,154 +1029,168 @@
             color: var(--medium-color);
         }
 
-        /* ============================================================ */
-        /* ===== RESPONSIVIDADE GERAL ===== */
-        /* ============================================================ */
+        /* notificação */
+        .notification {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius);
+            background: var(--white);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 9999;
+            animation: slideInRight 0.4s ease;
+            max-width: 400px;
+            border-left: 4px solid;
+        }
+
+        .notification.info { border-left-color: var(--info-color); }
+        .notification.success { border-left-color: var(--success-color); }
+        .notification.warning { border-left-color: var(--warning-color); }
+        .notification.error { border-left-color: var(--danger-color); }
+
+        .notification i { font-size: 1.2rem; }
+        .notification.info i { color: var(--info-color); }
+        .notification.success i { color: var(--success-color); }
+        .notification.warning i { color: var(--warning-color); }
+        .notification.error i { color: var(--danger-color); }
+
+        .notification span { flex: 1; font-size: 0.9rem; color: var(--dark-color); }
+
+        .notification-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--medium-color);
+            font-size: 1rem;
+            padding: 0.2rem;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(120%); opacity: 0; }
+        }
+
+        /* responsivo */
         @media (max-width: 1024px) {
-            .container {
-                padding: 0 1.5rem;
-            }
-            .page-title {
-                font-size: 2.2rem;
-            }
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
+            .container { padding: 0 1.5rem; }
+            .page-title { font-size: 2.2rem; }
+            .charts-grid { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 900px) {
-            .page-header {
-                padding: 2rem 1.5rem;
-            }
-            .indicators-grid {
-                grid-template-columns: 1fr 1fr;
-            }
+            .page-header { padding: 2rem 1.5rem; }
+            .indicators-grid { grid-template-columns: 1fr 1fr; }
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 0 1.25rem;
-            }
-            .page-title {
-                font-size: 1.8rem;
-            }
-            .page-subtitle {
-                font-size: 1rem;
-            }
-            .indicators-grid {
-                grid-template-columns: 1fr;
-            }
-            .data-cards {
-                grid-template-columns: 1fr;
-            }
-            .charts-grid {
-                grid-template-columns: 1fr;
-                gap: 1.25rem;
-            }
-            .table-section {
-                padding: 1.5rem;
-            }
-            .table-wrapper-scroll-y {
-                max-height: 350px;
-            }
-            .chart-scroll-wrapper {
-                max-height: 320px;
-            }
-            .chart-scroll-inner {
-                width: 640px;
-                height: 300px;
-            }
-            #map {
-                height: 320px !important;
-            }
-            .filters {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .filters select {
-                width: 100%;
-                max-width: 100%;
-            }
-            .filters button {
-                width: 100%;
-            }
+            .container { padding: 0 1.25rem; }
+            .page-title { font-size: 1.8rem; }
+            .page-subtitle { font-size: 1rem; }
+            .indicators-grid { grid-template-columns: 1fr; }
+            .data-cards { grid-template-columns: 1fr; }
+            .charts-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+            .table-section { padding: 1.5rem; }
+            .table-wrapper-scroll-y { max-height: 350px; }
+            .filters { flex-direction: column; align-items: stretch; }
+            .filters select { width: 100%; max-width: 100%; }
+            .filters button { width: 100%; }
+            .chart-card { padding: 1rem; }
+            .chart-card .card-header h3 { font-size: 0.88rem; padding-left: 0.6rem; }
+            .chart-card .chart-scroll-wrapper { min-height: 220px; max-height: 280px; }
+            .chart-card .chart-scroll-inner { min-height: 220px; max-height: 280px; min-width: 500px; width: 500px; }
+            .chart-card .chart-actions { opacity: 0.8; }
+            .chart-card .chart-btn { width: 28px; height: 28px; font-size: 10px; }
+            .chart-card .chart-btn i { font-size: 10px; }
+            .chart-card .descricao-card .texto { font-size: 0.8rem; }
+            .chart-card .descricao-card .btn-ver-mais { font-size: 0.75rem; padding: 0.3rem 0.8rem; }
+            #map { height: 320px !important; }
+            .modal-box { width: 95%; max-height: 90vh; }
+            .modal-body .grafico-wrapper { min-height: 40vh; }
+            .modal-scroll-wrapper { min-height: 35vh; max-height: 55vh; }
+            .modal-scroll-inner { min-height: 30vh; }
+            .modal-header { padding: 0.6rem 1rem; }
+            .modal-header h3 { font-size: 0.9rem; }
+            .modal-body { padding: 0.6rem 1rem 0.8rem 1rem; }
+            .modal-descricao .descricao-texto { font-size: 0.8rem; }
         }
 
         @media (max-width: 480px) {
-            .container {
-                padding: 0 1rem;
-            }
-            .page-title {
-                font-size: 1.6rem;
-            }
-            .indicator-value {
-                font-size: 1.5rem;
-            }
-            .tableFixHead {
-                font-size: 0.75rem;
-            }
-            .tableFixHead th,
-            .tableFixHead td {
-                padding: 0.3rem 0.2rem;
-                white-space: normal;
-            }
-            .chart-scroll-inner {
-                width: 560px;
-                height: 260px;
-            }
-            .indicators-grid {
-                grid-template-columns: 1fr;
-            }
-            #map {
-                height: 260px !important;
-            }
-            .search-box input {
-                width: 150px;
-            }
+            .container { padding: 0 1rem; }
+            .page-title { font-size: 1.6rem; }
+            .page-header { padding: 1.5rem 1rem; }
+            .indicator-value { font-size: 1.5rem; }
+            .status-indicator { font-size: 0.7rem; padding: 0.4rem 0.8rem; }
+            .breadcrumb { font-size: 0.7rem; gap: 0.3rem; }
+            .breadcrumb i { font-size: 0.5rem; }
+            .tableFixHead { font-size: 0.75rem; }
+            .tableFixHead th, .tableFixHead td { padding: 0.3rem 0.2rem; white-space: normal; }
+            .chart-card { padding: 0.75rem; }
+            .chart-card .card-header h3 { font-size: 0.8rem; padding-left: 0.5rem; gap: 0.4rem; min-width: 120px; }
+            .chart-card .chart-actions { opacity: 1; gap: 0.2rem; }
+            .chart-card .chart-btn { width: 24px; height: 24px; font-size: 9px; }
+            .chart-card .chart-btn i { font-size: 9px; }
+            .chart-card .chart-scroll-wrapper { min-height: 200px; max-height: 240px; }
+            .chart-card .chart-scroll-inner { min-width: 420px; width: 420px; min-height: 200px; max-height: 240px; }
+            .chart-card .chart-scroll-wrapper::-webkit-scrollbar { width: 4px; height: 4px; }
+            .chart-card .chart-scroll-wrapper::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 3px; }
+            .chart-card .chart-scroll-wrapper::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 3px; }
+            .chart-card .descricao-card { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+            .chart-card .descricao-card .btn-ver-mais { align-self: flex-start; font-size: 0.7rem; padding: 0.25rem 0.7rem; }
+            .chart-card .descricao-card .texto { font-size: 0.75rem; }
+            .charts-grid { grid-template-columns: 1fr; gap: 1rem; }
+            #map { height: 260px !important; }
+            .search-box input { width: 150px; }
+            .modal-box { max-width: 100%; margin: 0.5rem; border-radius: 8px; min-width: 0; width: calc(100vw - 1rem); max-height: 88vh; }
+            .modal-header { padding: 0.5rem 0.8rem; }
+            .modal-header h3 { font-size: 0.8rem; }
+            .modal-body { padding: 0.5rem 0.8rem 0.7rem 0.8rem; }
+            .modal-body .grafico-wrapper { min-height: 40vh; }
+            .modal-scroll-wrapper { min-height: 35vh; max-height: 50vh; }
+            .modal-scroll-inner { min-width: 420px; }
+            .modal-actions { padding: 0.4rem 0.6rem; gap: 0.3rem; }
+            .modal-action-btn { font-size: 0.6rem; padding: 0.25rem 0.6rem; }
+            .modal-descricao .descricao-texto { font-size: 0.75rem; }
         }
 
         @media (max-width: 360px) {
-            .chart-scroll-inner {
-                width: 420px;
-                height: 220px;
-            }
-            .chart-card .chart-scroll-inner {
-                min-width: 340px;
-                width: 340px;
-            }
+            .chart-card .chart-scroll-inner { min-width: 340px; width: 340px; }
+            .modal-scroll-inner { min-width: 340px; }
+        }
+
+        @media (max-height: 500px) and (orientation: landscape) {
+            .chart-card .chart-scroll-wrapper { min-height: 140px; max-height: 180px; }
+            .chart-card .chart-scroll-inner { min-height: 140px; max-height: 180px; }
+            .chart-card .card-header h3 { font-size: 0.8rem; }
+            .chart-card .descricao-card .texto { font-size: 0.7rem; }
+            .modal-body .grafico-wrapper { min-height: 35vh; }
+            .modal-scroll-wrapper { min-height: 30vh; max-height: 45vh; }
+            .modal-scroll-inner { min-height: 25vh; }
+            .modal-header h3 { font-size: 0.8rem; }
+            .modal-body { padding: 0.4rem 1rem 0.6rem 1rem; }
+            .modal-descricao .descricao-texto { font-size: 0.7rem; }
+            #map { height: 220px !important; }
         }
 
         @media (min-width: 901px) {
-            .nav-list {
-                display: flex !important;
-            }
-            .hamburger {
-                display: none !important;
-            }
-            .nav-menu-mobile {
-                display: none !important;
-            }
-            .menu-overlay {
-                display: none !important;
-            }
+            .nav-list { display: flex !important; }
+            .hamburger { display: none !important; }
+            .nav-menu-mobile { display: none !important; }
+            .menu-overlay { display: none !important; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Overlay de Carregamento -->
-    <div id="loading-overlay" class="modal-overlay">
-        <div class="modal-content">
-            <div style="width:80px;height:80px;border:4px solid #f3f3f3;border-top:4px solid var(--secondary-color);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 2rem;"></div>
-            <h3 style="color:var(--dark-color);margin-bottom:1rem;">Carregando Dados...</h3>
-            <p style="color:var(--medium-color);margin-bottom:1.5rem;" id="loading-message">Inicializando sistema e buscando informações</p>
-            <div style="height:6px;background:var(--light-color);border-radius:3px;overflow:hidden;">
-                <div id="loading-progress" style="height:100%;background:linear-gradient(90deg,var(--secondary-color),var(--primary-color));width:0%;transition:width 0.3s ease;"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Cabeçalho -->
+    <!-- cabeçalho -->
     <header class="main-header">
         <div class="container">
             <a href="../../index.html" class="logo">
@@ -1478,10 +1225,10 @@
         </ul>
     </nav>
 
-    <!-- Conteúdo Principal -->
+    <!-- conteúdo principal -->
     <main class="container">
 
-        <!-- Cabeçalho da Página -->
+        <!-- cabeçalho página -->
         <section class="page-header fade-in">
             <div class="breadcrumb">
                 <a href="../../index.html">Início</a>
@@ -1499,7 +1246,7 @@
             </div>
         </section>
 
-        <!-- Filtros -->
+        <!-- filtros -->
         <div class="filters">
             <div>
                 <label for="anoFilter"><i class="fas fa-calendar"></i> Ano:</label>
@@ -1523,7 +1270,7 @@
             <button onclick="resetarFiltros()" class="btn-reset"><i class="fas fa-undo"></i> Resetar</button>
         </div>
 
-        <!-- Indicadores Institucionais -->
+        <!-- indicadores -->
         <section class="indicators-section fade-in">
             <h2 class="section-title">Indicadores Institucionais</h2>
             <div class="indicators-grid" id="indicators-grid">
@@ -1555,7 +1302,7 @@
             </div>
         </section>
 
-        <!-- Dados Detalhados - Cards de Análise -->
+        <!-- cards análise -->
         <section class="data-section fade-in">
             <h2 class="section-title">Análise Detalhada por Campus</h2>
             <div class="data-cards">
@@ -1595,13 +1342,13 @@
             </div>
         </section>
 
-        <!-- Gráficos Interativos -->
+        <!-- gráficos -->
         <section class="charts-section fade-in">
             <h2 class="section-title">Visualizações Gráficas</h2>
             <div class="charts-grid" id="charts-grid"></div>
         </section>
 
-        <!-- Mapa dos Campi -->
+        <!-- mapa -->
         <div class="chart-container-mapa">
             <div class="chart-header">
                 <h3 class="chart-title"><i class="fas fa-map-marked-alt"></i> Mapa dos Campi</h3>
@@ -1613,7 +1360,7 @@
             <div id="map-legend"></div>
         </div>
 
-        <!-- Tabela de Campi -->
+        <!-- tabela -->
         <section class="table-section fade-in">
             <div class="table-header">
                 <h3 class="table-title"><i class="fas fa-table"></i> Lista Completa de Campi do IFPB</h3>
@@ -1633,7 +1380,7 @@
             </div>
         </section>
 
-        <!-- Metodologia e Fontes -->
+        <!-- metodologia -->
         <section class="methodology-section fade-in">
             <h2 class="section-title">Metodologia e Fontes</h2>
             <div class="methodology-grid">
@@ -1675,7 +1422,7 @@
         </section>
     </main>
 
-    <!-- ===== MODAL ===== -->
+    <!-- modal -->
     <div class="modal-overlay" id="modal">
         <div class="modal-box">
             <div class="modal-header">
@@ -1715,7 +1462,7 @@
         </div>
     </div>
 
-    <!-- Rodapé -->
+    <!-- rodapé -->
     <footer class="main-footer">
         <div class="container">
             <div class="footer-grid">
@@ -1757,9 +1504,7 @@
     </footer>
 
     <script>
-        // ================================================================
-        // MENU MOBILE
-        // ================================================================
+        // menu mobile
         const hamburger = document.getElementById('hamburger');
         const navMenuMobile = document.getElementById('navMenuMobile');
         const menuOverlay = document.getElementById('menuOverlay');
@@ -1796,9 +1541,7 @@
             link.addEventListener('click', closeMenu);
         });
 
-        // ================================================================
-        // COORDENADAS PARA O MAPA
-        // ================================================================
+        // coordenadas mapa
         const coordenadas = {
             'JOÃO PESSOA': [-7.1355914, -34.8737658],
             'MANGABEIRA': [-7.144524, -34.843093],
@@ -1915,46 +1658,14 @@
             }
         }
 
-        // ================================================================
-        // FUNÇÕES AUXILIARES
-        // ================================================================
-        function showLoading(message = 'Carregando dados...') {
-            const overlay = document.getElementById('loading-overlay');
-            const msgEl = document.getElementById('loading-message');
-            const progressEl = document.getElementById('loading-progress');
-            if (overlay) {
-                if (msgEl) msgEl.textContent = message;
-                if (progressEl) progressEl.style.width = '0%';
-                overlay.classList.add('show');
-                let progress = 0;
-                const interval = setInterval(() => {
-                    progress += Math.random() * 10;
-                    if (progress > 90) { clearInterval(interval); if (progressEl) progressEl.style.width = '90%'; } else { if (
-                            progressEl) progressEl.style.width = progress + '%'; }
-                }, 200);
-                window._loadingInterval = interval;
-            }
-        }
-
-        function hideLoading() {
-            const overlay = document.getElementById('loading-overlay');
-            const progressEl = document.getElementById('loading-progress');
-            if (overlay) {
-                if (progressEl) progressEl.style.width = '100%';
-                if (window._loadingInterval) clearInterval(window._loadingInterval);
-                setTimeout(() => overlay.classList.remove('show'), 300);
-            }
-        }
-
+        // funções auxiliares
         function showNotification(message, type = 'info') {
             const existing = document.querySelector('.notification');
             if (existing) existing.remove();
             const notification = document.createElement('div');
             notification.className = 'notification ' + type;
-            const icons = { success: 'check-circle', error: 'exclamation-circle', warning: 'exclamation-triangle',
-                info: 'info-circle' };
-            notification.innerHTML =
-                '<i class="fas fa-' + (icons[type] || icons.info) + '"></i><span>' + message +
+            const icons = { success: 'check-circle', error: 'exclamation-circle', warning: 'exclamation-triangle', info: 'info-circle' };
+            notification.innerHTML = '<i class="fas fa-' + (icons[type] || icons.info) + '"></i><span>' + message +
                 '</span><button class="notification-close"><i class="fas fa-times"></i></button>';
             document.body.appendChild(notification);
             notification.querySelector('.notification-close').addEventListener('click', function() {
@@ -1969,935 +1680,7 @@
             }, 5000);
         }
 
-        // ================================================================
-        // VARIÁVEIS GLOBAIS
-        // ================================================================
-        let dadosCompletos = [];
-        let dadosFiltrados = [];
-        let ordenacaoAtual = { coluna: 'Nome', direcao: 'asc' };
-        let charts = {};
-        let modalChartInstance = null;
-        let modalRawData = null;
-        let modalChartTitle = '';
-        let currentPage = 1;
 
-        // ================================================================
-        // CARREGAR DADOS
-        // ================================================================
-        async function carregarDados() {
-            try {
-                const caminhoInst = '../../assets/data/Dadosinstitucionais/dadosInstitucionais.json';
-                const caminhoAdm = '../../assets/data/EstruturaAdministrativa/DadosDocentesIFS.json';
-                console.log('Carregando:', caminhoInst, caminhoAdm);
-
-                const [resInst, resAdm] = await Promise.all([
-                    fetch(caminhoInst),
-                    fetch(caminhoAdm)
-                ]);
-
-                if (!resInst.ok || !resAdm.ok) {
-                    throw new Error('Falha ao carregar JSONs. Status: Inst=' + resInst.status + ', Adm=' + resAdm.status);
-                }
-
-                const dadosInst = await resInst.json();
-                const dadosAdm = await resAdm.json();
-
-                let totalBruto = 0;
-                let totalDocentesBruto = 0;
-                let totalTAEsBruto = 0;
-                let totalEfetivosBruto = 0;
-                dadosAdm.forEach(item => {
-                    const serv = parseFloat(item['Total de Servidores']) || 0;
-                    const doc = parseFloat(item['Docentes']) || 0;
-                    const taes = parseFloat(item['TAEs']) || 0;
-                    const efet = parseFloat(item['Docentes Efetivos']) || 0;
-                    totalBruto += serv;
-                    totalDocentesBruto += doc;
-                    totalTAEsBruto += taes;
-                    totalEfetivosBruto += efet;
-                });
-                window.totalServidoresBruto = totalBruto;
-                window.totalDocentesBruto = totalDocentesBruto;
-                window.totalTAEsBruto = totalTAEsBruto;
-                window.totalEfetivosBruto = totalEfetivosBruto;
-                console.log('✅ Total de Servidores (consolidado):', totalBruto);
-                console.log('✅ Docentes (consolidado):', totalDocentesBruto);
-                console.log('✅ TAEs (consolidado):', totalTAEsBruto);
-                console.log('✅ Docentes Efetivos (consolidado):', totalEfetivosBruto);
-
-                const mapaServ = new Map();
-                dadosAdm.forEach(item => {
-                    const campus = item.Estrutura.trim().toUpperCase();
-                    if (!mapaServ.has(campus)) {
-                        mapaServ.set(campus, {
-                            Total_Servidores: parseFloat(item['Total de Servidores']) || 0,
-                            TAEs: parseFloat(item['TAEs']) || 0,
-                            Docentes: parseFloat(item['Docentes']) || 0,
-                            Docentes_Efetivos: parseFloat(item['Docentes Efetivos']) || 0,
-                            ITCD: item.ITCD || null
-                        });
-                    }
-                });
-
-                const mapaMat = new Map();
-
-                dadosCompletos = dadosInst.map(campus => {
-                    const nomeNormalizado = campus.Nome.trim().toUpperCase();
-                    const serv = mapaServ.get(nomeNormalizado) || {};
-                    const mat = mapaMat.get(nomeNormalizado) || [];
-                    return {
-                        Nome: campus.Nome,
-                        Sigla: campus.Sigla || '',
-                        CNPJ: campus.CNPJ || '',
-                        Endereco: campus.Endereco || '',
-                        Municipio: campus.Municipio || '',
-                        UF: campus.UF || '',
-                        CEP: campus.CEP || '',
-                        Telefone: campus.Telefone || '',
-                        Ano: campus.Ano || '',
-                        AreaFisica: campus['Área física (m²)'] || '',
-                        Situacao: campus.Situação || '',
-                        Total_Servidores: serv.Total_Servidores || 0,
-                        TAEs: serv.TAEs || 0,
-                        Docentes: serv.Docentes || 0,
-                        Docentes_Efetivos: serv.Docentes_Efetivos || 0,
-                        ITCD: serv.ITCD || null,
-                        Matriculas: mat
-                    };
-                }).filter(c => c.Nome && c.Nome.trim() !== '');
-
-                dadosFiltrados = [...dadosCompletos];
-                console.log('✅ ' + dadosCompletos.length + ' campi carregados.');
-                return true;
-            } catch (erro) {
-                console.error('Erro ao carregar dados:', erro);
-                showNotification('Erro ao carregar dados. Verifique os arquivos JSON.', 'error');
-                dadosCompletos = [];
-                dadosFiltrados = [];
-                hideLoading();
-                return false;
-            }
-        }
-
-        // ================================================================
-        // FUNÇÕES DE CÁLCULO
-        // ================================================================
-        function calcularAreaTotal() {
-            let total = 0;
-            dadosCompletos.forEach(c => {
-                const match = c.AreaFisica.match(/([\d,]+)\s*(?:ha|hectare)/i);
-                if (match) {
-                    const ha = parseFloat(match[1].replace(',', '.'));
-                    total += ha;
-                }
-            });
-            return total;
-        }
-
-        function contarSituacao() {
-            const contagem = {};
-            dadosCompletos.forEach(c => {
-                const sit = c.Situacao.trim() || 'Não informado';
-                contagem[sit] = (contagem[sit] || 0) + 1;
-            });
-            return contagem;
-        }
-
-        function getMatriculasPorAno() {
-            const mapa = {};
-            dadosCompletos.forEach(c => {
-                if (c.Matriculas && c.Matriculas.length) {
-                    c.Matriculas.forEach(m => {
-                        const ano = m.ano;
-                        const val = m.valor || 0;
-                        mapa[ano] = (mapa[ano] || 0) + val;
-                    });
-                }
-            });
-            const anos = Object.keys(mapa).sort((a, b) => a - b);
-            return anos.map(a => ({ ano: parseInt(a), total: mapa[a] }));
-        }
-
-        // ================================================================
-        // FUNÇÕES DE CRIAÇÃO DE GRÁFICOS (COM SCROLL)
-        // ================================================================
-        function criarPieScroll(canvasId, labels, values, cores = null) {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return;
-            const parent = canvas.parentElement;
-            if (parent) {
-                parent.style.width = '100%';
-                parent.style.minWidth = '100%';
-            }
-            const ctx = canvas.getContext('2d');
-            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
-            if (!labels || labels.length === 0) return;
-            const defaultCores = ['#1a5f7a', '#36b9cc', '#1cc88a', '#f6c23e', '#4e73df', '#e74a3b'];
-            const bgCores = cores || labels.map((_, i) => defaultCores[i % defaultCores.length]);
-            const total = values.reduce((a, b) => a + b, 0);
-            charts[canvasId] = new Chart(ctx, {
-                type: 'pie',
-                data: { labels, datasets: [{ data: values, backgroundColor: bgCores, borderWidth: 0 }] },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 14, padding: 12 } },
-                        tooltip: {
-                            callbacks: {
-                                label: (c) => `${c.label}: ${c.raw} (${((c.raw / total) * 100).toFixed(1)}%)`
-                            }
-                        }
-                    }
-                }
-            });
-            return charts[canvasId];
-        }
-
-        function criarBarraVerticalScroll(canvasId, labels, values, tituloY = 'Quantidade') {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return;
-            const parent = canvas.parentElement;
-            if (parent) {
-                parent.style.width = '100%';
-                parent.style.minWidth = '100%';
-            }
-            const ctx = canvas.getContext('2d');
-            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
-            if (!labels || labels.length === 0) return;
-
-            function shortenText(text, maxChars = 18) {
-                if (!text) return '';
-                if (text.length <= maxChars) return text;
-                return text.substring(0, maxChars - 3) + '...';
-            }
-
-            const shortLabels = labels.map(label => shortenText(label, 14));
-
-            charts[canvasId] = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: shortLabels,
-                    datasets: [{
-                        label: tituloY,
-                        data: values,
-                        backgroundColor: '#1a5f7a',
-                        borderRadius: 5
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: { display: true, text: tituloY },
-                            ticks: { font: { size: 11 } }
-                        },
-                        x: {
-                            ticks: {
-                                autoSkip: false,
-                                maxRotation: 35,
-                                minRotation: 25,
-                                font: { size: 8 }
-                            }
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: (c) => `${c.raw} respostas`,
-                                afterBody: function(tooltipItems) {
-                                    const index = tooltipItems[0].dataIndex;
-                                    return labels[index] ? `\n${labels[index]}` : '';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-            return charts[canvasId];
-        }
-
-        function criarLinhaScroll(canvasId, labels, values, titulo = 'Frequência') {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return;
-            const parent = canvas.parentElement;
-            if (parent) {
-                parent.style.width = '100%';
-                parent.style.minWidth = '100%';
-            }
-            const ctx = canvas.getContext('2d');
-            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
-            if (!labels || labels.length === 0) return;
-            charts[canvasId] = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels,
-                    datasets: [{
-                        label: titulo,
-                        data: values,
-                        borderColor: '#1a5f7a',
-                        backgroundColor: 'rgba(26,95,122,0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.3,
-                        pointBackgroundColor: '#1a5f7a',
-                        pointRadius: 5
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: true, title: { display: true, text: titulo }, ticks: { font: { size: 11 } } },
-                        x: { ticks: { font: { size: 10 } } }
-                    }
-                }
-            });
-            return charts[canvasId];
-        }
-
-        // ================================================================
-        // FUNÇÕES PADRONIZADAS PARA CARDS
-        // ================================================================
-        function criarChartCard(cardId, canvasId, iconClass, titulo, descricao) {
-            return `
-                    <div class="chart-card" id="${cardId}">
-                        <div class="card-header">
-                            <h3>
-                                <i class="${iconClass}"></i>
-                                ${titulo}
-                            </h3>
-                            <div class="chart-actions">
-                                <button class="chart-btn" data-expand="${canvasId}" title="Expandir gráfico">
-                                    <i class="fas fa-expand"></i>
-                                </button>
-                                <button class="chart-btn" data-download="${canvasId}" title="Baixar PNG">
-                                    <i class="fas fa-image"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="chart-scroll-wrapper">
-                            <div class="chart-scroll-inner">
-                                <canvas id="${canvasId}"></canvas>
-                            </div>
-                        </div>
-                        <div class="descricao-card">
-                            <span class="texto">
-                                <i class="fas fa-info-circle"></i>
-                                ${descricao}
-                            </span>
-                            <button class="btn-ver-mais" data-expand-full="${canvasId}">
-                                Ver mais
-                                <i class="fas fa-arrow-right"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-        }
-
-        function configurarEventosCard(cardId, canvasId, titulo, rawData) {
-            const card = document.getElementById(cardId);
-            if (!card) return;
-
-            const expandBtn = card.querySelector(`[data-expand="${canvasId}"]`);
-            if (expandBtn) {
-                expandBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    abrirModalGrafico(canvasId, titulo, rawData);
-                });
-            }
-
-            const verMaisBtn = card.querySelector(`[data-expand-full="${canvasId}"]`);
-            if (verMaisBtn) {
-                verMaisBtn.addEventListener('click', () => {
-                    abrirModalGrafico(canvasId, titulo, rawData);
-                });
-            }
-
-            const downloadBtn = card.querySelector(`[data-download="${canvasId}"]`);
-            if (downloadBtn) {
-                downloadBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const canvas = document.getElementById(canvasId);
-                    if (canvas) {
-                        const link = document.createElement('a');
-                        link.download = `${titulo.replace(/\s+/g, '_')}.png`;
-                        link.href = canvas.toDataURL('image/png');
-                        link.click();
-                    }
-                });
-            }
-        }
-
-        // ================================================================
-        // FUNÇÃO PARA ABRIR O MODAL
-        // ================================================================
-        function abrirModalGrafico(canvasId, titulo, rawData) {
-            const canvasOrigem = document.getElementById(canvasId);
-            if (!canvasOrigem) return;
-
-            const chartObj = charts[canvasId];
-            if (!chartObj) return;
-
-            const modalCanvas = document.getElementById('modalCanvas');
-            if (modalChartInstance) {
-                modalChartInstance.destroy();
-                modalChartInstance = null;
-            }
-
-            const chartType = chartObj.config.type;
-            let modalData = JSON.parse(JSON.stringify(chartObj.config.data));
-
-            modalChartInstance = new Chart(modalCanvas.getContext('2d'), {
-                type: chartType,
-                data: modalData,
-                options: {
-                    ...chartObj.config.options,
-                    responsive: true,
-                    maintainAspectRatio: true
-                }
-            });
-
-            document.getElementById('modalTitle').innerHTML = `<i class="fas fa-chart-bar"></i> ${titulo}`;
-            modalRawData = rawData;
-            modalChartTitle = titulo;
-
-            const descricao = document.getElementById('modalDescricao');
-            if (descricao) {
-                descricao.innerHTML = `
-                        <i class="fas fa-info-circle" aria-hidden="true"></i>
-                        Este gráfico apresenta dados institucionais do IFPB.
-                        <br><br>
-                        <strong>Como interpretar:</strong>
-                        <ul>
-                            <li>Barras representam a distribuição dos dados por categoria.</li>
-                            <li>Gráficos de pizza indicam a proporção de cada categoria.</li>
-                            <li>Gráficos de linha ilustram a evolução dos dados ao longo do tempo.</li>
-                            <li>Recomendamos a visualização em telas maiores para uma melhor experiência.</li>
-                        </ul>
-                        <br>
-                        <strong>💡 Dica:</strong> Utilize a barra de rolagem horizontal para visualizar todos os dados.
-                    `;
-            }
-
-            document.getElementById('modal').classList.add('active');
-
-            setTimeout(() => {
-                if (modalChartInstance && modalChartInstance.resize) {
-                    modalChartInstance.resize();
-                }
-                const modalBody = document.querySelector('.modal-body');
-                if (modalBody) {
-                    modalBody.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            }, 200);
-        }
-
-        // ================================================================
-        // CONFIGURAÇÃO DOS BOTÕES DO MODAL
-        // ================================================================
-        function configurarBotoesModal() {
-            document.getElementById('closeModalBtn').addEventListener('click', fecharModal);
-            document.getElementById('modal').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('modal')) fecharModal();
-            });
-
-            document.getElementById('modalPngBtn').addEventListener('click', () => {
-                if (modalChartInstance) {
-                    const canvas = document.getElementById('modalCanvas');
-                    const link = document.createElement('a');
-                    link.download = `${modalChartTitle || 'grafico'}.png`;
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                }
-            });
-
-            document.getElementById('modalJsonBtn').addEventListener('click', () => {
-                if (modalRawData) {
-                    const blob = new Blob([JSON.stringify(modalRawData, null, 2)], { type: 'application/json' });
-                    const link = document.createElement('a');
-                    link.download = `${modalChartTitle || 'dados'}.json`;
-                    link.href = URL.createObjectURL(blob);
-                    link.click();
-                    URL.revokeObjectURL(link.href);
-                }
-            });
-
-            document.getElementById('modalCsvBtn').addEventListener('click', () => {
-                if (modalRawData && modalRawData.length) {
-                    const headers = Object.keys(modalRawData[0]);
-                    const rows = [headers.join(',')];
-                    for (const row of modalRawData) {
-                        rows.push(headers.map(h => `"${String(row[h] || '').replace(/"/g, '""')}"`).join(','));
-                    }
-                    const blob = new Blob(['\uFEFF' + rows.join('\n')], { type: 'text/csv;charset=utf-8' });
-                    const link = document.createElement('a');
-                    link.download = `${modalChartTitle || 'dados'}.csv`;
-                    link.href = URL.createObjectURL(blob);
-                    link.click();
-                    URL.revokeObjectURL(link.href);
-                }
-            });
-        }
-
-        function fecharModal() {
-            document.getElementById('modal').classList.remove('active');
-            if (modalChartInstance) {
-                modalChartInstance.destroy();
-                modalChartInstance = null;
-            }
-        }
-
-        // ================================================================
-        // ATUALIZAR INDICADORES
-        // ================================================================
-        function atualizarIndicadores() {
-            const totalCampi = dadosFiltrados.length;
-            const municipios = new Set(dadosFiltrados.map(c => c.Municipio).filter(m => m));
-            const totalServ = window.totalServidoresBruto || dadosCompletos.reduce((s, c) => s + (c.Total_Servidores || 0),
-            0);
-            const totalDocentes = window.totalDocentesBruto || dadosFiltrados.reduce((s, c) => s + (c.Docentes || 0), 0);
-            const totalTAEs = window.totalTAEsBruto || dadosFiltrados.reduce((s, c) => s + (c.TAEs || 0), 0);
-
-            document.getElementById('total-campi').textContent = totalCampi;
-            document.getElementById('detalhe-municipios').textContent = municipios.size + ' municípios atendidos';
-            document.getElementById('total-servidores').textContent = totalServ.toLocaleString();
-            document.getElementById('detalhe-servidores').textContent = totalDocentes.toLocaleString() +
-                ' docentes / ' + totalTAEs.toLocaleString() + ' técnicos';
-
-            // Área total
-            const areaTotal = calcularAreaTotal();
-            document.getElementById('area-total').textContent = areaTotal.toFixed(1);
-            document.getElementById('detalhe-area').textContent = (areaTotal * 10000).toLocaleString() + ' m²';
-
-            // Status
-            document.getElementById('status-campi').textContent = totalCampi + ' Campi Ativos';
-            document.getElementById('status-servidores').textContent = totalServ.toLocaleString() + ' Servidores';
-            document.getElementById('status-ano').textContent = new Date().getFullYear();
-            document.getElementById('last-update').textContent = new Date().toLocaleDateString('pt-BR');
-        }
-
-        // ================================================================
-        // ATUALIZAR CARDS DE ANÁLISE
-        // ================================================================
-        function atualizarCardsAnalise() {
-            const top3 = [...dadosCompletos].sort((a, b) => (b.Total_Servidores || 0) - (a.Total_Servidores || 0)).slice(0,
-            3);
-            const totalMetrica = dadosCompletos.reduce((s, c) => s + (c.Total_Servidores || 0), 0);
-
-            const listaMaiores = document.getElementById('maiores-campi-list');
-            if (listaMaiores) {
-                listaMaiores.innerHTML = top3.map(c => {
-                    const pct = totalMetrica > 0 ? ((c.Total_Servidores / totalMetrica) * 100).toFixed(1) : 0;
-                    return '<div class="data-item"><span class="data-label"><i class="fas fa-map-marker-alt"></i> ' + c
-                        .Municipio + '</span><span class="data-value">' + c.Total_Servidores +
-                        ' serv.</span><span class="data-percentage">' + pct + '%</span></div>';
-                }).join('');
-                document.getElementById('total-maiores-campi').textContent = top3.length + ' Campi';
-            }
-
-            const somaTop3 = top3.reduce((s, c) => s + (c.Total_Servidores || 0), 0);
-            const pctTop3 = totalMetrica > 0 ? (somaTop3 / totalMetrica) * 100 : 0;
-            document.getElementById('progress-maiores').style.width = Math.min(pctTop3, 100) + '%';
-            document.getElementById('texto-concentracao').textContent =
-                `Concentração: ${pctTop3.toFixed(1)}% nos 3 maiores campi`;
-
-            const totalDocentes = window.totalDocentesBruto || dadosCompletos.reduce((s, c) => s + (c.Docentes || 0), 0);
-            const totalTAEs = window.totalTAEsBruto || dadosCompletos.reduce((s, c) => s + (c.TAEs || 0), 0);
-            const totalServidores = window.totalServidoresBruto || dadosCompletos.reduce((s, c) => s + (c.Total_Servidores ||
-                0), 0);
-
-            const listaServidores = document.getElementById('distribuicao-servidores-list');
-            if (listaServidores) {
-                listaServidores.innerHTML = `
-                        <div class="data-item"><span class="data-label"><i class="fas fa-chalkboard-teacher"></i> Docentes</span><span class="data-value">${totalDocentes.toLocaleString()}</span><span class="data-percentage">${(totalServidores > 0 ? ((totalDocentes / totalServidores) * 100).toFixed(1) : 0)}%</span></div>
-                        <div class="data-item"><span class="data-label"><i class="fas fa-user-tie"></i> Técnico-Administrativos</span><span class="data-value">${totalTAEs.toLocaleString()}</span><span class="data-percentage">${(totalServidores > 0 ? ((totalTAEs / totalServidores) * 100).toFixed(1) : 0)}%</span></div>
-                    `;
-                document.getElementById('total-servidores-card').textContent = totalServidores.toLocaleString();
-            }
-
-            const pctDocentes = totalServidores > 0 ? (totalDocentes / totalServidores) * 100 : 0;
-            document.getElementById('progress-servidores').style.width = Math.min(pctDocentes, 100) + '%';
-            document.getElementById('texto-maior-categoria').textContent =
-                `Maior categoria: Docentes (${totalDocentes.toLocaleString()})`;
-        }
-
-        // ================================================================
-        // ATUALIZAR GRÁFICOS
-        // ================================================================
-        function atualizarGraficos() {
-            const grid = document.getElementById('charts-grid');
-            if (!grid) return;
-
-            grid.innerHTML = '';
-
-            // 1. Distribuição por Região
-            const regioes = {
-                'JOÃO PESSOA': 'Metropolitana',
-                'CABEDELO': 'Metropolitana',
-                'SANTA RITA': 'Metropolitana',
-                'MANGABEIRA': 'Metropolitana',
-                'MAMANGUAPE': 'Metropolitana',
-                'SAPÉ': 'Metropolitana',
-                'CABEDELO CENTRO': 'Metropolitana',
-                'CAMPINA GRANDE': 'Agreste',
-                'AREIA': 'Agreste',
-                'ESPERANÇA': 'Agreste',
-                'GUARABIRA': 'Agreste',
-                'ITABAIANA': 'Agreste',
-                'SOLEDADE': 'Agreste',
-                'ALAGOA GRANDE': 'Agreste',
-                'PATOS': 'Sertão',
-                'SOUSA': 'Sertão',
-                'CAJAZEIRAS': 'Sertão',
-                'CATOLÉ DO ROCHA': 'Sertão',
-                'PRINCESA ISABEL': 'Sertão',
-                'ITAPORANGA': 'Sertão',
-                'SANTA LUZIA': 'Sertão',
-                'PEDRAS DE FOGO': 'Borborema',
-                'PICUÍ': 'Borborema',
-                'MONTEIRO': 'Borborema',
-                'QUEIMADAS': 'Borborema'
-            };
-
-            const contagem = {};
-            dadosFiltrados.forEach(c => {
-                const cidade = c.Municipio.toUpperCase().trim();
-                const reg = regioes[cidade] || 'Outras';
-                contagem[reg] = (contagem[reg] || 0) + 1;
-            });
-
-            grid.innerHTML = criarChartCard(
-                'card_distribuicao',
-                'distribuicaoChart',
-                'fas fa-chart-pie',
-                'Distribuição por Região',
-                'Distribuição dos campi do IFPB por região geográfica.'
-            );
-
-            // 2. Evolução de Campi
-            const anos = {};
-            dadosCompletos.forEach(c => {
-                const m = c.Ano.match(/\d{4}/);
-                if (m) anos[m[0]] = (anos[m[0]] || 0) + 1;
-            });
-            const sortedAnos = Object.keys(anos).sort();
-            let acc = 0;
-            const evolData = sortedAnos.map(a => { acc += anos[a]; return acc; });
-
-            grid.innerHTML += criarChartCard(
-                'card_evolucao',
-                'evolucaoChart',
-                'fas fa-chart-line',
-                'Evolução de Campi',
-                'Evolução do número de campi do IFPB ao longo dos anos.'
-            );
-
-            // 3. Servidores por Campus (Top 10)
-            const top = [...dadosFiltrados].sort((a, b) => (b.Total_Servidores || 0) - (a.Total_Servidores || 0)).slice(0,
-            10);
-
-            grid.innerHTML += criarChartCard(
-                'card_servidores',
-                'servidoresChart',
-                'fas fa-chart-bar',
-                'Servidores por Campus (Top 10)',
-                'Os 10 campi com maior número de servidores.'
-            );
-
-            // 4. Categorias de Servidores
-            const totDoc = window.totalDocentesBruto || 0;
-            const totTAEs = window.totalTAEsBruto || 0;
-            const totEf = window.totalEfetivosBruto || 0;
-            const totServ = window.totalServidoresBruto || 0;
-            const totOutros = totServ - totDoc - totTAEs;
-
-            grid.innerHTML += criarChartCard(
-                'card_categorias',
-                'categoriasChart',
-                'fas fa-users',
-                'Categorias de Servidores',
-                'Distribuição dos servidores por categoria.'
-            );
-
-            // 5. Matrículas (se disponível)
-            const dadosMat = getMatriculasPorAno();
-            if (dadosMat.length > 0) {
-                grid.innerHTML += criarChartCard(
-                    'card_matriculas',
-                    'matriculasChart',
-                    'fas fa-user-graduate',
-                    'Matrículas Totais por Ano',
-                    'Evolução do total de matrículas ao longo dos anos.'
-                );
-            }
-
-            // ===== CRIAR GRÁFICOS =====
-            setTimeout(() => {
-                criarPieScroll('distribuicaoChart', Object.keys(contagem), Object.values(contagem));
-                criarLinhaScroll('evolucaoChart', sortedAnos, evolData, 'Campi Acumulados');
-                criarBarraVerticalScroll('servidoresChart',
-                    top.map(c => c.Sigla || c.Nome),
-                    top.map(c => c.Total_Servidores || 0),
-                    'Servidores'
-                );
-                criarPieScroll('categoriasChart',
-                    ['Docentes', 'TAEs', 'Efetivos', 'Outros'],
-                    [totDoc, totTAEs, totEf, totOutros],
-                    ['#4e73df', '#36b9cc', '#1cc88a', '#f6c23e']
-                );
-
-                if (dadosMat.length > 0) {
-                    const ctx = document.getElementById('matriculasChart');
-                    if (ctx) {
-                        if (window._matriculasChart) window._matriculasChart.destroy();
-                        window._matriculasChart = new Chart(ctx.getContext('2d'), {
-                            type: 'line',
-                            data: {
-                                labels: dadosMat.map(d => d.ano),
-                                datasets: [{
-                                    label: 'Total de Matrículas',
-                                    data: dadosMat.map(d => d.total),
-                                    borderColor: '#4e73df',
-                                    backgroundColor: 'rgba(78,115,223,0.1)',
-                                    borderWidth: 3,
-                                    fill: true,
-                                    tension: 0.4
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                plugins: { legend: { position: 'top' } },
-                                scales: { y: { beginAtZero: true } }
-                            }
-                        });
-                    }
-                }
-
-                // ===== CONFIGURAR EVENTOS DOS CARDS =====
-                const cards = [
-                    { id: 'card_distribuicao', canvas: 'distribuicaoChart', title: 'Distribuição por Região' },
-                    { id: 'card_evolucao', canvas: 'evolucaoChart', title: 'Evolução de Campi' },
-                    { id: 'card_servidores', canvas: 'servidoresChart', title: 'Servidores por Campus' },
-                    { id: 'card_categorias', canvas: 'categoriasChart', title: 'Categorias de Servidores' }
-                ];
-
-                cards.forEach(({ id, canvas, title }) => {
-                    configurarEventosCard(id, canvas, title, dadosFiltrados);
-                });
-
-                if (dadosMat.length > 0) {
-                    configurarEventosCard('card_matriculas', 'matriculasChart', 'Matrículas Totais por Ano',
-                        dadosFiltrados);
-                }
-
-            }, 100);
-        }
-
-        // ================================================================
-        // ATUALIZAR TABELA
-        // ================================================================
-        function atualizarTabela() {
-            const container = document.getElementById('tabela-campi-container');
-            const tableInfo = document.getElementById('table-info');
-
-            if (!dadosFiltrados.length) {
-                container.innerHTML =
-                    '<div class="no-results"><i class="fas fa-search" style="font-size:3rem;color:var(--warning-color);"></i><h3>Nenhum campus encontrado</h3></div>';
-                tableInfo.textContent = '0 campi';
-                return;
-            }
-
-            const colunas = ['Nome', 'Sigla', 'Municipio', 'UF', 'Ano', 'Situacao', 'Total_Servidores', 'Docentes', 'TAEs'];
-
-            let html =
-                '<div class="table-wrapper-scroll-y"><table class="tableFixHead"><thead><tr>';
-            colunas.forEach(col => {
-                const nomes = { 'Nome': 'Nome', 'Sigla': 'Sigla', 'Municipio': 'Município', 'UF': 'UF',
-                    'Ano': 'Criação', 'Situacao': 'Situação', 'Total_Servidores': 'Servidores',
-                    'Docentes': 'Docentes', 'TAEs': 'TAEs' };
-                html += `<th>${nomes[col] || col}</th>`;
-            });
-            html += '</tr></thead><tbody>';
-
-            dadosFiltrados.forEach(c => {
-                html += '<tr>';
-                colunas.forEach(col => {
-                    let val = c[col] || 'N/D';
-                    if (['Total_Servidores', 'Docentes', 'TAEs'].includes(col)) {
-                        val = Number(val).toLocaleString();
-                    }
-                    if (col === 'Ano') {
-                        const match = String(val).match(/\d{4}/);
-                        val = match ? match[0] : val;
-                    }
-                    html += `<td>${val}</td>`;
-                });
-                html += '</tr>';
-            });
-
-            html += '</tbody></table></div>';
-            container.innerHTML = html;
-            tableInfo.textContent = `Mostrando ${dadosFiltrados.length} campi`;
-        }
-
-        // ================================================================
-        // FILTROS
-        // ================================================================
-        function preencherFiltros() {
-            const anosSet = new Set();
-            dadosCompletos.forEach(c => {
-                const match = c.Ano.match(/\d{4}/);
-                if (match) anosSet.add(match[0]);
-            });
-            const anos = [...anosSet].sort();
-            const selAno = document.getElementById('anoFilter');
-            if (selAno) {
-                selAno.innerHTML = '<option value="todos">Todos os Anos</option>';
-                anos.forEach(a => {
-                    const opt = document.createElement('option');
-                    opt.value = a;
-                    opt.textContent = a;
-                    selAno.appendChild(opt);
-                });
-            }
-
-            const campi = [...new Set(dadosCompletos.map(c => c.Nome).filter(n => n && n.trim() !== ''))].sort((a, b) => a
-                .localeCompare(b, 'pt-BR'));
-            const selCampus = document.getElementById('campusFilter');
-            if (selCampus) {
-                selCampus.innerHTML = '<option value="todos">Todos os Campi</option>';
-                campi.forEach(nome => {
-                    const opt = document.createElement('option');
-                    opt.value = nome;
-                    opt.textContent = nome;
-                    selCampus.appendChild(opt);
-                });
-            }
-
-            const situacoes = [...new Set(dadosCompletos.map(c => c.Situacao).filter(s => s && s.trim() !== ''))].sort();
-            const selSituacao = document.getElementById('situacaoFilter');
-            if (selSituacao) {
-                selSituacao.innerHTML = '<option value="todos">Todas</option>';
-                situacoes.forEach(sit => {
-                    const opt = document.createElement('option');
-                    opt.value = sit;
-                    opt.textContent = sit;
-                    selSituacao.appendChild(opt);
-                });
-            }
-        }
-
-        function aplicarFiltros() {
-            const ano = document.getElementById('anoFilter').value;
-            const campus = document.getElementById('campusFilter').value;
-            const situacao = document.getElementById('situacaoFilter').value;
-
-            dadosFiltrados = dadosCompletos.filter(c => {
-                let ok = true;
-                if (ano !== 'todos') {
-                    const match = c.Ano.match(/\d{4}/);
-                    if (!match || match[0] !== ano) ok = false;
-                }
-                if (campus !== 'todos' && c.Nome !== campus) ok = false;
-                if (situacao !== 'todos' && c.Situacao !== situacao) ok = false;
-                return ok;
-            });
-
-            dadosFiltrados.sort((a, b) => (b.Total_Servidores || 0) - (a.Total_Servidores || 0));
-            currentPage = 1;
-            ordenacaoAtual.coluna = 'Total_Servidores';
-            ordenacaoAtual.direcao = 'desc';
-
-            atualizarTudo();
-            showNotification('Filtros aplicados!', 'success');
-        }
-
-        function resetarFiltros() {
-            document.getElementById('anoFilter').value = 'todos';
-            document.getElementById('campusFilter').value = 'todos';
-            document.getElementById('situacaoFilter').value = 'todos';
-
-            dadosFiltrados = [...dadosCompletos];
-            dadosFiltrados.sort((a, b) => (b.Total_Servidores || 0) - (a.Total_Servidores || 0));
-            currentPage = 1;
-            ordenacaoAtual.coluna = 'Total_Servidores';
-            ordenacaoAtual.direcao = 'desc';
-
-            atualizarTudo();
-            showNotification('Filtros resetados.', 'info');
-        }
-
-        function exportarParaCSV() {
-            if (!dadosFiltrados.length) {
-                showNotification('Nenhum dado para exportar.', 'warning');
-                return;
-            }
-
-            const cols = ['Nome', 'Sigla', 'Municipio', 'UF', 'Ano', 'Situacao', 'Total_Servidores', 'Docentes', 'TAEs'];
-            let csv = cols.join(',') + '\n';
-            dadosFiltrados.forEach(c => {
-                const linha = cols.map(col => {
-                    let val = String(c[col] || '');
-                    if (val.includes(',') || val.includes('"')) {
-                        val = '"' + val.replace(/"/g, '""') + '"';
-                    }
-                    return val;
-                }).join(',');
-                csv += linha + '\n';
-            });
-
-            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'ifpb_campi_' + new Date().toISOString().slice(0, 10) + '.csv';
-            link.click();
-            URL.revokeObjectURL(link.href);
-            showNotification('CSV exportado!', 'success');
-        }
-
-        // ================================================================
-        // ATUALIZAR TUDO
-        // ================================================================
-        function atualizarTudo() {
-            atualizarIndicadores();
-            atualizarCardsAnalise();
-            atualizarGraficos();
-            atualizarTabela();
-            renderizarMapa();
-        }
-
-        // ================================================================
-        // INICIALIZAÇÃO
-        // ================================================================
-        document.addEventListener('DOMContentLoaded', async function() {
-            showLoading('Carregando dados institucionais...');
-            const success = await carregarDados();
-
-            if (success) {
-                preencherFiltros();
-                aplicarFiltros();
-                configurarBotoesModal();
-                hideLoading();
-
-                // Busca na tabela
-                document.getElementById('table-search').addEventListener('input', function() {
-                    const term = this.value.toLowerCase();
-                    const rows = document.querySelectorAll('#tabela-campi-container tbody tr');
-                    rows.forEach(row => {
-                        row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
-                    });
-                });
-
-                showNotification('Dados carregados com sucesso!', 'success');
-            } else {
-                hideLoading();
-                showNotification('Erro ao carregar dados.', 'error');
-            }
-        });
     </script>
 </body>
 </html>
