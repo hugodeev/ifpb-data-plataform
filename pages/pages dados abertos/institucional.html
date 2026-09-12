@@ -2449,8 +2449,95 @@
             }, 100);
         }
 
+        // atualizar tabela
+        function atualizarTabela() {
+            const container = document.getElementById('tabela-campi-container');
+            const tableInfo = document.getElementById('table-info');
 
-        
+            if (!dadosFiltrados.length) {
+                container.innerHTML = '<div class="no-results"><i class="fas fa-search" style="font-size:3rem;color:var(--warning-color);"></i><h3>Nenhum campus encontrado</h3></div>';
+                tableInfo.textContent = '0 campi';
+                return;
+            }
+
+            const colunas = ['Nome', 'Sigla', 'Municipio', 'UF', 'Ano', 'Situacao', 'Total_Servidores', 'Docentes', 'TAEs'];
+
+            let html = '<div class="table-wrapper-scroll-y"><table class="tableFixHead"><thead><tr>';
+            colunas.forEach(col => {
+                const nomes = { 'Nome': 'Nome', 'Sigla': 'Sigla', 'Municipio': 'Município', 'UF': 'UF',
+                    'Ano': 'Criação', 'Situacao': 'Situação', 'Total_Servidores': 'Servidores',
+                    'Docentes': 'Docentes', 'TAEs': 'TAEs' };
+                html += `<th>${nomes[col] || col}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            dadosFiltrados.forEach(c => {
+                html += '<tr>';
+                colunas.forEach(col => {
+                    let val = c[col] || 'N/D';
+                    if (['Total_Servidores', 'Docentes', 'TAEs'].includes(col)) {
+                        val = Number(val).toLocaleString();
+                    }
+                    if (col === 'Ano') {
+                        const match = String(val).match(/\d{4}/);
+                        val = match ? match[0] : val;
+                    }
+                    html += `<td>${val}</td>`;
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+            tableInfo.textContent = `Mostrando ${dadosFiltrados.length} campi`;
+        }
+
+        // filtros
+        function preencherFiltros() {
+            const anosSet = new Set();
+            dadosCompletos.forEach(c => {
+                const match = c.Ano.match(/\d{4}/);
+                if (match) anosSet.add(match[0]);
+            });
+            const anos = [...anosSet].sort();
+            const selAno = document.getElementById('anoFilter');
+            if (selAno) {
+                selAno.innerHTML = '<option value="todos">Todos os Anos</option>';
+                anos.forEach(a => {
+                    const opt = document.createElement('option');
+                    opt.value = a;
+                    opt.textContent = a;
+                    selAno.appendChild(opt);
+                });
+            }
+
+            const campi = [...new Set(dadosCompletos.map(c => c.Nome).filter(n => n && n.trim() !== ''))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+            const selCampus = document.getElementById('campusFilter');
+            if (selCampus) {
+                selCampus.innerHTML = '<option value="todos">Todos os Campi</option>';
+                campi.forEach(nome => {
+                    const opt = document.createElement('option');
+                    opt.value = nome;
+                    opt.textContent = nome;
+                    selCampus.appendChild(opt);
+                });
+            }
+
+            const situacoes = [...new Set(dadosCompletos.map(c => c.Situacao).filter(s => s && s.trim() !== ''))].sort();
+            const selSituacao = document.getElementById('situacaoFilter');
+            if (selSituacao) {
+                selSituacao.innerHTML = '<option value="todos">Todas</option>';
+                situacoes.forEach(sit => {
+                    const opt = document.createElement('option');
+                    opt.value = sit;
+                    opt.textContent = sit;
+                    selSituacao.appendChild(opt);
+                });
+            }
+        }
+
+
+
     </script>
 </body>
 </html>
