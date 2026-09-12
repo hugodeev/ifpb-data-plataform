@@ -2200,7 +2200,257 @@
             }
         }
 
+        // atualizar indicadores
+        function atualizarIndicadores() {
+            const totalCampi = dadosFiltrados.length;
+            const municipios = new Set(dadosFiltrados.map(c => c.Municipio).filter(m => m));
+            const totalServ = window.totalServidoresBruto || dadosCompletos.reduce((s, c) => s + (c.Total_Servidores || 0), 0);
+            const totalDocentes = window.totalDocentesBruto || dadosFiltrados.reduce((s, c) => s + (c.Docentes || 0), 0);
+            const totalTAEs = window.totalTAEsBruto || dadosFiltrados.reduce((s, c) => s + (c.TAEs || 0), 0);
 
+            document.getElementById('total-campi').textContent = totalCampi;
+            document.getElementById('detalhe-municipios').textContent = municipios.size + ' municípios atendidos';
+            document.getElementById('total-servidores').textContent = totalServ.toLocaleString();
+            document.getElementById('detalhe-servidores').textContent = totalDocentes.toLocaleString() + ' docentes / ' + totalTAEs.toLocaleString() + ' técnicos';
+
+            const areaTotal = calcularAreaTotal();
+            document.getElementById('area-total').textContent = areaTotal.toFixed(1);
+            document.getElementById('detalhe-area').textContent = (areaTotal * 10000).toLocaleString() + ' m²';
+
+            document.getElementById('status-campi').textContent = totalCampi + ' Campi Ativos';
+            document.getElementById('status-servidores').textContent = totalServ.toLocaleString() + ' Servidores';
+            document.getElementById('status-ano').textContent = new Date().getFullYear();
+            document.getElementById('last-update').textContent = new Date().toLocaleDateString('pt-BR');
+        }
+
+        // atualizar cards
+        function atualizarCardsAnalise() {
+            const top3 = [...dadosCompletos].sort((a, b) => (b.Total_Servidores || 0) - (a.Total_Servidores || 0)).slice(0, 3);
+            const totalMetrica = dadosCompletos.reduce((s, c) => s + (c.Total_Servidores || 0), 0);
+
+            const listaMaiores = document.getElementById('maiores-campi-list');
+            if (listaMaiores) {
+                listaMaiores.innerHTML = top3.map(c => {
+                    const pct = totalMetrica > 0 ? ((c.Total_Servidores / totalMetrica) * 100).toFixed(1) : 0;
+                    return '<div class="data-item"><span class="data-label"><i class="fas fa-map-marker-alt"></i> ' + c.Municipio + '</span><span class="data-value">' + c.Total_Servidores + ' serv.</span><span class="data-percentage">' + pct + '%</span></div>';
+                }).join('');
+                document.getElementById('total-maiores-campi').textContent = top3.length + ' Campi';
+            }
+
+            const somaTop3 = top3.reduce((s, c) => s + (c.Total_Servidores || 0), 0);
+            const pctTop3 = totalMetrica > 0 ? (somaTop3 / totalMetrica) * 100 : 0;
+            document.getElementById('progress-maiores').style.width = Math.min(pctTop3, 100) + '%';
+            document.getElementById('texto-concentracao').textContent = `Concentração: ${pctTop3.toFixed(1)}% nos 3 maiores campi`;
+
+            const totalDocentes = window.totalDocentesBruto || dadosCompletos.reduce((s, c) => s + (c.Docentes || 0), 0);
+            const totalTAEs = window.totalTAEsBruto || dadosCompletos.reduce((s, c) => s + (c.TAEs || 0), 0);
+            const totalServidores = window.totalServidoresBruto || dadosCompletos.reduce((s, c) => s + (c.Total_Servidores || 0), 0);
+
+            const listaServidores = document.getElementById('distribuicao-servidores-list');
+            if (listaServidores) {
+                listaServidores.innerHTML = `
+                    <div class="data-item"><span class="data-label"><i class="fas fa-chalkboard-teacher"></i> Docentes</span><span class="data-value">${totalDocentes.toLocaleString()}</span><span class="data-percentage">${(totalServidores > 0 ? ((totalDocentes / totalServidores) * 100).toFixed(1) : 0)}%</span></div>
+                    <div class="data-item"><span class="data-label"><i class="fas fa-user-tie"></i> Técnico-Administrativos</span><span class="data-value">${totalTAEs.toLocaleString()}</span><span class="data-percentage">${(totalServidores > 0 ? ((totalTAEs / totalServidores) * 100).toFixed(1) : 0)}%</span></div>
+                `;
+                document.getElementById('total-servidores-card').textContent = totalServidores.toLocaleString();
+            }
+
+            const pctDocentes = totalServidores > 0 ? (totalDocentes / totalServidores) * 100 : 0;
+            document.getElementById('progress-servidores').style.width = Math.min(pctDocentes, 100) + '%';
+            document.getElementById('texto-maior-categoria').textContent = `Maior categoria: Docentes (${totalDocentes.toLocaleString()})`;
+
+            // distribuição regional
+            const regioes = {
+                'JOÃO PESSOA': 'Metropolitana', 'CABEDELO': 'Metropolitana', 'SANTA RITA': 'Metropolitana',
+                'MANGABEIRA': 'Metropolitana', 'MAMANGUAPE': 'Metropolitana', 'SAPÉ': 'Metropolitana',
+                'CABEDELO CENTRO': 'Metropolitana', 'CAMPINA GRANDE': 'Agreste', 'AREIA': 'Agreste',
+                'ESPERANÇA': 'Agreste', 'GUARABIRA': 'Agreste', 'ITABAIANA': 'Agreste', 'SOLEDADE': 'Agreste',
+                'ALAGOA GRANDE': 'Agreste', 'PATOS': 'Sertão', 'SOUSA': 'Sertão', 'CAJAZEIRAS': 'Sertão',
+                'CATOLÉ DO ROCHA': 'Sertão', 'PRINCESA ISABEL': 'Sertão', 'ITAPORANGA': 'Sertão',
+                'SANTA LUZIA': 'Sertão', 'PEDRAS DE FOGO': 'Borborema', 'PICUÍ': 'Borborema',
+                'MONTEIRO': 'Borborema', 'QUEIMADAS': 'Borborema'
+            };
+
+            const contagemReg = {};
+            dadosFiltrados.forEach(c => {
+                const cidade = c.Municipio.toUpperCase().trim();
+                const reg = regioes[cidade] || 'Outras';
+                contagemReg[reg] = (contagemReg[reg] || 0) + 1;
+            });
+
+            const listaRegional = document.getElementById('distribuicao-regional-list');
+            if (listaRegional) {
+                const regSorted = Object.entries(contagemReg).sort((a, b) => b[1] - a[1]);
+                const totalReg = regSorted.reduce((s, r) => s + r[1], 0);
+                listaRegional.innerHTML = regSorted.map(([reg, count]) => {
+                    const pct = totalReg > 0 ? ((count / totalReg) * 100).toFixed(1) : 0;
+                    return '<div class="data-item"><span class="data-label"><i class="fas fa-map-pin"></i> ' + reg + '</span><span class="data-value">' + count + ' campi</span><span class="data-percentage">' + pct + '%</span></div>';
+                }).join('');
+                document.getElementById('total-regioes').textContent = regSorted.length + ' Regiões';
+            }
+
+            if (Object.keys(contagemReg).length > 0) {
+                const maiorReg = Object.entries(contagemReg).sort((a, b) => b[1] - a[1])[0];
+                const pctMaior = (maiorReg[1] / dadosFiltrados.length) * 100;
+                document.getElementById('progress-regional').style.width = Math.min(pctMaior, 100) + '%';
+                document.getElementById('texto-concentracao-regional').textContent = `Maior região: ${maiorReg[0]} (${maiorReg[1]} campi)`;
+            }
+        }
+
+        // atualizar gráficos
+        function atualizarGraficos() {
+            const grid = document.getElementById('charts-grid');
+            if (!grid) return;
+
+            grid.innerHTML = '';
+
+            // distribuição região
+            const regioes = {
+                'JOÃO PESSOA': 'Metropolitana', 'CABEDELO': 'Metropolitana', 'SANTA RITA': 'Metropolitana',
+                'MANGABEIRA': 'Metropolitana', 'MAMANGUAPE': 'Metropolitana', 'SAPÉ': 'Metropolitana',
+                'CABEDELO CENTRO': 'Metropolitana', 'CAMPINA GRANDE': 'Agreste', 'AREIA': 'Agreste',
+                'ESPERANÇA': 'Agreste', 'GUARABIRA': 'Agreste', 'ITABAIANA': 'Agreste', 'SOLEDADE': 'Agreste',
+                'ALAGOA GRANDE': 'Agreste', 'PATOS': 'Sertão', 'SOUSA': 'Sertão', 'CAJAZEIRAS': 'Sertão',
+                'CATOLÉ DO ROCHA': 'Sertão', 'PRINCESA ISABEL': 'Sertão', 'ITAPORANGA': 'Sertão',
+                'SANTA LUZIA': 'Sertão', 'PEDRAS DE FOGO': 'Borborema', 'PICUÍ': 'Borborema',
+                'MONTEIRO': 'Borborema', 'QUEIMADAS': 'Borborema'
+            };
+
+            const contagem = {};
+            dadosFiltrados.forEach(c => {
+                const cidade = c.Municipio.toUpperCase().trim();
+                const reg = regioes[cidade] || 'Outras';
+                contagem[reg] = (contagem[reg] || 0) + 1;
+            });
+
+            grid.innerHTML = criarChartCard(
+                'card_distribuicao',
+                'distribuicaoChart',
+                'fas fa-chart-pie',
+                'Distribuição por Região',
+                'Distribuição dos campi do IFPB por região geográfica.'
+            );
+
+            // evolução campi
+            const anos = {};
+            dadosCompletos.forEach(c => {
+                const m = c.Ano.match(/\d{4}/);
+                if (m) anos[m[0]] = (anos[m[0]] || 0) + 1;
+            });
+            const sortedAnos = Object.keys(anos).sort();
+            let acc = 0;
+            const evolData = sortedAnos.map(a => { acc += anos[a]; return acc; });
+
+            grid.innerHTML += criarChartCard(
+                'card_evolucao',
+                'evolucaoChart',
+                'fas fa-chart-line',
+                'Evolução de Campi',
+                'Evolução do número de campi do IFPB ao longo dos anos.'
+            );
+
+            // servidores top 10
+            const top = [...dadosFiltrados].sort((a, b) => (b.Total_Servidores || 0) - (a.Total_Servidores || 0)).slice(0, 10);
+
+            grid.innerHTML += criarChartCard(
+                'card_servidores',
+                'servidoresChart',
+                'fas fa-chart-bar',
+                'Servidores por Campus (Top 10)',
+                'Os 10 campi com maior número de servidores.'
+            );
+
+            // categorias servidores
+            const totDoc = window.totalDocentesBruto || 0;
+            const totTAEs = window.totalTAEsBruto || 0;
+            const totEf = window.totalEfetivosBruto || 0;
+            const totServ = window.totalServidoresBruto || 0;
+            const totOutros = totServ - totDoc - totTAEs;
+
+            grid.innerHTML += criarChartCard(
+                'card_categorias',
+                'categoriasChart',
+                'fas fa-users',
+                'Categorias de Servidores',
+                'Distribuição dos servidores por categoria.'
+            );
+
+            // matrículas
+            const dadosMat = getMatriculasPorAno();
+            if (dadosMat.length > 0) {
+                grid.innerHTML += criarChartCard(
+                    'card_matriculas',
+                    'matriculasChart',
+                    'fas fa-user-graduate',
+                    'Matrículas Totais por Ano',
+                    'Evolução do total de matrículas ao longo dos anos.'
+                );
+            }
+
+            // criar gráficos
+            setTimeout(() => {
+                criarPieScroll('distribuicaoChart', Object.keys(contagem), Object.values(contagem));
+                criarLinhaScroll('evolucaoChart', sortedAnos, evolData, 'Campi Acumulados');
+                criarBarraVerticalScroll('servidoresChart',
+                    top.map(c => c.Sigla || c.Nome),
+                    top.map(c => c.Total_Servidores || 0),
+                    'Servidores'
+                );
+                criarPieScroll('categoriasChart',
+                    ['Docentes', 'TAEs', 'Efetivos', 'Outros'],
+                    [totDoc, totTAEs, totEf, totOutros],
+                    ['#4e73df', '#36b9cc', '#1cc88a', '#f6c23e']
+                );
+
+                if (dadosMat.length > 0) {
+                    const ctx = document.getElementById('matriculasChart');
+                    if (ctx) {
+                        if (window._matriculasChart) window._matriculasChart.destroy();
+                        window._matriculasChart = new Chart(ctx.getContext('2d'), {
+                            type: 'line',
+                            data: {
+                                labels: dadosMat.map(d => d.ano),
+                                datasets: [{
+                                    label: 'Total de Matrículas',
+                                    data: dadosMat.map(d => d.total),
+                                    borderColor: '#4e73df',
+                                    backgroundColor: 'rgba(78,115,223,0.1)',
+                                    borderWidth: 3,
+                                    fill: true,
+                                    tension: 0.4
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: { legend: { position: 'top' } },
+                                scales: { y: { beginAtZero: true } }
+                            }
+                        });
+                    }
+                }
+
+                // eventos cards
+                const cards = [
+                    { id: 'card_distribuicao', canvas: 'distribuicaoChart', title: 'Distribuição por Região' },
+                    { id: 'card_evolucao', canvas: 'evolucaoChart', title: 'Evolução de Campi' },
+                    { id: 'card_servidores', canvas: 'servidoresChart', title: 'Servidores por Campus' },
+                    { id: 'card_categorias', canvas: 'categoriasChart', title: 'Categorias de Servidores' }
+                ];
+
+                cards.forEach(({ id, canvas, title }) => {
+                    configurarEventosCard(id, canvas, title, dadosFiltrados);
+                });
+
+                if (dadosMat.length > 0) {
+                    configurarEventosCard('card_matriculas', 'matriculasChart', 'Matrículas Totais por Ano', dadosFiltrados);
+                }
+
+            }, 100);
+        }
+
+
+        
     </script>
 </body>
 </html>
