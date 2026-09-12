@@ -1586,6 +1586,184 @@
       }
     }
 
+    // carregar dados
+    async function carregarDados() {
+      try {
+        const basePath = '../../assets/data/';
+
+        const [resCampi, resMatriculas, resOrc] = await Promise.all([
+          fetch(basePath + 'Campi/campi.json'),
+          fetch(basePath + 'EstruturaAdministrativa/DadosMatriculasDiscentes.json'),
+          fetch(basePath + 'DadosOrçamentario/dadosOrcamentario.json')
+        ]);
+
+        if (!resCampi.ok) throw new Error(`HTTP ${resCampi.status} - Campi`);
+        if (!resMatriculas.ok) throw new Error(`HTTP ${resMatriculas.status} - Matrículas`);
+        if (!resOrc.ok) throw new Error(`HTTP ${resOrc.status} - Orçamento`);
+
+        const campi = await resCampi.json();
+        const matriculas = await resMatriculas.json();
+        const orcamento = await resOrc.json();
+
+        processarDados(campi, matriculas, orcamento);
+      } catch (erro) {
+        console.error('Erro ao carregar dados:', erro);
+        document.getElementById('statCampi').textContent = '26';
+        document.getElementById('statEstudantes').textContent = '0';
+        document.getElementById('statCursos').textContent = 'R$ 0,00';
+      }
+    }
+
+    // processar dados
+    function processarDados(campi, matriculas, orcamento) {
+      // campi
+      const campiFiltrados = campi.filter(item =>
+        item.Nome && item.Nome.includes('CAMPUS')
+      );
+      const totalCampi = campiFiltrados.length;
+
+      // matrículas
+      const validos = matriculas.filter(item => {
+        const mat = parseInt(item.Matrículas);
+        return !isNaN(mat) && mat > 0;
+      });
+
+      const porAno = {};
+      validos.forEach(item => {
+        const ano = item.Ano;
+        const mat = parseInt(item.Matrículas);
+        if (!porAno[ano]) porAno[ano] = 0;
+        porAno[ano] += mat;
+      });
+
+      const totalMatriculasGeral = Object.values(porAno).reduce((soma, val) => soma + val, 0);
+
+      const anos = Object.keys(porAno).map(Number).sort((a, b) => a - b);
+      const ultimoAno = anos[anos.length - 1] || 2025;
+
+      const porCampusUltimoAno = {};
+      validos.filter(item => item.Ano === ultimoAno).forEach(item => {
+        const campus = item['Estrutura com Matrícula'];
+        const mat = parseInt(item.Matrículas);
+        porCampusUltimoAno[campus] = (porCampusUltimoAno[campus] || 0) + mat;
+      });
+      const campiOrdenados = Object.keys(porCampusUltimoAno).sort((a, b) => porCampusUltimoAno[b] - porCampusUltimoAno[a]);
+
+      // orçamento
+      let totalEmpenhado = 0;
+      orcamento.forEach(item => {
+        const empenhado = parseFloat(item.valor_empenhado) || 0;
+        totalEmpenhado += empenhado;
+      });
+
+      let valorFormatado;
+      if (totalEmpenhado >= 1e9) {
+        valorFormatado = 'R$ ' + (totalEmpenhado / 1e9).toFixed(1) + ' bi';
+      } else if (totalEmpenhado >= 1e6) {
+        valorFormatado = 'R$ ' + (totalEmpenhado / 1e6).toFixed(2) + ' mi';
+      } else {
+        valorFormatado = 'R$ ' + totalEmpenhado.toLocaleString('pt-BR');
+      }
+
+      // atualizar hero
+      document.getElementById('statCampi').textContent = totalCampi;
+      document.getElementById('statEstudantes').textContent = totalMatriculasGeral.toLocaleString('pt-BR');
+      document.getElementById('statCursos').textContent = valorFormatado;
+
+      // renderizar gráficos
+      const grid = document.getElementById('charts-grid');
+      if (!grid) return;
+
+      grid.innerHTML = '';
+
+      // evolução matrículas
+      grid.innerHTML = criarChartCard(
+        'card_evolucao',
+        'evolucaoChart',
+        'fas fa-chart-line',
+        'Evolução das Matrículas',
+        'Evolução do total de matrículas ao longo dos anos.'
+      );
+
+      // matrículas por campus
+      const topCampi = campiOrdenados.slice(0, 10);
+      const topValores = topCampi.map(c => porCampusUltimoAno[c]);
+
+      grid.innerHTML += criarChartCard(
+        'card_campus',
+        'campusChart',
+        'fas fa-chart-bar',
+        `Matrículas por Campus (${ultimoAno})`,
+        `Distribuição de matrículas pelos campus do IFPB no ano de ${ultimoAno}.`
+      );
+
+      // criar gráficos
+      setTimeout(() => {
+        criarLinhaScroll('evolucaoChart', anos, anos.map(ano => porAno[ano] || 0), 'Total de Matrículas');
+
+        criarBarraVerticalScroll('campusChart',
+          topCampi.map(c => c.replace('Campus ', '')),
+          topValores,
+          'Matrículas'
+        );
+
+        // eventos cards
+        const cards = [
+          { id: 'card_evolucao', canvas: 'evolucaoChart', title: 'Evolução das Matrículas' },
+          { id: 'card_campus', canvas: 'campusChart', title: 'Matrículas por Campus' }
+        ];
+
+        cards.forEach(({ id, canvas, title }) => {
+          if (document.getElementById(canvas)) {
+            configurarEventosCard(id, canvas, title, matriculas);
+          }
+        });
+
+        // atualizar fonte
+        const fonteEl = document.querySelector('.highlights > div:last-child');
+        if (fonteEl) {
+          fonteEl.innerHTML = `<i class="fas fa-database"></i> Fonte: Dados Abertos, Transparência e Relatórios IFPB | Atualização mensal | Último ano: ${ultimoAno} | ${totalCampi} campi`;
+        }
+
+      }, 100);
+
+      console.log('✅ Dados atualizados com sucesso! Total geral de matrículas:', totalMatriculasGeral.toLocaleString('pt-BR'));
+    }
+
+    // faq acordeão
+    document.addEventListener('DOMContentLoaded', function() {
+      const faqItems = document.querySelectorAll('.faq-item');
+
+      faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+
+        question.addEventListener('click', function() {
+          faqItems.forEach(other => {
+            if (other !== item && other.classList.contains('active')) {
+              other.classList.remove('active');
+              other.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+            }
+          });
+
+          const isActive = item.classList.contains('active');
+          item.classList.toggle('active');
+          question.setAttribute('aria-expanded', !isActive);
+        });
+
+        question.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.click();
+          }
+        });
+      });
+
+      // botões modal
+      configurarBotoesModal();
+
+      // carregar dados
+      carregarDados();
+    });
 
   </script>
 </body>
