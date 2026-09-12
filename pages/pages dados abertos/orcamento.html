@@ -1792,6 +1792,128 @@ function showNotification(message, type = 'info') {
     }, 4000);
 }
 
+
+// criar gráficos
+function criarPieScroll(canvasId, labels, values, cores = null) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const parent = canvas.parentElement;
+    if (parent) { parent.style.width = '100%'; parent.style.minWidth = '100%'; }
+    const ctx = canvas.getContext('2d');
+    if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+    if (!labels || labels.length === 0) return;
+    const defaultCores = ['#1a5f7a', '#36b9cc', '#1cc88a', '#f6c23e', '#4e73df', '#e74a3b'];
+    const bgCores = cores || labels.map((_, i) => defaultCores[i % defaultCores.length]);
+    const total = values.reduce((a, b) => a + b, 0);
+    charts[canvasId] = new Chart(ctx, {
+        type: 'pie',
+        data: { labels, datasets: [{ data: values, backgroundColor: bgCores, borderWidth: 0 }] },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 14, padding: 12 } },
+                tooltip: {
+                    callbacks: {
+                        label: (c) => `${c.label}: R$ ${c.raw.toFixed(1)} mi (${((c.raw / total) * 100).toFixed(1)}%)`
+                    }
+                }
+            }
+        }
+    });
+    return charts[canvasId];
+}
+
+function criarBarraVerticalScroll(canvasId, labels, values, tituloY = 'R$ milhões') {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const parent = canvas.parentElement;
+    if (parent) { parent.style.width = '100%'; parent.style.minWidth = '100%'; }
+    const ctx = canvas.getContext('2d');
+    if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+    if (!labels || labels.length === 0) return;
+
+    function shortenText(text, maxChars = 18) {
+        if (!text) return '';
+        if (text.length <= maxChars) return text;
+        return text.substring(0, maxChars - 3) + '...';
+    }
+
+    const shortLabels = labels.map(label => shortenText(label, 14));
+
+    charts[canvasId] = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: shortLabels,
+            datasets: [{
+                label: tituloY,
+                data: values,
+                backgroundColor: ['#1a5f7a', '#36b9cc', '#1cc88a', '#f6c23e', '#4e73df', '#e74a3b'],
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: tituloY },
+                    ticks: { font: { size: 11 } }
+                },
+                x: {
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 35,
+                        minRotation: 25,
+                        font: { size: 8 }
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: (c) => `R$ ${c.raw.toFixed(1)} mi`,
+                        afterBody: function(tooltipItems) {
+                            const index = tooltipItems[0].dataIndex;
+                            return labels[index] ? `\n${labels[index]}` : '';
+                        }
+                    }
+                }
+            }
+        }
+    });
+    return charts[canvasId];
+}
+
+function criarLinhaScroll(canvasId, labels, datasets, tituloY = 'R$ milhões') {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    const parent = canvas.parentElement;
+    if (parent) { parent.style.width = '100%'; parent.style.minWidth = '100%'; }
+    const ctx = canvas.getContext('2d');
+    if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+    if (!labels || labels.length === 0) return;
+    charts[canvasId] = new Chart(ctx, {
+        type: 'line',
+        data: { labels, datasets },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8, padding: 12, font: { size: 10 } } },
+                tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: R$ ${ctx.parsed.y?.toFixed(1) || 'N/D'} mi` } }
+            },
+            scales: {
+                y: { beginAtZero: true, title: { display: true, text: tituloY }, ticks: { font: { size: 11 } } },
+                x: { ticks: { font: { size: 10 } } }
+            }
+        }
+    });
+    return charts[canvasId];
+}
+
+
 </script>
 </body>
 </html>
