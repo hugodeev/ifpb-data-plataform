@@ -1070,6 +1070,57 @@
 
 .main-footer .footer-brand h3 { color: #ffffff; }
 
+/* responsivo */
+@media (max-width: 1024px) {
+    .container { padding: 0 1.5rem; }
+    .page-title { font-size: 2.2rem; }
+    .charts-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 900px) {
+    .page-header { padding: 2rem 1.5rem; }
+    .indicators-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+    .container { padding: 0 1.25rem; }
+    .page-title { font-size: 1.8rem; }
+    .page-subtitle { font-size: 1rem; }
+    .indicators-grid { grid-template-columns: 1fr; }
+    .data-cards { grid-template-columns: 1fr; }
+    .charts-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+    .table-section { padding: 1.5rem; }
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .filters select {
+        width: 100%;
+        max-width: 100%;
+    }
+    .filters button {
+        width: 100%;
+    }
+    .chart-card { padding: 1rem; }
+    .chart-card .card-header h3 { font-size: 0.88rem; padding-left: 0.6rem; }
+    .chart-card .chart-scroll-wrapper { min-height: 220px; max-height: 280px; }
+    .chart-card .chart-scroll-inner { min-height: 220px; max-height: 280px; min-width: 500px; width: 500px; }
+    .chart-card .chart-actions { opacity: 0.8; }
+    .chart-card .chart-btn { width: 28px; height: 28px; font-size: 10px; }
+    .chart-card .chart-btn i { font-size: 10px; }
+    .chart-card .descricao-card .texto { font-size: 0.8rem; }
+    .chart-card .descricao-card .btn-ver-mais { font-size: 0.75rem; padding: 0.3rem 0.8rem; }
+    .comparison-grid { grid-template-columns: repeat(2, 1fr); }
+    .modal-box { width: 95%; max-height: 90vh; }
+    .modal-body .grafico-wrapper { min-height: 50vh; }
+    .modal-scroll-wrapper { min-height: 40vh; max-height: 65vh; }
+    .modal-scroll-inner { min-height: 35vh; }
+    .modal-header { padding: 0.6rem 1rem; }
+    .modal-header h3 { font-size: 0.9rem; }
+    .modal-body { padding: 0.6rem 1rem 0.8rem 1rem; }
+    .modal-descricao .descricao-texto { font-size: 0.8rem; }
+}
+
 
 .fade-in {
     animation: fadeIn 0.5s ease forwards;
