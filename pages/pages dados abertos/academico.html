@@ -1790,6 +1790,222 @@
             });
         }
 
+        function fecharModal() {
+            document.getElementById('modal').classList.remove('active');
+            if (modalChartInstance) {
+                modalChartInstance.destroy();
+                modalChartInstance = null;
+            }
+        }
+
+        // renderizar gráficos
+        function renderizarGraficos() {
+            const grid = document.getElementById('charts-grid');
+            if (!grid) return;
+
+            grid.innerHTML = '';
+
+            const campusList = Object.keys(dadosAgrupados).sort();
+
+            // matrículas campus
+            const labels = [];
+            const dataMatriculas = [];
+            campusList.forEach(campus => {
+                const dados = dadosAgrupados[campus];
+                let total = 0;
+                Object.values(dados.matriculas).forEach(v => {
+                    if (v !== null && v !== undefined && !isNaN(v)) {
+                        total += Number(v);
+                    }
+                });
+                labels.push(campus);
+                dataMatriculas.push(total);
+            });
+
+            grid.innerHTML = criarChartCard(
+                'card_matriculas',
+                'chartMatriculas',
+                'fas fa-user-graduate',
+                'Matrículas por Campus',
+                'Distribuição de matrículas acumuladas por campus do IFPB.'
+            );
+
+            // evolução matrículas
+            const anosSet = new Set();
+            Object.values(dadosAgrupados).forEach(d => {
+                Object.keys(d.matriculas).forEach(a => anosSet.add(parseInt(a)));
+            });
+            const anosOrdenados = [...anosSet].sort((a, b) => a - b);
+            const evolData = anosOrdenados.map(ano => {
+                let total = 0;
+                Object.values(dadosAgrupados).forEach(d => {
+                    if (d.matriculas[ano] !== undefined && d.matriculas[ano] !== null && !isNaN(d.matriculas[ano])) {
+                        total += Number(d.matriculas[ano]);
+                    }
+                });
+                return total;
+            });
+
+            if (evolData.length > 0) {
+                grid.innerHTML += criarChartCard(
+                    'card_evolucao',
+                    'chartEvolucao',
+                    'fas fa-chart-line',
+                    'Evolução de Matrículas',
+                    'Evolução do total de matrículas ao longo dos anos.'
+                );
+            }
+
+            // servidores top 10
+            const topServidores = [...campusList].sort((a, b) => (dadosAgrupados[b]?.servidores || 0) - (dadosAgrupados[a]?.servidores || 0)).slice(0, 10);
+
+            grid.innerHTML += criarChartCard(
+                'card_servidores',
+                'chartServidores',
+                'fas fa-users',
+                'Servidores por Campus (Top 10)',
+                'Os 10 campi com maior número de servidores.'
+            );
+
+            // distribuição servidores
+            const totalDocentes = campusList.reduce((s, c) => s + (dadosAgrupados[c]?.docentes || 0), 0);
+            const totalTAEs = campusList.reduce((s, c) => s + (dadosAgrupados[c]?.taes || 0), 0);
+            const totalOutros = campusList.reduce((s, c) => s + (dadosAgrupados[c]?.servidores || 0), 0) - totalDocentes - totalTAEs;
+
+            if (totalDocentes > 0 || totalTAEs > 0) {
+                grid.innerHTML += criarChartCard(
+                    'card_distribuicao',
+                    'chartDistribuicao',
+                    'fas fa-chart-pie',
+                    'Distribuição de Servidores',
+                    'Distribuição dos servidores por categoria (Docentes, TAEs e outros).'
+                );
+            }
+
+            // criar gráficos
+            setTimeout(() => {
+                criarBarraVerticalScroll('chartMatriculas', labels, dataMatriculas, 'Matrículas');
+
+                if (evolData.length > 0) {
+                    criarLinhaScroll('chartEvolucao', anosOrdenados, evolData, 'Total de Matrículas');
+                }
+
+                criarBarraVerticalScroll('chartServidores',
+                    topServidores.map(c => c),
+                    topServidores.map(c => dadosAgrupados[c]?.servidores || 0),
+                    'Servidores'
+                );
+
+                const distLabels = ['Docentes', 'TAEs'];
+                const distData = [totalDocentes, totalTAEs];
+                if (totalOutros > 0) {
+                    distLabels.push('Outros');
+                    distData.push(totalOutros);
+                }
+                criarPieScroll('chartDistribuicao', distLabels, distData);
+
+                // eventos cards
+                const cards = [
+                    { id: 'card_matriculas', canvas: 'chartMatriculas', title: 'Matrículas por Campus' },
+                    { id: 'card_evolucao', canvas: 'chartEvolucao', title: 'Evolução de Matrículas' },
+                    { id: 'card_servidores', canvas: 'chartServidores', title: 'Servidores por Campus' },
+                    { id: 'card_distribuicao', canvas: 'chartDistribuicao', title: 'Distribuição de Servidores' }
+                ];
+
+                cards.forEach(({ id, canvas, title }) => {
+                    if (document.getElementById(canvas)) {
+                        configurarEventosCard(id, canvas, title, dadosAdm);
+                    }
+                });
+
+            }, 100);
+        }
+
+        // atualizar cards
+        function atualizarCards() {
+            let totalEstudantes = 0;
+            let totalDocentes = 0;
+            let totalTAEs = 0;
+            let totalServidores = 0;
+            let campusCount = 0;
+
+            Object.entries(dadosAgrupados).forEach(([campus, dados]) => {
+                let somaMatriculas = 0;
+                Object.values(dados.matriculas).forEach(v => {
+                    if (v !== null && v !== undefined && !isNaN(v)) {
+                        somaMatriculas += Number(v);
+                    }
+                });
+                totalEstudantes += somaMatriculas;
+                totalDocentes += dados.docentes || 0;
+                totalTAEs += dados.taes || 0;
+                totalServidores += dados.servidores || 0;
+                campusCount++;
+            });
+
+            document.getElementById('total-students').textContent = totalEstudantes.toLocaleString();
+            document.getElementById('total-docentes').textContent = totalDocentes.toLocaleString();
+            document.getElementById('total-taes').textContent = totalTAEs.toLocaleString();
+            document.getElementById('media-estudantes').textContent = campusCount > 0 ? Math.round(totalEstudantes / campusCount).toLocaleString() : '---';
+        }
+
+        // atualizar header
+        function atualizarHeader() {
+            const anoEl = document.getElementById('header-ano');
+            const estudantesEl = document.getElementById('header-estudantes');
+            const docentesEl = document.getElementById('header-docentes');
+
+            if (anoEl) {
+                anoEl.textContent = new Date().getFullYear();
+            }
+
+            let totalEstudantes = 0;
+            let totalDocentes = 0;
+            Object.values(dadosAgrupados).forEach(d => {
+                Object.values(d.matriculas).forEach(v => {
+                    if (v !== null && v !== undefined && !isNaN(v)) totalEstudantes += Number(v);
+                });
+                totalDocentes += d.docentes || 0;
+            });
+
+            if (estudantesEl) estudantesEl.textContent = totalEstudantes.toLocaleString() + ' Estudantes';
+            if (docentesEl) docentesEl.textContent = totalDocentes.toLocaleString() + ' Docentes';
+        }
+
+        // atualizar tabela
+        function atualizarTabela() {
+            const tbody = document.getElementById('academic-table-body');
+            if (!tbody) return;
+
+            const campusList = filteredCampi.length > 0 ? filteredCampi : Object.keys(dadosAgrupados).sort();
+
+            if (campusList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="loading-cell">Nenhum dado encontrado.</td></tr>';
+                return;
+            }
+
+            let html = '';
+            campusList.forEach(campus => {
+                const dados = dadosAgrupados[campus];
+                if (!dados) return;
+                let matricula = 0;
+                Object.values(dados.matriculas).forEach(v => {
+                    if (v !== null && v !== undefined && !isNaN(v)) {
+                        matricula += Number(v);
+                    }
+                });
+                html += `<tr>
+                    <td><strong>${campus}</strong></td>
+                    <td>${matricula.toLocaleString()}</td>
+                    <td>${dados.docentes || 0}</td>
+                    <td>${dados.taes || 0}</td>
+                    <td>${dados.servidores || 0}</td>
+                </tr>`;
+            });
+
+            tbody.innerHTML = html;
+            document.getElementById('table-count').textContent = campusList.length + ' campi encontrados';
+        }
 
     </script>
 </body>
