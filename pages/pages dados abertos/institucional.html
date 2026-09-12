@@ -2537,6 +2537,100 @@
         }
 
 
+        function aplicarFiltros() {
+            const ano = document.getElementById('anoFilter').value;
+            const campus = document.getElementById('campusFilter').value;
+            const situacao = document.getElementById('situacaoFilter').value;
+
+            dadosFiltrados = dadosCompletos.filter(c => {
+                let ok = true;
+                if (ano !== 'todos') {
+                    const match = c.Ano.match(/\d{4}/);
+                    if (!match || match[0] !== ano) ok = false;
+                }
+                if (campus !== 'todos' && c.Nome !== campus) ok = false;
+                if (situacao !== 'todos' && c.Situacao !== situacao) ok = false;
+                return ok;
+            });
+
+            dadosFiltrados.sort((a, b) => (b.Total_Servidores || 0) - (a.Total_Servidores || 0));
+
+            atualizarTudo();
+            showNotification('Filtros aplicados!', 'success');
+        }
+
+        function resetarFiltros() {
+            document.getElementById('anoFilter').value = 'todos';
+            document.getElementById('campusFilter').value = 'todos';
+            document.getElementById('situacaoFilter').value = 'todos';
+
+            dadosFiltrados = [...dadosCompletos];
+            dadosFiltrados.sort((a, b) => (b.Total_Servidores || 0) - (a.Total_Servidores || 0));
+
+            atualizarTudo();
+            showNotification('Filtros resetados.', 'info');
+        }
+
+        function exportarParaCSV() {
+            if (!dadosFiltrados.length) {
+                showNotification('Nenhum dado para exportar.', 'warning');
+                return;
+            }
+
+            const cols = ['Nome', 'Sigla', 'Municipio', 'UF', 'Ano', 'Situacao', 'Total_Servidores', 'Docentes', 'TAEs'];
+            let csv = cols.join(',') + '\n';
+            dadosFiltrados.forEach(c => {
+                const linha = cols.map(col => {
+                    let val = String(c[col] || '');
+                    if (val.includes(',') || val.includes('"')) {
+                        val = '"' + val.replace(/"/g, '""') + '"';
+                    }
+                    return val;
+                }).join(',');
+                csv += linha + '\n';
+            });
+
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'ifpb_campi_' + new Date().toISOString().slice(0, 10) + '.csv';
+            link.click();
+            URL.revokeObjectURL(link.href);
+            showNotification('CSV exportado!', 'success');
+        }
+
+        // atualizar tudo
+        function atualizarTudo() {
+            atualizarIndicadores();
+            atualizarCardsAnalise();
+            atualizarGraficos();
+            atualizarTabela();
+            renderizarMapa();
+        }
+
+        // inicialização
+        document.addEventListener('DOMContentLoaded', async function() {
+            const success = await carregarDados();
+
+            if (success) {
+                preencherFiltros();
+                aplicarFiltros();
+                configurarBotoesModal();
+
+                // busca tabela
+                document.getElementById('table-search').addEventListener('input', function() {
+                    const term = this.value.toLowerCase();
+                    const rows = document.querySelectorAll('#tabela-campi-container tbody tr');
+                    rows.forEach(row => {
+                        row.style.display = row.textContent.toLowerCase().includes(term) ? '' : 'none';
+                    });
+                });
+
+                showNotification('Dados carregados com sucesso!', 'success');
+            } else {
+                showNotification('Erro ao carregar dados.', 'error');
+            }
+        });
 
     </script>
 </body>
