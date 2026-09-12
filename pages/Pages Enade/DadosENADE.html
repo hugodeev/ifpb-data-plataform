@@ -826,6 +826,45 @@
 
         .main-footer .footer-brand h3 { color: #ffffff; }
 
+        /* responsivo */
+        @media (max-width: 1024px) {
+            .container { padding: 0 1.5rem; }
+            .charts-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .hero p { max-width: 100%; }
+            .hero-buttons { justify-content: center; }
+            .section-title { font-size: 1.6rem; }
+            .modulo-descricao { padding: 1.5rem; }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 1.25rem; }
+            .chart-card { padding: 1rem; }
+            .chart-card .card-header h3 { font-size: 0.88rem; padding-left: 0.6rem; }
+            .chart-card .chart-scroll-wrapper { min-height: 200px; max-height: 260px; }
+            .chart-card .chart-scroll-inner { min-height: 200px; max-height: 260px; min-width: 500px; width: 500px; }
+            .chart-card .chart-actions { opacity: 0.8; }
+            .chart-card .chart-btn { width: 28px; height: 28px; font-size: 10px; }
+            .chart-card .chart-btn i { font-size: 10px; }
+            .chart-card .descricao-card .texto { font-size: 0.8rem; }
+            .chart-card .descricao-card .btn-ver-mais { font-size: 0.75rem; padding: 0.3rem 0.8rem; }
+            .charts-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+            .modal-box { width: 95%; max-height: 90vh; }
+            .modal-body .grafico-wrapper { min-height: 40vh; }
+            .modal-scroll-wrapper { min-height: 35vh; max-height: 55vh; }
+            .modal-scroll-inner { min-height: 30vh; }
+            .modal-header { padding: 0.6rem 1rem; }
+            .modal-header h3 { font-size: 0.9rem; }
+            .modal-body { padding: 0.6rem 1rem 0.8rem 1rem; }
+            .modal-descricao .descricao-texto { font-size: 0.8rem; }
+        }
+
     </style>
 </head>
 <body>
