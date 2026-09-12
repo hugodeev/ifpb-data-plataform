@@ -2099,6 +2099,163 @@ function fecharModal() {
     }
 }
 
+// carregar dados
+async function carregarDadosOrcamentarios() {
+    try {
+        const caminho = '../../assets/data/DadosOrçamentario/dadosOrcamentario.json';
+        console.log('Carregando dados orçamentários de:', caminho);
+        const res = await fetch(caminho + '?t=' + Date.now());
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        dadosOrcamentarios = await res.json();
+        console.log('Dados carregados:', dadosOrcamentarios.length, 'registros');
+
+        dadosFiltrados = [...dadosOrcamentarios];
+        atualizarTabela();
+        renderizarGraficos();
+        showNotification('Dados orçamentários carregados!', 'success');
+        return true;
+    } catch (erro) {
+        console.error('Erro ao carregar dados:', erro);
+        // dados fallback
+        dadosOrcamentarios = [
+            { Funcao: "Educação Básica", DotInicial: "R$ 45,2 mi", DotAtual: "R$ 48,7 mi", Empenhado: "R$ 42,3 mi", Liquidado: "R$ 40,1 mi", Execucao: "82.3%", Variacao: "+8.2%", Icon: "fa-graduation-cap", Tipo: "educacao" },
+            { Funcao: "Educação Superior", DotInicial: "R$ 38,5 mi", DotAtual: "R$ 42,1 mi", Empenhado: "R$ 36,8 mi", Liquidado: "R$ 34,2 mi", Execucao: "79.8%", Variacao: "+12.5%", Icon: "fa-user-graduate", Tipo: "educacao" },
+            { Funcao: "Pessoal e Encargos", DotInicial: "R$ 185,0 mi", DotAtual: "R$ 198,3 mi", Empenhado: "R$ 182,5 mi", Liquidado: "R$ 175,8 mi", Execucao: "88.4%", Variacao: "+6.2%", Icon: "fa-users", Tipo: "pessoal" },
+            { Funcao: "Manutenção", DotInicial: "R$ 42,8 mi", DotAtual: "R$ 45,2 mi", Empenhado: "R$ 38,6 mi", Liquidado: "R$ 36,1 mi", Execucao: "71.2%", Variacao: "+3.8%", Icon: "fa-cogs", Tipo: "manutencao" },
+            { Funcao: "Investimentos", DotInicial: "R$ 28,5 mi", DotAtual: "R$ 32,9 mi", Empenhado: "R$ 26,3 mi", Liquidado: "R$ 22,8 mi", Execucao: "58.3%", Variacao: "+18.7%", Icon: "fa-hard-hat", Tipo: "investimento" },
+            { Funcao: "Pesquisa e Inovação", DotInicial: "R$ 12,4 mi", DotAtual: "R$ 14,8 mi", Empenhado: "R$ 11,2 mi", Liquidado: "R$ 9,8 mi", Execucao: "64.5%", Variacao: "+15.2%", Icon: "fa-flask", Tipo: "pesquisa" },
+            { Funcao: "Assistência Estudantil", DotInicial: "R$ 15,6 mi", DotAtual: "R$ 17,2 mi", Empenhado: "R$ 14,5 mi", Liquidado: "R$ 13,2 mi", Execucao: "76.7%", Variacao: "+9.4%", Icon: "fa-hand-holding-heart", Tipo: "assistencia" },
+            { Funcao: "Tecnologia da Informação", DotInicial: "R$ 8,3 mi", DotAtual: "R$ 9,7 mi", Empenhado: "R$ 7,8 mi", Liquidado: "R$ 6,9 mi", Execucao: "71.1%", Variacao: "+11.8%", Icon: "fa-laptop-code", Tipo: "tecnologia" },
+            { Funcao: "Infraestrutura Física", DotInicial: "R$ 22,4 mi", DotAtual: "R$ 26,1 mi", Empenhado: "R$ 19,8 mi", Liquidado: "R$ 17,5 mi", Execucao: "62.3%", Variacao: "+16.5%", Icon: "fa-building", Tipo: "infraestrutura" },
+            { Funcao: "Gestão Administrativa", DotInicial: "R$ 18,6 mi", DotAtual: "R$ 19,8 mi", Empenhado: "R$ 16,2 mi", Liquidado: "R$ 14,9 mi", Execucao: "75.3%", Variacao: "+4.2%", Icon: "fa-clipboard-list", Tipo: "gestao" }
+        ];
+        dadosFiltrados = [...dadosOrcamentarios];
+        atualizarTabela();
+        renderizarGraficos();
+        return false;
+    }
+}
+
+// renderizar gráficos
+function renderizarGraficos() {
+    const grid = document.getElementById('charts-grid');
+    if (!grid) return;
+
+    grid.innerHTML = '';
+
+    // composição
+    const compLabels = ['Pessoal', 'Custeio', 'Investimentos', 'Outras'];
+    const compData = [198.3, 55.8, 32.9, 0];
+
+    grid.innerHTML = criarChartCard(
+        'card_composition',
+        'compositionChart',
+        'fas fa-chart-pie',
+        'Composição Orçamentária',
+        'Distribuição do orçamento por categoria de despesa.'
+    );
+
+    // evolução
+    const evolLabels = ['2020', '2021', '2022', '2023', '2024'];
+    const evolReceitas = [298.5, 312.0, 328.7, 345.2, 382.7];
+    const evolDespesas = [245.3, 258.7, 269.8, 287.0, 312.4];
+
+    grid.innerHTML += criarChartCard(
+        'card_evolution',
+        'evolutionChart',
+        'fas fa-chart-line',
+        'Evolução Receitas vs Despesas',
+        'Evolução comparativa de receitas e despesas ao longo dos anos.'
+    );
+
+    // despesas
+    const expLabels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set'];
+    const expPessoal = [16.2, 16.8, 17.5, 18.2, 19.0, 19.8, 20.5, 21.2, 21.8];
+    const expCusteio = [4.2, 4.5, 4.8, 5.2, 5.5, 5.8, 6.2, 6.5, 6.8];
+    const expInvest = [2.8, 3.2, 3.5, 3.8, 4.2, 4.5, 4.8, 5.2, 5.5];
+
+    grid.innerHTML += criarChartCard(
+        'card_expenses',
+        'expensesChart',
+        'fas fa-chart-bar',
+        'Despesas por Categoria (Mensal)',
+        'Evolução mensal das despesas divididas por categoria.'
+    );
+
+    // distribuição
+    const campusLabels = ['João Pessoa', 'Campina Grande', 'Sousa', 'Patos', 'Cajazeiras', 'Cabedelo'];
+    const campusData = [58.2, 42.5, 28.7, 24.3, 19.8, 16.5];
+
+    grid.innerHTML += criarChartCard(
+        'card_distribution',
+        'distributionChart',
+        'fas fa-map-marked-alt',
+        'Distribuição por Campus',
+        'Distribuição do orçamento por campus do IFPB.'
+    );
+
+    // criar gráficos
+    setTimeout(() => {
+        // composição
+        criarPieScroll('compositionChart', compLabels, compData);
+
+        // evolução
+        const evolDatasets = [
+            { label: 'Receitas', data: evolReceitas, borderColor: '#1a5f7a', backgroundColor: 'rgba(26,95,122,0.1)', fill: true, tension: 0.4 },
+            { label: 'Despesas', data: evolDespesas, borderColor: '#e74a3b', backgroundColor: 'rgba(231,74,59,0.1)', fill: true, tension: 0.4 }
+        ];
+        criarLinhaScroll('evolutionChart', evolLabels, evolDatasets, 'R$ milhões');
+
+        // despesas
+        const expCanvas = document.getElementById('expensesChart');
+        if (expCanvas) {
+            const ctx = expCanvas.getContext('2d');
+            if (charts['expensesChart']) { charts['expensesChart'].destroy(); delete charts['expensesChart']; }
+            charts['expensesChart'] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: expLabels,
+                    datasets: [
+                        { label: 'Pessoal', data: expPessoal, backgroundColor: '#e74a3b', borderRadius: 4 },
+                        { label: 'Custeio', data: expCusteio, backgroundColor: '#f6c23e', borderRadius: 4 },
+                        { label: 'Investimentos', data: expInvest, backgroundColor: '#36b9cc', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top', labels: { font: { size: 10 } } } },
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: 'R$ milhões' } },
+                        x: { ticks: { font: { size: 8 } } }
+                    }
+                }
+            });
+            charts['expensesChart'].canvas.parentElement.style.width = '100%';
+            charts['expensesChart'].canvas.parentElement.style.minWidth = '100%';
+        }
+
+        // distribuição
+        criarBarraVerticalScroll('distributionChart', campusLabels, campusData, 'R$ milhões');
+
+        // eventos cards
+        const cards = [
+            { id: 'card_composition', canvas: 'compositionChart', title: 'Composição Orçamentária' },
+            { id: 'card_evolution', canvas: 'evolutionChart', title: 'Evolução Receitas vs Despesas' },
+            { id: 'card_expenses', canvas: 'expensesChart', title: 'Despesas por Categoria' },
+            { id: 'card_distribution', canvas: 'distributionChart', title: 'Distribuição por Campus' }
+        ];
+
+        cards.forEach(({ id, canvas, title }) => {
+            if (document.getElementById(canvas)) {
+                configurarEventosCard(id, canvas, title, dadosOrcamentarios);
+            }
+        });
+
+    }, 100);
+}
+
+
 
 </script>
 </body>
