@@ -1159,6 +1159,32 @@
     .modal-descricao .descricao-texto { font-size: 0.75rem; }
 }
 
+@media (max-width: 360px) {
+    .chart-card .chart-scroll-inner { min-width: 340px; width: 340px; }
+    .modal-scroll-inner { min-width: 340px; }
+    .comparison-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+    .chart-card .chart-scroll-wrapper { min-height: 140px; max-height: 180px; }
+    .chart-card .chart-scroll-inner { min-height: 140px; max-height: 180px; }
+    .chart-card .card-header h3 { font-size: 0.8rem; }
+    .chart-card .descricao-card .texto { font-size: 0.7rem; }
+    .modal-body .grafico-wrapper { min-height: 35vh; }
+    .modal-scroll-wrapper { min-height: 30vh; max-height: 45vh; }
+    .modal-scroll-inner { min-height: 25vh; }
+    .modal-header h3 { font-size: 0.8rem; }
+    .modal-body { padding: 0.4rem 1rem 0.6rem 1rem; }
+    .modal-descricao .descricao-texto { font-size: 0.7rem; }
+}
+
+@media (min-width: 901px) {
+    .nav-list { display: flex !important; }
+    .hamburger { display: none !important; }
+    .nav-menu-mobile { display: none !important; }
+    .menu-overlay { display: none !important; }
+}
+
 .fade-in {
     animation: fadeIn 0.5s ease forwards;
 }
