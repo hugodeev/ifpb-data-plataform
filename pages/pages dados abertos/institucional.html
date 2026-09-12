@@ -1885,6 +1885,207 @@
             return anos.map(a => ({ ano: parseInt(a), total: mapa[a] }));
         }
 
+        // criar gráficos
+        function criarPieScroll(canvasId, labels, values, cores = null) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const parent = canvas.parentElement;
+            if (parent) { parent.style.width = '100%'; parent.style.minWidth = '100%'; }
+            const ctx = canvas.getContext('2d');
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+            const defaultCores = ['#1a5f7a', '#36b9cc', '#1cc88a', '#f6c23e', '#4e73df', '#e74a3b'];
+            const bgCores = cores || labels.map((_, i) => defaultCores[i % defaultCores.length]);
+            const total = values.reduce((a, b) => a + b, 0);
+            charts[canvasId] = new Chart(ctx, {
+                type: 'pie',
+                data: { labels, datasets: [{ data: values, backgroundColor: bgCores, borderWidth: 0 }] },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { font: { size: 11 }, boxWidth: 14, padding: 12 } },
+                        tooltip: {
+                            callbacks: {
+                                label: (c) => `${c.label}: ${c.raw} (${((c.raw / total) * 100).toFixed(1)}%)`
+                            }
+                        }
+                    }
+                }
+            });
+            return charts[canvasId];
+        }
+
+        function criarBarraVerticalScroll(canvasId, labels, values, tituloY = 'Quantidade') {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const parent = canvas.parentElement;
+            if (parent) { parent.style.width = '100%'; parent.style.minWidth = '100%'; }
+            const ctx = canvas.getContext('2d');
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+
+            function shortenText(text, maxChars = 18) {
+                if (!text) return '';
+                if (text.length <= maxChars) return text;
+                return text.substring(0, maxChars - 3) + '...';
+            }
+
+            const shortLabels = labels.map(label => shortenText(label, 14));
+
+            charts[canvasId] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: shortLabels,
+                    datasets: [{
+                        label: tituloY,
+                        data: values,
+                        backgroundColor: '#1a5f7a',
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: tituloY },
+                            ticks: { font: { size: 11 } }
+                        },
+                        x: {
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 35,
+                                minRotation: 25,
+                                font: { size: 8 }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: (c) => `${c.raw} unidades`,
+                                afterBody: function(tooltipItems) {
+                                    const index = tooltipItems[0].dataIndex;
+                                    return labels[index] ? `\n${labels[index]}` : '';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            return charts[canvasId];
+        }
+
+        function criarLinhaScroll(canvasId, labels, values, titulo = 'Frequência') {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const parent = canvas.parentElement;
+            if (parent) { parent.style.width = '100%'; parent.style.minWidth = '100%'; }
+            const ctx = canvas.getContext('2d');
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+            charts[canvasId] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: titulo,
+                        data: values,
+                        borderColor: '#1a5f7a',
+                        backgroundColor: 'rgba(26,95,122,0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#1a5f7a',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, title: { display: true, text: titulo }, ticks: { font: { size: 11 } } },
+                        x: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+            return charts[canvasId];
+        }
+
+        // cards padrão
+        function criarChartCard(cardId, canvasId, iconClass, titulo, descricao) {
+            return `
+                <div class="chart-card" id="${cardId}">
+                    <div class="card-header">
+                        <h3>
+                            <i class="${iconClass}"></i>
+                            ${titulo}
+                        </h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn" data-expand="${canvasId}" title="Expandir gráfico">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="chart-btn" data-download="${canvasId}" title="Baixar PNG">
+                                <i class="fas fa-image"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-scroll-wrapper">
+                        <div class="chart-scroll-inner">
+                            <canvas id="${canvasId}"></canvas>
+                        </div>
+                    </div>
+                    <div class="descricao-card">
+                        <span class="texto">
+                            <i class="fas fa-info-circle"></i>
+                            ${descricao}
+                        </span>
+                        <button class="btn-ver-mais" data-expand-full="${canvasId}">
+                            Ver mais
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function configurarEventosCard(cardId, canvasId, titulo, rawData) {
+            const card = document.getElementById(cardId);
+            if (!card) return;
+
+            const expandBtn = card.querySelector(`[data-expand="${canvasId}"]`);
+            if (expandBtn) {
+                expandBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    abrirModalGrafico(canvasId, titulo, rawData);
+                });
+            }
+
+            const verMaisBtn = card.querySelector(`[data-expand-full="${canvasId}"]`);
+            if (verMaisBtn) {
+                verMaisBtn.addEventListener('click', () => {
+                    abrirModalGrafico(canvasId, titulo, rawData);
+                });
+            }
+
+            const downloadBtn = card.querySelector(`[data-download="${canvasId}"]`);
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const canvas = document.getElementById(canvasId);
+                    if (canvas) {
+                        const link = document.createElement('a');
+                        link.download = `${titulo.replace(/\s+/g, '_')}.png`;
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                    }
+                });
+            }
+        }
+
+    
 
     </script>
 </body>
