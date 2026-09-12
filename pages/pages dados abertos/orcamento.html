@@ -1185,6 +1185,33 @@
     .menu-overlay { display: none !important; }
 }
 
+/* carregamento */
+.loading-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.loading-indicator i {
+    font-size: 2rem;
+    color: var(--secondary-color);
+}
+
+.modal-overlay-loading {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+.modal-overlay-loading.show { display: flex; }
+
+
 .fade-in {
     animation: fadeIn 0.5s ease forwards;
 }
