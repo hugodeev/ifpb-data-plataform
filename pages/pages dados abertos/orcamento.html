@@ -2328,6 +2328,110 @@ function aplicarFiltros() {
 }
 
 
+function resetarFiltros() {
+    document.getElementById('anoFilter').value = 'todos';
+    document.getElementById('tipoFilter').value = 'todos';
+    document.getElementById('campusFilter').value = 'todos';
+    dadosFiltrados = [...dadosOrcamentarios];
+    currentPage = 1;
+    atualizarTabela();
+    showNotification('Filtros resetados.', 'info');
+}
+
+function exportarCSV() {
+    if (dadosFiltrados.length === 0) {
+        showNotification('Nenhum dado para exportar.', 'warning');
+        return;
+    }
+
+    const headers = ['Função', 'Dotação Inicial', 'Dotação Atual', 'Empenhado', 'Liquidado', '% Execução', 'Variação'];
+    let csv = headers.join(',') + '\n';
+    dadosFiltrados.forEach(item => {
+        const row = [
+            item.Funcao,
+            item.DotInicial.replace('R$ ', '').replace(' mi', ''),
+            item.DotAtual.replace('R$ ', '').replace(' mi', ''),
+            item.Empenhado.replace('R$ ', '').replace(' mi', ''),
+            item.Liquidado.replace('R$ ', '').replace(' mi', ''),
+            item.Execucao.replace('%', ''),
+            item.Variacao.replace('%', '')
+        ];
+        csv += row.join(',') + '\n';
+    });
+
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'despesas_ifpb_' + new Date().toISOString().slice(0, 10) + '.csv';
+    link.click();
+    URL.revokeObjectURL(link.href);
+    showNotification('CSV exportado!', 'success');
+}
+
+// inicialização
+document.addEventListener('DOMContentLoaded', async function() {
+    showLoading('Carregando dados orçamentários...');
+
+    // eventos filtros
+    document.getElementById('apply-filters').addEventListener('click', aplicarFiltros);
+    document.getElementById('reset-filters').addEventListener('click', resetarFiltros);
+
+    // exportar csv
+    document.getElementById('export-table').addEventListener('click', exportarCSV);
+
+    // busca tabela
+    const searchInput = document.getElementById('table-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const term = this.value.toLowerCase();
+            if (term === '') {
+                dadosFiltrados = [...dadosOrcamentarios];
+            } else {
+                dadosFiltrados = dadosOrcamentarios.filter(item =>
+                    item.Funcao.toLowerCase().includes(term)
+                );
+            }
+            currentPage = 1;
+            atualizarTabela();
+        });
+    }
+
+    // paginação
+    const prevBtn = document.getElementById('prev-page');
+    const nextBtn = document.getElementById('next-page');
+    
+    if (prevBtn) {
+        prevBtn.addEventListener('click', function() {
+            if (currentPage > 1) { 
+                currentPage--; 
+                atualizarTabela(); 
+            }
+        });
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', function() {
+            const totalPages = Math.ceil(dadosFiltrados.length / rowsPerPage);
+            if (currentPage < totalPages) { 
+                currentPage++; 
+                atualizarTabela(); 
+            }
+        });
+    }
+
+    // carrega dados
+    await carregarDadosOrcamentarios();
+    hideLoading();
+
+    // botões modal
+    configurarBotoesModal();
+
+    // atualiza data
+    const now = new Date();
+    document.getElementById('last-update').textContent = now.toLocaleDateString('pt-BR', {
+        day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+});
 
 </script>
 </body>
