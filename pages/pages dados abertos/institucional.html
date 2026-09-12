@@ -917,7 +917,87 @@
             font-size: 0.9rem;
         }
 
-       /* config*/
+        /* mapa */
+        #map {
+            height: 450px;
+            width: 100%;
+            border-radius: 8px;
+            z-index: 1;
+        }
+
+        .leaflet-control-zoom { z-index: 2 !important; }
+
+        #map-legend {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 0.8rem;
+            font-size: 0.85rem;
+            color: var(--medium-color);
+            flex-wrap: wrap;
+        }
+
+        .chart-container-mapa {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid #e3e6f0;
+            margin: 2rem 0;
+        }
+
+        .chart-container-mapa .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-container-mapa .chart-title {
+            font-size: 1.1rem;
+            color: var(--dark-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .chart-container-mapa .chart-actions {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .chart-container-mapa .chart-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid #d1d3e2;
+            background: rgba(255, 255, 255, 0.95);
+            color: #5a5c69;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+
+        .chart-container-mapa .chart-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: scale(1.08);
+        }
+
+        /* metodologia */
+        .methodology-section {
+            background: linear-gradient(135deg, var(--light-color), #eef2ff);
+            border-radius: var(--radius);
+            padding: 2.5rem;
+            margin: 3rem 0;
+            border-left: 5px solid var(--secondary-color);
+        }
 
         .methodology-grid {
             display: grid;
