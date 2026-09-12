@@ -1760,6 +1760,131 @@
             }, 5000);
         }
 
+        // variáveis globais
+        let dadosCompletos = [];
+        let dadosFiltrados = [];
+        let charts = {};
+        let modalChartInstance = null;
+        let modalRawData = null;
+        let modalChartTitle = '';
+
+        // carregar dados
+        async function carregarDados() {
+            try {
+                const caminhoInst = '../../assets/data/Dadosinstitucionais/dadosInstitucionais.json';
+                const caminhoAdm = '../../assets/data/EstruturaAdministrativa/DadosDocentesIFS.json';
+
+                const [resInst, resAdm] = await Promise.all([
+                    fetch(caminhoInst),
+                    fetch(caminhoAdm)
+                ]);
+
+                if (!resInst.ok || !resAdm.ok) {
+                    throw new Error('Falha ao carregar JSONs. Status: Inst=' + resInst.status + ', Adm=' + resAdm.status);
+                }
+
+                const dadosInst = await resInst.json();
+                const dadosAdm = await resAdm.json();
+
+                let totalBruto = 0;
+                let totalDocentesBruto = 0;
+                let totalTAEsBruto = 0;
+                let totalEfetivosBruto = 0;
+                dadosAdm.forEach(item => {
+                    const serv = parseFloat(item['Total de Servidores']) || 0;
+                    const doc = parseFloat(item['Docentes']) || 0;
+                    const taes = parseFloat(item['TAEs']) || 0;
+                    const efet = parseFloat(item['Docentes Efetivos']) || 0;
+                    totalBruto += serv;
+                    totalDocentesBruto += doc;
+                    totalTAEsBruto += taes;
+                    totalEfetivosBruto += efet;
+                });
+                window.totalServidoresBruto = totalBruto;
+                window.totalDocentesBruto = totalDocentesBruto;
+                window.totalTAEsBruto = totalTAEsBruto;
+                window.totalEfetivosBruto = totalEfetivosBruto;
+
+                const mapaServ = new Map();
+                dadosAdm.forEach(item => {
+                    const campus = item.Estrutura.trim().toUpperCase();
+                    if (!mapaServ.has(campus)) {
+                        mapaServ.set(campus, {
+                            Total_Servidores: parseFloat(item['Total de Servidores']) || 0,
+                            TAEs: parseFloat(item['TAEs']) || 0,
+                            Docentes: parseFloat(item['Docentes']) || 0,
+                            Docentes_Efetivos: parseFloat(item['Docentes Efetivos']) || 0,
+                            ITCD: item.ITCD || null
+                        });
+                    }
+                });
+
+                const mapaMat = new Map();
+
+                dadosCompletos = dadosInst.map(campus => {
+                    const nomeNormalizado = campus.Nome.trim().toUpperCase();
+                    const serv = mapaServ.get(nomeNormalizado) || {};
+                    const mat = mapaMat.get(nomeNormalizado) || [];
+                    return {
+                        Nome: campus.Nome,
+                        Sigla: campus.Sigla || '',
+                        CNPJ: campus.CNPJ || '',
+                        Endereco: campus.Endereco || '',
+                        Municipio: campus.Municipio || '',
+                        UF: campus.UF || '',
+                        CEP: campus.CEP || '',
+                        Telefone: campus.Telefone || '',
+                        Ano: campus.Ano || '',
+                        AreaFisica: campus['Área física (m²)'] || '',
+                        Situacao: campus.Situação || '',
+                        Total_Servidores: serv.Total_Servidores || 0,
+                        TAEs: serv.TAEs || 0,
+                        Docentes: serv.Docentes || 0,
+                        Docentes_Efetivos: serv.Docentes_Efetivos || 0,
+                        ITCD: serv.ITCD || null,
+                        Matriculas: mat
+                    };
+                }).filter(c => c.Nome && c.Nome.trim() !== '');
+
+                dadosFiltrados = [...dadosCompletos];
+                return true;
+            } catch (erro) {
+                console.error('Erro ao carregar dados:', erro);
+                showNotification('Erro ao carregar dados. Verifique os arquivos JSON.', 'error');
+                dadosCompletos = [];
+                dadosFiltrados = [];
+                return false;
+            }
+        }
+
+        // funções cálculo
+        function calcularAreaTotal() {
+            let total = 0;
+            dadosCompletos.forEach(c => {
+                const match = c.AreaFisica.match(/([\d,]+)\s*(?:ha|hectare)/i);
+                if (match) {
+                    const ha = parseFloat(match[1].replace(',', '.'));
+                    total += ha;
+                }
+            });
+            return total;
+        }
+
+        function getMatriculasPorAno() {
+            const mapa = {};
+            dadosCompletos.forEach(c => {
+                if (c.Matriculas && c.Matriculas.length) {
+                    c.Matriculas.forEach(m => {
+                        const ano = m.ano;
+                        const val = m.valor || 0;
+                        mapa[ano] = (mapa[ano] || 0) + val;
+                    });
+                }
+            });
+            const anos = Object.keys(mapa).sort((a, b) => a - b);
+            return anos.map(a => ({ ano: parseInt(a), total: mapa[a] }));
+        }
+
 
     </script>
 </body>
