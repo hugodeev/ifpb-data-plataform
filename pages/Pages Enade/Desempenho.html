@@ -1653,6 +1653,73 @@
             });
         }
 
+        // heatmap html
+        function renderHeatmapHTML(dados) {
+            const anos = [...new Set(dados.map(d => d.ANO_EXAME).filter(a => a && a !== ''))].sort();
+            const cursos = [...new Set(dados.map(d => d.CODIGO_CURSO).filter(c => c && c !== ''))];
+
+            if (!anos.length || !cursos.length) {
+                return '<p style="text-align:center;color:var(--medium-color);padding:2rem;">Nenhum dado para heatmap</p>';
+            }
+
+            let html = `
+                <div class="heatmap-container" style="max-height:400px;overflow:auto;">
+                    <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+                        <thead>
+                            <tr>
+                                <th style="position:sticky;top:0;background:var(--light-color);padding:8px;border-bottom:2px solid #e9ecef;z-index:5;">Curso</th>
+                                ${anos.map(ano => `<th style="position:sticky;top:0;background:var(--light-color);padding:8px;border-bottom:2px solid #e9ecef;z-index:5;">${String(ano).replace(/\.0$/,'')}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            cursos.forEach(curso => {
+                const nome = getNomeCurso(curso);
+                html += `<tr><td style="font-weight:500;white-space:nowrap;padding:6px 8px;border-bottom:1px solid #f1f3f5;">${nome}</td>`;
+                anos.forEach(ano => {
+                    const reg = dados.find(d => d.ANO_EXAME === ano && d.CODIGO_CURSO === curso);
+                    const nota = reg ? (parseNota(reg.NOTA_GERAL) ?? parseNota(reg.NOTA_FORMACAO_GERAL)) : null;
+                    let cor = '#f1f3f5', texto = '—';
+                    if (nota !== null) {
+                        texto = nota.toFixed(1);
+                        const intensidade = Math.min(1, nota / 50);
+                        const r = Math.round(255 * (1 - intensidade));
+                        const g = Math.round(255 * intensidade);
+                        cor = `rgb(${r}, ${g}, 80)`;
+                    }
+                    html += `<td style="background:${cor};color:${nota !== null && nota > 40 ? '#fff' : '#333'};padding:6px 8px;text-align:center;border-bottom:1px solid #f1f3f5;">${texto}</td>`;
+                });
+                html += `</tr>`;
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+                <div class="heatmap-legend">
+                    <span><span class="color-box" style="background:rgb(255,80,80);"></span> Baixa</span>
+                    <span><span class="color-box" style="background:rgb(168,168,80);"></span> Média</span>
+                    <span><span class="color-box" style="background:rgb(80,255,80);"></span> Alta</span>
+                </div>
+            `;
+
+            return html;
+        }
+
+        // atualizar tudo
+        function atualizarTudo() {
+            atualizarStats();
+            renderRanking();
+            renderGraficos();
+        }
+
+        // inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            configurarBotoesModalGrafico();
+            carregarDados();
+        });
+
 
     </script>
 </body>
