@@ -1049,6 +1049,138 @@
         }
     }
 
+    // renderizar gráficos
+    function renderGraficos() {
+        const grid = document.getElementById('charts-grid');
+        if (!grid) return;
+
+        grid.innerHTML = '';
+
+        // infraestrutura radar
+        const infraKeys = Object.keys(infraLabels);
+        const infraMedias = infraKeys.map(item => {
+            const vals = dadosFiltrados.map(d => parseNota(d[item])).filter(v => v !== null);
+            return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+        });
+
+        grid.innerHTML = criarChartCard(
+            'card_infraRadar',
+            'infraRadar',
+            'fas fa-chart-radar',
+            'Avaliação da Infraestrutura',
+            'Avaliação detalhada dos itens de infraestrutura dos campi.'
+        );
+
+        // metodologia radar
+        const metodKeys = Object.keys(metodologiaLabels);
+        const metodMedias = metodKeys.map(item => {
+            const vals = dadosFiltrados.map(d => parseNota(d[item])).filter(v => v !== null);
+            return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+        });
+
+        grid.innerHTML += criarChartCard(
+            'card_metodologiaRadar',
+            'metodologiaRadar',
+            'fas fa-chart-radar',
+            'Avaliação da Metodologia',
+            'Avaliação detalhada dos itens de metodologia de ensino.'
+        );
+
+        // correlação
+        const correlacoes = infraKeys.map(item => {
+            const pares = dadosFiltrados.map(d => ({ infra: parseNota(d[item]), nota: parseNota(d.NOTA_GERAL) ?? parseNota(d.NOTA_FORMACAO_GERAL) }))
+                .filter(p => p.infra !== null && p.nota !== null);
+            if (pares.length < 2) return { label: infraLabels[item], corr: 0 };
+            const n = pares.length;
+            const sumX = pares.reduce((s, p) => s + p.infra, 0);
+            const sumY = pares.reduce((s, p) => s + p.nota, 0);
+            const sumXY = pares.reduce((s, p) => s + p.infra * p.nota, 0);
+            const sumX2 = pares.reduce((s, p) => s + p.infra * p.infra, 0);
+            const sumY2 = pares.reduce((s, p) => s + p.nota * p.nota, 0);
+            const corr = (n * sumXY - sumX * sumY) / (Math.sqrt(n * sumX2 - sumX * sumX) * Math.sqrt(n * sumY2 - sumY * sumY));
+            return { label: infraLabels[item], corr: isNaN(corr) ? 0 : corr };
+        });
+
+        grid.innerHTML += criarChartCard(
+            'card_correlacao',
+            'correlacaoInfraNota',
+            'fas fa-link',
+            'Correlação entre Infraestrutura e Nota Geral',
+            'Relação entre a avaliação da infraestrutura e o desempenho acadêmico.'
+        );
+
+        // percepção prova
+        const percepcoes = [
+            { key: 'PERCEPCAO_DIFICULDADE_FG', label: 'Dificuldade FG' },
+            { key: 'PERCEPCAO_DIFICULDADE_CE', label: 'Dificuldade CE' },
+            { key: 'PERCEPCAO_EXTENSAO_PROVA', label: 'Extensão' },
+            { key: 'PERCEPCAO_CLAREZA_FG', label: 'Clareza FG' },
+            { key: 'PERCEPCAO_CLAREZA_CE', label: 'Clareza CE' },
+            { key: 'PERCEPCAO_SUFICIENCIA_INFO', label: 'Suficiência Info' },
+            { key: 'PERCEPCAO_DIFICULDADE_RESPONDER', label: 'Dificuldade Responder' },
+            { key: 'PERCEPCAO_CONHECIMENTO_CONTEUDO', label: 'Conhecimento Conteúdo' },
+            { key: 'PERCEPCAO_TEMPO_GASTO', label: 'Tempo Gasto' }
+        ];
+        const mapLetraNum = { 'A': 1, 'B': 2, 'C': 3, 'D': 4, 'E': 5 };
+        const percepData = percepcoes.map(p => {
+            const vals = dadosFiltrados.map(d => d[p.key]).filter(v => v && v !== '');
+            if (!vals.length) return 0;
+            const nums = vals.map(v => mapLetraNum[v] || 3);
+            return nums.reduce((a, b) => a + b, 0) / nums.length;
+        });
+
+        grid.innerHTML += criarChartCard(
+            'card_percepcao',
+            'percepcaoChart',
+            'fas fa-chart-bar',
+            'Percepção sobre a Prova',
+            'Percepção dos estudantes sobre dificuldade, clareza e tempo da prova.'
+        );
+
+        // nível exigência
+        const exigenciaData = dadosFiltrados.filter(d => d.NIVEL_EXIGENCIA && d.NIVEL_EXIGENCIA !== '');
+        const freqExig = {};
+        exigenciaData.forEach(d => {
+            const ano = detectarAno(d);
+            const texto = window.converterValor ? window.converterValor('NIVEL_EXIGENCIA', d.NIVEL_EXIGENCIA, ano) : d.NIVEL_EXIGENCIA;
+            freqExig[texto] = (freqExig[texto] || 0) + 1;
+        });
+        const sortedExig = Object.entries(freqExig).sort((a, b) => b[1] - a[1]);
+
+        grid.innerHTML += criarChartCard(
+            'card_exigencia',
+            'nivelExigenciaChart',
+            'fas fa-chart-bar',
+            'Nível de Exigência do Curso',
+            'Percepção dos estudantes sobre o nível de exigência do curso.'
+        );
+
+        // criar gráficos
+        setTimeout(() => {
+            criarRadarScroll('infraRadar', Object.values(infraLabels), infraMedias, '#387f1c', 'Infraestrutura');
+            criarRadarScroll('metodologiaRadar', Object.values(metodologiaLabels), metodMedias, '#36b9cc', 'Metodologia');
+            criarCorrelacaoScroll('correlacaoInfraNota', correlacoes.map(c => c.label), correlacoes.map(c => c.corr));
+            criarBarraVerticalScroll('percepcaoChart', percepcoes.map(p => p.label), percepData, 'Percepção (1=Melhor, 5=Pior)', ['#36b9cc', '#1cc88a', '#f6c23e', '#f6c23e', '#36b9cc', '#1cc88a', '#e74a3b', '#9b59b6', '#e84393']);
+            criarBarraVerticalScroll('nivelExigenciaChart', sortedExig.map(s => s[0]), sortedExig.map(s => s[1]), 'Quantidade');
+
+            // eventos dos cards
+            const cards = [
+                { id: 'card_infraRadar', canvas: 'infraRadar', title: 'Avaliação da Infraestrutura' },
+                { id: 'card_metodologiaRadar', canvas: 'metodologiaRadar', title: 'Avaliação da Metodologia' },
+                { id: 'card_correlacao', canvas: 'correlacaoInfraNota', title: 'Correlação entre Infraestrutura e Nota Geral' },
+                { id: 'card_percepcao', canvas: 'percepcaoChart', title: 'Percepção sobre a Prova' },
+                { id: 'card_exigencia', canvas: 'nivelExigenciaChart', title: 'Nível de Exigência do Curso' }
+            ];
+
+            cards.forEach(({ id, canvas, title }) => {
+                if (document.getElementById(canvas)) {
+                    configurarEventosCard(id, canvas, title, dadosFiltrados);
+                }
+            });
+
+        }, 100);
+    }
+
     </script>
 
 </body>
