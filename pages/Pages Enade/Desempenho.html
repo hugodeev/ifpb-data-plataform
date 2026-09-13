@@ -1403,7 +1403,66 @@
 
             atualizarStatusIndicators();
         }
-   
+
+         // ranking
+        function renderRanking() {
+            const tbody = document.getElementById('rankingBody');
+            if (!dadosFiltrados.length) {
+                tbody.innerHTML = `<tr><td colspan="13" style="text-align:center;padding:2rem;color:var(--medium-color);">
+                    <i class="fas fa-info-circle" style="font-size:1.5rem;display:block;margin-bottom:0.5rem;"></i>
+                    Nenhum dado encontrado para os filtros selecionados.
+                </td></tr>`;
+                return;
+            }
+
+            const sorted = [...dadosFiltrados].sort((a, b) =>
+                (parseNota(b.NOTA_GERAL) || -1) - (parseNota(a.NOTA_GERAL) || -1)
+            );
+
+            let html = '';
+            sorted.forEach((d, i) => {
+                const notaGeral = parseNota(d.NOTA_GERAL);
+                const notaFG = parseNota(d.NOTA_FORMACAO_GERAL);
+                const notaCE = parseNota(d.NOTA_COMP_ESPECIFICO);
+                const conceito = getConceito(notaFG ?? notaGeral);
+                const nomeCurso = getNomeCurso(d.CODIGO_CURSO);
+                const cidade = getNomeCampus(d.CO_MUNIC_CURSO) || 'N/D';
+                const anoReg = window.detectarAno(d);
+                const sexo = window.getTexto(d, 'SEXO', anoReg);
+                const idade = window.getTexto(d, 'IDADE', anoReg);
+                const cor = window.getTexto(d, 'COR_RACA', anoReg);
+                const renda = window.getTexto(d, 'RENDA_FAMILIAR', anoReg);
+                const anoTexto = String(d.ANO_EXAME || '').replace(/\.0$/, '');
+
+                html += `<tr>
+                    <td>${i + 1}</td>
+                    <td>${nomeCurso}</td>
+                    <td>${cidade}</td>
+                    <td>${anoTexto}</td>
+                    <td>${notaGeral !== null ? notaGeral.toFixed(1) : 'N/D'}</td>
+                    <td>${notaFG !== null ? notaFG.toFixed(1) : 'N/D'}</td>
+                    <td>${notaCE !== null ? notaCE.toFixed(1) : 'N/D'}</td>
+                    <td>${sexo}</td>
+                    <td>${idade}</td>
+                    <td>${cor}</td>
+                    <td>${renda}</td>
+                    <td><span class="badge-conceito ${conceito.class}">${conceito.label}</span></td>
+                    <td><button class="btn-perfil" data-index="${i}"><i class="fas fa-id-card"></i> Perfil</button></td>
+                </tr>`;
+            });
+
+            tbody.innerHTML = html;
+
+            document.querySelectorAll('.btn-perfil').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const idx = parseInt(this.dataset.index);
+                    abrirPerfil(idx);
+                });
+            });
+
+            window.__rankingAtual = sorted;
+        }
+
 
     </script>
 </body>
