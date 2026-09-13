@@ -882,6 +882,52 @@
             SITUACAO_CE_Q3: 'Situação CE - Questão 3'
         };
 
+         // funções auxiliares
+        function getConceito(nota) {
+            if (!nota || nota === '') return { label: 'N/A', class: '' };
+            const n = parseFloat(nota);
+            if (isNaN(n)) return { label: 'N/A', class: '' };
+            if (n >= 45) return { label: '5', class: 'conceito-5' };
+            if (n >= 35) return { label: '4', class: 'conceito-4' };
+            if (n >= 25) return { label: '3', class: 'conceito-3' };
+            if (n >= 15) return { label: '2', class: 'conceito-2' };
+            return { label: '1', class: 'conceito-1' };
+        }
+
+        function parseNota(valor) {
+            if (!valor || valor === '') return null;
+            let str = String(valor).trim();
+            str = str.replace(/[^0-9.,]/g, '');
+            str = str.replace(',', '.');
+            const parts = str.split('.');
+            if (parts.length > 2) str = parts.slice(0, -1).join('') + '.' + parts[parts.length - 1];
+            const parsed = parseFloat(str);
+            if (isNaN(parsed)) return null;
+            if (parsed < 0 || parsed > 100) return null;
+            return parsed;
+        }
+
+        function getNomeCurso(codigo) {
+            return cursosMap[codigo] || window.converterValor('CODIGO_CURSO', codigo, null) || codigo;
+        }
+
+        function getNomeCampus(codigo) {
+            return campusMap[codigo] || codigo;
+        }
+
+        function getPaletaCores(index) {
+            const paleta = [
+                '#e74a3b', '#3498db', '#2ecc71', '#f39c12', '#9b59b6',
+                '#1abc9c', '#e67e22', '#e84393', '#00b894', '#6c5ce7',
+                '#fdcb6e', '#e17055', '#0984e3', '#00cec9', '#fd79a8',
+                '#a29bfe', '#55efc4', '#fab1a0', '#81ecec', '#ff7675',
+                '#74b9ff', '#55a3e0', '#f8a5c2', '#7bed9f', '#70a1ff',
+                '#ff6b81', '#2ed573', '#ffa502', '#1e90ff', '#ff4757'
+            ];
+            return paleta[index % paleta.length];
+        }
+
+
        
     </script>
 </body>
