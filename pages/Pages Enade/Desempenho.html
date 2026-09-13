@@ -1017,7 +1017,82 @@
             return charts[canvasId];
         }
 
-       
+        // card gráfico
+        function criarChartCard(cardId, canvasId, iconClass, titulo, descricao) {
+            return `
+                <div class="chart-card" id="${cardId}">
+                    <div class="card-header">
+                        <h3>
+                            <i class="${iconClass}"></i>
+                            ${titulo}
+                        </h3>
+                        <div class="chart-actions">
+                            <button class="chart-btn" data-expand="${canvasId}" title="Expandir gráfico">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <button class="chart-btn" data-download="${canvasId}" title="Baixar PNG">
+                                <i class="fas fa-image"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-scroll-wrapper">
+                        <div class="chart-scroll-inner">
+                            <canvas id="${canvasId}"></canvas>
+                        </div>
+                    </div>
+                    <div class="descricao-card">
+                        <span class="texto">
+                            <i class="fas fa-info-circle"></i>
+                            ${descricao}
+                        </span>
+                        <button class="btn-ver-mais" data-expand-full="${canvasId}">
+                            Ver mais
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // eventos cards
+        function configurarEventosCard(cardId, canvasId, titulo, dados) {
+            const card = document.getElementById(cardId);
+            if (!card) return;
+
+            const descricaoCard = card.querySelector('.descricao-card .texto')?.textContent?.trim() || '';
+            const descricaoFull = descricaoCard.replace(/^[^:]+:\s*/, '');
+
+            const expandBtn = card.querySelector(`[data-expand="${canvasId}"]`);
+            if (expandBtn) {
+                expandBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    abrirModalGrafico(canvasId, titulo, dados, descricaoFull);
+                });
+            }
+
+            const verMaisBtn = card.querySelector(`[data-expand-full="${canvasId}"]`);
+            if (verMaisBtn) {
+                verMaisBtn.addEventListener('click', () => {
+                    abrirModalGrafico(canvasId, titulo, dados, descricaoFull);
+                });
+            }
+
+            const downloadBtn = card.querySelector(`[data-download="${canvasId}"]`);
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const canvas = document.getElementById(canvasId);
+                    if (canvas) {
+                        const link = document.createElement('a');
+                        link.download = `${titulo.replace(/\s+/g, '_')}.png`;
+                        link.href = canvas.toDataURL('image/png');
+                        link.click();
+                    }
+                });
+            }
+        }
+
+        
     </script>
 </body>
 </html>
