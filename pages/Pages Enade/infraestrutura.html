@@ -792,7 +792,7 @@
         }
     }
 
-     // abrir modal
+    // abrir modal
     function abrirModalGrafico(canvasId, titulo, rawData) {
         const canvasOrigem = document.getElementById(canvasId);
         if (!canvasOrigem) return;
@@ -907,6 +907,107 @@
         }
     }
 
+    // carregar dados
+    function carregarDados() {
+        fetch('../../assets/data/DadosENADE/DADOSENADEGERAL.json')
+            .then(r => r.ok ? r.json() : Promise.reject('HTTP ' + r.status))
+            .then(data => {
+                dadosCompletos = data;
+                dadosFiltrados = [...dadosCompletos];
+                preencherFiltros();
+                atualizarStatusIndicators();
+                atualizarTudo();
+                configurarBotoesModal();
+            })
+            .catch(err => console.error('Erro:', err));
+    }
+
+    function preencherFiltros() {
+        const anos = [...new Set(dadosCompletos.map(d => String(d.ANO_EXAME || '').replace(/\.0$/, '')).filter(a => /^\d{4}$/.test(a)))].sort();
+        const cursos = [...new Set(dadosCompletos.map(d => String(d.CODIGO_CURSO || '').trim()).filter(c => c))];
+        const campi = [...new Set(dadosCompletos.map(d => String(d.CO_MUNIC_CURSO || '')).filter(c => c))];
+
+        const selA = document.getElementById('anoInfra');
+        selA.innerHTML = '<option value="todos">Todos os Anos</option>';
+        anos.forEach(a => { const o = document.createElement('option'); o.value = a; o.textContent = a; selA.appendChild(o); });
+
+        const selC = document.getElementById('cursoInfra');
+        selC.innerHTML = '<option value="todos">Todos os Cursos</option>';
+        cursos.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = getNomeCurso(c); selC.appendChild(o); });
+
+        const selCamp = document.getElementById('campusInfra');
+        selCamp.innerHTML = '<option value="todos">Todos</option>';
+        campi.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = getNomeCampus(c); selCamp.appendChild(o); });
+    }
+
+    function aplicarFiltrosInfra() {
+        const ano = document.getElementById('anoInfra').value;
+        const curso = document.getElementById('cursoInfra').value;
+        const campus = document.getElementById('campusInfra').value;
+        dadosFiltrados = dadosCompletos.filter(d => {
+            const a = String(d.ANO_EXAME || '').replace(/\.0$/, '');
+            const c = String(d.CODIGO_CURSO || '').trim();
+            const camp = String(d.CO_MUNIC_CURSO || '');
+            let ok = true;
+            if (ano !== 'todos' && a !== ano) ok = false;
+            if (curso !== 'todos' && c !== curso) ok = false;
+            if (campus !== 'todos' && camp !== campus) ok = false;
+            return ok;
+        });
+        atualizarStatusIndicators();
+        atualizarTudo();
+    }
+
+    function resetarFiltrosInfra() {
+        document.getElementById('anoInfra').value = 'todos';
+        document.getElementById('cursoInfra').value = 'todos';
+        document.getElementById('campusInfra').value = 'todos';
+        dadosFiltrados = [...dadosCompletos];
+        atualizarStatusIndicators();
+        atualizarTudo();
+    }
+
+    function atualizarStatusIndicators() {
+        const total = dadosFiltrados.length;
+        const elAno = document.getElementById('status-ano');
+        const elItens = document.getElementById('status-itens');
+        const elCorrelacao = document.getElementById('status-correlacao');
+
+        if (elAno) {
+            const anoAtual = new Date().getFullYear();
+            elAno.textContent = anoAtual;
+        }
+
+        const items = Object.keys(infraLabels);
+        let itensComDados = 0;
+        items.forEach(item => {
+            const vals = dadosFiltrados.map(d => d[item]).filter(v => v && v !== '');
+            if (vals.length > 0) itensComDados++;
+        });
+        if (elItens) elItens.textContent = itensComDados + ' itens avaliados';
+
+        const pares = dadosFiltrados.map(d => ({ infra: parseNota(d.INSTALACOES_GERAIS), nota: parseNota(d.NOTA_GERAL) ?? parseNota(d.NOTA_FORMACAO_GERAL) }))
+            .filter(p => p.infra !== null && p.nota !== null);
+        if (pares.length > 1 && elCorrelacao) {
+            const n = pares.length;
+            const sumX = pares.reduce((s, p) => s + p.infra, 0);
+            const sumY = pares.reduce((s, p) => s + p.nota, 0);
+            const sumXY = pares.reduce((s, p) => s + p.infra * p.nota, 0);
+            const sumX2 = pares.reduce((s, p) => s + p.infra * p.infra, 0);
+            const sumY2 = pares.reduce((s, p) => s + p.nota * p.nota, 0);
+            const corr = (n * sumXY - sumX * sumY) / (Math.sqrt(n * sumX2 - sumX * sumX) * Math.sqrt(n * sumY2 - sumY * sumY));
+            elCorrelacao.textContent = 'Correlação: ' + (isNaN(corr) ? '0.00' : corr.toFixed(2));
+        } else if (elCorrelacao) {
+            elCorrelacao.textContent = 'Dados insuficientes';
+        }
+    }
+
+    function atualizarTudo() {
+        atualizarStats();
+        renderGraficos();
+        renderAvaliacaoCurso();
+        renderInfraItens();
+    }
 
     </script>
 
