@@ -1359,6 +1359,51 @@
             atualizarTudo();
         }
 
+        // indicadores
+        function atualizarStatusIndicators() {
+            const totalRegistros = dadosFiltrados.length;
+            const cursos = new Set(dadosFiltrados.map(d => String(d.CODIGO_CURSO)).filter(c => c));
+            const totalCursos = cursos.size;
+
+            const elCursos = document.getElementById('status-cursos');
+            const elParticipantes = document.getElementById('status-participantes');
+            const elAno = document.getElementById('status-ano');
+
+            if (elAno) {
+                const anoAtual = new Date().getFullYear();
+                elAno.textContent = anoAtual;
+            }
+            if (elCursos) elCursos.textContent = totalCursos + ' Cursos';
+            if (elParticipantes) elParticipantes.textContent = totalRegistros.toLocaleString() + ' Participantes';
+        }
+
+        // estatísticas
+        function atualizarStats() {
+            const total = dadosFiltrados.length;
+            document.getElementById('totalRegistros').textContent = total;
+
+            const notas = dadosFiltrados.map(d => parseNota(d.NOTA_GERAL)).filter(n => n !== null && !isNaN(n));
+            const notasFG = dadosFiltrados.map(d => parseNota(d.NOTA_FORMACAO_GERAL)).filter(n => n !== null && !isNaN(n));
+            const cursos = new Set(dadosFiltrados.map(d => String(d.CODIGO_CURSO)).filter(c => c));
+            document.getElementById('totalCursos').textContent = cursos.size;
+
+            if (notas.length) {
+                const media = notas.reduce((a, b) => a + b, 0) / notas.length;
+                document.getElementById('mediaGeral').textContent = media.toFixed(1);
+            } else {
+                document.getElementById('mediaGeral').textContent = '-';
+            }
+
+            if (notasFG.length) {
+                const mediaFG = notasFG.reduce((a, b) => a + b, 0) / notasFG.length;
+                document.getElementById('mediaFG').textContent = mediaFG.toFixed(1);
+            } else {
+                document.getElementById('mediaFG').textContent = '-';
+            }
+
+            atualizarStatusIndicators();
+        }
+   
 
     </script>
 </body>
