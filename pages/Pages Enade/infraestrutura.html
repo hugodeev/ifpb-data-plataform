@@ -485,6 +485,59 @@
         link.addEventListener('click', closeMenu);
     });
 
+    // variáveis globais
+    let dadosCompletos = [];
+    let dadosFiltrados = [];
+    let charts = {};
+    let modalChartInstance = null;
+    let modalRawData = null;
+    let modalChartTitle = '';
+
+    const campusMap = {
+        '2507507': 'João Pessoa',
+        '2503704': 'Cajazeiras',
+        '2512309': 'Princesa Isabel',
+        '2506301': 'Guarabira',
+        '2503209': 'Cabedelo',
+        '2504009': 'Campina Grande',
+        '2509701': 'Monteiro',
+        '2516201': 'Sousa',
+        '2510808': 'Patos'
+    };
+
+    const cursosMap = {
+        '49960': 'Design de Interiores', '58391': 'Redes de Computadores', '81312': 'Química',
+        '95089': 'Automação Industrial', '95093': 'Automação Industrial',
+        '95104': 'Análise e Desenvolvimento de Sistemas', '1166614': 'Análise e Desenvolvimento de Sistemas',
+        '114944': 'Construção de Edifícios', '1167926': 'Gestão Comercial',
+        '123002': 'Gestão Ambiental', '123105': 'Design Gráfico', '123116': 'Segurança no Trabalho',
+        '123120': 'Gestão Ambiental', '103481': 'Engenharia Elétrica', '1262856': 'Engenharia Civil',
+        '1342196': 'Engenharia de Computação', '1457168': 'Engenharia Civil', '1457169': 'Engenharia Civil',
+        '1457171': 'Engenharia Mecânica', '1128030': 'Matemática', '1128096': 'Matemática',
+        '1176228': 'Letras - Língua Portuguesa', '1188374': 'Física', '1188396': 'Educação Física',
+        '123233': 'Química', '1307356': 'Computação e Informática', '1341255': 'Ciências Biológicas',
+        '100260': 'Administração', '123237': 'Medicina Veterinária', '1261262': 'Administração Pública'
+    };
+
+    const infraLabels = {
+        'INSTALACOES_GERAIS': 'Instalações Gerais', 'SALAS_AULA': 'Salas de Aula',
+        'LABORATORIOS': 'Laboratórios', 'AMBIENTES_PRATICAS': 'Ambientes Práticos',
+        'EQUIPAMENTOS_PRATICAS': 'Equipamentos', 'ACESSO_INTERNET': 'Acesso Internet',
+        'RECURSOS_AUDIOVISUAIS': 'Recursos Audiovisuais', 'FREQUENCIA_BIBLIOTECA': 'Freq. Biblioteca',
+        'ACESSO_ACERVO': 'Acesso ao Acervo', 'ATUALIZACAO_ACERVO': 'Atualização Acervo',
+        'PERIODICOS_CIENTIFICOS': 'Periódicos', 'HORARIO_BIBLIOTECA': 'Horário Biblioteca'
+    };
+
+    const metodologiaLabels = {
+        'PLANOS_ENSINO': 'Planos de Ensino', 'COERENCIA_CONTEUDOS': 'Coerência Conteúdos',
+        'ATIVIDADES_PESQUISA': 'Atividades Pesquisa', 'USO_LIVROS_TEXTO': 'Uso Livros-texto',
+        'USO_ARTIGOS_CIENTIFICOS': 'Uso Artigos', 'MATERIAIS_PROFESSORES': 'Materiais Professores',
+        'EXIGENCIA_IDIOMA': 'Exigência Idiomas', 'DISPONIBILIDADE_PROFESSORES': 'Disponibilidade Professores',
+        'DOMINIO_CONTEUDO': 'Domínio Conteúdo', 'CONTEXTUALIZACAO': 'Contextualização',
+        'INTEGRACAO_CURRICULO': 'Integração Currículo'
+    };
+
+
     </script>
 
 </body>
