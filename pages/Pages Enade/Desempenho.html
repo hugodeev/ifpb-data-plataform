@@ -1463,6 +1463,196 @@
             window.__rankingAtual = sorted;
         }
 
+        // renderizar gráficos
+        function renderGraficos() {
+            const dados = dadosFiltrados;
+
+            // preparar dados
+            const anos = [...new Set(dados.map(d => d.ANO_EXAME).filter(a => a && a !== ''))].sort();
+            const cursos = [...new Set(dados.map(d => d.CODIGO_CURSO).filter(c => c && c !== ''))];
+            const anosLabels = anos.map(a => String(a).replace(/\.0$/, ''));
+
+            // evolução
+            const datasetsEvolucao = cursos.map((curso, idx) => {
+                const data = anos.map(ano => {
+                    const reg = dados.find(d => d.ANO_EXAME === ano && d.CODIGO_CURSO === curso);
+                    return reg ? (parseNota(reg.NOTA_GERAL) ?? parseNota(reg.NOTA_FORMACAO_GERAL)) : null;
+                });
+                const cor = getPaletaCores(idx);
+                return {
+                    label: getNomeCurso(curso),
+                    data: data,
+                    borderColor: cor,
+                    backgroundColor: cor + '33',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    spanGaps: true,
+                    borderWidth: 2
+                };
+            });
+
+            // média geral
+            const mediaGeral = anos.map(ano => {
+                const notas = dados.filter(d => d.ANO_EXAME === ano)
+                    .map(d => parseNota(d.NOTA_GERAL) ?? parseNota(d.NOTA_FORMACAO_GERAL))
+                    .filter(n => n !== null);
+                return notas.length ? notas.reduce((a, b) => a + b, 0) / notas.length : null;
+            });
+
+            datasetsEvolucao.push({
+                label: 'Média Geral',
+                data: mediaGeral,
+                borderColor: '#1a1a2e',
+                backgroundColor: 'rgba(26,26,46,0.05)',
+                borderDash: [8, 5],
+                borderWidth: 3,
+                pointRadius: 0,
+                fill: false,
+                tension: 0.3
+            });
+
+            // scatter
+            const scatterData = {};
+            dados.forEach(d => {
+                const fg = parseNota(d.NOTA_FORMACAO_GERAL);
+                const ce = parseNota(d.NOTA_COMP_ESPECIFICO);
+                if (fg !== null && ce !== null) {
+                    const curso = getNomeCurso(d.CODIGO_CURSO);
+                    const cor = getPaletaCores(cursos.indexOf(d.CODIGO_CURSO));
+                    if (!scatterData[curso]) {
+                        scatterData[curso] = { label: curso, data: [], backgroundColor: cor, borderColor: cor, pointRadius: 5, pointHoverRadius: 8, showLine: false };
+                    }
+                    scatterData[curso].data.push({ x: fg, y: ce });
+                }
+            });
+            const datasetsScatter = Object.values(scatterData);
+
+            // conceitos
+            const dadosConceitos = cursos.map(curso => {
+                const registros = dados.filter(d => d.CODIGO_CURSO === curso);
+                const conceitos = registros.map(d => {
+                    const nota = parseNota(d.NOTA_GERAL) ?? parseNota(d.NOTA_FORMACAO_GERAL);
+                    return getConceito(nota).label;
+                }).filter(c => c !== 'N/A');
+                const total = conceitos.length;
+                const contagem = { '5': 0, '4': 0, '3': 0, '2': 0, '1': 0 };
+                conceitos.forEach(c => { if (contagem[c] !== undefined) contagem[c]++; });
+                return { curso: getNomeCurso(curso), ...contagem, total };
+            }).filter(d => d.total > 0);
+
+            const conceitosLabels = dadosConceitos.map(d => d.curso);
+            const conceitosDatasets = [
+                { label: 'Conceito 5', data: dadosConceitos.map(d => d['5']), backgroundColor: '#1cc88a' },
+                { label: 'Conceito 4', data: dadosConceitos.map(d => d['4']), backgroundColor: '#36b9cc' },
+                { label: 'Conceito 3', data: dadosConceitos.map(d => d['3']), backgroundColor: '#f6c23e' },
+                { label: 'Conceito 2', data: dadosConceitos.map(d => d['2']), backgroundColor: '#e74a3b' },
+                { label: 'Conceito 1', data: dadosConceitos.map(d => d['1']), backgroundColor: '#858796' }
+            ];
+
+            // média anual
+            const mediaAnual = anos.map(ano => {
+                const notas = dados.filter(d => d.ANO_EXAME === ano)
+                    .map(d => parseNota(d.NOTA_GERAL) ?? parseNota(d.NOTA_FORMACAO_GERAL))
+                    .filter(n => n !== null);
+                return notas.length ? notas.reduce((a, b) => a + b, 0) / notas.length : null;
+            });
+
+            // montar cards
+            let html = '';
+
+            html += criarChartCard('card_evolucao', 'chartEvolucao', 'fas fa-chart-line', 'Evolução das Notas por Curso', 'Evolução das notas ao longo dos anos, com destaque para a média geral.');
+
+            html += criarChartCard('card_scatter', 'chartScatter', 'fas fa-chart-scatter', 'Correlação: FG vs Conhecimento Específico', 'Relação entre as notas de Formação Geral e Conhecimento Específico.');
+
+            html += criarChartCard('card_conceitos', 'chartConceitos', 'fas fa-chart-pie', 'Distribuição de Conceitos por Curso', 'Distribuição dos conceitos ENADE (1 a 5) por curso.');
+
+            html += criarChartCard('card_mediaGeral', 'chartMediaGeral', 'fas fa-fire', 'Média Geral Anual', 'Evolução da média geral de todos os cursos ao longo dos anos.');
+
+            html += criarChartCard('card_heatmap', 'chartHeatmap', 'fas fa-table', 'Heatmap: Notas por Curso × Ano', 'Visualização matricial das notas por curso e ano.');
+
+            document.getElementById('graficosGrid').innerHTML = html;
+
+            // renderizar gráficos
+            criarLinhaScroll('chartEvolucao', anosLabels, datasetsEvolucao, 'Nota');
+
+            if (datasetsScatter.length) {
+                criarScatterScroll('chartScatter', datasetsScatter);
+            }
+
+            if (conceitosLabels.length) {
+                criarBarraEmpilhadaScroll('chartConceitos', conceitosLabels, conceitosDatasets);
+            }
+
+            // média geral
+            const mediaCanvas = document.getElementById('chartMediaGeral');
+            if (mediaCanvas) {
+                const ctx = mediaCanvas.getContext('2d');
+                if (charts['chartMediaGeral']) { charts['chartMediaGeral'].destroy(); delete charts['chartMediaGeral']; }
+                if (anosLabels.length) {
+                    charts['chartMediaGeral'] = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: anosLabels,
+                            datasets: [{
+                                label: 'Média Geral',
+                                data: mediaAnual,
+                                borderColor: '#2c3e50',
+                                backgroundColor: 'rgba(44,62,80,0.1)',
+                                fill: true,
+                                tension: 0.3,
+                                pointRadius: 4,
+                                pointBackgroundColor: '#2c3e50'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: { callbacks: { label: (ctx) => `Média: ${ctx.parsed.y?.toFixed(1) || 'N/D'}` } }
+                            },
+                            scales: {
+                                y: { beginAtZero: true, title: { display: true, text: 'Nota' } },
+                                x: { title: { display: true, text: 'Ano' } }
+                            }
+                        }
+                    });
+                    charts['chartMediaGeral'].canvas.parentElement.style.width = '100%';
+                    charts['chartMediaGeral'].canvas.parentElement.style.minWidth = '100%';
+                }
+            }
+
+            // heatmap
+            const heatmapCanvas = document.getElementById('chartHeatmap');
+            if (heatmapCanvas) {
+                const container = heatmapCanvas.parentElement.parentElement;
+                const heatmapHTML = renderHeatmapHTML(dados);
+                const scrollWrapper = heatmapCanvas.closest('.chart-scroll-wrapper');
+                if (scrollWrapper) {
+                    scrollWrapper.innerHTML = heatmapHTML;
+                    scrollWrapper.style.minHeight = 'auto';
+                    scrollWrapper.style.maxHeight = '500px';
+                    scrollWrapper.style.overflow = 'auto';
+                    scrollWrapper.style.padding = '0.5rem';
+                }
+                if (charts['chartHeatmap']) { delete charts['chartHeatmap']; }
+            }
+
+            // eventos cards
+            const configs = [
+                { id: 'card_evolucao', canvas: 'chartEvolucao', titulo: 'Evolução das Notas por Curso' },
+                { id: 'card_scatter', canvas: 'chartScatter', titulo: 'Correlação: FG vs Conhecimento Específico' },
+                { id: 'card_conceitos', canvas: 'chartConceitos', titulo: 'Distribuição de Conceitos por Curso' },
+                { id: 'card_mediaGeral', canvas: 'chartMediaGeral', titulo: 'Média Geral Anual' },
+                { id: 'card_heatmap', canvas: 'chartHeatmap', titulo: 'Heatmap: Notas por Curso × Ano' }
+            ];
+
+            configs.forEach(cfg => {
+                configurarEventosCard(cfg.id, cfg.canvas, cfg.titulo, dados);
+            });
+        }
+
 
     </script>
 </body>
