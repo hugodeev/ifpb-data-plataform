@@ -538,7 +538,22 @@
             height: 100% !important;
         }
 
-       /* config*/
+        .modal-scroll-wrapper::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        .modal-scroll-wrapper::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 5px;
+        }
+        .modal-scroll-wrapper::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 5px;
+        }
+        .modal-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
         .my-custom-scrollbar::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 4px;
@@ -1756,5 +1771,6 @@
         })();
 
     </script>
+
 </body>
 </html>
