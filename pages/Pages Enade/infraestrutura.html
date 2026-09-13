@@ -573,6 +573,154 @@
         return map[v] || { label: v, class: '' };
     }
 
+    // criar gráficos
+    function criarRadarScroll(canvasId, labels, data, cor, titulo) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        const parent = canvas.parentElement;
+        if (parent) { parent.style.width = '100%'; parent.style.minWidth = '100%'; }
+        const ctx = canvas.getContext('2d');
+        if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+        if (!labels || labels.length === 0) return;
+        charts[canvasId] = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: titulo || 'Avaliação',
+                    data: data,
+                    backgroundColor: cor + '33',
+                    borderColor: cor,
+                    pointBackgroundColor: cor,
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { r: { min: 0, max: 6, ticks: { stepSize: 1 } } },
+                plugins: { legend: { display: false } }
+            }
+        });
+        return charts[canvasId];
+    }
+
+    function criarBarraVerticalScroll(canvasId, labels, values, tituloY = 'Quantidade', cores = null) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        const parent = canvas.parentElement;
+        if (parent) { parent.style.width = '100%'; parent.style.minWidth = '100%'; }
+        const ctx = canvas.getContext('2d');
+        if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+        if (!labels || labels.length === 0) return;
+
+        function shortenText(text, maxChars = 18) {
+            if (!text) return '';
+            if (text.length <= maxChars) return text;
+            return text.substring(0, maxChars - 3) + '...';
+        }
+
+        const shortLabels = labels.map(label => shortenText(label, 14));
+        const defaultCores = ['#4aa47d', '#36b9cc', '#1cc88a', '#f6c23e', '#4e73df', '#e74a3b'];
+        const bgCores = cores || defaultCores;
+
+        charts[canvasId] = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: shortLabels,
+                datasets: [{
+                    label: tituloY,
+                    data: values,
+                    backgroundColor: bgCores.length > 1 ? bgCores : '#4aa47d',
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: tituloY },
+                        ticks: { font: { size: 11 } }
+                    },
+                    x: {
+                        ticks: {
+                            autoSkip: false,
+                            maxRotation: 35,
+                            minRotation: 25,
+                            font: { size: 8 }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: (c) => `${c.raw}`,
+                            afterBody: function(tooltipItems) {
+                                const index = tooltipItems[0].dataIndex;
+                                return labels[index] ? `\n${labels[index]}` : '';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        return charts[canvasId];
+    }
+
+    function criarCorrelacaoScroll(canvasId, labels, values) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        const parent = canvas.parentElement;
+        if (parent) { parent.style.width = '100%'; parent.style.minWidth = '100%'; }
+        const ctx = canvas.getContext('2d');
+        if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+        if (!labels || labels.length === 0) return;
+
+        function shortenText(text, maxChars = 18) {
+            if (!text) return '';
+            if (text.length <= maxChars) return text;
+            return text.substring(0, maxChars - 3) + '...';
+        }
+
+        const shortLabels = labels.map(label => shortenText(label, 14));
+
+        charts[canvasId] = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: shortLabels,
+                datasets: [{
+                    label: 'Correlação com Nota',
+                    data: values,
+                    backgroundColor: values.map(v => v > 0 ? '#1cc88a' : '#e74a3b'),
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Coeficiente de Correlação' },
+                        ticks: { font: { size: 11 } }
+                    },
+                    x: {
+                        ticks: {
+                            autoSkip: false,
+                            maxRotation: 35,
+                            minRotation: 25,
+                            font: { size: 8 }
+                        }
+                    }
+                }
+            }
+        });
+        return charts[canvasId];
+    }
+
     </script>
 
 </body>
