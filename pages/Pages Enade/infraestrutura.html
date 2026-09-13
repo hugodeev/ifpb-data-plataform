@@ -537,6 +537,41 @@
         'INTEGRACAO_CURRICULO': 'Integração Currículo'
     };
 
+    // funções auxiliares
+    function getNomeCurso(c) { 
+        return cursosMap[c] || (window.converterValor ? window.converterValor('CODIGO_CURSO', c, null) : c) || c; 
+    }
+
+    function getNomeCampus(c) { 
+        return campusMap[c] || c; 
+    }
+
+    function parseNota(v) { 
+        if (!v) return null; 
+        const p = parseFloat(v); 
+        return isNaN(p) ? null : p; 
+    }
+
+    function detectarAno(d) {
+        if (d && d.ANO_EXAME) {
+            const ano = String(d.ANO_EXAME).replace(/\.0$/, '');
+            if (/^\d{4}$/.test(ano)) {
+                return ano;
+            }
+        }
+        return null;
+    }
+
+    function getNotaClass(v) {
+        const map = { 
+            '1': { label: 'Excelente', class: 'nota-excelente' }, 
+            '2': { label: 'Bom', class: 'nota-bom' }, 
+            '3': { label: 'Regular', class: 'nota-regular' }, 
+            '4': { label: 'Ruim', class: 'nota-ruim' }, 
+            '5': { label: 'Péssimo', class: 'nota-pessimo' } 
+        };
+        return map[v] || { label: v, class: '' };
+    }
 
     </script>
 
