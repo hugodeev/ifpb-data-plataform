@@ -1181,6 +1181,58 @@
         }, 100);
     }
 
+    // avaliação curso
+    function renderAvaliacaoCurso() {
+        const campos = [
+            { key: 'CONTRIBUICAO_CULTURA_GERAL', id: 'avaliacaoCultura' },
+            { key: 'CONTRIBUICAO_FORMACAO_TEORICA', id: 'avaliacaoTeorica' },
+            { key: 'CONTRIBUICAO_EXERCICIO_PROFISSIONAL', id: 'avaliacaoProfissional' },
+            { key: 'AVALIACAO_GERAL_CURSO', id: 'avaliacaoGeralCurso' }
+        ];
+        campos.forEach(campo => {
+            const vals = dadosFiltrados.map(d => d[campo.key]).filter(v => v && v !== '');
+            if (vals.length) {
+                const freq = {};
+                vals.forEach(v => freq[v] = (freq[v] || 0) + 1);
+                const moda = Object.keys(freq).reduce((a, b) => freq[a] > freq[b] ? a : b);
+                const conceito = { 'A': '5', 'B': '4', 'C': '3', 'D': '2', 'E': '1' }[moda] || '3';
+                const el = document.getElementById(campo.id);
+                el.textContent = conceito;
+                el.className = 'badge-conceito conceito-' + conceito;
+            } else {
+                const el = document.getElementById(campo.id);
+                el.textContent = 'N/A';
+                el.className = 'badge-conceito conceito-3';
+            }
+        });
+    }
+
+    // itens infra
+    function renderInfraItens() {
+        const container = document.getElementById('infraItens');
+        const items = Object.keys(infraLabels);
+        let html = '';
+        items.forEach(item => {
+            const vals = dadosFiltrados.map(d => d[item]).filter(v => v && v !== '');
+            let nota = 'N/A', notaClass = '';
+            if (vals.length) {
+                const freq = {};
+                vals.forEach(v => freq[v] = (freq[v] || 0) + 1);
+                const moda = Object.keys(freq).reduce((a, b) => freq[a] > freq[b] ? a : b);
+                const info = getNotaClass(moda);
+                nota = info.label;
+                notaClass = info.class;
+            }
+            html += '<div class="avaliacao-item"><span class="nome">' + infraLabels[item] + '</span><span class="nota ' + notaClass + '">' + nota + '</span></div>';
+        });
+        container.innerHTML = html;
+    }
+
+    // inicialização
+    document.addEventListener('DOMContentLoaded', function() {
+        carregarDados();
+    });
+
     </script>
 
 </body>
