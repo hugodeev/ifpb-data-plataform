@@ -927,6 +927,95 @@
             return paleta[index % paleta.length];
         }
 
+        // criar gráficos
+        function criarLinhaScroll(canvasId, labels, datasets, tituloY = 'Nota') {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const parent = canvas.parentElement;
+            if (parent) { parent.style.width = '100%'; parent.style.minWidth = '100%'; }
+            const ctx = canvas.getContext('2d');
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+            charts[canvasId] = new Chart(ctx, {
+                type: 'line',
+                data: { labels, datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8, padding: 12, font: { size: 10 } } },
+                        tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(1) || 'N/D'}` } }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)' }, title: { display: true, text: tituloY } },
+                        x: { grid: { display: false }, title: { display: true, text: 'Ano' } }
+                    }
+                }
+            });
+            return charts[canvasId];
+        }
+
+        function criarScatterScroll(canvasId, datasets) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const parent = canvas.parentElement;
+            if (parent) { parent.style.width = '100%'; parent.style.minWidth = '100%'; }
+            const ctx = canvas.getContext('2d');
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!datasets || datasets.length === 0) return;
+            charts[canvasId] = new Chart(ctx, {
+                type: 'scatter',
+                data: { datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8, padding: 12, font: { size: 10 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    const label = context.dataset.label || '';
+                                    return `${label}: FG: ${context.parsed.x?.toFixed(1) || 'N/D'}, CE: ${context.parsed.y?.toFixed(1) || 'N/D'}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { title: { display: true, text: 'Formação Geral' }, min: 0, max: 100 },
+                        y: { title: { display: true, text: 'Conhecimento Específico' }, min: 0, max: 100 }
+                    }
+                }
+            });
+            return charts[canvasId];
+        }
+
+        function criarBarraEmpilhadaScroll(canvasId, labels, datasets) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const parent = canvas.parentElement;
+            if (parent) { parent.style.width = '100%'; parent.style.minWidth = '100%'; }
+            const ctx = canvas.getContext('2d');
+            if (charts[canvasId]) { charts[canvasId].destroy(); delete charts[canvasId]; }
+            if (!labels || labels.length === 0) return;
+            charts[canvasId] = new Chart(ctx, {
+                type: 'bar',
+                data: { labels, datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8, font: { size: 10 } } },
+                        tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y} alunos` } }
+                    },
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: { stacked: true, beginAtZero: true, title: { display: true, text: 'Quantidade de Alunos' } }
+                    }
+                }
+            });
+            return charts[canvasId];
+        }
 
        
     </script>
