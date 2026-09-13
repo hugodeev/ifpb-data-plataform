@@ -1092,7 +1092,136 @@
             }
         }
 
-        
+         // abrir modal
+        function abrirModalGrafico(canvasId, titulo, dados, descricaoEspecifica = '') {
+            const canvasOrigem = document.getElementById(canvasId);
+            if (!canvasOrigem) return;
+
+            const chartObj = charts[canvasId];
+            if (!chartObj) return;
+
+            const modalCanvas = document.getElementById('modalCanvas');
+            if (modalChartInstance) {
+                modalChartInstance.destroy();
+                modalChartInstance = null;
+            }
+
+            const chartType = chartObj.config.type;
+            const modalData = JSON.parse(JSON.stringify(chartObj.config.data));
+
+            modalChartInstance = new Chart(modalCanvas.getContext('2d'), {
+                type: chartType,
+                data: modalData,
+                options: {
+                    ...chartObj.config.options,
+                    responsive: true,
+                    maintainAspectRatio: true
+                }
+            });
+
+            document.getElementById('modalGraficoTitulo').innerHTML = `<i class="fas fa-chart-bar"></i> ${titulo}`;
+            modalRawData = dados;
+            modalChartTitle = titulo;
+
+            const totalRespostas = dados ? dados.length : 0;
+            const possuiScroll = chartType === 'bar' || chartType === 'line' || chartType === 'scatter';
+
+            const textoN = totalRespostas > 0 ? `<strong>Baseado em ${totalRespostas} registros.</strong><br><br>` : '';
+
+            let textoInterpretar = `
+                <strong>Como interpretar:</strong>
+                <ul>
+                    <li>Linhas mostram a evolução das notas ao longo dos anos.</li>
+                    <li>Barras representam a distribuição por conceitos.</li>
+                    <li>Gráficos de dispersão mostram a correlação entre FG e CE.</li>
+                    <li>Recomendamos a visualização em telas maiores para uma melhor experiência.</li>
+            `;
+
+            if (chartType === 'scatter') {
+                textoInterpretar += `<li>Cada ponto representa um aluno, com a nota de FG no eixo X e CE no eixo Y.</li>`;
+            }
+
+            textoInterpretar += `</ul>`;
+
+            const dicaScroll = possuiScroll
+                ? `<br><strong>Dica:</strong> Utilize a barra de rolagem horizontal para visualizar todos os dados.`
+                : '';
+
+            const descricao = document.getElementById('modalDescricaoGrafico');
+            if (descricao) {
+                descricao.innerHTML = `
+                    <i class="fas fa-info-circle" aria-hidden="true"></i>
+                    ${descricaoEspecifica ? `<strong>Sobre este gráfico:</strong><br>${descricaoEspecifica}<br><br>` : ''}
+                    ${textoN}
+                    ${textoInterpretar}
+                    ${dicaScroll}
+                `;
+            }
+
+            document.getElementById('modalGrafico').classList.add('active');
+
+            setTimeout(() => {
+                if (modalChartInstance && modalChartInstance.resize) {
+                    modalChartInstance.resize();
+                }
+                const modalBody = document.querySelector('#modalGrafico .modal-body');
+                if (modalBody) {
+                    modalBody.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }, 200);
+        }
+
+        // botões modal
+        function configurarBotoesModalGrafico() {
+            document.getElementById('closeModalGrafico').addEventListener('click', () => {
+                document.getElementById('modalGrafico').classList.remove('active');
+                if (modalChartInstance) { modalChartInstance.destroy(); modalChartInstance = null; }
+            });
+            document.getElementById('modalGrafico').addEventListener('click', (e) => {
+                if (e.target.id === 'modalGrafico') {
+                    document.getElementById('modalGrafico').classList.remove('active');
+                    if (modalChartInstance) { modalChartInstance.destroy(); modalChartInstance = null; }
+                }
+            });
+
+            document.getElementById('modalPngBtn').addEventListener('click', () => {
+                if (modalChartInstance) {
+                    const canvas = document.getElementById('modalCanvas');
+                    const link = document.createElement('a');
+                    link.download = `${modalChartTitle || 'grafico'}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                }
+            });
+
+            document.getElementById('modalJsonBtn').addEventListener('click', () => {
+                if (modalRawData) {
+                    const blob = new Blob([JSON.stringify(modalRawData, null, 2)], { type: 'application/json' });
+                    const link = document.createElement('a');
+                    link.download = `${modalChartTitle || 'dados'}.json`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                }
+            });
+
+            document.getElementById('modalCsvBtn').addEventListener('click', () => {
+                if (modalRawData && modalRawData.length) {
+                    const headers = Object.keys(modalRawData[0]);
+                    const rows = [headers.join(',')];
+                    for (const row of modalRawData) {
+                        rows.push(headers.map(h => `"${String(row[h] || '').replace(/"/g, '""')}"`).join(','));
+                    }
+                    const blob = new Blob(['\uFEFF' + rows.join('\n')], { type: 'text/csv;charset=utf-8' });
+                    const link = document.createElement('a');
+                    link.download = `${modalChartTitle || 'dados'}.csv`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                    URL.revokeObjectURL(link.href);
+                }
+            });
+        }
+
     </script>
 </body>
 </html>
