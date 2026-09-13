@@ -1222,6 +1222,47 @@
             });
         }
 
+        // funções perfil
+        function fecharPerfil() {
+            document.getElementById('perfilModal').classList.remove('active');
+        }
+        document.getElementById('perfilModal').addEventListener('click', (e) => {
+            if (e.target.id === 'perfilModal') fecharPerfil();
+        });
+
+        function abrirPerfil(indice) {
+            const registro = window.__rankingAtual[indice];
+            if (!registro) return;
+            const ano = window.detectarAno(registro);
+            const nomeCurso = getNomeCurso(registro.CODIGO_CURSO);
+
+            document.getElementById('perfilModalTitulo').innerHTML =
+                `<i class="fas fa-id-card"></i> ${nomeCurso} • Edição ${String(registro.ANO_EXAME || '').replace(/\.0$/, '')}`;
+
+            let corpo = '';
+            Object.keys(CAMPOS_PERFIL).forEach(secao => {
+                const campos = CAMPOS_PERFIL[secao].filter(c => registro[c] !== undefined && registro[c] !== '');
+                if (!campos.length) return;
+                corpo += `<div style="font-weight:700;color:var(--primary-color);font-size:0.95rem;text-transform:uppercase;letter-spacing:0.03em;margin:1.2rem 0 0.6rem 0;">${secao}</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:0.8rem;">`;
+                campos.forEach(campo => {
+                    const texto = window.getTexto(registro, campo, ano);
+                    const label = LABELS_CAMPOS[campo] || campo;
+                    corpo += `
+                        <div style="background:var(--light-color);border-radius:8px;padding:0.6rem 0.8rem;">
+                            <span style="display:block;font-size:0.75rem;color:var(--medium-color);margin-bottom:0.2rem;">${label}</span>
+                            <span style="display:block;font-size:0.9rem;color:var(--dark-color);font-weight:600;">${texto}</span>
+                        </div>
+                    `;
+                });
+                corpo += `</div>`;
+            });
+
+            if (!corpo) corpo = '<p style="color:var(--medium-color);">Não há respostas de questionário disponíveis.</p>';
+            document.getElementById('perfilModalCorpo').innerHTML = corpo;
+            document.getElementById('perfilModal').classList.add('active');
+        }
+
+
     </script>
 </body>
 </html>
