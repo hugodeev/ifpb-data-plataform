@@ -1262,6 +1262,103 @@
             document.getElementById('perfilModal').classList.add('active');
         }
 
+        // carregar dados
+        function carregarDados() {
+            const url = '../../assets/data/DadosENADE/DADOSENADEGERAL.json';
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    dadosCompletos = data;
+                    dadosFiltrados = [...dadosCompletos];
+                    preencherFiltros();
+                    atualizarTudo();
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar dados:', error);
+                    document.getElementById('rankingBody').innerHTML = `
+                        <tr><td colspan="13" style="text-align:center;padding:2rem;color:#e74a3b;">
+                            <i class="fas fa-exclamation-circle" style="font-size:2rem;display:block;margin-bottom:1rem;"></i>
+                            <p>Erro ao carregar os dados: ${error.message}</p>
+                            <p style="font-size:0.9rem;">Verifique se o arquivo DADOSENADEGERAL.json existe em: assets/data/DadosENADE/</p>
+                        </td></tr>`;
+                });
+        }
+
+        function preencherFiltros() {
+            const anos = [...new Set(
+                dadosCompletos.map(d => String(d.ANO_EXAME || '').replace(/\.0$/, ''))
+                    .filter(a => /^\d{4}$/.test(a))
+            )].sort();
+
+            const nomesCursos = [...new Set(
+                dadosCompletos.map(d => getNomeCurso(d.CODIGO_CURSO))
+                    .filter(n => n && n !== '')
+            )].sort();
+
+            const campi = [...new Set(
+                dadosCompletos.map(d => String(d.CO_MUNIC_CURSO || ''))
+                    .filter(c => c && c !== '')
+            )];
+
+            const selA = document.getElementById('anoFilter');
+            selA.innerHTML = '<option value="todos">Todos os Anos</option>';
+            anos.forEach(ano => {
+                const opt = document.createElement('option');
+                opt.value = ano;
+                opt.textContent = ano;
+                selA.appendChild(opt);
+            });
+
+            const selC = document.getElementById('cursoFilter');
+            selC.innerHTML = '<option value="todos">Todos os Cursos</option>';
+            nomesCursos.forEach(nome => {
+                const opt = document.createElement('option');
+                opt.value = nome;
+                opt.textContent = nome;
+                selC.appendChild(opt);
+            });
+
+            const selCamp = document.getElementById('campusFilter');
+            selCamp.innerHTML = '<option value="todos">Todos</option>';
+            campi.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c;
+                opt.textContent = getNomeCampus(c) || c;
+                selCamp.appendChild(opt);
+            });
+        }
+
+        function aplicarFiltros() {
+            const ano = document.getElementById('anoFilter').value;
+            const curso = document.getElementById('cursoFilter').value;
+            const campus = document.getElementById('campusFilter').value;
+
+            dadosFiltrados = dadosCompletos.filter(d => {
+                const anoDado = String(d.ANO_EXAME || '').replace(/\.0$/, '');
+                const nomeCurso = getNomeCurso(d.CODIGO_CURSO);
+                const campusDado = String(d.CO_MUNIC_CURSO || '');
+
+                let ok = true;
+                if (ano !== 'todos' && anoDado !== ano) ok = false;
+                if (curso !== 'todos' && nomeCurso !== curso) ok = false;
+                if (campus !== 'todos' && campusDado !== campus) ok = false;
+                return ok;
+            });
+
+            atualizarTudo();
+        }
+
+        function resetarFiltros() {
+            document.getElementById('anoFilter').value = 'todos';
+            document.getElementById('cursoFilter').value = 'todos';
+            document.getElementById('campusFilter').value = 'todos';
+            dadosFiltrados = [...dadosCompletos];
+            atualizarTudo();
+        }
+
 
     </script>
 </body>
