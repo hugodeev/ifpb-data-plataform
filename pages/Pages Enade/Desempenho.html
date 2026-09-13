@@ -797,6 +797,41 @@
             border-radius: 3px;
         }
 
+        /* responsivo */
+        @media (max-width: 1024px) {
+            .chart-card { padding: 1.25rem; }
+            .chart-card .card-header h3 { font-size: 0.95rem; }
+            .chart-card .chart-scroll-wrapper { min-height: 250px; max-height: 320px; }
+            .chart-card .chart-scroll-inner { min-height: 250px; max-height: 320px; min-width: 600px; width: 600px; }
+        }
+
+        @media (max-width: 768px) {
+            .page-header { padding: 2rem 1.5rem; }
+            .page-title { font-size: 1.8rem; }
+            .page-subtitle { font-size: 1rem; }
+            .filters { flex-direction: column; align-items: stretch; }
+            .filters select { width: 100%; max-width: 100%; }
+            .charts-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+            .chart-card { padding: 1rem; }
+            .chart-card .card-header h3 { font-size: 0.88rem; padding-left: 0.6rem; }
+            .chart-card .chart-scroll-wrapper { min-height: 220px; max-height: 280px; }
+            .chart-card .chart-scroll-inner { min-height: 220px; max-height: 280px; min-width: 500px; width: 500px; }
+            .chart-card .chart-actions { opacity: 0.8; }
+            .chart-card .chart-btn { width: 28px; height: 28px; font-size: 10px; }
+            .chart-card .chart-btn i { font-size: 10px; }
+            .chart-card .descricao-card .texto { font-size: 0.8rem; }
+            .chart-card .descricao-card .btn-ver-mais { font-size: 0.75rem; padding: 0.3rem 0.8rem; }
+            .modal-box { width: 95%; max-height: 90vh; }
+            .modal-body .grafico-wrapper { min-height: 58vh; }
+            .modal-scroll-wrapper { min-height: 58vh; max-height: 58vh; }
+            .modal-scroll-inner { min-width: 750px; padding-left: 18rem; display: flex; align-items: center; justify-content: center; }
+            .modal-header { padding: 0.6rem 1rem; }
+            .modal-header h3 { font-size: 0.9rem; }
+            .modal-body { padding: 0.6rem 1rem 0.8rem 1rem; }
+            .modal-descricao .descricao-texto { font-size: 0.8rem; }
+            .my-custom-scrollbar { height: 350px; }
+        }
+
     </style>
 </head>
 <body>
